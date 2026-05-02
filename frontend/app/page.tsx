@@ -139,6 +139,25 @@ export default function DesignSystem() {
           </h2>
 
           <div className="space-y-6">
+            {/* Events Colors */}
+            <div>
+              <h3 className="text-lg font-semibold mb-3">Event Colors</h3>
+              <div className="flex flex-col gap-3">
+                <div className="p-4 rounded border bg-info-bg text-info-text border-info-border">
+                  Info: This is an information message.
+                </div>
+                <div className="p-4 rounded border bg-success-bg text-success-text border-success-border">
+                  Success: Operation completed successfully.
+                </div>
+                <div className="p-4 rounded border bg-warning-bg text-warning-text border-warning-border">
+                  Warning: Please check your input.
+                </div>
+                <div className="p-4 rounded border bg-error-bg text-error-text border-error-border">
+                  Error: Something went wrong.
+                </div>
+              </div>
+            </div>
+
             <div>
               <h3 className="text-lg font-semibold mb-3">Spinner</h3>
               <div className="flex gap-4 items-center">
