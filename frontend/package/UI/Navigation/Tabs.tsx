@@ -9,12 +9,12 @@ export interface TabsProps {
 
 export function Tabs({ tabs, activeTab, onChange, className = '' }: TabsProps) {
   return (
-    <div className={`flex overflow-x-auto hide-scrollbar border-b border-[var(--color-border)] ${className}`}>
+    <div className={`flex overflow-x-auto hide-scrollbar border-b border-border ${className}`}>
       {tabs.map((tab, idx) => (
         <button
           key={idx}
           onClick={() => onChange(idx)}
-          className={`min-w-fit px-4 h-12 font-medium text-sm transition-colors border-b-2 ${activeTab === idx ? 'border-[var(--color-primary)] text-[var(--color-primary)]' : 'border-transparent text-[var(--color-text-muted)]'}`}
+          className={`min-w-fit px-4 h-12 font-medium text-sm transition-colors border-b-2 ${activeTab === idx ? 'border-primary text-primary' : 'border-transparent text-text-muted'}`}
         >
           {tab}
         </button>

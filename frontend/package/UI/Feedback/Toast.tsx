@@ -6,7 +6,7 @@ export function Toast({ message, type = 'info', isVisible }: { message: string, 
   
   return (
     <div className="fixed top-14 left-4 right-4 z-50 animate-slide-down">
-      <div className={`${colors[type]} text-white px-4 py-3 rounded-xl shadow-lg flex items-center`}>
+      <div className={`${colors[type]} text-white px-4 py-3 rounded-sm shadow-lg flex items-center`}>
         {message}
       </div>
     </div>

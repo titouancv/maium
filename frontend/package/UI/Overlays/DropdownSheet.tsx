@@ -9,7 +9,7 @@ export function DropdownSheet({ isOpen, onClose, options, onSelect }: any) {
           <button 
             key={i} 
             onClick={() => { onSelect(opt); onClose(); }} 
-            className="flex items-center h-14 px-2 border-b border-[var(--color-border)] last:border-0 text-left text-[var(--color-text)]"
+            className="flex items-center h-14 px-2 border-b border-border last:border-0 text-left text-text"
           >
             {opt.label || opt}
           </button>
