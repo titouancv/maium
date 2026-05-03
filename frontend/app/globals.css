@@ -36,41 +36,41 @@
   --blue-800: #191c28;
   --blue-900: #0e1018;
 
-  /* Info — cyan #00f0ff */
-  --info-50: #e0fdff;
-  --info-100: #b0f8ff;
-  --info-200: #60f0ff;
-  --info-400: #00f0ff;
-  --info-600: #00b8cc;
-  --info-800: #007a8a;
-  --info-900: #003d45;
+  /* Info — jaune ambre */
+  --info-50: #fef9ee;
+  --info-100: #fdedc4;
+  --info-200: #fbd98a;
+  --info-400: #f8c463;
+  --info-600: #d49a28;
+  --info-800: #a07018;
+  --info-900: #5c3e0a;
 
-  /* Success — vert #00ff81 */
-  --success-50: #e0fff0;
-  --success-100: #aaffd6;
-  --success-200: #55ffb0;
-  --success-400: #00ff81;
-  --success-600: #00cc66;
-  --success-800: #008040;
-  --success-900: #003d1e;
+  /* Success — vert olive (inchangé) */
+  --success-50: #f2f5e6;
+  --success-100: #d8e4a4;
+  --success-200: #b5cb65;
+  --success-400: #81912f;
+  --success-600: #5e6a20;
+  --success-800: #3d4614;
+  --success-900: #20250a;
 
-  /* Warning — rose #f23598 */
-  --warning-50: #fde8f3;
-  --warning-100: #fab8db;
-  --warning-200: #f670ba;
-  --warning-400: #f23598;
-  --warning-600: #b81f70;
-  --warning-800: #7a1049;
-  --warning-900: #3d0824;
+  /* Warning — rose fushia */
+  --warning-50: #fdeef7;
+  --warning-100: #f9c5e8;
+  --warning-200: #f285ce;
+  --warning-400: #d6348e;
+  --warning-600: #a8206c;
+  --warning-800: #751049;
+  --warning-900: #42062a;
 
-  /* Error — rouge #ff0000 */
-  --error-50: #ffe0e0;
-  --error-100: #ffaaaa;
-  --error-200: #ff5555;
-  --error-400: #ff0000;
-  --error-600: #cc0000;
-  --error-800: #880000;
-  --error-900: #440000;
+  /* Error — rouge framboise (inchangé) */
+  --error-50: #fcedef;
+  --error-100: #f5b8bf;
+  --error-200: #eb808c;
+  --error-400: #e03f4f;
+  --error-600: #b02030;
+  --error-800: #7d1220;
+  --error-900: #470810;
 }
 
 /* ============================================================
