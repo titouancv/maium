@@ -1,5 +1,5 @@
-import React from 'react';
-import { TextInput, TextInputProps } from '../Essential/TextInput';
+import React from "react";
+import { TextInput, TextInputProps } from "./TextInput";
 
 export function SearchInput(props: TextInputProps) {
   return (

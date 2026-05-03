@@ -10,11 +10,11 @@ export const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
     return (
       <div className="flex flex-col gap-1.5 w-full">
         {label && (
-          <label className="text-sm font-medium text-text pl-1">{label}</label>
+          <label className="text-sm font-medium text-text">{label}</label>
         )}
         <input
           ref={ref}
-          className={`h-12 px-4 rounded-full bg-surface-sunken border ${error ? "border-error-border text-error-text" : "border-transparent focus:border-primary"} outline-none focus:ring-2 focus:ring-primary/20 text-base transition-all w-full ${className}`}
+          className={`h-12 ${error ? " text-error-text" : ""}  transition-all w-full ${className}`}
           {...props}
         />
         {error && (

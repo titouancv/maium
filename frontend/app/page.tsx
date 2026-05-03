@@ -1,20 +1,20 @@
 "use client";
 
 import React, { useState } from "react";
-import { TopBar } from "../package/UI/Navigation/TopBar";
-import { BottomNavigation } from "../package/UI/Navigation/BottomNavigation";
-import { Card } from "../package/UI/Structure/Card";
-import { Button } from "../package/UI/Essential/Button";
-import { SearchInput } from "../package/UI/Utility/SearchInput";
-import { Switch } from "../package/UI/Essential/Switch";
-import { Divider } from "../package/UI/Structure/Divider";
-import { Fab } from "../package/UI/Interactions/Fab";
-import { TextInput } from "../package/UI/Essential/TextInput";
-import { PasswordInput } from "../package/UI/Essential/PasswordInput";
-import { Select } from "../package/UI/Essential/Select";
-import { Spinner } from "../package/UI/Feedback/Spinner";
-import { Skeleton } from "../package/UI/Feedback/Skeleton";
-import { Tabs } from "../package/UI/Navigation/Tabs";
+import { TopBar } from "../package/UI/TopBar";
+import { BottomNavigation } from "../package/UI/BottomNavigation";
+import { Card } from "../package/UI/Card";
+import { Button } from "../package/UI/Button";
+import { SearchInput } from "../package/UI/SearchInput";
+import { Switch } from "../package/UI/Switch";
+import { Divider } from "../package/UI/Divider";
+import { Fab } from "../package/UI/Fab";
+import { TextInput } from "../package/UI/TextInput";
+import { PasswordInput } from "../package/UI/PasswordInput";
+import { Select } from "../package/UI/Select";
+import { Spinner } from "../package/UI/Spinner";
+import { Skeleton } from "../package/UI/Skeleton";
+import { Tabs } from "../package/UI/Tabs";
 
 export default function DesignSystem() {
   const [switchState, setSwitchState] = useState(true);
@@ -55,13 +55,10 @@ export default function DesignSystem() {
             <div>
               <h3 className="text-lg font-semibold mb-3">Inputs</h3>
               <div className="flex flex-col gap-4 max-w-sm">
-                <TextInput
-                  label="Text Input"
-                  placeholder="Entrez du texte..."
-                />
+                <TextInput label="Text Input" placeholder="ENTREZ DU TEXT..." />
                 <TextInput
                   label="With Error"
-                  placeholder="Entrez du texte..."
+                  placeholder="ENTREZ DU TEXT..."
                   error="Ce champ est requis."
                 />
                 <PasswordInput
@@ -108,7 +105,7 @@ export default function DesignSystem() {
               <h3 className="text-lg font-semibold mb-3">Cards (Paddings)</h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <Card padding="none">
-                  <div className="p-4 bg-primary-subtle text-primary">
+                  <div className="p-4 bg-primary text-primary-text">
                     No padding (Custom Content)
                   </div>
                 </Card>
