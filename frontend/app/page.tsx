@@ -32,6 +32,7 @@ export default function DesignSystem() {
               <div className="flex flex-wrap gap-2 items-center">
                 <Button variant="primary">Primary</Button>
                 <Button variant="secondary">Secondary</Button>
+                <Button variant="neutral">Neutral</Button>
                 <Button variant="outline">Outline</Button>
                 <Button variant="ghost">Ghost</Button>
               </div>
@@ -118,16 +119,10 @@ export default function DesignSystem() {
             <div>
               <h3 className="text-lg font-semibold mb-3">Event Colors</h3>
               <div className="flex flex-col gap-3">
-                <div className="p-4 rounded border bg-info-bg text-info-text border-info-border">
+                <div className="p-4 rounded border bg-secondary text-on-secondary border-secondary">
                   Info: This is an information message.
                 </div>
-                <div className="p-4 rounded border bg-success-bg text-success-text border-success-border">
-                  Success: Operation completed successfully.
-                </div>
-                <div className="p-4 rounded border bg-warning-bg text-warning-text border-warning-border">
-                  Warning: Please check your input.
-                </div>
-                <div className="p-4 rounded border bg-error-bg text-error-text border-error-border">
+                <div className="p-4 rounded border bg-error text-on-error border-error">
                   Error: Something went wrong.
                 </div>
               </div>

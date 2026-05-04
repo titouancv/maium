@@ -18,7 +18,7 @@ export function Card({
   };
   return (
     <div
-      className={`bg-surface-100 rounded-sm shadow-sm border border-brd-400 ${paddings[padding]} ${className}`}
+      className={`bg-surface-100 rounded-sm shadow-sm border border-brd-200 ${paddings[padding]} ${className}`}
       {...props}
     >
       {children}

@@ -150,7 +150,7 @@
   --color-primary-900: var(--primary-900);
 
   /* secondary */
-  --color-secondary: var(--secondary-600);
+  --color-secondary: var(--secondary-400);
   --color-on-secondary: var(--secondary-50);
 
   --color-secondary-50: var(--secondary-50);
@@ -183,6 +183,9 @@
   --color-dark-900: var(--dark-900);
 
   /* Error */
+  --color-error: var(--error-400);
+  --color-on-error: var(--error-50);
+
   --color-error-50: var(--error-50);
   --color-error-100: var(--error-100);
   --color-error-200: var(--error-200);
