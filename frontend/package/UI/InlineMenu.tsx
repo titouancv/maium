@@ -31,8 +31,8 @@ export function InlineMenu({ tabs }: InlineMenuProps) {
             transition={{ duration: 0.2 }}
             className={`relative z-10 ${
               isActive(tab.href)
-                ? "text-action-text"
-                : "text-text hover:text-action"
+                ? "text-on-primary"
+                : "text-txt hover:text-primary"
             }`}
           >
             {tab.name}
@@ -40,7 +40,7 @@ export function InlineMenu({ tabs }: InlineMenuProps) {
           {isActive(tab.href) && (
             <motion.div
               layoutId="activeTab"
-              className="absolute inset-0 bg-action rounded-full"
+              className="absolute inset-0 bg-primary rounded-full"
               transition={{ type: "spring", stiffness: 380, damping: 30 }}
             />
           )}

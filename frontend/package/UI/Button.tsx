@@ -15,10 +15,10 @@ export function Button({
   const baseStyle =
     "inline-flex items-center justify-center rounded-xl font-medium transition-colors active:scale-95 disabled:opacity-50 disabled:pointer-events-none";
   const variants = {
-    primary: "bg-primary text-on-primary hover:bg-primary-hover",
-    secondary: "bg-surface-sunken text-text hover:bg-border",
-    outline: "border-2 border-border text-text hover:bg-surface-sunken",
-    ghost: "bg-transparent text-text hover:bg-surface-sunken",
+    primary: "bg-primary text-on-primary hover:bg-primary-400",
+    secondary: "bg-surface-200 text-txt hover:bg-brd-200",
+    outline: "border-2 border-brd-400 text-txt hover:bg-surface-200",
+    ghost: "bg-transparent text-txt hover:bg-surface-200",
   };
   const sizes = {
     sm: "py-1 px-4 text-sm",

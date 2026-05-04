@@ -17,11 +17,11 @@ export function Title({
     "inline-flex items-center justify-center rounded-xl font-medium transition-colors active:scale-95 disabled:opacity-50 disabled:pointer-events-none";
   const variants = {
     primary: "text-primary",
-    secondary: "text-text",
+    secondary: "text-txt",
   };
   const backgroundVariants = {
     primary: "bg-primary",
-    secondary: "bg-text",
+    secondary: "bg-txt",
   };
   const sizes = {
     h1: "text-3xl font-bold",

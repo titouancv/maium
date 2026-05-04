@@ -14,7 +14,7 @@ export function Tabs({ tabs, activeTab, onChange, className = "" }: TabsProps) {
         <button
           key={idx}
           onClick={() => onChange(idx)}
-          className={`min-w-fit px-4 py-1 font-medium text-sm transition-colors rounded-full ${activeTab === idx ? "bg-primary text-primary-text" : "hover:bg-surface-raised text-text-muted"}`}
+          className={`min-w-fit px-4 py-1 font-medium text-sm transition-colors rounded-full ${activeTab === idx ? "bg-primary text-on-primary" : "hover:bg-surface-100 text-txt-muted"}`}
         >
           {tab}
         </button>
