@@ -13,7 +13,7 @@ export function Button({
   ...props
 }: ButtonProps) {
   const baseStyle =
-    "inline-flex items-center justify-center rounded-full font-medium transition-colors active:scale-95 disabled:opacity-50 disabled:pointer-events-none";
+    "inline-flex items-center justify-center rounded-xl font-medium transition-colors active:scale-95 disabled:opacity-50 disabled:pointer-events-none";
   const variants = {
     primary: "bg-primary text-on-primary hover:bg-primary-hover",
     secondary: "bg-surface-sunken text-text hover:bg-border",

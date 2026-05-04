@@ -1,20 +1,18 @@
 "use client";
 
 import React, { useState } from "react";
-import { TopBar } from "../package/UI/TopBar";
-import { BottomNavigation } from "../package/UI/BottomNavigation";
+import { InlineMenu } from "../package/UI/InlineMenu";
 import { Card } from "../package/UI/Card";
 import { Button } from "../package/UI/Button";
 import { SearchInput } from "../package/UI/SearchInput";
 import { Switch } from "../package/UI/Switch";
-import { Divider } from "../package/UI/Divider";
-import { Fab } from "../package/UI/Fab";
 import { TextInput } from "../package/UI/TextInput";
 import { PasswordInput } from "../package/UI/PasswordInput";
 import { Select } from "../package/UI/Select";
 import { Spinner } from "../package/UI/Spinner";
 import { Skeleton } from "../package/UI/Skeleton";
 import { Tabs } from "../package/UI/Tabs";
+import { Title } from "../package/UI/Title";
 
 export default function DesignSystem() {
   const [switchState, setSwitchState] = useState(true);
@@ -22,14 +20,10 @@ export default function DesignSystem() {
 
   return (
     <div className="min-h-screen bg-surface pb-24 font-sans text-text">
-      <TopBar title="Design System" />
-
       <main className="px-4 py-8 flex flex-col gap-10">
         {/* ESSENTIAL */}
         <section>
-          <h2 className="text-2xl font-bold mb-4 pb-2 border-b border-border">
-            1. Essential
-          </h2>
+          <Title label="1. Essential" className="mb-4" size="h1" />
 
           <div className="space-y-6">
             {/* Buttons */}
@@ -95,9 +89,7 @@ export default function DesignSystem() {
 
         {/* STRUCTURE */}
         <section>
-          <h2 className="text-2xl font-bold mb-4 pb-2 border-b border-border">
-            2. Structure
-          </h2>
+          <Title label="2. Structure" className="mb-4" size="h2" />
 
           <div className="space-y-6">
             {/* Cards */}
@@ -114,26 +106,12 @@ export default function DesignSystem() {
                 <Card padding="lg">Large padding</Card>
               </div>
             </div>
-
-            {/* Divider */}
-            <div>
-              <h3 className="text-lg font-semibold mb-3">Divider</h3>
-              <Card>
-                <div className="py-2">Item 1</div>
-                <Divider />
-                <div className="py-2">Item 2</div>
-                <Divider />
-                <div className="py-2">Item 3</div>
-              </Card>
-            </div>
           </div>
         </section>
 
         {/* FEEDBACK */}
         <section>
-          <h2 className="text-2xl font-bold mb-4 pb-2 border-b border-border">
-            3. Feedback
-          </h2>
+          <Title label="3. Feedback" className="mb-4" size="h3" />
 
           <div className="space-y-6">
             {/* Events Colors */}
@@ -174,9 +152,7 @@ export default function DesignSystem() {
 
         {/* NAVIGATION */}
         <section>
-          <h2 className="text-2xl font-bold mb-4 pb-2 border-b border-border">
-            4. Navigation (Preview)
-          </h2>
+          <Title label="4. Navigation (Preview)" className="mb-4" size="h4" />
           <div className="space-y-6">
             <div>
               <h3 className="text-lg font-semibold mb-3">Tabs</h3>
@@ -198,26 +174,13 @@ export default function DesignSystem() {
         </section>
       </main>
 
-      <Fab>✨</Fab>
-
-      <BottomNavigation>
-        <Button
-          variant="ghost"
-          className="flex-1 flex-col items-center !h-full rounded-none"
-        >
-          <span className="text-2xl mb-1">🎭</span>
-          <span className="text-[10px] text-primary font-semibold">
-            Composants
-          </span>
-        </Button>
-        <Button
-          variant="ghost"
-          className="flex-1 flex-col items-center !h-full rounded-none opacity-50"
-        >
-          <span className="text-2xl mb-1">📱</span>
-          <span className="text-[10px]">Mockup</span>
-        </Button>
-      </BottomNavigation>
+      <InlineMenu
+        tabs={[
+          { name: "Home", href: "/" },
+          { name: "About", href: "/about" },
+          { name: "Contact", href: "/contact" },
+        ]}
+      />
     </div>
   );
 }
