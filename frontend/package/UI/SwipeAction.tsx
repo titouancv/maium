@@ -1,7 +1,13 @@
 import React from "react";
 
+type SwipeActionProps = {
+  children: React.ReactNode;
+  actionContent?: React.ReactNode;
+  onAction?: () => void;
+};
+
 // Un simple wrapper CSS-only pour swipe
-export function SwipeAction({ children, actionContent, onAction }: any) {
+export function SwipeAction({ children, actionContent, onAction }: SwipeActionProps) {
   return (
     <div className="group relative h-full w-full overflow-hidden">
       <div
