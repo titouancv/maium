@@ -4,7 +4,7 @@ import { Button } from "./Button";
 export interface SelectProps extends React.SelectHTMLAttributes<HTMLSelectElement> {
   label?: string;
   error?: string;
-  variant?: "primary" | "secondary" | "neutral" | "outline" | "ghost";
+  variant?: "primary" | "inverse" | "neutral" | "outline" | "ghost";
   buttonSize?: "none" | "sm" | "md" | "lg";
 }
 

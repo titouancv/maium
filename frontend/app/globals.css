@@ -75,10 +75,20 @@
   --color-brd-700: var(--light-700);
   --color-brd-800: var(--light-800);
 
+  --color-inverse-50: var(--dark-50);
+  --color-inverse-100: var(--dark-100);
+  --color-inverse-200: var(--dark-200);
+  --color-inverse-400: var(--dark-400);
+  --color-inverse-600: var(--dark-600);
+  --color-inverse-700: var(--dark-700);
+  --color-inverse-800: var(--dark-800);
+
   --color-txt: var(--light-800);
   --color-txt-muted: var(--light-600);
   --color-txt-placeholder: var(--light-400);
   --color-txt-inverse: var(--light-50);
+
+  --font-nohemi: "Nohemi", sans-serif;
 }
 
 /* ============================================================
@@ -103,10 +113,20 @@
     --color-brd-700: var(--dark-100);
     --color-brd-800: var(--dark-50);
 
+    --color-inverse-50: var(--light-800);
+    --color-inverse-100: var(--light-700);
+    --color-inverse-200: var(--light-600);
+    --color-inverse-400: var(--light-400);
+    --color-inverse-600: var(--light-200);
+    --color-inverse-700: var(--light-100);
+    --color-inverse-800: var(--light-50);
+
     --color-txt: var(--dark-50);
     --color-txt-muted: var(--dark-200);
     --color-txt-placeholder: var(--dark-400);
     --color-txt-inverse: var(--dark-900);
+
+    --font-cabinet-grotesk: "CabinetGrotesk", sans-serif;
   }
 }
 
@@ -131,10 +151,20 @@
   --color-brd-700: var(--color-brd-700);
   --color-brd-800: var(--color-brd-800);
 
+  --color-inverse-50: var(--color-inverse-50);
+  --color-inverse-100: var(--color-inverse-100);
+  --color-inverse-200: var(--color-inverse-200);
+  --color-inverse-400: var(--color-inverse-400);
+  --color-inverse-600: var(--color-inverse-600);
+  --color-inverse-700: var(--color-inverse-700);
+  --color-inverse-800: var(--color-inverse-800);
+
   --color-txt: var(--color-txt);
   --color-txt-muted: var(--color-txt-muted);
   --color-txt-placeholder: var(--color-txt-placeholder);
   --color-txt-inverse: var(--color-txt-inverse);
+
+  --font-cabinet-grotesk: var(--font-cabinet-grotesk);
 
   /* primary */
   --color-primary: var(--primary-600);
@@ -202,5 +232,5 @@
 body {
   background: var(--color-surface-50);
   color: var(--color-txt);
-  font-family: var(--font-jost), Arial, Helvetica, sans-serif;
+  font-family: var(--font-cabinet-grotesk), sans-serif;
 }

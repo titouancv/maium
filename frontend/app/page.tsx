@@ -23,7 +23,7 @@ export default function DesignSystem() {
       <main className="px-4 py-8 flex flex-col gap-10">
         {/* ESSENTIAL */}
         <section>
-          <Title label="1. Essential" className="mb-4" size="h1" />
+          <Title label="Essential" className="mb-4" size="h1" />
 
           <div className="space-y-6">
             {/* Buttons */}
@@ -31,13 +31,13 @@ export default function DesignSystem() {
               <h3 className="text-lg font-semibold mb-3">Buttons (Variants)</h3>
               <div className="flex flex-wrap gap-2 items-center">
                 <Button variant="primary">Primary</Button>
-                <Button variant="secondary">Secondary</Button>
+                <Button variant="inverse">Inverse</Button>
                 <Button variant="neutral">Neutral</Button>
                 <Button variant="outline">Outline</Button>
                 <Button variant="ghost">Ghost</Button>
               </div>
-              <h3 className="text-lg font-semibold mb-3 mt-4">
-                Buttons (Sizes)
+              <h3 className="text-lg font-medium mb-3 mt-4">
+                Buttons (Sizes) Medium
               </h3>
               <div className="flex flex-wrap gap-2 items-center">
                 <Button size="sm">Small</Button>
@@ -90,7 +90,7 @@ export default function DesignSystem() {
 
         {/* STRUCTURE */}
         <section>
-          <Title label="2. Structure" className="mb-4" size="h2" />
+          <Title label="Structure" className="mb-4" size="h2" />
 
           <div className="space-y-6">
             {/* Cards */}
@@ -112,7 +112,7 @@ export default function DesignSystem() {
 
         {/* FEEDBACK */}
         <section>
-          <Title label="3. Feedback" className="mb-4" size="h3" />
+          <Title label="Feedback" className="mb-4" size="h3" />
 
           <div className="space-y-6">
             {/* Events Colors */}
@@ -147,7 +147,7 @@ export default function DesignSystem() {
 
         {/* NAVIGATION */}
         <section>
-          <Title label="4. Navigation (Preview)" className="mb-4" size="h4" />
+          <Title label="Navigation (Preview)" className="mb-4" size="h4" />
           <div className="space-y-6">
             <div>
               <h3 className="text-lg font-semibold mb-3">Tabs</h3>
