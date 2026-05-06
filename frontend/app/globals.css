@@ -204,12 +204,3 @@ body {
   color: var(--color-txt);
   font-family: var(--font-jost), Arial, Helvetica, sans-serif;
 }
-
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-  font-family: var(--font-jost);
-}

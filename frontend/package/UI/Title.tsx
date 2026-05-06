@@ -56,7 +56,7 @@ export function Title({
           className={`${baseStyle} ${variants[variant]} ${sizes[size]}`}
           {...props}
         >
-          {label}
+          {label.toUpperCase()}
         </span>
       </div>
       <div
