@@ -75,13 +75,13 @@
   --color-brd-700: var(--light-700);
   --color-brd-800: var(--light-800);
 
-  --color-inverse-50: var(--dark-50);
-  --color-inverse-100: var(--dark-100);
-  --color-inverse-200: var(--dark-200);
+  --color-inverse-50: var(--dark-800);
+  --color-inverse-100: var(--dark-700);
+  --color-inverse-200: var(--dark-600);
   --color-inverse-400: var(--dark-400);
-  --color-inverse-600: var(--dark-600);
-  --color-inverse-700: var(--dark-700);
-  --color-inverse-800: var(--dark-800);
+  --color-inverse-600: var(--dark-200);
+  --color-inverse-700: var(--dark-100);
+  --color-inverse-800: var(--dark-50);
 
   --color-txt: var(--light-800);
   --color-txt-muted: var(--light-600);
@@ -113,13 +113,13 @@
     --color-brd-700: var(--dark-100);
     --color-brd-800: var(--dark-50);
 
-    --color-inverse-50: var(--light-800);
-    --color-inverse-100: var(--light-700);
-    --color-inverse-200: var(--light-600);
+    --color-inverse-50: var(--light-50);
+    --color-inverse-100: var(--light-100);
+    --color-inverse-200: var(--light-200);
     --color-inverse-400: var(--light-400);
-    --color-inverse-600: var(--light-200);
-    --color-inverse-700: var(--light-100);
-    --color-inverse-800: var(--light-50);
+    --color-inverse-600: var(--light-600);
+    --color-inverse-700: var(--light-700);
+    --color-inverse-800: var(--light-800);
 
     --color-txt: var(--dark-50);
     --color-txt-muted: var(--dark-200);

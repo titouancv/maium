@@ -1,7 +1,8 @@
 import React from "react";
 
+export type ButtonVariant = "primary" | "inverse" | "outline" | "ghost";
 export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: "primary" | "inverse" | "neutral" | "outline" | "ghost";
+  variant?: ButtonVariant;
   size?: "none" | "sm" | "md" | "lg";
 }
 
@@ -13,15 +14,16 @@ export function Button({
   ...props
 }: ButtonProps) {
   const baseStyle =
-    " inline-flex items-center justify-center shadow-md font-medium transition-colors active:scale-95 disabled:opacity-50 disabled:pointer-events-none";
+    "cursor-pointer inline-flex items-center justify-center shadow-md inset-shadow-sm font-medium transition-colors duration-300 ease-in-out active:scale-95 disabled:opacity-50 disabled:pointer-events-none";
   const variants = {
     primary:
-      "bg-[radial-gradient(ellipse_at_center,var(--color-secondary)_0%,var(--color-primary)_70%)] text-on-primary hover:bg-[radial-gradient(ellipse_at_center,var(--color-secondary-400)_0%,var(--color-primary-400)_70%)]",
-    inverse: "bg-inverse-800 text-txt-inverse hover:bg-inverse-600",
-    neutral: "bg-surface-200 text-txt hover:bg-brd-100",
+      "bg-radial from-secondary-400 from-10% to-primary to-90% text-on-primary hover:from-primary hover:to-secondary-400 inset-shadow-light-100/60",
+    inverse:
+      "bg-inverse-50 text-txt-inverse hover:bg-inverse-200 inset-shadow-surface-50/80 ",
     outline:
-      "border-2 border-brd-200 text-txt hover:bg-surface-100  inset-shadow-xl inset-shadow-primary",
-    ghost: "bg-transparent text-txt hover:bg-surface-100",
+      " text-txt hover:bg-surface-200 inset-shadow-primary-200/80 dark:inset-shadow-primary-400/80",
+    ghost:
+      "bg-transparent text-txt hover:bg-surface-200 shadow-none inset-shadow-transparent",
   };
   const sizes = {
     none: "text-base rounded-2xl",

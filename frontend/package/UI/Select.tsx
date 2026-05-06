@@ -1,10 +1,10 @@
 import React, { forwardRef } from "react";
-import { Button } from "./Button";
+import { Button, ButtonVariant } from "./Button";
 
 export interface SelectProps extends React.SelectHTMLAttributes<HTMLSelectElement> {
   label?: string;
   error?: string;
-  variant?: "primary" | "inverse" | "neutral" | "outline" | "ghost";
+  variant?: ButtonVariant;
   buttonSize?: "none" | "sm" | "md" | "lg";
 }
 

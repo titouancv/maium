@@ -32,7 +32,6 @@ export default function DesignSystem() {
               <div className="flex flex-wrap gap-2 items-center">
                 <Button variant="primary">Primary</Button>
                 <Button variant="inverse">Inverse</Button>
-                <Button variant="neutral">Neutral</Button>
                 <Button variant="outline">Outline</Button>
                 <Button variant="ghost">Ghost</Button>
               </div>
