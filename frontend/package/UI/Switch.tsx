@@ -11,19 +11,19 @@ export const Switch = forwardRef<HTMLInputElement, SwitchProps>(
   ({ className = "", label, ...props }, ref) => {
     return (
       <label
-        className={`flex items-center justify-between min-h-[44px] cursor-pointer ${className}`}
+        className={`flex min-h-[44px] cursor-pointer items-center justify-between ${className}`}
       >
         {label && (
-          <span className="text-base font-medium text-txt pr-4">{label}</span>
+          <span className="text-txt pr-4 text-base font-medium">{label}</span>
         )}
-        <div className="relative inline-flex items-center shrink-0">
+        <div className="relative inline-flex shrink-0 items-center">
           <input
             type="checkbox"
             ref={ref}
-            className="sr-only peer"
+            className="peer sr-only"
             {...props}
           />
-          <div className="w-11 h-6 bg-brd-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+          <div className="bg-brd-700 peer peer-checked:bg-primary h-6 w-11 rounded-full peer-focus:outline-none after:absolute after:top-[2px] after:left-[2px] after:h-5 after:w-5 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-[''] peer-checked:after:translate-x-full peer-checked:after:border-white"></div>
         </div>
       </label>
     );

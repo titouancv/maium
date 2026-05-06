@@ -28,20 +28,20 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
       lg: "py-2 px-8 text-lg",
     };
     return (
-      <div className="flex flex-col gap-1.5 w-full">
+      <div className="flex w-full flex-col gap-1.5">
         {label && (
-          <label className="text-sm font-medium text-txt pl-1">{label}</label>
+          <label className="text-txt pl-1 text-sm font-medium">{label}</label>
         )}
         <Button size="none" variant={variant}>
           <select
             ref={ref}
-            className={`${sizes[buttonSize]} outline-none w-full appearance-none ${className}`}
+            className={`${sizes[buttonSize]} w-full appearance-none outline-none ${className}`}
             {...props}
           >
             {children}
           </select>
           {error && (
-            <span className="text-xs text-error-600 pl-1">{error}</span>
+            <span className="text-error-600 pl-1 text-xs">{error}</span>
           )}
         </Button>
       </div>

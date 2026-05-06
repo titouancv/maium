@@ -19,8 +19,8 @@ export default function DesignSystem() {
   const [activeTab, setActiveTab] = useState(0);
 
   return (
-    <div className="min-h-screen bg-surface pb-24 font-sans text-text">
-      <main className="px-4 py-8 flex flex-col gap-10">
+    <div className="bg-surface text-text min-h-screen pb-24 font-sans">
+      <main className="flex flex-col gap-10 px-4 py-8">
         {/* ESSENTIAL */}
         <section>
           <Title label="Essential" className="mb-4" size="h1" />
@@ -28,17 +28,17 @@ export default function DesignSystem() {
           <div className="space-y-6">
             {/* Buttons */}
             <div>
-              <h3 className="text-lg font-semibold mb-3">Buttons (Variants)</h3>
-              <div className="flex flex-wrap gap-2 items-center">
+              <h3 className="mb-3 text-lg font-semibold">Buttons (Variants)</h3>
+              <div className="flex flex-wrap items-center gap-2">
                 <Button variant="primary">Primary</Button>
                 <Button variant="inverse">Inverse</Button>
                 <Button variant="outline">Outline</Button>
                 <Button variant="ghost">Ghost</Button>
               </div>
-              <h3 className="text-lg font-medium mb-3 mt-4">
+              <h3 className="mt-4 mb-3 text-lg font-medium">
                 Buttons (Sizes) Medium
               </h3>
-              <div className="flex flex-wrap gap-2 items-center">
+              <div className="flex flex-wrap items-center gap-2">
                 <Button size="sm">Small</Button>
                 <Button size="md">Medium</Button>
                 <Button size="lg">Large</Button>
@@ -47,8 +47,8 @@ export default function DesignSystem() {
 
             {/* Inputs */}
             <div>
-              <h3 className="text-lg font-semibold mb-3">Inputs</h3>
-              <div className="flex flex-col gap-4 max-w-sm">
+              <h3 className="mb-3 text-lg font-semibold">Inputs</h3>
+              <div className="flex max-w-sm flex-col gap-4">
                 <TextInput label="Text Input" placeholder="ENTREZ DU TEXT..." />
                 <TextInput
                   label="With Error"
@@ -70,7 +70,7 @@ export default function DesignSystem() {
 
             {/* Switch */}
             <div>
-              <h3 className="text-lg font-semibold mb-3">Switch</h3>
+              <h3 className="mb-3 text-lg font-semibold">Switch</h3>
               <div className="flex flex-wrap gap-4">
                 <Switch
                   label="Active"
@@ -94,10 +94,10 @@ export default function DesignSystem() {
           <div className="space-y-6">
             {/* Cards */}
             <div>
-              <h3 className="text-lg font-semibold mb-3">Cards (Paddings)</h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <h3 className="mb-3 text-lg font-semibold">Cards (Paddings)</h3>
+              <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                 <Card padding="none">
-                  <div className="p-4 bg-primary text-primary-text">
+                  <div className="bg-primary text-primary-text p-4">
                     No padding (Custom Content)
                   </div>
                 </Card>
@@ -116,25 +116,25 @@ export default function DesignSystem() {
           <div className="space-y-6">
             {/* Events Colors */}
             <div>
-              <h3 className="text-lg font-semibold mb-3">Event Colors</h3>
+              <h3 className="mb-3 text-lg font-semibold">Event Colors</h3>
               <div className="flex flex-col gap-3">
-                <div className="p-4 rounded border bg-secondary text-on-secondary border-secondary">
+                <div className="bg-secondary text-on-secondary border-secondary rounded border p-4">
                   Info: This is an information message.
                 </div>
-                <div className="p-4 rounded border bg-error text-on-error border-error">
+                <div className="bg-error text-on-error border-error rounded border p-4">
                   Error: Something went wrong.
                 </div>
               </div>
             </div>
 
             <div>
-              <h3 className="text-lg font-semibold mb-3">Spinner</h3>
-              <div className="flex gap-4 items-center">
+              <h3 className="mb-3 text-lg font-semibold">Spinner</h3>
+              <div className="flex items-center gap-4">
                 <Spinner />
               </div>
             </div>
             <div>
-              <h3 className="text-lg font-semibold mb-3">Skeleton</h3>
+              <h3 className="mb-3 text-lg font-semibold">Skeleton</h3>
               <div className="space-y-3">
                 <Skeleton className="h-8 w-3/4 rounded" />
                 <Skeleton className="h-4 w-full rounded" />
@@ -149,13 +149,13 @@ export default function DesignSystem() {
           <Title label="Navigation (Preview)" className="mb-4" size="h4" />
           <div className="space-y-6">
             <div>
-              <h3 className="text-lg font-semibold mb-3">Tabs</h3>
+              <h3 className="mb-3 text-lg font-semibold">Tabs</h3>
               <Tabs
                 tabs={["Vue 1", "Vue 2", "Vue 3"]}
                 activeTab={activeTab}
                 onChange={setActiveTab}
               />
-              <div className="p-4 mt-2 bg-surface-sunken rounded-lg">
+              <div className="bg-surface-sunken mt-2 rounded-lg p-4">
                 Contenu de la{" "}
                 {activeTab === 0
                   ? "Vue 1"

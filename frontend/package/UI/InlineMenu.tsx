@@ -18,12 +18,12 @@ export function InlineMenu({ tabs }: InlineMenuProps) {
   const isActive = (path: string) => pathname === path;
 
   return (
-    <nav className="flex overflow-x-auto pb-1 scrollbar-hide gap-4">
+    <nav className="scrollbar-hide flex gap-4 overflow-x-auto pb-1">
       {tabs.map((tab) => (
         <Link
           key={tab.name}
           href={tab.href}
-          className="relative py-1 px-4 font-bold whitespace-nowrap"
+          className="relative px-4 py-1 font-bold whitespace-nowrap"
         >
           <motion.span
             initial={{ opacity: 0, y: -10 }}
@@ -40,7 +40,7 @@ export function InlineMenu({ tabs }: InlineMenuProps) {
           {isActive(tab.href) && (
             <motion.div
               layoutId="activeTab"
-              className="absolute inset-0 bg-primary rounded-full"
+              className="bg-primary absolute inset-0 rounded-full"
               transition={{ type: "spring", stiffness: 380, damping: 30 }}
             />
           )}

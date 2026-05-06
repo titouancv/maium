@@ -3,14 +3,14 @@ import React from "react";
 // Un simple wrapper CSS-only pour swipe
 export function SwipeAction({ children, actionContent, onAction }: any) {
   return (
-    <div className="relative overflow-hidden w-full h-full group">
+    <div className="group relative h-full w-full overflow-hidden">
       <div
-        className="absolute inset-y-0 right-0 w-24 bg-error-50 text-error-600 border-l border-error-400 flex items-center justify-center translate-x-full group-hover:translate-x-0 transition-transform cursor-pointer"
+        className="bg-error-50 text-error-600 border-error-400 absolute inset-y-0 right-0 flex w-24 translate-x-full cursor-pointer items-center justify-center border-l transition-transform group-hover:translate-x-0"
         onClick={onAction}
       >
         {actionContent || "Supprimer"}
       </div>
-      <div className="group-hover:-translate-x-24 transition-transform bg-surface-50">
+      <div className="bg-surface-50 transition-transform group-hover:-translate-x-24">
         {children}
       </div>
     </div>

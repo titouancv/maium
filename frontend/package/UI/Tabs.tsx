@@ -12,12 +12,12 @@ export function Tabs({ tabs, activeTab, onChange }: TabsProps) {
     return activeTab === idx;
   };
   return (
-    <div className="flex overflow-x-auto hide-scrollbar gap-2">
+    <div className="hide-scrollbar flex gap-2 overflow-x-auto">
       {tabs.map((tab, idx) => (
         <button
           key={idx}
           onClick={() => onChange(idx)}
-          className={`relative py-1 px-4 font-bold whitespace-nowrap`}
+          className={`relative px-4 py-1 font-bold whitespace-nowrap`}
         >
           <motion.span
             initial={{ opacity: 0, y: -10 }}
@@ -32,7 +32,7 @@ export function Tabs({ tabs, activeTab, onChange }: TabsProps) {
           {isActive(idx) && (
             <motion.div
               layoutId="activeTab"
-              className="absolute inset-0 bg-primary rounded-full"
+              className="bg-primary absolute inset-0 rounded-full"
               transition={{ type: "spring", stiffness: 380, damping: 30 }}
             />
           )}
