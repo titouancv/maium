@@ -21,21 +21,13 @@ export function Title({
     h1: "text-3xl font-extrabold",
     h2: "text-2xl font-bold",
     h3: "text-xl font-bold",
-    h4: "text-lg font-medium",
-    h5: "text-base font-medium",
-    h6: "text-sm font-medium",
+    h4: "text-lg font-bold",
+    h5: "text-base font-bold",
+    h6: "text-sm font-bold",
   };
   const barColors = {
     primary: "bg-primary",
     neutral: "bg-txt",
-  };
-  const barSizes = {
-    h1: "w-32",
-    h2: "w-24",
-    h3: "w-16",
-    h4: "w-16",
-    h5: "w-16",
-    h6: "w-16",
   };
 
   const Tag = size;
