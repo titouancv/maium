@@ -1,17 +1,19 @@
 "use client";
 
 import React, { useState } from "react";
-import { Card } from "../package/UI/Card";
-import { Button } from "../package/UI/Button";
-import { SearchInput } from "../package/UI/SearchInput";
-import { Switch } from "../package/UI/Switch";
-import { TextInput } from "../package/UI/TextInput";
-import { PasswordInput } from "../package/UI/PasswordInput";
-import { Select } from "../package/UI/Select";
-import { Spinner } from "../package/UI/Spinner";
-import { Skeleton } from "../package/UI/Skeleton";
-import { Tabs } from "../package/UI/Tabs";
-import { Title } from "../package/UI/Title";
+import {
+  Card,
+  Button,
+  SearchInput,
+  Switch,
+  PasswordInput,
+  Select,
+  Spinner,
+  Skeleton,
+  Tabs,
+  Title,
+  TextInput,
+} from "@ui";
 
 export default function DesignSystem() {
   const [switchState, setSwitchState] = useState(true);
