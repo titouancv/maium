@@ -13,9 +13,9 @@ import {
   Tabs,
   Title,
   TextInput,
-} from "@ui";
+} from "@/components/ui";
 
-export default function DesignSystem() {
+export default function DesignSystemPreview() {
   const [switchState, setSwitchState] = useState(true);
   const [activeTab, setActiveTab] = useState(0);
 

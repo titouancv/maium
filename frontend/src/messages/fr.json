@@ -1,0 +1,12 @@
+{
+  "common": {
+    "save": "Sauvegarder",
+    "cancel": "Annuler",
+    "loading": "Chargement...",
+    "error": "Une erreur s'est produite."
+  },
+  "home": {
+    "title": "Bienvenue",
+    "description": "Ceci est la page d'accueil"
+  }
+}

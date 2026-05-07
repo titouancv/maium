@@ -1,0 +1,12 @@
+{
+  "common": {
+    "save": "Save",
+    "cancel": "Cancel",
+    "loading": "Loading...",
+    "error": "Something went wrong."
+  },
+  "home": {
+    "title": "Welcome",
+    "description": "This is the home page"
+  }
+}
