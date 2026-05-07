@@ -1,8 +1,9 @@
 import React from "react";
 
+export type TitleSize = "h1" | "h2" | "h3" | "h4" | "h5" | "h6";
 export interface TitleProps extends React.HTMLAttributes<HTMLHeadingElement> {
   variant?: "primary" | "neutral";
-  size?: "h1" | "h2" | "h3" | "h4" | "h5" | "h6";
+  size?: TitleSize;
   label: string;
 }
 

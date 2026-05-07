@@ -94,15 +94,19 @@ export default function DesignSystem() {
             {/* Cards */}
             <div>
               <h3 className="mb-3 text-lg font-semibold">Cards (Paddings)</h3>
-              <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+              <div className="flex flex-col gap-6">
                 <Card padding="none">
-                  <div className="bg-primary text-primary-text p-4">
-                    No padding (Custom Content)
-                  </div>
+                  <div>No padding (Custom Content)</div>
                 </Card>
-                <Card padding="sm">Small padding</Card>
-                <Card padding="md">Medium padding (default)</Card>
-                <Card padding="lg">Large padding</Card>
+                <Card padding="sm" cardTitle="Small padding">
+                  lorem ipsus
+                </Card>
+                <Card padding="md" cardTitle="Medium padding (default)">
+                  lorem ipsus
+                </Card>
+                <Card padding="lg" cardTitle="Large padding">
+                  lorem ipsus
+                </Card>
               </div>
             </div>
           </div>
