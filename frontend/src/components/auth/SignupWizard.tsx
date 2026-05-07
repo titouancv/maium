@@ -25,12 +25,12 @@ export const SignupWizard = () => {
   };
 
   return (
-    <div>
-      <div className="mb-6 flex gap-2">
+    <div className="flex flex-col gap-6">
+      <div className="flex gap-2">
         {[1, 2, 3, 4].map((s) => (
           <div
             key={s}
-            className={`h-2 flex-1 rounded-full ${
+            className={`size-2 rounded-full ${
               step >= s ? "bg-primary" : "bg-surface-400"
             }`}
           />

@@ -1,3 +1,4 @@
+"use client";
 import React, { useState, forwardRef } from "react";
 import { TextInput, TextInputProps } from "./TextInput";
 
