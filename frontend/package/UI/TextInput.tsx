@@ -14,7 +14,7 @@ export const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
         )}
         <input
           ref={ref}
-          className={`h-12 w-full transition-all ${error && "text-error"} hover:bg-surface-100 focus:bg-surface-100 rounded-xl px-2 py-1 outline-none ${className}`}
+          className={`h-12 w-full transition-all ${error ? "text-error" : "text-txt"} hover:bg-surface-100 focus:bg-surface-100 rounded-xl px-2 py-1 outline-none ${className}`}
           {...props}
         />
         {error && <span className="text-error pl-1 text-xs">{error}</span>}

@@ -47,9 +47,7 @@ export function Title({
           {label}
         </Tag>
       </div>
-      <div
-        className={`${barColors[variant]} ${barSizes[size]} h-1 rounded-full`}
-      ></div>
+      <div className={`${barColors[variant]} h-1 w-24 rounded-full`}></div>
     </div>
   );
 }

@@ -118,9 +118,6 @@ export default function DesignSystem() {
             <div>
               <h3 className="mb-3 text-lg font-semibold">Event Colors</h3>
               <div className="flex flex-col gap-3">
-                <div className="bg-secondary text-on-secondary border-secondary rounded border p-4">
-                  Info: This is an information message.
-                </div>
                 <div className="bg-error text-on-error border-error rounded border p-4">
                   Error: Something went wrong.
                 </div>
@@ -174,6 +171,7 @@ export default function DesignSystem() {
           { name: "About", href: "/about" },
           { name: "Contact", href: "/contact" },
         ]}
+        layoutId="inlineMenuActiveTab"
       />
     </div>
   );

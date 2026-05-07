@@ -32,7 +32,7 @@ export function Tabs({ tabs, activeTab, onChange }: TabsProps) {
           {isActive(idx) && (
             <motion.div
               layoutId="activeTab"
-              className="bg-primary absolute inset-0 rounded-full"
+              className="from-secondary-400 to-primary inset-shadow-light-100/60 absolute inset-0 rounded-full bg-radial from-10% to-90% shadow-md inset-shadow-sm"
               transition={{ type: "spring", stiffness: 380, damping: 30 }}
             />
           )}

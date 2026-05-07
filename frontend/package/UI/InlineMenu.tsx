@@ -11,9 +11,10 @@ interface Tab {
 
 interface InlineMenuProps {
   tabs: Tab[];
+  layoutId: string;
 }
 
-export function InlineMenu({ tabs }: InlineMenuProps) {
+export function InlineMenu({ tabs, layoutId }: InlineMenuProps) {
   const pathname = usePathname();
   const isActive = (path: string) => pathname === path;
 
@@ -39,8 +40,8 @@ export function InlineMenu({ tabs }: InlineMenuProps) {
           </motion.span>
           {isActive(tab.href) && (
             <motion.div
-              layoutId="activeTab"
-              className="bg-primary absolute inset-0 rounded-full"
+              layoutId={layoutId}
+              className="from-secondary-400 to-primary inset-shadow-light-100/60 absolute inset-0 rounded-full bg-radial from-10% to-90% shadow-md inset-shadow-sm"
               transition={{ type: "spring", stiffness: 380, damping: 30 }}
             />
           )}
