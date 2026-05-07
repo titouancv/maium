@@ -399,6 +399,7 @@ try {
 ## Styles (Tailwind CSS)
 
 - **Always design mobile-first**: use base classes for mobile styling first, then adapt for desktop using Tailwind breakpoints (`sm:`, `md:`, `lg:`).
+- **Always use custom semantic tokens** for colors. You must use classes like `bg-surface-50`, `border-brd-200`, `text-txt`, or `text-txt-muted` instead of default Tailwind colors (e.g., avoid `bg-white` or `text-gray-900`).
 - No inline CSS except as a justified exception.
 - Use `cn()` (clsx + tailwind-merge) for conditional classes.
 - Extract complex variants with `cva()` (class-variance-authority).
@@ -468,5 +469,6 @@ Before writing a page or component, verify:
 - [ ] New components created if they don't exist yet
 - [ ] All constants / paths declared in `src/constants/`
 - [ ] Design is mobile-first (base classes for mobile, breakpoints for desktop)
+- [ ] Custom semantic tokens are used for colors (`bg-surface-50`, `text-txt`, etc.)
 - [ ] No `any`, no empty `catch`, no hardcoded strings
 - [ ] Absolute imports via `@/`
