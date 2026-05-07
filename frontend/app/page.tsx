@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState } from "react";
-import { InlineMenu } from "../package/UI/InlineMenu";
 import { Card } from "../package/UI/Card";
 import { Button } from "../package/UI/Button";
 import { SearchInput } from "../package/UI/SearchInput";
@@ -165,7 +164,7 @@ export default function DesignSystem() {
         </section>
       </main>
 
-      <InlineMenu
+      <Tabs
         tabs={[
           { name: "Home", href: "/" },
           { name: "About", href: "/about" },
