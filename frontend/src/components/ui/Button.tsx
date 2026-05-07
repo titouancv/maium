@@ -28,7 +28,7 @@ export function Button({
   const sizes = {
     none: "text-base rounded-2xl",
     sm: "py-1 px-4 text-sm rounded-xl",
-    md: "py-2 px-6 text-base rounded-2xl",
+    md: "py-2 px-6 text-md rounded-2xl",
     lg: "py-2 px-8 text-lg rounded-2xl",
   };
 

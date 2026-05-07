@@ -7,6 +7,44 @@
   },
   "home": {
     "title": "Welcome",
-    "description": "This is the home page"
+    "description": "This is the home page",
+    "signupButton": "Sign up",
+    "userData": "Your information",
+    "email": "Email",
+    "name": "Full name",
+    "pseudo": "Username",
+    "dob": "Date of birth"
+  },
+  "auth": {
+    "signup": {
+      "title": "Create an account",
+      "step1": {
+        "emailLabel": "Email address",
+        "emailPlaceholder": "Enter your email",
+        "passwordLabel": "Password",
+        "passwordPlaceholder": "Enter your password",
+        "nextButton": "Next"
+      },
+      "step2": {
+        "firstNameLabel": "First name",
+        "firstNamePlaceholder": "e.g. John",
+        "lastNameLabel": "Last name",
+        "lastNamePlaceholder": "e.g. Doe",
+        "nextButton": "Next",
+        "backButton": "Back"
+      },
+      "step3": {
+        "pseudoLabel": "Username",
+        "pseudoPlaceholder": "Choose a username",
+        "nextButton": "Next",
+        "backButton": "Back"
+      },
+      "step4": {
+        "dobLabel": "Date of birth",
+        "dobPlaceholder": "YYYY-MM-DD",
+        "submitButton": "Complete",
+        "backButton": "Back"
+      }
+    }
   }
 }

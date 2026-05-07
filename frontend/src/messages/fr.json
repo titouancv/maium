@@ -1,12 +1,50 @@
 {
   "common": {
-    "save": "Sauvegarder",
+    "save": "Enregistrer",
     "cancel": "Annuler",
     "loading": "Chargement...",
     "error": "Une erreur s'est produite."
   },
   "home": {
     "title": "Bienvenue",
-    "description": "Ceci est la page d'accueil"
+    "description": "Ceci est la page d'accueil",
+    "signupButton": "Créer un compte",
+    "userData": "Vos informations",
+    "email": "Email",
+    "name": "Nom complet",
+    "pseudo": "Pseudo",
+    "dob": "Date de naissance"
+  },
+  "auth": {
+    "signup": {
+      "title": "Créer un compte",
+      "step1": {
+        "emailLabel": "Adresse email",
+        "emailPlaceholder": "Entrez votre email",
+        "passwordLabel": "Mot de passe",
+        "passwordPlaceholder": "Entrez votre mot de passe",
+        "nextButton": "Suivant"
+      },
+      "step2": {
+        "firstNameLabel": "Prénom",
+        "firstNamePlaceholder": "ex: Jean",
+        "lastNameLabel": "Nom",
+        "lastNamePlaceholder": "ex: Dupont",
+        "nextButton": "Suivant",
+        "backButton": "Retour"
+      },
+      "step3": {
+        "pseudoLabel": "Pseudo",
+        "pseudoPlaceholder": "Choisissez un pseudo",
+        "nextButton": "Suivant",
+        "backButton": "Retour"
+      },
+      "step4": {
+        "dobLabel": "Date de naissance",
+        "dobPlaceholder": "AAAA-MM-JJ",
+        "submitButton": "Terminer",
+        "backButton": "Retour"
+      }
+    }
   }
 }
