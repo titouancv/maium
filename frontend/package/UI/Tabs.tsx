@@ -25,7 +25,7 @@ export function Tabs({
   const pathname = usePathname();
 
   return (
-    <div className="hide-scrollbar flex gap-2 overflow-x-auto pb-1">
+    <div className="hide-scrollbar flex gap-2 overflow-x-auto px-1">
       {tabs.map((tab, idx) => {
         const isString = typeof tab === "string";
         const name = isString ? tab : tab.name;

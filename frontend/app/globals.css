@@ -83,10 +83,10 @@
   --color-inverse-700: var(--dark-100);
   --color-inverse-800: var(--dark-50);
 
-  --color-txt: var(--light-800);
-  --color-txt-muted: var(--light-600);
-  --color-txt-placeholder: var(--light-400);
-  --color-txt-inverse: var(--light-50);
+  --color-txt: var(--color-inverse-50);
+  --color-txt-muted: var(--color-inverse-400);
+  --color-txt-placeholder: var(--color-inverse-600);
+  --color-txt-inverse: var(--color-surface-50);
 
   --font-nohemi: "Nohemi", sans-serif;
 }
@@ -121,10 +121,10 @@
     --color-inverse-700: var(--light-700);
     --color-inverse-800: var(--light-800);
 
-    --color-txt: var(--dark-50);
-    --color-txt-muted: var(--dark-200);
-    --color-txt-placeholder: var(--dark-400);
-    --color-txt-inverse: var(--dark-900);
+    --color-txt: var(--color-inverse-50);
+    --color-txt-muted: var(--color-inverse-200);
+    --color-txt-placeholder: var(--color-inverse-400);
+    --color-txt-inverse: var(--color-surface-50);
 
     --font-cabinet-grotesk: "CabinetGrotesk", sans-serif;
   }
