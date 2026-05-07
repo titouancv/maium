@@ -232,7 +232,7 @@ Page files (`app/[locale]/.../page.tsx`) are **layout templates only**. They:
 - Pass props to components
 - Compose components from `src/components/`
 
-They do **not** contain raw JSX like `<div>`, `<p>`, `<button>`, etc. directly — those live in components.
+They do **not** contain raw JSX like `<p>`, `<button>`, etc. directly except `<div>` — those live in components.
 
 ```tsx
 // ✅ Correct — page is a template
@@ -248,11 +248,11 @@ export default async function DashboardPage() {
   const stats = await fetchDashboardStats();
 
   return (
-    <>
+    <div className="flex">
       <DashboardHeader title={t("title")} />
       <StatsGrid stats={stats} />
       <RecentActivity />
-    </>
+    </div>
   );
 }
 ```
@@ -398,6 +398,7 @@ try {
 
 ## Styles (Tailwind CSS)
 
+- **Always design mobile-first**: use base classes for mobile styling first, then adapt for desktop using Tailwind breakpoints (`sm:`, `md:`, `lg:`).
 - No inline CSS except as a justified exception.
 - Use `cn()` (clsx + tailwind-merge) for conditional classes.
 - Extract complex variants with `cva()` (class-variance-authority).
@@ -466,5 +467,6 @@ Before writing a page or component, verify:
 - [ ] Page delegates UI to components in `src/components/`
 - [ ] New components created if they don't exist yet
 - [ ] All constants / paths declared in `src/constants/`
+- [ ] Design is mobile-first (base classes for mobile, breakpoints for desktop)
 - [ ] No `any`, no empty `catch`, no hardcoded strings
 - [ ] Absolute imports via `@/`
