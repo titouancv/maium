@@ -3,13 +3,13 @@ import { Title, TitleSize } from "./Title";
 
 export interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
   padding?: "none" | "sm" | "md" | "lg";
-  cardTitle?: string;
+  title?: string;
 }
 
-export function Card({
+export function Section({
   className = "",
   padding = "md",
-  cardTitle,
+  title,
   children,
   ...props
 }: CardProps) {
@@ -21,9 +21,9 @@ export function Card({
   };
 
   return (
-    <div className={` ${className} flex flex-col gap-4`} {...props}>
-      {cardTitle && <Title size={cardTitleSize[padding]} label={cardTitle} />}
+    <section className={` ${className} flex flex-col gap-4`} {...props}>
+      {title && <Title size={cardTitleSize[padding]} label={title} />}
       {children}
-    </div>
+    </section>
   );
 }
