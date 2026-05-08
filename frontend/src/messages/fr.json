@@ -20,22 +20,22 @@
       "title": "Créer un compte",
       "step1": {
         "emailLabel": "Adresse email",
-        "emailPlaceholder": "Entrez votre email",
+        "emailPlaceholder": "Adresse email",
         "passwordLabel": "Mot de passe",
-        "passwordPlaceholder": "Entrez votre mot de passe",
+        "passwordPlaceholder": "Mot de passe",
         "nextButton": "Suivant"
       },
       "step2": {
         "firstNameLabel": "Prénom",
-        "firstNamePlaceholder": "ex: Jean",
+        "firstNamePlaceholder": "Prénom",
         "lastNameLabel": "Nom",
-        "lastNamePlaceholder": "ex: Dupont",
+        "lastNamePlaceholder": "Nom",
         "nextButton": "Suivant",
         "backButton": "Retour"
       },
       "step3": {
         "pseudoLabel": "Pseudo",
-        "pseudoPlaceholder": "Choisissez un pseudo",
+        "pseudoPlaceholder": "Pseudo",
         "nextButton": "Suivant",
         "backButton": "Retour"
       },

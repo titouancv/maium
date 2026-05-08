@@ -225,6 +225,14 @@
   --color-error-900: var(--error-900);
 }
 
+@utility bg-main-gradient {
+  background-image: radial-gradient(
+    circle,
+    var(--color-secondary-400) 10%,
+    var(--color-primary) 90%
+  );
+}
+
 /* ============================================================
    BASE
    ============================================================ */

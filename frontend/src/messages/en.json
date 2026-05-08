@@ -20,22 +20,22 @@
       "title": "Create an account",
       "step1": {
         "emailLabel": "Email address",
-        "emailPlaceholder": "Enter your email",
+        "emailPlaceholder": "Email address",
         "passwordLabel": "Password",
-        "passwordPlaceholder": "Enter your password",
+        "passwordPlaceholder": "Password",
         "nextButton": "Next"
       },
       "step2": {
         "firstNameLabel": "First name",
-        "firstNamePlaceholder": "e.g. John",
+        "firstNamePlaceholder": "First name",
         "lastNameLabel": "Last name",
-        "lastNamePlaceholder": "e.g. Doe",
+        "lastNamePlaceholder": "Last name",
         "nextButton": "Next",
         "backButton": "Back"
       },
       "step3": {
         "pseudoLabel": "Username",
-        "pseudoPlaceholder": "Choose a username",
+        "pseudoPlaceholder": "Username",
         "nextButton": "Next",
         "backButton": "Back"
       },

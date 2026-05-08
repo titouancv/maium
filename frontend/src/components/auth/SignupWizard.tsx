@@ -31,12 +31,11 @@ export const SignupWizard = () => {
           <div
             key={s}
             className={`size-2 rounded-full ${
-              step >= s ? "bg-primary" : "bg-surface-400"
+              step >= s ? "bg-main-gradient" : "bg-surface-600"
             }`}
           />
         ))}
       </div>
-
       {step === 1 && <StepEmailPassword onNext={nextStep} />}
       {step === 2 && <StepName onNext={nextStep} onBack={() => setStep(1)} />}
       {step === 3 && <StepPseudo onNext={nextStep} onBack={() => setStep(2)} />}

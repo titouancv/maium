@@ -5,7 +5,8 @@ import { useUserStore } from "@/stores/useUserStore";
 import { Button } from "@/components/ui/Button";
 import { ROUTES } from "@/constants/routes";
 import { useRouter } from "@/i18n/navigation";
-import { Title } from "../ui";
+import { Section, Title } from "../ui";
+import { Card } from "../ui/Card";
 
 export const HomeContent = () => {
   const t = useTranslations("home");
@@ -16,23 +17,24 @@ export const HomeContent = () => {
     <div className="bg-surface-50 flex min-h-screen flex-col items-center justify-center gap-6 p-4">
       <Title label={t("title")} size="h1" />
       {user && user.email ? (
-        <div className="border-brd-200 bg-surface-100 rounded-2xl border p-6 shadow-sm">
-          <Title label={t("userData")} size="h2" />
-          <ul className="text-txt space-y-2">
-            <li>
-              <strong>{t("email")}:</strong> {user.email}
-            </li>
-            <li>
-              <strong>{t("name")}:</strong> {user.firstName} {user.lastName}
-            </li>
-            <li>
-              <strong>{t("pseudo")}:</strong> {user.pseudo}
-            </li>
-            <li>
-              <strong>{t("dob")}:</strong> {user.dob}
-            </li>
-          </ul>
-        </div>
+        <Card padding="lg" variant="inverse" className="max-w-md">
+          <Section title={t("userData")} padding="lg">
+            <ul className="space-y-2">
+              <li>
+                <strong>{t("email")}:</strong> {user.email}
+              </li>
+              <li>
+                <strong>{t("name")}:</strong> {user.firstName} {user.lastName}
+              </li>
+              <li>
+                <strong>{t("pseudo")}:</strong> {user.pseudo}
+              </li>
+              <li>
+                <strong>{t("dob")}:</strong> {user.dob}
+              </li>
+            </ul>
+          </Section>
+        </Card>
       ) : (
         <Button onClick={() => router.push(ROUTES.SIGNUP)}>
           {t("signupButton")}
