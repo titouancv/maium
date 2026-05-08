@@ -14,7 +14,7 @@ export function Button({
   ...props
 }: ButtonProps) {
   const baseStyle =
-    "cursor-pointer inline-flex items-center justify-center shadow-md inset-shadow-sm font-bold transition-colors duration-300 ease-in-out active:scale-95 disabled:opacity-50 disabled:pointer-events-none";
+    "cursor-pointer inline-flex items-center justify-center shadow-md inset-shadow-sm transition-colors duration-300 ease-in-out active:scale-95 disabled:opacity-50 disabled:pointer-events-none";
   const variants = {
     primary:
       "bg-radial from-secondary-400 from-10% to-primary to-90% text-on-primary hover:from-primary hover:to-secondary-400 inset-shadow-light-100/60",

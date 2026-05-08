@@ -16,7 +16,7 @@ export const PasswordInput = forwardRef<HTMLInputElement, TextInputProps>(
         <button
           type="button"
           onClick={() => setShow(!show)}
-          className="text-txt-muted absolute top-[34px] right-3 flex h-8 w-8 items-center justify-center"
+          className="text-txt-muted absolute top-[10px] right-3 flex h-8 w-8 items-center justify-center"
         >
           {show ? "🙈" : "👁️"}
         </button>

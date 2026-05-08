@@ -53,15 +53,10 @@ export const StepName = ({
         {...register("lastName")}
       />
       <div className="mt-4 flex gap-2">
-        <Button
-          variant="outline"
-          type="button"
-          onClick={handleBack}
-          className="w-full"
-        >
+        <Button variant="outline" type="button" onClick={handleBack} size="lg">
           {t("backButton")}
         </Button>
-        <Button type="submit" className="w-full">
+        <Button type="submit" size="lg">
           {t("nextButton")}
         </Button>
       </div>

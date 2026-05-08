@@ -45,7 +45,7 @@ export const StepEmailPassword = ({
         error={errors.password?.message as string}
         {...register("password")}
       />
-      <Button type="submit" className="mt-4 w-full">
+      <Button type="submit" className="mt-4 w-full" size="lg">
         {t("nextButton")}
       </Button>
     </form>

@@ -20,11 +20,11 @@ export function Title({
   };
   const sizes = {
     h1: "text-3xl font-extrabold",
-    h2: "text-2xl font-bold",
-    h3: "text-xl font-bold",
-    h4: "text-lg font-bold",
-    h5: "text-base font-bold",
-    h6: "text-sm font-bold",
+    h2: "text-2xl",
+    h3: "text-xl",
+    h4: "text-lg",
+    h5: "text-base",
+    h6: "text-sm",
   };
   const barColors = {
     primary: "bg-primary",

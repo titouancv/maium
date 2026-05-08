@@ -5,6 +5,7 @@ import { useUserStore } from "@/stores/useUserStore";
 import { Button } from "@/components/ui/Button";
 import { ROUTES } from "@/constants/routes";
 import { useRouter } from "@/i18n/navigation";
+import { Title } from "../ui";
 
 export const HomeContent = () => {
   const t = useTranslations("home");
@@ -12,13 +13,11 @@ export const HomeContent = () => {
   const router = useRouter();
 
   return (
-    <div className="bg-surface-50 flex min-h-screen flex-col items-center justify-center p-4">
-      <h1 className="text-txt mb-4 text-3xl font-bold">{t("title")}</h1>
-      <p className="text-txt-muted mb-8">{t("description")}</p>
-
+    <div className="bg-surface-50 flex min-h-screen flex-col items-center justify-center gap-6 p-4">
+      <Title label={t("title")} size="h1" />
       {user && user.email ? (
         <div className="border-brd-200 bg-surface-100 rounded-2xl border p-6 shadow-sm">
-          <h2 className="mb-4 text-xl font-semibold">{t("userData")}</h2>
+          <Title label={t("userData")} size="h2" />
           <ul className="text-txt space-y-2">
             <li>
               <strong>{t("email")}:</strong> {user.email}

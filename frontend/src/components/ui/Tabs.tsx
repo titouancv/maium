@@ -60,7 +60,7 @@ export function Tabs({
             <Link
               key={name}
               href={href}
-              className="relative px-4 py-1 font-bold whitespace-nowrap"
+              className="relative px-4 py-1 whitespace-nowrap"
             >
               {content}
             </Link>
@@ -71,7 +71,7 @@ export function Tabs({
           <button
             key={idx}
             onClick={() => onChange?.(idx)}
-            className="relative px-4 py-1 font-bold whitespace-nowrap"
+            className="relative px-4 py-1 whitespace-nowrap"
           >
             {content}
           </button>

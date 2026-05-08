@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import "../globals.css";
-import { cabinetGrotesk, nohemi } from "../fonts";
+import { cabinetGrotesk } from "../fonts";
 import { NextIntlClientProvider } from "next-intl";
 import { getMessages } from "next-intl/server";
 import { notFound } from "next/navigation";
@@ -28,9 +28,9 @@ export default async function RootLayout({
   return (
     <html
       lang={locale}
-      className={`${nohemi.variable} ${cabinetGrotesk.variable} h-full antialiased`}
+      className={`${cabinetGrotesk.variable} h-full antialiased`}
     >
-      <body className="flex min-h-full flex-col">
+      <body className="flex min-h-full flex-col font-bold">
         <NextIntlClientProvider messages={messages}>
           {children}
         </NextIntlClientProvider>
