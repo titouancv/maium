@@ -21,15 +21,15 @@ export function Button({
     inverse:
       "bg-inverse-50 text-txt-inverse hover:bg-inverse-200 inset-shadow-surface-50/80 ",
     outline:
-      " text-txt hover:bg-surface-200 inset-shadow-primary-200/80 dark:inset-shadow-primary-400/80",
+      " text-txt border-b border-brd-200 hover:bg-surface-200 inset-shadow-primary-200/80 dark:inset-shadow-primary-400/80",
     ghost:
       "bg-transparent text-txt hover:bg-surface-200 shadow-none inset-shadow-transparent",
   };
   const sizes = {
     none: "text-base rounded-2xl",
     sm: "py-1 px-4 text-sm rounded-xl",
-    md: "py-2 px-6 text-md rounded-2xl",
-    lg: "py-2 px-8 text-lg rounded-2xl",
+    md: "pt-2 pb-1 px-6 text-md rounded-2xl",
+    lg: "pt-2 pb-1 px-8 text-lg rounded-2xl",
   };
 
   return (
