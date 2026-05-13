@@ -4,4 +4,6 @@ export const ROUTES = {
 
 export const CONFIG = {} as const;
 
-export const API = {} as const;
+export const API = {
+  HEALTH: "/api/health",
+} as const;
