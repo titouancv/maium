@@ -15,25 +15,25 @@ Main ticket title. Always required.
 
 ### Type (select)
 
-| Value               | Color  | Technical → PR? |
-| ------------------- | ------ | --------------- |
-| `🐛 Bug`            | Red    | ✅ Yes          |
-| `✨ Fonctionnalité` | Purple | ✅ Yes          |
-| `❓ Support`        | Blue   | ❌ No           |
-| `📝 Documentation`  | Gray   | ❌ No           |
-| `🔧 Amélioration`   | Orange | ✅ Yes          |
+| Value      | Color  | Technical → PR? |
+| ---------- | ------ | --------------- |
+| `Fix`      | Red    | ✅ Yes          |
+| `Feat`     | Purple | ✅ Yes          |
+| `Refactor` | Blue   | ✅ Yes          |
+| `Debt`     | Gray   | ❌ No           |
+| `Chore`    | Orange | ❌ No           |
 
-### Status (select)
+### Status (status)
 
-| Value           | Meaning                    |
-| --------------- | -------------------------- |
-| `🆕 Nouveau`    | Newly created, not started |
-| `🔄 En cours`   | In development             |
-| `✅ Résolu`     | Done                       |
-| `❌ Fermé`      | Abandoned                  |
-| `⏸️ En attente` | Blocked                    |
+| Value             | Group       | Meaning                    |
+| ----------------- | ----------- | -------------------------- |
+| `Not started`     | to_do       | Newly created, not started |
+| `Work in progress`| in_progress | In development             |
+| `On hold`         | in_progress | Blocked / waiting          |
+| `Done`            | complete    | Finished                   |
+| `Closed`          | complete    | Abandoned                  |
 
-Always use `🆕 Nouveau` for tickets created from a transcript.
+Always use `Not started` for tickets created from a transcript.
 
 ### Priority (select)
 
@@ -78,16 +78,9 @@ Available values: `frontend`, `backend`, `design`, `infra`, `urgent`
 
 Pass as a stringified JSON array, e.g. `"[\"backend\", \"urgent\"]"`
 
-### Date de création (date)
+### created at (created_time)
 
-Use today's date. Format:
-
-```json
-{
-  "date:Date de création:start": "2026-05-13",
-  "date:Date de création:is_datetime": 0
-}
-```
+Auto-managed by Notion. Do not set.
 
 ### 🔗 GitHub Link (url)
 
@@ -114,14 +107,12 @@ Auto-managed. Do not set.
     {
       "properties": {
         "Title": "Fix dashboard display bug on mobile",
-        "Type": "🐛 Bug",
+        "Type": "Fix",
         "Priority": "P2",
         "Difficulty": "D3",
         "Time": "T3",
-        "Status": "🆕 Nouveau",
-        "Tags": "[\"frontend\", \"urgent\"]",
-        "date:Date de création:start": "2026-05-13",
-        "date:Date de création:is_datetime": 0
+        "Status": "Not started",
+        "Tags": "[\"frontend\", \"urgent\"]"
       },
       "content": "## 📌 What\nThe dashboard does not render correctly on mobile screens. Charts overflow and the navigation bar overlaps with the content area.\n\n## 🎯 Why\nSeveral users reported this issue during the last sprint review. It degrades the mobile experience significantly, which accounts for 40% of our traffic.\n\n## ✅ To-do list\n- [ ] Reproduce the bug on a mobile viewport (375px)\n- [ ] Identify the CSS root cause\n- [ ] Implement responsive fix\n- [ ] Test on iOS Safari and Android Chrome\n- [ ] Update snapshot tests\n- [ ] Submit for code review"
     }
