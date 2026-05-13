@@ -44,7 +44,9 @@
         "dobPlaceholder": "YYYY-MM-DD",
         "submitButton": "Complete",
         "backButton": "Back"
-      }
+      },
+      "duplicateEmailError": "This email address is already in use.",
+      "signupError": "An error occurred during signup. Please try again."
     }
   }
 }
