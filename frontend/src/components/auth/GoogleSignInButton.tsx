@@ -16,7 +16,7 @@ export const GoogleSignInButton = () => {
     const { error: authError } = await supabase.auth.signInWithOAuth({
       provider: "google",
       options: {
-        redirectTo: `${window.location.origin}${ROUTES.AUTH_CALLBACK}`,
+        redirectTo: `${window.location.origin}${ROUTES.AUTH_CALLBACK}?next=${ROUTES.SIGNUP}`,
       },
     });
     if (authError) {

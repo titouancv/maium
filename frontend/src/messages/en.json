@@ -46,6 +46,7 @@
         "backButton": "Back"
       },
       "duplicateEmailError": "This email address is already in use.",
+      "duplicatePseudoError": "This username is already in use.",
       "signupError": "An error occurred during signup. Please try again.",
       "oauth": {
         "googleButton": "Continue with Google",

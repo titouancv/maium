@@ -46,6 +46,7 @@
         "backButton": "Retour"
       },
       "duplicateEmailError": "Cette adresse e-mail est déjà utilisée.",
+      "duplicatePseudoError": "Ce pseudo est déjà utilisé.",
       "signupError": "Une erreur est survenue lors de l'inscription. Veuillez réessayer.",
       "oauth": {
         "googleButton": "Continuer avec Google",

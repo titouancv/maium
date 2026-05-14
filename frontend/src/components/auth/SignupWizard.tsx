@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
 import { useRouter } from "@/i18n/navigation";
 import { useUserStore, type UserState } from "@/stores/useUserStore";
@@ -11,6 +11,7 @@ import { StepPseudo } from "./StepPseudo";
 import { StepDob } from "./StepDob";
 import { GoogleSignInButton } from "./GoogleSignInButton";
 import { AppleSignInButton } from "./AppleSignInButton";
+import { createBrowserClient } from "@/lib/supabase";
 
 export const SignupWizard = () => {
   const [step, setStep] = useState(1);
@@ -18,6 +19,33 @@ export const SignupWizard = () => {
   const router = useRouter();
   const t = useTranslations("auth.signup");
   const { setUser, user } = useUserStore();
+
+  useEffect(() => {
+    const supabase = createBrowserClient();
+    supabase.auth.getUser().then(async ({ data: { user: authUser } }) => {
+      if (!authUser) return;
+
+      const { data: profile } = await supabase
+        .from("users")
+        .select("pseudo")
+        .eq("id", authUser.id)
+        .single();
+
+      if (profile?.pseudo) {
+        router.push(ROUTES.HOME);
+        return;
+      }
+
+      setUser({
+        supabaseId: authUser.id,
+        email: authUser.email,
+        firstName: authUser.user_metadata?.given_name ?? "",
+        lastName: authUser.user_metadata?.family_name ?? "",
+      });
+      setStep(2);
+    });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const nextStep = (data: Partial<UserState>) => {
     setUser(data);
@@ -28,26 +56,38 @@ export const SignupWizard = () => {
   const finish = async (data: Partial<UserState>) => {
     setUser(data);
     const merged = { ...user, ...data };
+    const isOAuth = !!merged.supabaseId;
 
-    const res = await fetch(API.USERS, {
-      method: "POST",
+    const res = await fetch(isOAuth ? API.USERS_ME : API.USERS, {
+      method: isOAuth ? "PATCH" : "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        email: merged.email,
-        password: merged.password,
-        firstName: merged.firstName,
-        lastName: merged.lastName,
-        pseudo: merged.pseudo,
-        dob: merged.dob,
-      }),
+      body: JSON.stringify(
+        isOAuth
+          ? {
+              firstName: merged.firstName,
+              lastName: merged.lastName,
+              pseudo: merged.pseudo,
+              dob: merged.dob,
+            }
+          : {
+              email: merged.email,
+              password: merged.password,
+              firstName: merged.firstName,
+              lastName: merged.lastName,
+              pseudo: merged.pseudo,
+              dob: merged.dob,
+            }
+      ),
     });
 
     if (res.ok) {
-      const json = await res.json();
-      setUser({ supabaseId: json.id });
+      if (!isOAuth) {
+        const json = await res.json();
+        setUser({ supabaseId: json.id });
+      }
       router.push(ROUTES.HOME);
     } else if (res.status === 409) {
-      setError(t("duplicateEmailError"));
+      setError(isOAuth ? t("duplicatePseudoError") : t("duplicateEmailError"));
     } else {
       setError(t("signupError"));
     }

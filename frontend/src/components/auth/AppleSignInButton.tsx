@@ -16,7 +16,7 @@ export const AppleSignInButton = () => {
     const { error: authError } = await supabase.auth.signInWithOAuth({
       provider: "apple",
       options: {
-        redirectTo: `${window.location.origin}${ROUTES.AUTH_CALLBACK}`,
+        redirectTo: `${window.location.origin}${ROUTES.AUTH_CALLBACK}?next=${ROUTES.SIGNUP}`,
       },
     });
     if (authError) {

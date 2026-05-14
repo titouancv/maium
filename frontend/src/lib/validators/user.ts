@@ -10,3 +10,12 @@ export const CreateUserSchema = z.object({
 });
 
 export type CreateUserInput = z.infer<typeof CreateUserSchema>;
+
+export const UpdateUserSchema = z.object({
+  firstName: z.string().min(1).max(50),
+  lastName: z.string().min(1).max(50),
+  pseudo: z.string().min(2).max(30),
+  dob: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
+});
+
+export type UpdateUserInput = z.infer<typeof UpdateUserSchema>;
