@@ -2,9 +2,8 @@
 
 import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/Button";
-import { ROUTES } from "@/constants/routes";
+import { API, ROUTES } from "@/constants";
 import { useRouter } from "@/i18n/navigation";
-import { createBrowserClient } from "@/lib/supabase";
 import { Section, Title } from "../ui";
 import { Card } from "../ui/Card";
 
@@ -25,17 +24,15 @@ export const HomeContent = ({ user }: HomeContentProps) => {
   const router = useRouter();
 
   const handleLogout = async () => {
-    const supabase = createBrowserClient();
-    await supabase.auth.signOut();
+    await fetch(API.AUTH_LOGOUT, { method: "POST" });
     router.push(ROUTES.HOME);
     router.refresh();
   };
 
   return (
-    <div className="bg-surface-50 flex min-h-screen flex-col items-center justify-center gap-6 p-4">
-      <Title label={t("title")} size="h1" />
+    <div className="flex min-h-screen flex-col items-center justify-center gap-6">
       {user ? (
-        <Card padding="lg" variant="ghost" className="max-w-md">
+        <div className="flex w-full flex-col items-start gap-6 md:max-w-sm">
           <Section title={t("userData")} padding="lg">
             <ul className="space-y-2">
               <li>
@@ -55,11 +52,14 @@ export const HomeContent = ({ user }: HomeContentProps) => {
           <Button variant="outline" onClick={handleLogout}>
             {t("logoutButton")}
           </Button>
-        </Card>
+        </div>
       ) : (
-        <Button onClick={() => router.push(ROUTES.SIGNUP)}>
-          {t("signupButton")}
-        </Button>
+        <>
+          <Title label={t("title")} size="h1" />
+          <Button onClick={() => router.push(ROUTES.SIGNUP)}>
+            {t("signupButton")}
+          </Button>
+        </>
       )}
     </div>
   );
