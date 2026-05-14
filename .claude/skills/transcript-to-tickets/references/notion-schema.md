@@ -25,13 +25,13 @@ Main ticket title. Always required.
 
 ### Status (status)
 
-| Value             | Group       | Meaning                    |
-| ----------------- | ----------- | -------------------------- |
-| `Not started`     | to_do       | Newly created, not started |
-| `Work in progress`| in_progress | In development             |
-| `On hold`         | in_progress | Blocked / waiting          |
-| `Done`            | complete    | Finished                   |
-| `Closed`          | complete    | Abandoned                  |
+| Value              | Group       | Color  | Meaning                    |
+| ------------------ | ----------- | ------ | -------------------------- |
+| `Not started`      | to_do       | Yellow | Newly created, not started |
+| `Work in progress` | in_progress | Blue   | In development             |
+| `On hold`          | in_progress | Purple | Blocked / waiting          |
+| `Done`             | complete    | Green  | Finished                   |
+| `Closed`           | complete    | Red    | Abandoned                  |
 
 Always use `Not started` for tickets created from a transcript.
 
@@ -78,17 +78,41 @@ Available values: `frontend`, `backend`, `design`, `infra`, `urgent`
 
 Pass as a stringified JSON array, e.g. `"[\"backend\", \"urgent\"]"`
 
-### created at (created_time)
+### Date (date)
 
-Auto-managed by Notion. Do not set.
+Optional due date or date range for the ticket. Set via `date:Date:start` and optionally `date:Date:end`.
 
-### 🔗 GitHub Link (url)
+### GitHub Link (url)
 
-URL of the associated GitHub Pull Request. Filled after PR creation.
+URL of the associated GitHub Pull Request or issue. Description: "Lien vers le dépôt, issue ou PR GitHub Maium associé". Filled after PR creation.
 
 ### Assigned To (person)
 
 JSON array of Notion user IDs. Leave empty if not mentioned in the transcript.
+
+### Blocks (relation)
+
+Relation to other tickets in the same database that this ticket blocks. Do not set on creation.
+
+### Blocked by (relation)
+
+Relation to other tickets in the same database that block this ticket. Do not set on creation.
+
+### Created on (created_time)
+
+Auto-managed by Notion. Do not set.
+
+### Last modification (last_edited_time)
+
+Auto-managed by Notion. Do not set.
+
+### Is done (formula)
+
+Auto-calculated by Notion. Do not set.
+
+### Pending blockers (rollup)
+
+Auto-calculated rollup of unresolved blockers. Do not set.
 
 ### ROI (formula)
 
