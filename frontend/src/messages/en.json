@@ -13,7 +13,8 @@
     "email": "Email",
     "name": "Full name",
     "pseudo": "Username",
-    "dob": "Date of birth"
+    "dob": "Date of birth",
+    "logoutButton": "Sign out"
   },
   "auth": {
     "signup": {

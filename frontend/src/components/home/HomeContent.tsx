@@ -4,6 +4,7 @@ import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/Button";
 import { ROUTES } from "@/constants/routes";
 import { useRouter } from "@/i18n/navigation";
+import { createBrowserClient } from "@/lib/supabase";
 import { Section, Title } from "../ui";
 import { Card } from "../ui/Card";
 
@@ -22,6 +23,12 @@ interface HomeContentProps {
 export const HomeContent = ({ user }: HomeContentProps) => {
   const t = useTranslations("home");
   const router = useRouter();
+
+  const handleLogout = async () => {
+    const supabase = createBrowserClient();
+    await supabase.auth.signOut();
+    router.refresh();
+  };
 
   return (
     <div className="bg-surface-50 flex min-h-screen flex-col items-center justify-center gap-6 p-4">
@@ -44,6 +51,9 @@ export const HomeContent = ({ user }: HomeContentProps) => {
               </li>
             </ul>
           </Section>
+          <Button variant="outline" onClick={handleLogout}>
+            {t("logoutButton")}
+          </Button>
         </Card>
       ) : (
         <Button onClick={() => router.push(ROUTES.SIGNUP)}>
