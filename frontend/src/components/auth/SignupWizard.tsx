@@ -44,7 +44,7 @@ export const SignupWizard = () => {
       });
       setStep(2);
     });
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const nextStep = (data: Partial<UserState>) => {
@@ -76,7 +76,7 @@ export const SignupWizard = () => {
               lastName: merged.lastName,
               pseudo: merged.pseudo,
               dob: merged.dob,
-            }
+            },
       ),
     });
 
@@ -109,14 +109,14 @@ export const SignupWizard = () => {
         <>
           <div className="flex flex-col gap-3">
             <GoogleSignInButton />
-            <AppleSignInButton />
+            {/* <AppleSignInButton /> */}
           </div>
-          <div className="flex items-center gap-3">
+          {/* <div className="flex items-center gap-3">
             <div className="h-px flex-1 bg-brd-200" />
             <span className="text-sm text-txt-muted">{t("oauth.orDivider")}</span>
             <div className="h-px flex-1 bg-brd-200" />
           </div>
-          <StepEmailPassword onNext={nextStep} />
+          <StepEmailPassword onNext={nextStep} /> */}
         </>
       )}
       {step === 2 && <StepName onNext={nextStep} onBack={() => setStep(1)} />}
