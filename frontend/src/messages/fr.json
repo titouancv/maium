@@ -46,7 +46,14 @@
         "backButton": "Retour"
       },
       "duplicateEmailError": "Cette adresse e-mail est déjà utilisée.",
-      "signupError": "Une erreur est survenue lors de l'inscription. Veuillez réessayer."
+      "signupError": "Une erreur est survenue lors de l'inscription. Veuillez réessayer.",
+      "oauth": {
+        "googleButton": "Continuer avec Google",
+        "appleButton": "Continuer avec Apple",
+        "orDivider": "ou",
+        "errorGeneric": "Échec de l'authentification. Veuillez réessayer.",
+        "errorEmailExists": "Un compte existe déjà avec cet e-mail. Essayez de vous connecter."
+      }
     }
   }
 }
