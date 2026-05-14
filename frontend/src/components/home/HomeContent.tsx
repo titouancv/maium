@@ -35,7 +35,7 @@ export const HomeContent = ({ user }: HomeContentProps) => {
     <div className="bg-surface-50 flex min-h-screen flex-col items-center justify-center gap-6 p-4">
       <Title label={t("title")} size="h1" />
       {user ? (
-        <Card padding="lg" variant="inverse" className="max-w-md">
+        <Card padding="lg" variant="ghost" className="max-w-md">
           <Section title={t("userData")} padding="lg">
             <ul className="space-y-2">
               <li>

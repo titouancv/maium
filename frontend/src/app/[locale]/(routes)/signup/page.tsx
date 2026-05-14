@@ -1,13 +1,10 @@
 import { SignupWizard } from "@/components/auth/SignupWizard";
-import { Title } from "@/components/ui";
-import { getTranslations } from "next-intl/server";
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import { ROUTES } from "@/constants";
 import type { UserState } from "@/stores/useUserStore";
 
 export default async function SignupPage() {
-  const t = await getTranslations("auth.signup");
   const supabase = await createClient();
 
   const {
@@ -37,12 +34,5 @@ export default async function SignupPage() {
     };
   }
 
-  return (
-    <div className="bg-surface-50 flex min-h-screen flex-col items-center justify-center p-4">
-      <div className="w-full max-w-md">
-        <Title label={t("title")} className="mb-6 text-center" size="h1" />
-        <SignupWizard initialStep={initialStep} initialUser={initialUser} />
-      </div>
-    </div>
-  );
+  return <SignupWizard initialStep={initialStep} initialUser={initialUser} />;
 }

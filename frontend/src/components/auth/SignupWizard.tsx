@@ -4,20 +4,22 @@ import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { useRouter } from "@/i18n/navigation";
 import { useUserStore, type UserState } from "@/stores/useUserStore";
-import { StepEmailPassword } from "./StepEmailPassword";
 import { StepName } from "./StepName";
 import { ROUTES, API } from "@/constants";
 import { StepPseudo } from "./StepPseudo";
 import { StepDob } from "./StepDob";
 import { GoogleSignInButton } from "./GoogleSignInButton";
-import { AppleSignInButton } from "./AppleSignInButton";
+import { StepLayout } from "./StepLayout";
 
 interface SignupWizardProps {
   initialStep?: number;
   initialUser?: Partial<UserState>;
 }
 
-export const SignupWizard = ({ initialStep = 1, initialUser = {} }: SignupWizardProps) => {
+export const SignupWizard = ({
+  initialStep = 1,
+  initialUser = {},
+}: SignupWizardProps) => {
   const [step, setStep] = useState(initialStep);
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
@@ -70,43 +72,38 @@ export const SignupWizard = ({ initialStep = 1, initialUser = {} }: SignupWizard
     }
   };
 
+  const FORM_ID = "signup-step-form";
+
+  const stepTitles: Record<number, string> = {
+    1: t("step1.title"),
+    2: t("step2.title"),
+    3: t("step3.title"),
+    4: t("step4.title"),
+  };
+
+  const stepNavProps = {
+    2: { formId: FORM_ID, onBack: () => setStep(1), backLabel: t("step2.backButton"), nextLabel: t("step2.nextButton") },
+    3: { formId: FORM_ID, onBack: () => setStep(2), backLabel: t("step3.backButton"), nextLabel: t("step3.nextButton") },
+    4: { formId: FORM_ID, onBack: () => setStep(3), backLabel: t("step4.backButton"), nextLabel: t("step4.submitButton") },
+  }[step];
+
   return (
-    <div className="flex flex-col gap-6">
-      <div className="flex gap-2">
-        {[1, 2, 3, 4].map((s) => (
-          <div
-            key={s}
-            className={`size-2 rounded-full ${
-              step >= s ? "bg-main-gradient" : "bg-surface-600"
-            }`}
-          />
-        ))}
-      </div>
+    <StepLayout title={stepTitles[step] ?? t("title")} step={step} {...stepNavProps}>
       {step === 1 && (
-        <>
-          <div className="flex flex-col gap-3">
-            <GoogleSignInButton />
-            {/* <AppleSignInButton /> */}
-          </div>
-          {/* <div className="flex items-center gap-3">
-            <div className="h-px flex-1 bg-brd-200" />
-            <span className="text-sm text-txt-muted">{t("oauth.orDivider")}</span>
-            <div className="h-px flex-1 bg-brd-200" />
-          </div>
-          <StepEmailPassword onNext={nextStep} /> */}
-        </>
+        <div className="">
+          <GoogleSignInButton />
+        </div>
       )}
       {step === 2 && (
         <StepName
           onNext={nextStep}
-          onBack={() => setStep(1)}
           defaultFirstName={initialUser.firstName}
           defaultLastName={initialUser.lastName}
         />
       )}
-      {step === 3 && <StepPseudo onNext={nextStep} onBack={() => setStep(2)} />}
-      {step === 4 && <StepDob onNext={finish} onBack={() => setStep(3)} />}
+      {step === 3 && <StepPseudo onNext={nextStep} />}
+      {step === 4 && <StepDob onNext={finish} />}
       {error && <p className="text-sm text-red-500">{error}</p>}
-    </div>
+    </StepLayout>
   );
 };

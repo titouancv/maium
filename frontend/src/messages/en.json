@@ -20,6 +20,7 @@
     "signup": {
       "title": "Create an account",
       "step1": {
+        "title": "Create an account",
         "emailLabel": "Email address",
         "emailPlaceholder": "Email address",
         "passwordLabel": "Password",
@@ -27,6 +28,7 @@
         "nextButton": "Next"
       },
       "step2": {
+        "title": "What's your name?",
         "firstNameLabel": "First name",
         "firstNamePlaceholder": "First name",
         "lastNameLabel": "Last name",
@@ -35,12 +37,14 @@
         "backButton": "Back"
       },
       "step3": {
+        "title": "Choose your username",
         "pseudoLabel": "Username",
         "pseudoPlaceholder": "Username",
         "nextButton": "Next",
         "backButton": "Back"
       },
       "step4": {
+        "title": "When's your birthday?",
         "dobLabel": "Date of birth",
         "dobPlaceholder": "YYYY-MM-DD",
         "submitButton": "Complete",

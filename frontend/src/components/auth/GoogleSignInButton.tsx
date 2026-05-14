@@ -23,7 +23,7 @@ export const GoogleSignInButton = () => {
       setError(
         authError.message.includes("already")
           ? t("errorEmailExists")
-          : t("errorGeneric")
+          : t("errorGeneric"),
       );
     }
   };
@@ -34,7 +34,7 @@ export const GoogleSignInButton = () => {
         type="button"
         variant="outline"
         size="lg"
-        className="w-full gap-3"
+        className="gap-3"
         onClick={handleSignIn}
       >
         <svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true">

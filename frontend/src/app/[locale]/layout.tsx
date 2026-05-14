@@ -30,7 +30,7 @@ export default async function RootLayout({
       lang={locale}
       className={`${cabinetGrotesk.variable} h-full antialiased`}
     >
-      <body className="flex min-h-full flex-col font-bold">
+      <body className="flex min-h-full flex-col p-4 font-bold">
         <NextIntlClientProvider messages={messages}>
           {children}
         </NextIntlClientProvider>

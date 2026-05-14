@@ -10,4 +10,5 @@ export * from "./SwipeAction";
 export * from "./Switch";
 export * from "./Tabs";
 export * from "./TextInput";
+export * from "./StepCounter";
 export * from "./Title";
