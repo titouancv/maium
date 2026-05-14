@@ -9,6 +9,8 @@ import { StepName } from "./StepName";
 import { ROUTES, API } from "@/constants";
 import { StepPseudo } from "./StepPseudo";
 import { StepDob } from "./StepDob";
+import { GoogleSignInButton } from "./GoogleSignInButton";
+import { AppleSignInButton } from "./AppleSignInButton";
 
 export const SignupWizard = () => {
   const [step, setStep] = useState(1);
@@ -63,7 +65,20 @@ export const SignupWizard = () => {
           />
         ))}
       </div>
-      {step === 1 && <StepEmailPassword onNext={nextStep} />}
+      {step === 1 && (
+        <>
+          <div className="flex flex-col gap-3">
+            <GoogleSignInButton />
+            <AppleSignInButton />
+          </div>
+          <div className="flex items-center gap-3">
+            <div className="h-px flex-1 bg-brd-200" />
+            <span className="text-sm text-txt-muted">{t("oauth.orDivider")}</span>
+            <div className="h-px flex-1 bg-brd-200" />
+          </div>
+          <StepEmailPassword onNext={nextStep} />
+        </>
+      )}
       {step === 2 && <StepName onNext={nextStep} onBack={() => setStep(1)} />}
       {step === 3 && <StepPseudo onNext={nextStep} onBack={() => setStep(2)} />}
       {step === 4 && <StepDob onNext={finish} onBack={() => setStep(3)} />}
