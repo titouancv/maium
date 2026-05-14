@@ -53,7 +53,7 @@ Example: `https://notion.so/Fix-dashboard-bug-c08407dc0e85...` → page ID is th
 
 ---
 
-## Step 2 — Update Notion ticket to "🔄 En cours"
+## Step 2 — Update Notion ticket to "Work in progress"
 
 Use `notion-update-page` to set the ticket status to Work in Progress:
 
@@ -62,7 +62,7 @@ Use `notion-update-page` to set the ticket status to Work in Progress:
   "page_id": "<NOTION_PAGE_ID>",
   "command": "update_properties",
   "properties": {
-    "Status": "🔄 En cours"
+    "Status": "Work in progress"
   }
 }
 ```
@@ -198,7 +198,7 @@ Show a concise summary:
 
 🔀 PR: <PR title> → <PR URL>
 🌿 Branch: <branch name>
-📋 Notion ticket: updated to 🔄 En cours → <notion URL>
+📋 Notion ticket: updated to Work in progress → <notion URL>
 📝 Commits pushed: N file(s) changed
 
 What was implemented:

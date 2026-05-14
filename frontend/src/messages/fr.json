@@ -44,7 +44,9 @@
         "dobPlaceholder": "AAAA-MM-JJ",
         "submitButton": "Terminer",
         "backButton": "Retour"
-      }
+      },
+      "duplicateEmailError": "Cette adresse e-mail est déjà utilisée.",
+      "signupError": "Une erreur est survenue lors de l'inscription. Veuillez réessayer."
     }
   }
 }
