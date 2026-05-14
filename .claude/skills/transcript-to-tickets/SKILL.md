@@ -27,18 +27,18 @@ This skill reads a written text (meeting transcript, notes, summary) and:
 
 Read the provided text carefully and identify every task, action, bug, and improvement mentioned. For each task, determine:
 
-| Field             | How to infer                                    | Available options                                                                  |
-| ----------------- | ----------------------------------------------- | ---------------------------------------------------------------------------------- |
-| **Title**         | Short, clear task title                         | —                                                                                  |
-| **Type**          | Nature of the task                              | `🐛 Bug`, `✨ Fonctionnalité`, `❓ Support`, `📝 Documentation`, `🔧 Amélioration` |
-| **Priority**      | Perceived urgency                               | `P1` (critical) → `P5` (low)                                                       |
-| **Difficulty**    | Estimated complexity                            | `D1` (very hard) → `D5` (very easy)                                                |
-| **Time**          | Estimated effort                                | `T1` (long) → `T5` (quick)                                                         |
-| **Tags**          | Technical domain                                | `frontend`, `backend`, `design`, `infra`, `urgent` (multi)                         |
-| **Status**        | Always `🆕 Nouveau` for new tickets             | —                                                                                  |
-| **Is technical?** | Bug, Feature or Improvement = YES → create a PR | —                                                                                  |
+| Field             | How to infer                                    | Available options                                          |
+| ----------------- | ----------------------------------------------- | ---------------------------------------------------------- |
+| **Title**         | Short, clear task title                         | —                                                          |
+| **Type**          | Nature of the task                              | `Fix`, `Feat`, `Refactor`, `Debt`, `Chore`                 |
+| **Priority**      | Perceived urgency                               | `P1` (critical) → `P5` (low)                               |
+| **Difficulty**    | Estimated complexity                            | `D1` (very hard) → `D5` (very easy)                        |
+| **Time**          | Estimated effort                                | `T1` (long) → `T5` (quick)                                 |
+| **Tags**          | Technical domain                                | `frontend`, `backend`, `design`, `infra`, `urgent` (multi) |
+| **Status**        | Always `Not started` for new tickets            | —                                                          |
+| **Is technical?** | Fix, Feat or Refactor = YES → create a PR       | —                                                          |
 
-**"Technical ticket" rule**: If Type is `🐛 Bug`, `✨ Fonctionnalité` or `🔧 Amélioration`, the ticket is technical and requires a GitHub PR.
+**"Technical ticket" rule**: If Type is `Fix`, `Feat` or `Refactor`, the ticket is technical and requires a GitHub PR.
 
 Before creating anything, **show the user a summary** and ask for confirmation:
 
@@ -102,14 +102,12 @@ Use the `Notion:notion-create-pages` tool. Pass the structured description (Step
     {
       "properties": {
         "Title": "Short task title",
-        "Type": "✨ Fonctionnalité",
+        "Type": "Feat",
         "Priority": "P2",
         "Difficulty": "D3",
         "Time": "T3",
-        "Status": "🆕 Nouveau",
-        "Tags": "[\"backend\"]",
-        "date:Date de création:start": "2026-05-13",
-        "date:Date de création:is_datetime": 0
+        "Status": "Not started",
+        "Tags": "[\"backend\"]"
       },
       "content": "## 📌 What\n...\n\n## 🎯 Why\n...\n\n## ✅ To-do list\n- [ ] ...\n- [ ] ..."
     }
@@ -118,7 +116,7 @@ Use the `Notion:notion-create-pages` tool. Pass the structured description (Step
 ```
 
 > **Note**: `Tags` is a `multi_select` — pass as a stringified JSON array.
-> The `🔗 GitHub Link` property will be filled after PR creation (Step 4).
+> The `GitHub Link` property will be filled after PR creation (Step 4).
 > Do NOT use the `Description` property for the structured content — use `content` (page body) instead.
 
 ---
@@ -170,11 +168,11 @@ EOF
 ```
 
 PR title prefix convention:
-| Type | Prefix |
-|------|--------|
-| `🐛 Bug` | `fix:` |
-| `✨ Fonctionnalité` | `feat:` |
-| `🔧 Amélioration` | `improve:` |
+| Type        | Prefix      |
+| ----------- | ----------- |
+| `Fix`       | `fix:`      |
+| `Feat`      | `feat:`     |
+| `Refactor`  | `refactor:` |
 
 > **Note**: `gh` must be authenticated (`gh auth status`). If not, run `gh auth login` before creating PRs. No token needs to be asked from the user.
 
@@ -189,7 +187,7 @@ After each PR is created, update the corresponding Notion ticket with the PR URL
   "page_id": "NOTION_PAGE_ID",
   "command": "update_properties",
   "properties": {
-    "🔗 GitHub Link": "https://github.com/titouancv/maium/pull/123"
+    "GitHub Link": "https://github.com/titouancv/maium/pull/123"
   }
 }
 ```
