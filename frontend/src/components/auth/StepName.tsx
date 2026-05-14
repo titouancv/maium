@@ -16,9 +16,13 @@ const schema = z.object({
 export const StepName = ({
   onNext,
   onBack,
+  defaultFirstName,
+  defaultLastName,
 }: {
   onNext: (d: Partial<UserState>) => void;
   onBack: () => void;
+  defaultFirstName?: string;
+  defaultLastName?: string;
 }) => {
   const t = useTranslations("auth.signup.step2");
   const { user, setUser } = useUserStore();
@@ -30,8 +34,8 @@ export const StepName = ({
   } = useForm({
     resolver: zodResolver(schema),
     defaultValues: {
-      firstName: user?.firstName || "",
-      lastName: user?.lastName || "",
+      firstName: user?.firstName || defaultFirstName || "",
+      lastName: user?.lastName || defaultLastName || "",
     },
   });
 
