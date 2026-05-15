@@ -16,9 +16,25 @@
     "dob": "Date of birth",
     "logoutButton": "Sign out"
   },
+  "welcome": {
+    "greeting": "Welcome, {name}!",
+    "subtitle": "Your profile is all set.",
+    "personalInfo": "Personal info",
+    "professionalExperience": "Professional experience",
+    "educationalExperience": "Educational experience",
+    "email": "Email",
+    "name": "Full name",
+    "pseudo": "Username",
+    "dob": "Date of birth",
+    "noExperiences": "No experiences added yet.",
+    "enterApp": "Enter the app",
+    "slideToEnter": "Slide to enter",
+    "founderMessage": "Thank you for joining maium. We built this app with passion, and we hope it'll be with you for a long time. Welcome to the adventure! 🥳",
+    "founderSignature": "Titouan & Arthur, the founders"
+  },
   "auth": {
     "signup": {
-      "title": "Create an account",
+      "title": "Welcome",
       "step1": {
         "title": "Create an account",
         "emailLabel": "Email address",

@@ -35,10 +35,10 @@ export async function GET(request: Request) {
       if (user) {
         const { data: profile } = await supabase
           .from("users")
-          .select("id")
+          .select("onboarding_completed")
           .eq("id", user.id)
           .single();
-        if (profile) {
+        if (profile?.onboarding_completed) {
           return NextResponse.redirect(`${origin}${next}`);
         }
         return NextResponse.redirect(`${origin}${ROUTES.SIGNUP}`);

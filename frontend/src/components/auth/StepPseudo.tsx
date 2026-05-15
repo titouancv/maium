@@ -13,8 +13,10 @@ const schema = z.object({
 
 export const StepPseudo = ({
   onNext,
+  defaultPseudo,
 }: {
   onNext: (d: Partial<UserState>) => void;
+  defaultPseudo?: string;
 }) => {
   const t = useTranslations("auth.signup.step3");
   const { user } = useUserStore();
@@ -25,7 +27,7 @@ export const StepPseudo = ({
   } = useForm({
     resolver: zodResolver(schema),
     defaultValues: {
-      pseudo: user?.pseudo || "",
+      pseudo: user?.pseudo || defaultPseudo || "",
     },
   });
 
