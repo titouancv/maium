@@ -65,6 +65,7 @@ export const SignupWizard = ({
     const isOAuth = !!initialUser.supabaseId;
 
     setIsLoading(true);
+    router.push(ROUTES.WELCOME);
     const res = await fetch(isOAuth ? API.USERS_ME : API.USERS, {
       method: isOAuth ? "PATCH" : "POST",
       headers: { "Content-Type": "application/json" },
@@ -93,7 +94,6 @@ export const SignupWizard = ({
         const json = await res.json();
         setUser({ supabaseId: json.id });
       }
-      router.push(ROUTES.WELCOME);
     } else if (res.status === 409) {
       setError(isOAuth ? t("duplicatePseudoError") : t("duplicateEmailError"));
     } else {
@@ -161,7 +161,9 @@ export const SignupWizard = ({
               onValidityChange={setIsStepValid}
             />
           )}
-          {step === 3 && <StepDob onNext={finish} onValidityChange={setIsStepValid} />}
+          {step === 3 && (
+            <StepDob onNext={finish} onValidityChange={setIsStepValid} />
+          )}
           {error && <p className="text-sm text-red-500">{error}</p>}
         </StepLayout>
       )}
