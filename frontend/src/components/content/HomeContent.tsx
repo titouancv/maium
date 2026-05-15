@@ -56,7 +56,7 @@ export const HomeContent = ({ user }: HomeContentProps) => {
           particleCount: 120,
           angle: 315,
           spread: 70,
-          origin: { x: 0, y: 1 },
+          origin: { x: 0, y: 0 },
           startVelocity: 30,
           gravity: 0.7,
           scalar: 0.8,
@@ -65,7 +65,7 @@ export const HomeContent = ({ user }: HomeContentProps) => {
           particleCount: 120,
           angle: 225,
           spread: 70,
-          origin: { x: 1, y: 1 },
+          origin: { x: 1, y: 0 },
           startVelocity: 30,
           gravity: 0.7,
           scalar: 0.8,
@@ -106,7 +106,11 @@ export const HomeContent = ({ user }: HomeContentProps) => {
               </li>
             </ul>
           </Section>
-          <Button variant="outline" onClick={handleLogout} isLoading={isLoggingOut}>
+          <Button
+            variant="outline"
+            onClick={handleLogout}
+            isLoading={isLoggingOut}
+          >
             {t("logoutButton")}
           </Button>
         </div>
