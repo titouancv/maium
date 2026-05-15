@@ -37,12 +37,14 @@ export const StepEmailPassword = ({
     <form onSubmit={handleSubmit(onNext)} className="space-y-4">
       <TextInput
         placeholder={t("emailPlaceholder")}
-        error={errors.email?.message as string}
+        infoLabel={errors.email?.message as string}
+        infoType="error"
         {...register("email")}
       />
       <PasswordInput
         placeholder={t("passwordPlaceholder")}
-        error={errors.password?.message as string}
+        infoLabel={errors.password?.message as string}
+        infoType="error"
         {...register("password")}
       />
       <Button type="submit" className="mt-4 w-full" size="lg">

@@ -1,30 +1,28 @@
-import React from "react";
+"use client";
 
-export type ButtonVariant = "primary" | "inverse" | "outline" | "ghost";
+import React from "react";
+import { useTranslations } from "next-intl";
+import { UI_VARIANTS, UIVariant } from "@/constants";
+import { cn } from "@/lib/utils";
+
+export type ButtonVariant = UIVariant;
 export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: ButtonVariant;
   size?: "none" | "sm" | "md" | "lg";
+  isLoading?: boolean;
 }
 
 export function Button({
   className = "",
   variant = "primary",
   size = "md",
+  isLoading = false,
   children,
   ...props
 }: ButtonProps) {
+  const t = useTranslations("common");
   const baseStyle =
-    "cursor-pointer inline-flex items-center justify-center shadow-md inset-shadow-sm transition-colors duration-300 ease-in-out active:scale-95 disabled:opacity-50 disabled:pointer-events-none";
-  const variants = {
-    primary:
-      "bg-radial from-secondary-400 from-10% to-primary to-90% text-on-primary hover:from-primary hover:to-secondary-400 inset-shadow-light-100/60",
-    inverse:
-      "bg-inverse-50 text-txt-inverse hover:bg-inverse-200 inset-shadow-surface-50/80 ",
-    outline:
-      " text-txt border-b border-brd-200 hover:bg-surface-200 inset-shadow-primary-200/80 dark:inset-shadow-primary-400/80",
-    ghost:
-      "bg-transparent text-txt hover:bg-surface-200 shadow-none inset-shadow-transparent",
-  };
+    "cursor-pointer inline-flex items-center justify-center shadow-md inset-shadow-sm transition-colors duration-300 ease-in-out active:scale-95 disabled:opacity-50 disabled:pointer-events-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-inverse-50";
   const sizes = {
     none: "text-base rounded-2xl",
     sm: "py-1 px-4 text-sm rounded-xl",
@@ -32,9 +30,23 @@ export function Button({
     lg: "pt-2 pb-1 px-8 text-lg rounded-2xl",
   };
 
+  if (isLoading) {
+    return (
+      <div
+        className={cn(
+          sizes[size],
+          className,
+          "flex items-center justify-center",
+        )}
+      >
+        <p className="text-primary animate-pulse">{t("loading")}</p>
+      </div>
+    );
+  }
+
   return (
     <button
-      className={`${baseStyle} ${variants[variant]} ${sizes[size]} ${className}`}
+      className={cn(baseStyle, UI_VARIANTS[variant], sizes[size], className)}
       {...props}
     >
       {children}

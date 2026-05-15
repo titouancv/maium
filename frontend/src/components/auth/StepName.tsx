@@ -1,71 +1,96 @@
 "use client";
 
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useTranslations } from "next-intl";
 import { TextInput } from "@/components/ui/TextInput";
-import { Button } from "@/components/ui/Button";
 import { UserState, useUserStore } from "@/stores/useUserStore";
-
-const schema = z.object({
-  firstName: z.string().min(1),
-  lastName: z.string().min(1),
-});
 
 export const StepName = ({
   onNext,
-  onBack,
+  defaultFirstName,
+  defaultLastName,
+  onValidityChange,
 }: {
   onNext: (d: Partial<UserState>) => void;
-  onBack: () => void;
+  defaultFirstName?: string;
+  defaultLastName?: string;
+  onValidityChange?: (isValid: boolean) => void;
 }) => {
   const t = useTranslations("auth.signup.step2");
-  const { user, setUser } = useUserStore();
+  const { user } = useUserStore();
+  const schema = z.object({
+    firstName: z.string().min(1, t("firstNameRequired")),
+    lastName: z.string().min(1, t("lastNameRequired")),
+  });
   const {
     register,
     handleSubmit,
-    getValues,
-    formState: { errors },
+    trigger,
+    setFocus,
+    formState: { errors, isValid, touchedFields },
   } = useForm({
     resolver: zodResolver(schema),
+    mode: "onChange",
     defaultValues: {
-      firstName: user?.firstName || "",
-      lastName: user?.lastName || "",
+      firstName: user?.firstName || defaultFirstName || "",
+      lastName: user?.lastName || defaultLastName || "",
     },
   });
 
-  const handleBack = () => {
-    setUser(getValues());
-    onBack();
-  };
+  useEffect(() => {
+    trigger();
+    setFocus("firstName");
+  }, []);
+
+  useEffect(() => {
+    onValidityChange?.(isValid);
+  }, [isValid]);
 
   return (
-    <form onSubmit={handleSubmit(onNext)} className="space-y-4">
+    <form
+      id="signup-step-form"
+      onSubmit={handleSubmit(onNext)}
+      className="space-y-4"
+    >
       <TextInput
         placeholder={t("firstNamePlaceholder")}
-        error={errors.firstName?.message as string}
+        infoLabel={
+          touchedFields.firstName
+            ? (errors.firstName?.message as string)
+            : undefined
+        }
+        infoType={
+          touchedFields.firstName && errors.firstName ? "error" : "info"
+        }
+        inputMode="text"
+        autoCapitalize="words"
+        autoComplete="given-name"
+        enterKeyHint="next"
+        onKeyDown={(e) => {
+          if (e.key === "Enter") {
+            e.preventDefault();
+            setFocus("lastName");
+          }
+        }}
         {...register("firstName")}
       />
       <TextInput
         placeholder={t("lastNamePlaceholder")}
-        error={errors.lastName?.message as string}
+        infoLabel={
+          touchedFields.lastName
+            ? (errors.lastName?.message as string)
+            : undefined
+        }
+        infoType={touchedFields.lastName && errors.lastName ? "error" : "info"}
+        inputMode="text"
+        autoCapitalize="words"
+        autoComplete="family-name"
+        enterKeyHint="done"
         {...register("lastName")}
       />
-      <div className="mt-4 flex gap-2">
-        <Button
-          variant="outline"
-          type="button"
-          onClick={handleBack}
-          size="lg"
-          className="w-full"
-        >
-          {t("backButton")}
-        </Button>
-        <Button type="submit" size="lg" className="w-full">
-          {t("nextButton")}
-        </Button>
-      </div>
     </form>
   );
 };

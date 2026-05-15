@@ -2,7 +2,7 @@
   "common": {
     "save": "Enregistrer",
     "cancel": "Annuler",
-    "loading": "Chargement...",
+    "loading": "Chargement",
     "error": "Une erreur s'est produite."
   },
   "home": {
@@ -13,12 +13,34 @@
     "email": "Email",
     "name": "Nom complet",
     "pseudo": "Pseudo",
-    "dob": "Date de naissance"
+    "dob": "Date de naissance",
+    "logoutButton": "Se déconnecter",
+    "deleteAccountButton": "Supprimer le compte",
+    "deleteAccountConfirm": "Êtes-vous sûr ? Cette action est irréversible.",
+    "deleteAccountConfirmButton": "Oui, supprimer",
+    "deleteAccountCancelButton": "Annuler"
+  },
+  "welcome": {
+    "greeting": "Bienvenue, {name} !",
+    "subtitle": "Votre profil est prêt.",
+    "personalInfo": "Informations personnelles",
+    "professionalExperience": "Expérience professionnelle",
+    "educationalExperience": "Parcours éducatif",
+    "email": "Email",
+    "name": "Nom complet",
+    "pseudo": "Pseudo",
+    "dob": "Date de naissance",
+    "noExperiences": "Aucune expérience ajoutée pour l'instant.",
+    "enterApp": "Accéder à l'application",
+    "slideToEnter": "Glissez pour entrer",
+    "founderMessage": "Merci d'avoir rejoint maium. On a construit cette application avec passion, et on espère qu'elle t'accompagnera longtemps. Bienvenue dans l'aventure ! 🥳",
+    "founderSignature": "Titouan & Arthur, les fondateurs"
   },
   "auth": {
     "signup": {
-      "title": "Créer un compte",
+      "title": "Bienvenue",
       "step1": {
+        "title": "Créer un compte",
         "emailLabel": "Adresse email",
         "emailPlaceholder": "Adresse email",
         "passwordLabel": "Mot de passe",
@@ -26,24 +48,45 @@
         "nextButton": "Suivant"
       },
       "step2": {
+        "title": "Quel est votre nom ?",
         "firstNameLabel": "Prénom",
         "firstNamePlaceholder": "Prénom",
         "lastNameLabel": "Nom",
         "lastNamePlaceholder": "Nom",
+        "firstNameRequired": "Le prénom est requis",
+        "lastNameRequired": "Le nom est requis",
         "nextButton": "Suivant",
         "backButton": "Retour"
       },
       "step3": {
+        "title": "Choisissez votre pseudo",
         "pseudoLabel": "Pseudo",
         "pseudoPlaceholder": "Pseudo",
+        "pseudoMinLength": "Le pseudo doit contenir au moins 3 caractères",
+        "pseudoChecking": "Vérification...",
+        "pseudoAvailable": "Pseudo disponible",
+        "pseudoTaken": "Ce pseudo est déjà utilisé",
         "nextButton": "Suivant",
         "backButton": "Retour"
       },
       "step4": {
+        "title": "Quelle est votre date de naissance ?",
         "dobLabel": "Date de naissance",
         "dobPlaceholder": "AAAA-MM-JJ",
+        "dobInvalid": "Veuillez entrer une date valide",
+        "dobFuture": "La date de naissance ne peut pas être dans le futur",
         "submitButton": "Terminer",
         "backButton": "Retour"
+      },
+      "duplicateEmailError": "Cette adresse e-mail est déjà utilisée.",
+      "duplicatePseudoError": "Ce pseudo est déjà utilisé.",
+      "signupError": "Une erreur est survenue lors de l'inscription. Veuillez réessayer.",
+      "oauth": {
+        "googleButton": "Continuer avec Google",
+        "appleButton": "Continuer avec Apple",
+        "orDivider": "ou",
+        "errorGeneric": "Échec de l'authentification. Veuillez réessayer.",
+        "errorEmailExists": "Un compte existe déjà avec cet e-mail. Essayez de vous connecter."
       }
     }
   }

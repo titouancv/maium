@@ -1,63 +1,128 @@
 "use client";
 
-import { useForm } from "react-hook-form";
+import { useEffect, useState } from "react";
+import { useForm, useWatch } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useTranslations } from "next-intl";
 import { TextInput } from "@/components/ui/TextInput";
-import { Button } from "@/components/ui/Button";
 import { UserState, useUserStore } from "@/stores/useUserStore";
+import { API } from "@/constants";
 
-const schema = z.object({
-  pseudo: z.string().min(3),
-});
+type AvailabilityStatus = "idle" | "checking" | "available" | "taken";
 
 export const StepPseudo = ({
   onNext,
-  onBack,
+  defaultPseudo,
+  onValidityChange,
 }: {
   onNext: (d: Partial<UserState>) => void;
-  onBack: () => void;
+  defaultPseudo?: string;
+  onValidityChange?: (isValid: boolean) => void;
 }) => {
   const t = useTranslations("auth.signup.step3");
-  const { user, setUser } = useUserStore();
+  const { user } = useUserStore();
+  const schema = z.object({
+    pseudo: z.string().min(3, t("pseudoMinLength")),
+  });
   const {
     register,
     handleSubmit,
-    getValues,
-    formState: { errors },
+    trigger,
+    setFocus,
+    setError,
+    clearErrors,
+    control,
+    formState: { errors, isValid, touchedFields },
   } = useForm({
     resolver: zodResolver(schema),
+    mode: "onChange",
     defaultValues: {
-      pseudo: user?.pseudo || "",
+      pseudo: user?.pseudo || defaultPseudo || "",
     },
   });
 
-  const handleBack = () => {
-    setUser(getValues());
-    onBack();
+  const [availabilityStatus, setAvailabilityStatus] =
+    useState<AvailabilityStatus>("idle");
+
+  const pseudo = useWatch({ control, name: "pseudo" });
+
+  useEffect(() => {
+    trigger();
+    setFocus("pseudo");
+  }, []);
+
+  useEffect(() => {
+    if (!pseudo || pseudo.length < 3) {
+      const timer = setTimeout(() => setAvailabilityStatus("idle"), 0);
+      return () => clearTimeout(timer);
+    }
+
+    if (pseudo === user?.pseudo || pseudo === defaultPseudo) {
+      const timer = setTimeout(() => {
+        setAvailabilityStatus("available");
+        clearErrors("pseudo");
+      }, 0);
+      return () => clearTimeout(timer);
+    }
+
+    const timer = setTimeout(async () => {
+      setAvailabilityStatus("checking");
+      try {
+        const res = await fetch(
+          `${API.USERS_PSEUDO_CHECK}?value=${encodeURIComponent(pseudo)}`,
+        );
+        const data = await res.json();
+        if (data.available) {
+          setAvailabilityStatus("available");
+          clearErrors("pseudo");
+        } else {
+          setAvailabilityStatus("taken");
+          setError("pseudo", { message: t("pseudoTaken") });
+        }
+      } catch {
+        setAvailabilityStatus("idle");
+      }
+    }, 500);
+
+    return () => clearTimeout(timer);
+  }, [pseudo, user?.pseudo, defaultPseudo, clearErrors, setError, t]);
+
+  useEffect(() => {
+    onValidityChange?.(isValid && availabilityStatus === "available");
+  }, [isValid, availabilityStatus, onValidityChange]);
+
+  const getInfoLabel = () => {
+    if (touchedFields.pseudo && errors.pseudo?.message) return errors.pseudo.message;
+    if (availabilityStatus === "checking") return t("pseudoChecking");
+    if (availabilityStatus === "available") return t("pseudoAvailable");
+    return undefined;
+  };
+
+  const getInfoType = (): "error" | "success" | "info" => {
+    if (touchedFields.pseudo && errors.pseudo) return "error";
+    if (availabilityStatus === "checking") return "info";
+    if (availabilityStatus === "available") return "success";
+    return "info";
   };
 
   return (
-    <form onSubmit={handleSubmit(onNext)} className="space-y-4">
+    <form
+      id="signup-step-form"
+      onSubmit={handleSubmit(onNext)}
+      className="space-y-4"
+    >
       <TextInput
         placeholder={t("pseudoPlaceholder")}
-        error={errors.pseudo?.message as string}
+        infoLabel={getInfoLabel()}
+        infoType={getInfoType()}
+        inputMode="text"
+        autoCapitalize="none"
+        autoCorrect="off"
+        autoComplete="username"
+        enterKeyHint="done"
         {...register("pseudo")}
       />
-      <div className="mt-4 flex gap-2">
-        <Button
-          variant="outline"
-          type="button"
-          onClick={handleBack}
-          className="w-full"
-        >
-          {t("backButton")}
-        </Button>
-        <Button type="submit" className="w-full">
-          {t("nextButton")}
-        </Button>
-      </div>
     </form>
   );
 };
