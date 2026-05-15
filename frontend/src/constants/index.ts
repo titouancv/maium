@@ -1,6 +1,7 @@
 export const ROUTES = {
   HOME: "/",
   SIGNUP: "/signup",
+  WELCOME: "/welcome",
   AUTH_CALLBACK: "/auth/callback",
 } as const;
 

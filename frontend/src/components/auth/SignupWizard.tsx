@@ -64,7 +64,7 @@ export const SignupWizard = ({
         const json = await res.json();
         setUser({ supabaseId: json.id });
       }
-      router.push(ROUTES.HOME);
+      router.push(ROUTES.WELCOME);
     } else if (res.status === 409) {
       setError(isOAuth ? t("duplicatePseudoError") : t("duplicateEmailError"));
     } else {

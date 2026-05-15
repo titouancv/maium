@@ -16,6 +16,19 @@
     "dob": "Date of birth",
     "logoutButton": "Sign out"
   },
+  "welcome": {
+    "greeting": "Welcome, {name}!",
+    "subtitle": "Your profile is all set.",
+    "personalInfo": "Personal info",
+    "professionalExperience": "Professional experience",
+    "educationalExperience": "Educational experience",
+    "email": "Email",
+    "name": "Full name",
+    "pseudo": "Username",
+    "dob": "Date of birth",
+    "noExperiences": "No experiences added yet.",
+    "enterApp": "Enter the app"
+  },
   "auth": {
     "signup": {
       "title": "Create an account",

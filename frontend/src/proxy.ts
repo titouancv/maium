@@ -1,6 +1,6 @@
 import { createServerClient } from "@supabase/ssr";
 import createIntlMiddleware from "next-intl/middleware";
-import { type NextRequest } from "next/server";
+import { type NextRequest, NextResponse } from "next/server";
 import { routing } from "./i18n/routing";
 
 const handleI18nRouting = createIntlMiddleware(routing);
@@ -26,7 +26,16 @@ export default async function proxy(request: NextRequest) {
   );
 
   // Refresh session — always use getUser(), never getSession(), for security
-  await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  const pathname = request.nextUrl.pathname;
+  const isWelcomeRoute =
+    pathname === "/welcome" || pathname.endsWith("/welcome");
+  if (!user && isWelcomeRoute) {
+    return NextResponse.redirect(new URL("/", request.url));
+  }
 
   return response;
 }
