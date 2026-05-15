@@ -78,10 +78,19 @@ export const HomeContent = ({ user }: HomeContentProps) => {
   }, [searchParams]);
 
   const [isLoggingOut, setIsLoggingOut] = useState(false);
+  const [isDeletingAccount, setIsDeletingAccount] = useState(false);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
   const handleLogout = async () => {
     setIsLoggingOut(true);
     await fetch(API.AUTH_LOGOUT, { method: "POST" });
+    router.push(ROUTES.HOME);
+    router.refresh();
+  };
+
+  const handleDeleteAccount = async () => {
+    setIsDeletingAccount(true);
+    await fetch(API.USERS_ME, { method: "DELETE" });
     router.push(ROUTES.HOME);
     router.refresh();
   };
@@ -113,6 +122,33 @@ export const HomeContent = ({ user }: HomeContentProps) => {
           >
             {t("logoutButton")}
           </Button>
+          {!showDeleteConfirm ? (
+            <Button
+              variant="primary"
+              onClick={() => setShowDeleteConfirm(true)}
+            >
+              {t("deleteAccountButton")}
+            </Button>
+          ) : (
+            <div className="flex flex-col gap-2">
+              <p className="text-txt text-sm">{t("deleteAccountConfirm")}</p>
+              <div className="flex gap-2">
+                <Button
+                  variant="outline"
+                  onClick={() => setShowDeleteConfirm(false)}
+                >
+                  {t("deleteAccountCancelButton")}
+                </Button>
+                <Button
+                  variant="primary"
+                  onClick={handleDeleteAccount}
+                  isLoading={isDeletingAccount}
+                >
+                  {t("deleteAccountConfirmButton")}
+                </Button>
+              </div>
+            </div>
+          )}
         </div>
       )}
     </div>
