@@ -13,6 +13,8 @@ interface StepLayoutProps {
   onBack?: () => void;
   backLabel?: string;
   nextLabel?: string;
+  nextDisabled?: boolean;
+  nextLoading?: boolean;
   children: React.ReactNode;
 }
 
@@ -24,6 +26,8 @@ export const StepLayout = ({
   onBack,
   backLabel,
   nextLabel,
+  nextDisabled,
+  nextLoading,
   children,
 }: StepLayoutProps) => {
   const [keyboardHeight, setKeyboardHeight] = useState(0);
@@ -89,7 +93,7 @@ export const StepLayout = ({
                   {backLabel}
                 </Button>
               )}
-              <Button type="submit" form={formId} size="lg" className="w-full">
+              <Button type="submit" form={formId} size="lg" className="w-full" disabled={nextDisabled} isLoading={nextLoading}>
                 {nextLabel}
               </Button>
             </div>

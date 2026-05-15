@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/Button";
@@ -54,9 +54,18 @@ export const HomeContent = ({ user }: HomeContentProps) => {
       import("canvas-confetti").then(({ default: confetti }) => {
         confetti({
           particleCount: 120,
-          angle: 270,
-          spread: 80,
-          origin: { x: 0.5, y: 0 },
+          angle: 315,
+          spread: 70,
+          origin: { x: 0, y: 1 },
+          startVelocity: 30,
+          gravity: 0.7,
+          scalar: 0.8,
+        });
+        confetti({
+          particleCount: 120,
+          angle: 225,
+          spread: 70,
+          origin: { x: 1, y: 1 },
           startVelocity: 30,
           gravity: 0.7,
           scalar: 0.8,
@@ -68,7 +77,10 @@ export const HomeContent = ({ user }: HomeContentProps) => {
     window.history.replaceState(null, "", url.toString());
   }, [searchParams]);
 
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
+
   const handleLogout = async () => {
+    setIsLoggingOut(true);
     await fetch(API.AUTH_LOGOUT, { method: "POST" });
     router.push(ROUTES.HOME);
     router.refresh();
@@ -94,7 +106,7 @@ export const HomeContent = ({ user }: HomeContentProps) => {
               </li>
             </ul>
           </Section>
-          <Button variant="outline" onClick={handleLogout}>
+          <Button variant="outline" onClick={handleLogout} isLoading={isLoggingOut}>
             {t("logoutButton")}
           </Button>
         </div>

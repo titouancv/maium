@@ -1,4 +1,7 @@
+"use client";
+
 import React from "react";
+import { useTranslations } from "next-intl";
 import { UI_VARIANTS, UIVariant } from "@/constants";
 import { cn } from "@/lib/utils";
 
@@ -6,15 +9,18 @@ export type ButtonVariant = UIVariant;
 export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: ButtonVariant;
   size?: "none" | "sm" | "md" | "lg";
+  isLoading?: boolean;
 }
 
 export function Button({
   className = "",
   variant = "primary",
   size = "md",
+  isLoading = false,
   children,
   ...props
 }: ButtonProps) {
+  const t = useTranslations("common");
   const baseStyle =
     "cursor-pointer inline-flex items-center justify-center shadow-md inset-shadow-sm transition-colors duration-300 ease-in-out active:scale-95 disabled:opacity-50 disabled:pointer-events-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-inverse-50";
   const sizes = {
@@ -23,6 +29,20 @@ export function Button({
     md: "pt-2 pb-1 px-6 text-md rounded-2xl",
     lg: "pt-2 pb-1 px-8 text-lg rounded-2xl",
   };
+
+  if (isLoading) {
+    return (
+      <div
+        className={cn(
+          sizes[size],
+          className,
+          "flex items-center justify-center",
+        )}
+      >
+        <p className="text-primary animate-pulse">{t("loading")}</p>
+      </div>
+    );
+  }
 
   return (
     <button

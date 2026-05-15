@@ -2,7 +2,7 @@
   "common": {
     "save": "Enregistrer",
     "cancel": "Annuler",
-    "loading": "Chargement...",
+    "loading": "Chargement",
     "error": "Une erreur s'est produite."
   },
   "home": {
@@ -49,6 +49,8 @@
         "firstNamePlaceholder": "Prénom",
         "lastNameLabel": "Nom",
         "lastNamePlaceholder": "Nom",
+        "firstNameRequired": "Le prénom est requis",
+        "lastNameRequired": "Le nom est requis",
         "nextButton": "Suivant",
         "backButton": "Retour"
       },
@@ -56,6 +58,10 @@
         "title": "Choisissez votre pseudo",
         "pseudoLabel": "Pseudo",
         "pseudoPlaceholder": "Pseudo",
+        "pseudoMinLength": "Le pseudo doit contenir au moins 3 caractères",
+        "pseudoChecking": "Vérification...",
+        "pseudoAvailable": "Pseudo disponible",
+        "pseudoTaken": "Ce pseudo est déjà utilisé",
         "nextButton": "Suivant",
         "backButton": "Retour"
       },
@@ -63,6 +69,8 @@
         "title": "Quelle est votre date de naissance ?",
         "dobLabel": "Date de naissance",
         "dobPlaceholder": "AAAA-MM-JJ",
+        "dobInvalid": "Veuillez entrer une date valide",
+        "dobFuture": "La date de naissance ne peut pas être dans le futur",
         "submitButton": "Terminer",
         "backButton": "Retour"
       },

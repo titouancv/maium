@@ -23,19 +23,28 @@ export const SignupWizard = ({
 }: SignupWizardProps) => {
   const [step, setStep] = useState(initialStep);
   const [error, setError] = useState<string | null>(null);
+  const [isStepValid, setIsStepValid] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
   const t = useTranslations("auth.signup");
   const { setUser, user } = useUserStore();
+
+  const handleStepChange = (newStep: number) => {
+    setIsStepValid(false);
+    setStep(newStep);
+  };
 
   const nextStep = async (data: Partial<UserState>) => {
     setError(null);
 
     if (initialUser.supabaseId) {
+      setIsLoading(true);
       const res = await fetch(API.USERS_ME, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),
       });
+      setIsLoading(false);
       if (!res.ok) {
         if (res.status === 409) {
           setError(t("duplicatePseudoError"));
@@ -47,7 +56,7 @@ export const SignupWizard = ({
     }
 
     setUser(data);
-    setStep((s) => s + 1);
+    handleStepChange(step + 1);
   };
 
   const finish = async (data: Partial<UserState>) => {
@@ -55,6 +64,7 @@ export const SignupWizard = ({
     const merged = { ...user, ...data };
     const isOAuth = !!initialUser.supabaseId;
 
+    setIsLoading(true);
     const res = await fetch(isOAuth ? API.USERS_ME : API.USERS, {
       method: isOAuth ? "PATCH" : "POST",
       headers: { "Content-Type": "application/json" },
@@ -76,6 +86,7 @@ export const SignupWizard = ({
             },
       ),
     });
+    setIsLoading(false);
 
     if (res.ok) {
       if (!isOAuth) {
@@ -101,19 +112,19 @@ export const SignupWizard = ({
   const stepNavProps = {
     1: {
       formId: FORM_ID,
-      onBack: () => setStep(0),
+      onBack: () => handleStepChange(0),
       backLabel: t("step2.backButton"),
       nextLabel: t("step2.nextButton"),
     },
     2: {
       formId: FORM_ID,
-      onBack: () => setStep(1),
+      onBack: () => handleStepChange(1),
       backLabel: t("step3.backButton"),
       nextLabel: t("step3.nextButton"),
     },
     3: {
       formId: FORM_ID,
-      onBack: () => setStep(2),
+      onBack: () => handleStepChange(2),
       backLabel: t("step4.backButton"),
       nextLabel: t("step4.submitButton"),
     },
@@ -131,6 +142,8 @@ export const SignupWizard = ({
           title={stepTitles[step] ?? t("title")}
           step={step}
           totalSteps={3}
+          nextDisabled={!isStepValid}
+          nextLoading={isLoading}
           {...stepNavProps}
         >
           {step === 1 && (
@@ -138,12 +151,17 @@ export const SignupWizard = ({
               onNext={nextStep}
               defaultFirstName={initialUser.firstName}
               defaultLastName={initialUser.lastName}
+              onValidityChange={setIsStepValid}
             />
           )}
           {step === 2 && (
-            <StepPseudo onNext={nextStep} defaultPseudo={initialUser.pseudo} />
+            <StepPseudo
+              onNext={nextStep}
+              defaultPseudo={initialUser.pseudo}
+              onValidityChange={setIsStepValid}
+            />
           )}
-          {step === 3 && <StepDob onNext={finish} />}
+          {step === 3 && <StepDob onNext={finish} onValidityChange={setIsStepValid} />}
           {error && <p className="text-sm text-red-500">{error}</p>}
         </StepLayout>
       )}

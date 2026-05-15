@@ -2,7 +2,7 @@
   "common": {
     "save": "Save",
     "cancel": "Cancel",
-    "loading": "Loading...",
+    "loading": "Loading",
     "error": "Something went wrong."
   },
   "home": {
@@ -49,6 +49,8 @@
         "firstNamePlaceholder": "First name",
         "lastNameLabel": "Last name",
         "lastNamePlaceholder": "Last name",
+        "firstNameRequired": "First name is required",
+        "lastNameRequired": "Last name is required",
         "nextButton": "Next",
         "backButton": "Back"
       },
@@ -56,6 +58,10 @@
         "title": "Choose your username",
         "pseudoLabel": "Username",
         "pseudoPlaceholder": "Username",
+        "pseudoMinLength": "Username must be at least 3 characters",
+        "pseudoChecking": "Checking...",
+        "pseudoAvailable": "Username available",
+        "pseudoTaken": "This username is already taken",
         "nextButton": "Next",
         "backButton": "Back"
       },
@@ -63,6 +69,8 @@
         "title": "When's your birthday?",
         "dobLabel": "Date of birth",
         "dobPlaceholder": "YYYY-MM-DD",
+        "dobInvalid": "Please enter a valid date",
+        "dobFuture": "Date of birth cannot be in the future",
         "submitButton": "Complete",
         "backButton": "Back"
       },
