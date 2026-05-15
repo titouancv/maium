@@ -123,7 +123,7 @@ export const SignupWizard = ({
     <>
       {step === 0 ? (
         <div className="flex min-h-screen flex-col items-center justify-center gap-8">
-          <Title label={t("title")} size="h1" />
+          <Title label={"maium"} size="h1" />
           <GoogleSignInButton />
         </div>
       ) : (

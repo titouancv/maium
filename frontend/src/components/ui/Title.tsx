@@ -30,7 +30,7 @@ export function Title({
           {label}
         </Tag>
       </div>
-      <div className="h-1 w-24 rounded-full bg-current"></div>
+      <div className="h-1 w-22 rounded-full bg-current"></div>
     </div>
   );
 }
