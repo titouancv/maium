@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/Button";
 interface StepLayoutProps {
   title: string;
   step: number;
-  totalSteps?: number;
+  totalSteps: number;
   formId?: string;
   onBack?: () => void;
   backLabel?: string;
@@ -19,7 +19,7 @@ interface StepLayoutProps {
 export const StepLayout = ({
   title,
   step,
-  totalSteps = 4,
+  totalSteps,
   formId,
   onBack,
   backLabel,

@@ -1,4 +1,4 @@
-import { SignupWizard } from "@/components/auth/SignupWizard";
+import { SignupWizard } from "@/components/content/SignupContent";
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import { ROUTES } from "@/constants";
@@ -11,26 +11,31 @@ export default async function SignupPage() {
     data: { user },
   } = await supabase.auth.getUser();
 
-  let initialStep = 1;
+  let initialStep = 0;
   let initialUser: Partial<UserState> = {};
 
   if (user) {
     const { data: profile } = await supabase
       .from("users")
-      .select("pseudo")
+      .select("pseudo, dob, first_name, last_name, onboarding_completed")
       .eq("id", user.id)
       .single();
 
-    if (profile?.pseudo) {
+    if (profile?.onboarding_completed) {
       redirect(ROUTES.HOME);
     }
 
-    initialStep = 2;
+    if (profile?.pseudo && profile?.dob) {
+      redirect(ROUTES.WELCOME);
+    }
+
+    initialStep = profile?.pseudo ? 3 : 1;
     initialUser = {
       supabaseId: user.id,
       email: user.email,
-      firstName: user.user_metadata?.given_name ?? "",
-      lastName: user.user_metadata?.family_name ?? "",
+      firstName: profile?.first_name ?? user.user_metadata?.given_name ?? "",
+      lastName: profile?.last_name ?? user.user_metadata?.family_name ?? "",
+      pseudo: profile?.pseudo ?? undefined,
     };
   }
 

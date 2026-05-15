@@ -27,11 +27,14 @@
     "pseudo": "Pseudo",
     "dob": "Date de naissance",
     "noExperiences": "Aucune expérience ajoutée pour l'instant.",
-    "enterApp": "Accéder à l'application"
+    "enterApp": "Accéder à l'application",
+    "slideToEnter": "Glissez pour entrer",
+    "founderMessage": "Merci d'avoir rejoint maium. On a construit cette application avec passion, et on espère qu'elle t'accompagnera longtemps. Bienvenue dans l'aventure ! 🥳",
+    "founderSignature": "Titouan & Arthur, les fondateurs"
   },
   "auth": {
     "signup": {
-      "title": "Créer un compte",
+      "title": "Bienvenue",
       "step1": {
         "title": "Créer un compte",
         "emailLabel": "Adresse email",

@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
-import { WelcomeContent } from "@/components/home/WelcomeContent";
+import { WelcomeContent } from "@/components/content/WelcomeContent";
 import { ROUTES } from "@/constants";
 
 export default async function WelcomePage() {
