@@ -7,6 +7,7 @@ export interface UserState {
   lastName?: string;
   pseudo?: string;
   dob?: string;
+  supabaseId?: string;
 }
 
 interface UserStore {

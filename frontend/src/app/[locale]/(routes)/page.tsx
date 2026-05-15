@@ -1,8 +1,21 @@
-import { getTranslations } from "next-intl/server";
+import { createClient } from "@/lib/supabase/server";
 import { HomeContent } from "@/components/home/HomeContent";
 
 export default async function HomePage() {
-  const t = await getTranslations("home");
+  const supabase = await createClient();
+  const {
+    data: { user: authUser },
+  } = await supabase.auth.getUser();
 
-  return <HomeContent />;
+  let userData = null;
+  if (authUser) {
+    const { data } = await supabase
+      .from("users")
+      .select("email, first_name, last_name, pseudo, dob")
+      .eq("id", authUser.id)
+      .single();
+    userData = data;
+  }
+
+  return <HomeContent user={userData} />;
 }

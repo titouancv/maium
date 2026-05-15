@@ -13,12 +13,14 @@
     "email": "Email",
     "name": "Full name",
     "pseudo": "Username",
-    "dob": "Date of birth"
+    "dob": "Date of birth",
+    "logoutButton": "Sign out"
   },
   "auth": {
     "signup": {
       "title": "Create an account",
       "step1": {
+        "title": "Create an account",
         "emailLabel": "Email address",
         "emailPlaceholder": "Email address",
         "passwordLabel": "Password",
@@ -26,6 +28,7 @@
         "nextButton": "Next"
       },
       "step2": {
+        "title": "What's your name?",
         "firstNameLabel": "First name",
         "firstNamePlaceholder": "First name",
         "lastNameLabel": "Last name",
@@ -34,16 +37,28 @@
         "backButton": "Back"
       },
       "step3": {
+        "title": "Choose your username",
         "pseudoLabel": "Username",
         "pseudoPlaceholder": "Username",
         "nextButton": "Next",
         "backButton": "Back"
       },
       "step4": {
+        "title": "When's your birthday?",
         "dobLabel": "Date of birth",
         "dobPlaceholder": "YYYY-MM-DD",
         "submitButton": "Complete",
         "backButton": "Back"
+      },
+      "duplicateEmailError": "This email address is already in use.",
+      "duplicatePseudoError": "This username is already in use.",
+      "signupError": "An error occurred during signup. Please try again.",
+      "oauth": {
+        "googleButton": "Continue with Google",
+        "appleButton": "Continue with Apple",
+        "orDivider": "or",
+        "errorGeneric": "Authentication failed. Please try again.",
+        "errorEmailExists": "An account with this email already exists. Try signing in instead."
       }
     }
   }

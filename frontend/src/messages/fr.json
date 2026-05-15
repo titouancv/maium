@@ -13,12 +13,14 @@
     "email": "Email",
     "name": "Nom complet",
     "pseudo": "Pseudo",
-    "dob": "Date de naissance"
+    "dob": "Date de naissance",
+    "logoutButton": "Se déconnecter"
   },
   "auth": {
     "signup": {
       "title": "Créer un compte",
       "step1": {
+        "title": "Créer un compte",
         "emailLabel": "Adresse email",
         "emailPlaceholder": "Adresse email",
         "passwordLabel": "Mot de passe",
@@ -26,6 +28,7 @@
         "nextButton": "Suivant"
       },
       "step2": {
+        "title": "Quel est votre nom ?",
         "firstNameLabel": "Prénom",
         "firstNamePlaceholder": "Prénom",
         "lastNameLabel": "Nom",
@@ -34,16 +37,28 @@
         "backButton": "Retour"
       },
       "step3": {
+        "title": "Choisissez votre pseudo",
         "pseudoLabel": "Pseudo",
         "pseudoPlaceholder": "Pseudo",
         "nextButton": "Suivant",
         "backButton": "Retour"
       },
       "step4": {
+        "title": "Quelle est votre date de naissance ?",
         "dobLabel": "Date de naissance",
         "dobPlaceholder": "AAAA-MM-JJ",
         "submitButton": "Terminer",
         "backButton": "Retour"
+      },
+      "duplicateEmailError": "Cette adresse e-mail est déjà utilisée.",
+      "duplicatePseudoError": "Ce pseudo est déjà utilisé.",
+      "signupError": "Une erreur est survenue lors de l'inscription. Veuillez réessayer.",
+      "oauth": {
+        "googleButton": "Continuer avec Google",
+        "appleButton": "Continuer avec Apple",
+        "orDivider": "ou",
+        "errorGeneric": "Échec de l'authentification. Veuillez réessayer.",
+        "errorEmailExists": "Un compte existe déjà avec cet e-mail. Essayez de vous connecter."
       }
     }
   }

@@ -5,6 +5,7 @@ import { NextIntlClientProvider } from "next-intl";
 import { getMessages } from "next-intl/server";
 import { notFound } from "next/navigation";
 import { routing } from "@/i18n/routing";
+import { Providers } from "@/components/Providers";
 
 export const metadata: Metadata = {
   title: "maium",
@@ -30,9 +31,9 @@ export default async function RootLayout({
       lang={locale}
       className={`${cabinetGrotesk.variable} h-full antialiased`}
     >
-      <body className="flex min-h-full flex-col font-bold">
+      <body className="flex min-h-full flex-col p-4 font-bold">
         <NextIntlClientProvider messages={messages}>
-          {children}
+          <Providers>{children}</Providers>
         </NextIntlClientProvider>
       </body>
     </html>
