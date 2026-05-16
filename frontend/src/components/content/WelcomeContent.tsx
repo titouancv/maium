@@ -20,8 +20,8 @@ export const WelcomeContent = ({ firstName }: WelcomeContentProps) => {
   const t = useTranslations("welcome");
   const router = useRouter();
 
-  const handleEnterApp = async () => {
-    await fetch("/api/users/me", {
+  const handleEnterApp = () => {
+    fetch("/api/users/me", {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ onboardingCompleted: true }),
