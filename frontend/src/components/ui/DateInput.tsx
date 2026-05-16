@@ -8,6 +8,7 @@ interface DateInputProps {
   value?: string; // ISO format: YYYY-MM-DD | YYYY-MM | YYYY depending on mode
   onChange?: (value: string) => void;
   onBlur?: () => void;
+  onEnter?: () => void;
   name?: string;
   error?: string;
   autoComplete?: string;
@@ -79,7 +80,7 @@ const MODE_CONFIGS: Record<DateMode, ModeConfig> = {
 };
 
 export const DateInput = forwardRef<HTMLInputElement, DateInputProps>(
-  ({ value, onChange, onBlur, name, error, autoComplete, autoFocus, mode = "DD-MM-YYYY" }, forwardedRef) => {
+  ({ value, onChange, onBlur, onEnter, name, error, autoComplete, autoFocus, mode = "DD-MM-YYYY" }, forwardedRef) => {
     const config = MODE_CONFIGS[mode];
     const [digits, setDigits] = useState(() => config.fromISO(value ?? ""));
     const localRef = useRef<HTMLInputElement>(null);
@@ -93,7 +94,7 @@ export const DateInput = forwardRef<HTMLInputElement, DateInputProps>(
     }, [digits, config.cursorPos, forwardedRef]);
 
     const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-      if (e.key === "Enter") return;
+      if (e.key === "Enter") { onEnter?.(); return; }
       e.preventDefault();
       if (/^\d$/.test(e.key) && digits.length < config.maxDigits) {
         const next = digits + e.key;

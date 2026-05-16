@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -33,6 +33,7 @@ export const ProfessionalExperienceSubWizard = ({
 }: Props) => {
   const t = useTranslations("auth.signup.step5");
   const [subStep, setSubStep] = useState(1);
+  const endDateRef = useRef<HTMLInputElement>(null);
   const TOTAL = 3;
 
   const schema = z
@@ -108,8 +109,10 @@ export const ProfessionalExperienceSubWizard = ({
             infoLabel={errors.company?.message}
             infoType={errors.company ? "error" : "info"}
             autoCapitalize="words"
+            enterKeyHint="next"
             autoFocus
             {...register("company")}
+            onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); void handlePrimary(); } }}
           />
         )}
 
@@ -119,8 +122,10 @@ export const ProfessionalExperienceSubWizard = ({
             infoLabel={errors.role?.message}
             infoType={errors.role ? "error" : "info"}
             autoCapitalize="words"
+            enterKeyHint="next"
             autoFocus
             {...register("role")}
+            onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); void handlePrimary(); } }}
           />
         )}
 
@@ -138,6 +143,7 @@ export const ProfessionalExperienceSubWizard = ({
                   name={field.name}
                   error={errors.startDate?.message}
                   autoFocus
+                  onEnter={() => endDateRef.current?.focus()}
                 />
               )}
             />
@@ -146,12 +152,14 @@ export const ProfessionalExperienceSubWizard = ({
               control={control}
               render={({ field }) => (
                 <DateInput
+                  ref={endDateRef}
                   mode="MM-YYYY"
                   value={field.value}
                   onChange={field.onChange}
                   onBlur={field.onBlur}
                   name={field.name}
                   error={errors.endDate?.message}
+                  onEnter={() => void handlePrimary()}
                 />
               )}
             />

@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, forwardRef, useImperativeHandle } from "react";
-import { useForm, useFieldArray, useWatch, type Control, type Resolver } from "react-hook-form";
+import { useForm, useFieldArray, type Resolver } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useTranslations } from "next-intl";
@@ -9,7 +9,7 @@ import { useRouter } from "@/i18n/navigation";
 import { Button } from "@/components/ui/Button";
 import { type UserState, useUserStore } from "@/stores/useUserStore";
 import { ROUTES } from "@/constants";
-import { ExperienceItem } from "../experience/ExperienceItem";
+import { ExperienceList } from "../experience/ExperienceList";
 
 const MONTH_YEAR = /^\d{4}-(0[1-9]|1[0-2])$/;
 const YEAR = /^\d{4}$/;
@@ -89,52 +89,19 @@ const ExperienceStepInner = forwardRef<
         </Button>
       )}
       {mode === "list" && (
-        <div className="flex flex-col gap-3">
-          {fields.map((field, index) => (
-            <ItemRow
-              key={field.id}
-              index={index}
-              control={control}
-              getDisplay={config.getDisplay}
-              editLabel={config.editLabel}
-              onEdit={() => router.push(`${config.baseUrl}&index=${index}`)}
-            />
-          ))}
-        </div>
+        <ExperienceList
+          fields={fields}
+          control={control}
+          getDisplay={config.getDisplay}
+          editLabel={config.editLabel}
+          onEdit={(index) => router.push(`${config.baseUrl}&index=${index}`)}
+        />
       )}
     </form>
   );
 });
 
 ExperienceStepInner.displayName = "ExperienceStepInner";
-
-const ItemRow = ({
-  index,
-  control,
-  getDisplay,
-  editLabel,
-  onEdit,
-}: {
-  index: number;
-  control: Control<FormItems>;
-  getDisplay: StepConfig["getDisplay"];
-  editLabel: string;
-  onEdit: () => void;
-}) => {
-  const items = useWatch({ control, name: "items" });
-  const display = getDisplay(items?.[index] ?? {});
-  return (
-    <ExperienceItem
-      title={display.title}
-      subtitle={display.subtitle}
-      startPeriod={display.startPeriod}
-      endPeriod={display.endPeriod}
-      presentLabel={display.presentLabel}
-      editLabel={editLabel}
-      onEdit={onEdit}
-    />
-  );
-};
 
 // ─── Public component ─────────────────────────────────────────────────────────
 

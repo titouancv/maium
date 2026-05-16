@@ -1,11 +1,12 @@
 "use client";
 
-import { useState } from "react";
-import { useForm } from "react-hook-form";
+import { useRef, useState } from "react";
+import { useForm, Controller } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useTranslations } from "next-intl";
 import { TextInput } from "@/components/ui/TextInput";
+import { DateInput } from "@/components/ui/DateInput";
 import { StepLayout } from "@/components/layout/StepLayout";
 
 const YEAR = /^\d{4}$/;
@@ -35,6 +36,8 @@ export const EducationalExperienceSubWizard = ({
   const t = useTranslations("auth.signup.step6");
   const [subStep, setSubStep] = useState(1);
   const TOTAL = 4;
+  const endYearRef = useRef<HTMLInputElement>(null);
+  const websiteRef = useRef<HTMLInputElement>(null);
 
   const schema = z
     .object({
@@ -55,6 +58,7 @@ export const EducationalExperienceSubWizard = ({
 
   const {
     register,
+    control,
     trigger,
     handleSubmit,
     formState: { errors },
@@ -115,8 +119,10 @@ export const EducationalExperienceSubWizard = ({
             infoLabel={errors.school?.message}
             infoType={errors.school ? "error" : "info"}
             autoCapitalize="words"
+            enterKeyHint="next"
             autoFocus
             {...register("school")}
+            onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); void handlePrimary(); } }}
           />
         )}
 
@@ -126,27 +132,46 @@ export const EducationalExperienceSubWizard = ({
             infoLabel={errors.fieldOfStudy?.message}
             infoType={errors.fieldOfStudy ? "error" : "info"}
             autoCapitalize="words"
+            enterKeyHint="next"
             autoFocus
             {...register("fieldOfStudy")}
+            onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); void handlePrimary(); } }}
           />
         )}
 
         {subStep === 3 && (
           <div className="flex w-full gap-2">
-            <TextInput
-              placeholder={t("startYearPlaceholder")}
-              infoLabel={errors.startYear?.message}
-              infoType={errors.startYear ? "error" : "info"}
-              inputMode="numeric"
-              autoFocus
-              {...register("startYear")}
+            <Controller
+              name="startYear"
+              control={control}
+              render={({ field }) => (
+                <DateInput
+                  mode="YYYY"
+                  value={field.value}
+                  onChange={field.onChange}
+                  onBlur={field.onBlur}
+                  name={field.name}
+                  error={errors.startYear?.message}
+                  autoFocus
+                  onEnter={() => endYearRef.current?.focus()}
+                />
+              )}
             />
-            <TextInput
-              placeholder={t("endYearPlaceholder")}
-              infoLabel={errors.endYear?.message}
-              infoType={errors.endYear ? "error" : "info"}
-              inputMode="numeric"
-              {...register("endYear")}
+            <Controller
+              name="endYear"
+              control={control}
+              render={({ field }) => (
+                <DateInput
+                  ref={endYearRef}
+                  mode="YYYY"
+                  value={field.value}
+                  onChange={field.onChange}
+                  onBlur={field.onBlur}
+                  name={field.name}
+                  error={errors.endYear?.message}
+                  onEnter={() => void handlePrimary()}
+                />
+              )}
             />
           </div>
         )}
@@ -157,8 +182,10 @@ export const EducationalExperienceSubWizard = ({
               placeholder={t("descriptionPlaceholder")}
               infoLabel={errors.description?.message}
               infoType={errors.description ? "error" : "info"}
+              enterKeyHint="next"
               autoFocus
               {...register("description")}
+              onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); websiteRef.current?.focus(); } }}
             />
             <TextInput
               placeholder={t("websitePlaceholder")}
@@ -166,7 +193,10 @@ export const EducationalExperienceSubWizard = ({
               infoType={errors.website ? "error" : "info"}
               inputMode="url"
               autoCapitalize="none"
+              enterKeyHint="done"
               {...register("website")}
+              ref={(el) => { websiteRef.current = el; }}
+              onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); void handlePrimary(); } }}
             />
           </>
         )}
