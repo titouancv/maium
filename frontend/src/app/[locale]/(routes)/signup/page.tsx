@@ -3,7 +3,11 @@ import { SignupWizard } from "@/components/content/SignupContent";
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import { ROUTES } from "@/constants";
-import type { UserState } from "@/stores/useUserStore";
+import type {
+  UserState,
+  ProfessionalExperience,
+  EducationalExperience,
+} from "@/stores/useUserStore";
 
 export default async function SignupPage() {
   const supabase = await createClient();
@@ -18,7 +22,9 @@ export default async function SignupPage() {
   if (user) {
     const { data: profile } = await supabase
       .from("users")
-      .select("pseudo, dob, first_name, last_name, onboarding_completed")
+      .select(
+        "pseudo, dob, first_name, last_name, onboarding_completed, professional_experiences, educational_experiences",
+      )
       .eq("id", user.id)
       .single();
 
@@ -33,6 +39,13 @@ export default async function SignupPage() {
       firstName: profile?.first_name ?? user.user_metadata?.given_name ?? "",
       lastName: profile?.last_name ?? user.user_metadata?.family_name ?? "",
       pseudo: profile?.pseudo ?? undefined,
+      dob: profile?.dob ?? undefined,
+      professionalExperiences:
+        (profile?.professional_experiences as unknown as ProfessionalExperience[] | null) ??
+        [],
+      educationalExperiences:
+        (profile?.educational_experiences as unknown as EducationalExperience[] | null) ??
+        [],
     };
   }
 

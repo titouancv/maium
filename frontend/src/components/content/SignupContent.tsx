@@ -195,7 +195,11 @@ export const SignupWizard = ({
             />
           )}
           {step === 3 && (
-            <StepDob onNext={nextStep} onValidityChange={setIsStepValid} />
+            <StepDob
+              onNext={nextStep}
+              onValidityChange={setIsStepValid}
+              defaultDob={initialUser.dob}
+            />
           )}
           {step === 4 && (
             <StepExperience

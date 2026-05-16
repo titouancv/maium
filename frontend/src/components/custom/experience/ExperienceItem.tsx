@@ -12,6 +12,7 @@ export interface Experience {
   website?: string;
   location?: string;
   presentLabel?: string;
+  sinceLabel?: string;
   editLabel: string;
   onEdit: () => void;
 }
@@ -25,6 +26,7 @@ export const ExperienceItem = ({
   website,
   description,
   presentLabel,
+  sinceLabel,
   editLabel,
   onEdit,
 }: Experience) => {
@@ -49,7 +51,7 @@ export const ExperienceItem = ({
   const formatPeriod = (startDate: string, endDate?: string): string => {
     const [startYear] = startDate.split("-").map(Number);
     if (!endDate) {
-      return `${startYear}`;
+      return sinceLabel ? `${sinceLabel} ${startYear}` : `${startYear}`;
     }
     const [endYear] = endDate.split("-").map(Number);
     if (startYear === endYear) {

@@ -206,6 +206,7 @@ export const StepExperience = forwardRef<ExperienceStepHandle, Props>(
             location: item.location || undefined,
             website: item.website || undefined,
             presentLabel: t("presentLabel"),
+            sinceLabel: t("sinceLabel"),
           }),
         }
       : {
@@ -267,11 +268,13 @@ export const StepExperience = forwardRef<ExperienceStepHandle, Props>(
             endPeriod: item.endYear || undefined,
             location: item.location || undefined,
             website: item.website || undefined,
+            sinceLabel: t("sinceLabel"),
           }),
         };
 
     return (
       <ExperienceStepInner
+        key={config.defaultValues.items.length}
         ref={ref}
         config={config}
         onNext={onNext}

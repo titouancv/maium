@@ -11,9 +11,11 @@ import { UserState, useUserStore } from "@/stores/useUserStore";
 export const StepDob = ({
   onNext,
   onValidityChange,
+  defaultDob,
 }: {
   onNext: (d: Partial<UserState>) => void;
   onValidityChange?: (isValid: boolean) => void;
+  defaultDob?: string;
 }) => {
   const t = useTranslations("auth.signup.step4");
   const { user } = useUserStore();
@@ -37,7 +39,7 @@ export const StepDob = ({
     resolver: zodResolver(schema),
     mode: "onChange",
     defaultValues: {
-      dob: user?.dob || "",
+      dob: user?.dob || defaultDob || "",
     },
   });
 
