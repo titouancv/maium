@@ -142,7 +142,7 @@ export const SignupWizard = ({
       ? {
           formId: FORM_ID,
           primaryLabel: tCommon("nextButton"),
-          secondaryLabel: t("step5.addEntry"),
+          secondaryLabel: tCommon("addButton"),
           onSecondary: () => {
             step4Ref.current?.addEntry();
           },
@@ -154,14 +154,17 @@ export const SignupWizard = ({
     2: { formId: FORM_ID, primaryLabel: tCommon("nextButton") },
     3: { formId: FORM_ID, primaryLabel: tCommon("nextButton") },
     4: step4NavProps,
-    5: step5Mode === "list"
-      ? {
-          formId: FORM_ID,
-          primaryLabel: tCommon("nextButton"),
-          secondaryLabel: t("step6.addEntry"),
-          onSecondary: () => { step5Ref.current?.addEntry(); },
-        }
-      : { formId: FORM_ID, primaryLabel: tCommon("nextButton") },
+    5:
+      step5Mode === "list"
+        ? {
+            formId: FORM_ID,
+            primaryLabel: tCommon("nextButton"),
+            secondaryLabel: tCommon("addButton"),
+            onSecondary: () => {
+              step5Ref.current?.addEntry();
+            },
+          }
+        : { formId: FORM_ID, primaryLabel: tCommon("nextButton") },
   }[step];
 
   return (

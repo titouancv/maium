@@ -94,7 +94,7 @@ export const DateInput = forwardRef<HTMLInputElement, DateInputProps>(
     }, [digits, config.cursorPos, forwardedRef]);
 
     const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-      if (e.key === "Enter") { onEnter?.(); return; }
+      if (e.key === "Enter") { e.preventDefault(); onEnter?.(); return; }
       e.preventDefault();
       if (/^\d$/.test(e.key) && digits.length < config.maxDigits) {
         const next = digits + e.key;

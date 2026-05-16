@@ -6,6 +6,7 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useTranslations } from "next-intl";
 import { TextInput } from "@/components/ui/TextInput";
+import { TextArea } from "@/components/ui/TextArea";
 import { DateInput } from "@/components/ui/DateInput";
 import { LocationInput } from "@/components/ui/LocationInput";
 import { StepLayout } from "@/components/layout/StepLayout";
@@ -53,12 +54,18 @@ export const ExperienceSubWizard = ({
       endPeriod: z
         .union([z.string().regex(MONTH_YEAR), z.literal("")])
         .optional(),
-      description: z.string().max(500).or(z.literal("")),
-      website: z.union([z.string().url({ message: t("websiteInvalid") }), z.literal("")]),
+      description: z.string().or(z.literal("")),
+      website: z.union([
+        z.url({ message: t("websiteInvalid") }),
+        z.literal(""),
+      ]),
       location: z.string().max(100).or(z.literal("")),
     })
     .refine(
-      (d) => !d.endPeriod || !MONTH_YEAR.test(d.endPeriod) || d.endPeriod >= d.startPeriod,
+      (d) =>
+        !d.endPeriod ||
+        !MONTH_YEAR.test(d.endPeriod) ||
+        d.endPeriod >= d.startPeriod,
       { message: t("endPeriodBeforeStart"), path: ["endPeriod"] },
     );
 
@@ -133,7 +140,12 @@ export const ExperienceSubWizard = ({
             enterKeyHint="next"
             autoFocus
             {...register("organization")}
-            onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); void handlePrimary(); } }}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                e.preventDefault();
+                void handlePrimary();
+              }
+            }}
           />
         )}
 
@@ -146,7 +158,12 @@ export const ExperienceSubWizard = ({
             enterKeyHint="next"
             autoFocus
             {...register("role")}
-            onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); void handlePrimary(); } }}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                e.preventDefault();
+                void handlePrimary();
+              }
+            }}
           />
         )}
 
@@ -188,14 +205,13 @@ export const ExperienceSubWizard = ({
         )}
 
         {subStep === 4 && (
-          <TextInput
+          <TextArea
             placeholder={t("descriptionPlaceholder")}
             infoLabel={errors.description?.message}
             infoType={errors.description ? "error" : "info"}
-            enterKeyHint="next"
+            row={10}
             autoFocus
             {...register("description")}
-            onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); void handlePrimary(); } }}
           />
         )}
 
@@ -209,7 +225,12 @@ export const ExperienceSubWizard = ({
             enterKeyHint="next"
             autoFocus
             {...register("website")}
-            onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); void handlePrimary(); } }}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                e.preventDefault();
+                void handlePrimary();
+              }
+            }}
           />
         )}
 

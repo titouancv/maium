@@ -8,6 +8,7 @@
     "backButton": "Back",
     "skipButton": "Skip",
     "cancelButton": "Cancel",
+    "addButton": "Add",
     "editButton": "Edit",
     "sinceLabel": "since"
   },

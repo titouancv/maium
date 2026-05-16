@@ -15,7 +15,7 @@ export const ExperienceSchema = z
   .object({
     organization: z.string().min(1).max(120),
     role: z.string().min(1).max(120),
-    description: z.string().max(500).optional(),
+    description: z.string().optional(),
     website: optionalUrl,
     location: z.string().max(100).optional(),
     startPeriod: period,

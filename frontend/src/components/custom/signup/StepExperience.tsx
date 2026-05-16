@@ -86,15 +86,17 @@ const ExperienceStepInner = forwardRef<
       className="flex flex-col gap-4"
     >
       {mode === "empty" && (
-        <Button
-          type="button"
-          variant="outline"
-          size="md"
-          className="w-full"
-          onClick={() => router.push(config.baseUrl)}
-        >
-          {config.addEntryLabel}
-        </Button>
+        <div className="">
+          <Button
+            type="button"
+            variant="outline"
+            size="md"
+            className="w-full"
+            onClick={() => router.push(config.baseUrl)}
+          >
+            {config.addEntryLabel}
+          </Button>
+        </div>
       )}
       {mode === "list" && (
         <ExperienceList

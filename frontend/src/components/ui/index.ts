@@ -11,6 +11,7 @@ export * from "./SwipeAction";
 export * from "./Switch";
 export * from "./Tabs";
 export * from "./TextInput";
+export * from "./TextArea";
 export * from "./DateInput";
 export * from "./LocationInput";
 export * from "./SlideToEnter";
