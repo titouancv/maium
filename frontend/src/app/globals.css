@@ -237,6 +237,13 @@
    BASE
    ============================================================ */
 
+html,
+body {
+  height: 100%;
+  overflow: hidden;
+  margin: 0;
+}
+
 body {
   background: var(--color-surface-50);
   color: var(--color-txt);

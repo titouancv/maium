@@ -20,6 +20,7 @@ export const StepEmailPassword = ({
   onNext: (d: Partial<UserState>) => void;
 }) => {
   const t = useTranslations("auth.signup.step1");
+  const tCommon = useTranslations("common");
   const { user } = useUserStore();
   const {
     register,
@@ -48,7 +49,7 @@ export const StepEmailPassword = ({
         {...register("password")}
       />
       <Button type="submit" className="mt-4 w-full" size="lg">
-        {t("nextButton")}
+        {tCommon("nextButton")}
       </Button>
     </form>
   );

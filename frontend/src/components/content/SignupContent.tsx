@@ -1,15 +1,21 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState, useEffect } from "react";
+import { useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { useRouter } from "@/i18n/navigation";
 import { useUserStore, type UserState } from "@/stores/useUserStore";
 import { ROUTES, API } from "@/constants";
 import { StepLayout } from "../layout/StepLayout";
-import { GoogleSignInButton } from "../auth/GoogleSignInButton";
-import { StepName } from "../auth/StepName";
-import { StepPseudo } from "../auth/StepPseudo";
-import { StepDob } from "../auth/StepDob";
+import { GoogleSignInButton } from "../custom/signup/GoogleSignInButton";
+import { StepName } from "../custom/signup/StepName";
+import { StepPseudo } from "../custom/signup/StepPseudo";
+import { StepDob } from "../custom/signup/StepDob";
+import {
+  StepExperience,
+  type Step4Handle,
+  type Step4Mode,
+} from "../custom/signup/StepExperience";
 import { Title } from "../ui";
 
 interface SignupWizardProps {
@@ -17,17 +23,35 @@ interface SignupWizardProps {
   initialUser?: Partial<UserState>;
 }
 
+const TOTAL_STEPS = 5;
+
 export const SignupWizard = ({
   initialStep = 0,
   initialUser = {},
 }: SignupWizardProps) => {
-  const [step, setStep] = useState(initialStep);
+  const searchParams = useSearchParams();
+  const urlStep = searchParams.get("step");
+  const [step, setStep] = useState(
+    urlStep ? parseInt(urlStep, 10) : initialStep,
+  );
   const [error, setError] = useState<string | null>(null);
   const [isStepValid, setIsStepValid] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const step4Ref = useRef<Step4Handle>(null);
+  const [step4Mode, setStep4Mode] = useState<Step4Mode>("empty");
+  const step5Ref = useRef<Step4Handle>(null);
+  const [step5Mode, setStep5Mode] = useState<Step4Mode>("empty");
   const router = useRouter();
   const t = useTranslations("auth.signup");
+  const tCommon = useTranslations("common");
   const { setUser, user } = useUserStore();
+
+  useEffect(() => {
+    if (!user && Object.keys(initialUser).length > 0) {
+      setUser(initialUser);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const handleStepChange = (newStep: number) => {
     setIsStepValid(false);
@@ -75,6 +99,8 @@ export const SignupWizard = ({
               lastName: merged.lastName,
               pseudo: merged.pseudo,
               dob: merged.dob,
+              professionalExperiences: merged.professionalExperiences ?? [],
+              educationalExperiences: merged.educationalExperiences ?? [],
             }
           : {
               email: merged.email,
@@ -107,27 +133,38 @@ export const SignupWizard = ({
     1: t("step2.title"),
     2: t("step3.title"),
     3: t("step4.title"),
+    4: t("step5.title"),
+    5: t("step6.title"),
   };
 
+  const step4NavProps =
+    step4Mode === "list"
+      ? {
+          formId: FORM_ID,
+          primaryLabel: tCommon("nextButton"),
+          secondaryLabel: tCommon("addButton"),
+          onSecondary: () => {
+            step4Ref.current?.addEntry();
+          },
+        }
+      : { formId: FORM_ID, primaryLabel: tCommon("nextButton") };
+
   const stepNavProps = {
-    1: {
-      formId: FORM_ID,
-      onBack: () => handleStepChange(0),
-      backLabel: t("step2.backButton"),
-      nextLabel: t("step2.nextButton"),
-    },
-    2: {
-      formId: FORM_ID,
-      onBack: () => handleStepChange(1),
-      backLabel: t("step3.backButton"),
-      nextLabel: t("step3.nextButton"),
-    },
-    3: {
-      formId: FORM_ID,
-      onBack: () => handleStepChange(2),
-      backLabel: t("step4.backButton"),
-      nextLabel: t("step4.submitButton"),
-    },
+    1: { formId: FORM_ID, primaryLabel: tCommon("nextButton") },
+    2: { formId: FORM_ID, primaryLabel: tCommon("nextButton") },
+    3: { formId: FORM_ID, primaryLabel: tCommon("nextButton") },
+    4: step4NavProps,
+    5:
+      step5Mode === "list"
+        ? {
+            formId: FORM_ID,
+            primaryLabel: tCommon("nextButton"),
+            secondaryLabel: tCommon("addButton"),
+            onSecondary: () => {
+              step5Ref.current?.addEntry();
+            },
+          }
+        : { formId: FORM_ID, primaryLabel: tCommon("nextButton") },
   }[step];
 
   return (
@@ -141,9 +178,9 @@ export const SignupWizard = ({
         <StepLayout
           title={stepTitles[step] ?? t("title")}
           step={step}
-          totalSteps={3}
-          nextDisabled={!isStepValid}
-          nextLoading={isLoading}
+          totalSteps={TOTAL_STEPS}
+          primaryDisabled={step < 4 && !isStepValid}
+          primaryLoading={isLoading}
           {...stepNavProps}
         >
           {step === 1 && (
@@ -162,7 +199,29 @@ export const SignupWizard = ({
             />
           )}
           {step === 3 && (
-            <StepDob onNext={finish} onValidityChange={setIsStepValid} />
+            <StepDob
+              onNext={nextStep}
+              onValidityChange={setIsStepValid}
+              defaultDob={initialUser.dob}
+            />
+          )}
+          {step === 4 && (
+            <StepExperience
+              type="professional"
+              ref={step4Ref}
+              onNext={nextStep}
+              onValidityChange={setIsStepValid}
+              onModeChange={setStep4Mode}
+            />
+          )}
+          {step === 5 && (
+            <StepExperience
+              type="educational"
+              ref={step5Ref}
+              onNext={finish}
+              onValidityChange={setIsStepValid}
+              onModeChange={setStep5Mode}
+            />
           )}
           {error && <p className="text-sm text-red-500">{error}</p>}
         </StepLayout>

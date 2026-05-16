@@ -3,7 +3,14 @@
     "save": "Enregistrer",
     "cancel": "Annuler",
     "loading": "Chargement",
-    "error": "Une erreur s'est produite."
+    "error": "Une erreur s'est produite.",
+    "nextButton": "Suivant",
+    "backButton": "Retour",
+    "skipButton": "Passer",
+    "cancelButton": "Annuler",
+    "addButton": "Ajouter",
+    "editButton": "Modifier",
+    "sinceLabel": "depuis"
   },
   "home": {
     "title": "Bienvenue",
@@ -44,8 +51,7 @@
         "emailLabel": "Adresse email",
         "emailPlaceholder": "Adresse email",
         "passwordLabel": "Mot de passe",
-        "passwordPlaceholder": "Mot de passe",
-        "nextButton": "Suivant"
+        "passwordPlaceholder": "Mot de passe"
       },
       "step2": {
         "title": "Quel est votre nom ?",
@@ -54,9 +60,7 @@
         "lastNameLabel": "Nom",
         "lastNamePlaceholder": "Nom",
         "firstNameRequired": "Le prénom est requis",
-        "lastNameRequired": "Le nom est requis",
-        "nextButton": "Suivant",
-        "backButton": "Retour"
+        "lastNameRequired": "Le nom est requis"
       },
       "step3": {
         "title": "Choisissez votre pseudo",
@@ -65,9 +69,7 @@
         "pseudoMinLength": "Le pseudo doit contenir au moins 3 caractères",
         "pseudoChecking": "Vérification...",
         "pseudoAvailable": "Pseudo disponible",
-        "pseudoTaken": "Ce pseudo est déjà utilisé",
-        "nextButton": "Suivant",
-        "backButton": "Retour"
+        "pseudoTaken": "Ce pseudo est déjà utilisé"
       },
       "step4": {
         "title": "Quelle est votre date de naissance ?",
@@ -75,8 +77,17 @@
         "dobPlaceholder": "AAAA-MM-JJ",
         "dobInvalid": "Veuillez entrer une date valide",
         "dobFuture": "La date de naissance ne peut pas être dans le futur",
-        "submitButton": "Terminer",
-        "backButton": "Retour"
+        "submitButton": "Suivant"
+      },
+      "step5": {
+        "title": "Expérience professionnelle",
+        "subtitle": "Parlez-nous de votre carrière (optionnel)",
+        "addEntry": "Ajouter un poste"
+      },
+      "step6": {
+        "title": "Parcours éducatif",
+        "subtitle": "Parlez-nous de vos études (optionnel)",
+        "addEntry": "Ajouter une école"
       },
       "duplicateEmailError": "Cette adresse e-mail est déjà utilisée.",
       "duplicatePseudoError": "Ce pseudo est déjà utilisé.",
@@ -88,6 +99,51 @@
         "errorGeneric": "Échec de l'authentification. Veuillez réessayer.",
         "errorEmailExists": "Un compte existe déjà avec cet e-mail. Essayez de vous connecter."
       }
+    }
+  },
+  "experience": {
+    "professional": {
+      "addEntry": "Ajouter un poste",
+      "removeEntry": "Supprimer",
+      "organizationPlaceholder": "Entreprise",
+      "rolePlaceholder": "Poste",
+      "descriptionPlaceholder": "Description",
+      "websitePlaceholder": "https://...",
+      "locationPlaceholder": "Ville, Pays",
+      "organizationRequired": "L'entreprise est requise",
+      "roleRequired": "Le poste est requis",
+      "startPeriodRequired": "La date de début est requise (AAAA-MM)",
+      "endPeriodBeforeStart": "La date de fin doit être après la date de début",
+      "websiteInvalid": "Veuillez entrer une URL valide",
+      "saveButton": "Enregistrer",
+      "presentLabel": "En cours",
+      "subStep1Title": "Entreprise",
+      "subStep2Title": "Poste",
+      "subStep3Title": "Durée",
+      "subStep4Title": "Description",
+      "subStep5Title": "Site web",
+      "subStep6Title": "Localisation"
+    },
+    "educational": {
+      "addEntry": "Ajouter une école",
+      "removeEntry": "Supprimer",
+      "organizationPlaceholder": "École",
+      "rolePlaceholder": "Domaine d'étude",
+      "descriptionPlaceholder": "Description",
+      "websitePlaceholder": "https://...",
+      "locationPlaceholder": "Ville, Pays",
+      "organizationRequired": "L'école est requise",
+      "roleRequired": "Le domaine d'étude est requis",
+      "startPeriodRequired": "L'année de début est requise (AAAA)",
+      "endPeriodBeforeStart": "L'année de fin doit être après l'année de début",
+      "websiteInvalid": "Veuillez entrer une URL valide",
+      "saveButton": "Terminer",
+      "subStep1Title": "École",
+      "subStep2Title": "Domaine d'étude",
+      "subStep3Title": "Durée",
+      "subStep4Title": "Description",
+      "subStep5Title": "Site web",
+      "subStep6Title": "Localisation"
     }
   }
 }

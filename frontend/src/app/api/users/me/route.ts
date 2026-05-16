@@ -21,14 +21,27 @@ export async function PATCH(request: NextRequest) {
       return NextResponse.json({ error: "Invalid input" }, { status: 400 });
     }
 
-    const { firstName, lastName, pseudo, dob, onboardingCompleted } = parsed.data;
+    const {
+      firstName,
+      lastName,
+      pseudo,
+      dob,
+      onboardingCompleted,
+      professionalExperiences,
+      educationalExperiences,
+    } = parsed.data;
 
     const updates: Record<string, unknown> = {};
     if (firstName !== undefined) updates.first_name = firstName;
     if (lastName !== undefined) updates.last_name = lastName;
     if (pseudo !== undefined) updates.pseudo = pseudo;
     if (dob !== undefined) updates.dob = dob;
-    if (onboardingCompleted !== undefined) updates.onboarding_completed = onboardingCompleted;
+    if (onboardingCompleted !== undefined)
+      updates.onboarding_completed = onboardingCompleted;
+    if (professionalExperiences !== undefined)
+      updates.professional_experiences = professionalExperiences;
+    if (educationalExperiences !== undefined)
+      updates.educational_experiences = educationalExperiences;
 
     const { error: dbError } = await supabase
       .from("users")

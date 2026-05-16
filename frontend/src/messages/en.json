@@ -3,7 +3,14 @@
     "save": "Save",
     "cancel": "Cancel",
     "loading": "Loading",
-    "error": "Something went wrong."
+    "error": "Something went wrong.",
+    "nextButton": "Next",
+    "backButton": "Back",
+    "skipButton": "Skip",
+    "cancelButton": "Cancel",
+    "addButton": "Add",
+    "editButton": "Edit",
+    "sinceLabel": "since"
   },
   "home": {
     "title": "Welcome",
@@ -44,8 +51,7 @@
         "emailLabel": "Email address",
         "emailPlaceholder": "Email address",
         "passwordLabel": "Password",
-        "passwordPlaceholder": "Password",
-        "nextButton": "Next"
+        "passwordPlaceholder": "Password"
       },
       "step2": {
         "title": "What's your name?",
@@ -54,9 +60,7 @@
         "lastNameLabel": "Last name",
         "lastNamePlaceholder": "Last name",
         "firstNameRequired": "First name is required",
-        "lastNameRequired": "Last name is required",
-        "nextButton": "Next",
-        "backButton": "Back"
+        "lastNameRequired": "Last name is required"
       },
       "step3": {
         "title": "Choose your username",
@@ -65,9 +69,7 @@
         "pseudoMinLength": "Username must be at least 3 characters",
         "pseudoChecking": "Checking...",
         "pseudoAvailable": "Username available",
-        "pseudoTaken": "This username is already taken",
-        "nextButton": "Next",
-        "backButton": "Back"
+        "pseudoTaken": "This username is already taken"
       },
       "step4": {
         "title": "When's your birthday?",
@@ -75,8 +77,17 @@
         "dobPlaceholder": "YYYY-MM-DD",
         "dobInvalid": "Please enter a valid date",
         "dobFuture": "Date of birth cannot be in the future",
-        "submitButton": "Complete",
-        "backButton": "Back"
+        "submitButton": "Next"
+      },
+      "step5": {
+        "title": "Professional experience",
+        "subtitle": "Tell us about your career (optional)",
+        "addEntry": "Add a position"
+      },
+      "step6": {
+        "title": "Educational background",
+        "subtitle": "Tell us about your education (optional)",
+        "addEntry": "Add a school"
       },
       "duplicateEmailError": "This email address is already in use.",
       "duplicatePseudoError": "This username is already in use.",
@@ -88,6 +99,51 @@
         "errorGeneric": "Authentication failed. Please try again.",
         "errorEmailExists": "An account with this email already exists. Try signing in instead."
       }
+    }
+  },
+  "experience": {
+    "professional": {
+      "addEntry": "Add a position",
+      "removeEntry": "Remove",
+      "organizationPlaceholder": "Company",
+      "rolePlaceholder": "Role",
+      "descriptionPlaceholder": "Description",
+      "websitePlaceholder": "https://...",
+      "locationPlaceholder": "City, Country",
+      "organizationRequired": "Company is required",
+      "roleRequired": "Role is required",
+      "startPeriodRequired": "Start date is required (YYYY-MM)",
+      "endPeriodBeforeStart": "End date must be after start date",
+      "websiteInvalid": "Please enter a valid URL",
+      "saveButton": "Save",
+      "presentLabel": "Present",
+      "subStep1Title": "Company",
+      "subStep2Title": "Position",
+      "subStep3Title": "Duration",
+      "subStep4Title": "Description",
+      "subStep5Title": "Website",
+      "subStep6Title": "Location"
+    },
+    "educational": {
+      "addEntry": "Add a school",
+      "removeEntry": "Remove",
+      "organizationPlaceholder": "School",
+      "rolePlaceholder": "Field of study",
+      "descriptionPlaceholder": "Description",
+      "websitePlaceholder": "https://...",
+      "locationPlaceholder": "City, Country",
+      "organizationRequired": "School is required",
+      "roleRequired": "Field of study is required",
+      "startPeriodRequired": "Start year is required (YYYY)",
+      "endPeriodBeforeStart": "End year must be after start year",
+      "websiteInvalid": "Please enter a valid URL",
+      "saveButton": "Complete",
+      "subStep1Title": "School",
+      "subStep2Title": "Field of study",
+      "subStep3Title": "Duration",
+      "subStep4Title": "Description",
+      "subStep5Title": "Website",
+      "subStep6Title": "Location"
     }
   }
 }

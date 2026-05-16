@@ -1,5 +1,15 @@
 import { create } from "zustand";
 
+export interface Experience {
+  organization: string;
+  role: string;
+  startPeriod: string;
+  endPeriod?: string;
+  description?: string;
+  website?: string;
+  location?: string;
+}
+
 export interface UserState {
   email?: string;
   password?: string;
@@ -8,6 +18,8 @@ export interface UserState {
   pseudo?: string;
   dob?: string;
   supabaseId?: string;
+  professionalExperiences?: Experience[];
+  educationalExperiences?: Experience[];
 }
 
 interface UserStore {
