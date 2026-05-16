@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import { SignupWizard } from "@/components/content/SignupContent";
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
@@ -25,11 +26,7 @@ export default async function SignupPage() {
       redirect(ROUTES.HOME);
     }
 
-    if (profile?.pseudo && profile?.dob) {
-      redirect(ROUTES.WELCOME);
-    }
-
-    initialStep = profile?.pseudo ? 3 : 1;
+    initialStep = profile?.dob ? 4 : profile?.pseudo ? 3 : 1;
     initialUser = {
       supabaseId: user.id,
       email: user.email,
@@ -39,5 +36,9 @@ export default async function SignupPage() {
     };
   }
 
-  return <SignupWizard initialStep={initialStep} initialUser={initialUser} />;
+  return (
+    <Suspense>
+      <SignupWizard initialStep={initialStep} initialUser={initialUser} />
+    </Suspense>
+  );
 }
