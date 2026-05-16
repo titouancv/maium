@@ -6,20 +6,8 @@ import { useLoadingStore } from "@/stores/useLoadingStore";
 
 export function Providers({ children }: { children: React.ReactNode }) {
   useEffect(() => {
-    const originalFetch = window.fetch;
-
-    window.fetch = async (...args: Parameters<typeof fetch>) => {
-      useLoadingStore.getState().increment();
-      try {
-        return await originalFetch(...args);
-      } finally {
-        useLoadingStore.getState().decrement();
-      }
-    };
-
-    return () => {
-      window.fetch = originalFetch;
-    };
+    const timer = setTimeout(() => useLoadingStore.getState().suppress(), 500);
+    return () => clearTimeout(timer);
   }, []);
 
   return (

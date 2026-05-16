@@ -2,15 +2,16 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useLoadingStore } from "@/stores/useLoadingStore";
+import { Title } from "./Title";
 
-// hidden        → non monté
-// transitioning → monté, opacity-0  (entrée ou sortie)
 // visible       → monté, opacity-100
+// transitioning → monté, opacity-0  (sortie uniquement)
+// hidden        → non monté
 type Phase = "hidden" | "transitioning" | "visible";
 
 export function LoadingOverlay() {
-  const count = useLoadingStore((state) => state.count);
-  const [phase, setPhase] = useState<Phase>("hidden");
+  const suppressed = useLoadingStore((state) => state.suppressed);
+  const [phase, setPhase] = useState<Phase>("visible");
   const timerA = useRef<ReturnType<typeof setTimeout> | null>(null);
   const timerB = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -18,33 +19,24 @@ export function LoadingOverlay() {
     clearTimeout(timerA.current!);
     clearTimeout(timerB.current!);
 
-    if (count > 0) {
-      // Après 1s : monter avec opacity-0, puis fondu entrant en 300ms
-      timerA.current = setTimeout(() => {
-        setPhase("transitioning");
-        timerB.current = setTimeout(() => setPhase("visible"), 16);
-      }, 1000);
-    } else {
-      // Fondu sortant : opacity-0, puis démonter après 350ms
-      timerA.current = setTimeout(() => {
-        setPhase("transitioning");
-        timerB.current = setTimeout(() => setPhase("hidden"), 350);
-      }, 0);
+    if (suppressed) {
+      timerA.current = setTimeout(() => setPhase("transitioning"), 0);
+      timerB.current = setTimeout(() => setPhase("hidden"), 300);
     }
 
     return () => {
       clearTimeout(timerA.current!);
       clearTimeout(timerB.current!);
     };
-  }, [count]);
+  }, [suppressed]);
 
   if (phase === "hidden") return null;
 
   return (
     <div
-      className={`fixed inset-0 z-50 flex items-center justify-center backdrop-blur-md bg-surface-50/20 transition-opacity duration-300 ${phase === "visible" ? "opacity-100" : "opacity-0"}`}
+      className={`bg-surface-50 fixed inset-0 z-50 flex items-center justify-center backdrop-blur-md transition-opacity duration-300 ${phase === "visible" ? "opacity-100" : "opacity-0"}`}
     >
-      <span className="text-txt text-2xl font-bold">maium</span>
+      <Title label={"maium"} size="h1" />
     </div>
   );
 }
