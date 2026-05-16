@@ -7,6 +7,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useTranslations } from "next-intl";
 import { TextInput } from "@/components/ui/TextInput";
 import { DateInput } from "@/components/ui/DateInput";
+import { LocationInput } from "@/components/ui/LocationInput";
 import { StepLayout } from "@/components/layout/StepLayout";
 
 const MONTH_YEAR = /^\d{4}-(0[1-9]|1[0-2])$/;
@@ -16,6 +17,9 @@ export interface ProfessionalExperienceFormData {
   role: string;
   startDate: string;
   endDate?: string;
+  description: string;
+  website: string;
+  location: string;
 }
 
 interface Props {
@@ -34,7 +38,7 @@ export const ProfessionalExperienceSubWizard = ({
   const t = useTranslations("auth.signup.step5");
   const [subStep, setSubStep] = useState(1);
   const endDateRef = useRef<HTMLInputElement>(null);
-  const TOTAL = 3;
+  const TOTAL = 6;
 
   const schema = z
     .object({
@@ -47,6 +51,9 @@ export const ProfessionalExperienceSubWizard = ({
           z.literal(""),
         ])
         .optional(),
+      description: z.string().max(500).or(z.literal("")),
+      website: z.union([z.string().url({ message: t("websiteInvalid") }), z.literal("")]),
+      location: z.string().max(100).or(z.literal("")),
     })
     .refine(
       (d) =>
@@ -68,6 +75,9 @@ export const ProfessionalExperienceSubWizard = ({
       role: initialData?.role ?? "",
       startDate: initialData?.startDate ?? "",
       endDate: initialData?.endDate ?? "",
+      description: initialData?.description ?? "",
+      website: initialData?.website ?? "",
+      location: initialData?.location ?? "",
     },
   });
 
@@ -75,6 +85,9 @@ export const ProfessionalExperienceSubWizard = ({
     1: ["company"],
     2: ["role"],
     3: ["startDate", "endDate"],
+    4: ["description"],
+    5: ["website"],
+    6: ["location"],
   };
 
   const handlePrimary = async () => {
@@ -87,7 +100,14 @@ export const ProfessionalExperienceSubWizard = ({
     }
   };
 
-  const titles = [t("subStep1Title"), t("subStep2Title"), t("subStep3Title")];
+  const titles = [
+    t("subStep1Title"),
+    t("subStep2Title"),
+    t("subStep3Title"),
+    t("subStep4Title"),
+    t("subStep5Title"),
+    t("subStep6Title"),
+  ];
 
   return (
     <StepLayout
@@ -164,6 +184,50 @@ export const ProfessionalExperienceSubWizard = ({
               )}
             />
           </div>
+        )}
+
+        {subStep === 4 && (
+          <TextInput
+            placeholder={t("descriptionPlaceholder")}
+            infoLabel={errors.description?.message}
+            infoType={errors.description ? "error" : "info"}
+            enterKeyHint="next"
+            autoFocus
+            {...register("description")}
+            onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); void handlePrimary(); } }}
+          />
+        )}
+
+        {subStep === 5 && (
+          <TextInput
+            placeholder={t("websitePlaceholder")}
+            infoLabel={errors.website?.message}
+            infoType={errors.website ? "error" : "info"}
+            inputMode="url"
+            autoCapitalize="none"
+            enterKeyHint="next"
+            autoFocus
+            {...register("website")}
+            onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); void handlePrimary(); } }}
+          />
+        )}
+
+        {subStep === 6 && (
+          <Controller
+            name="location"
+            control={control}
+            render={({ field }) => (
+              <LocationInput
+                placeholder={t("locationPlaceholder")}
+                value={field.value}
+                onChange={field.onChange}
+                onBlur={field.onBlur}
+                name={field.name}
+                error={errors.location?.message}
+                autoFocus
+              />
+            )}
+          />
         )}
       </div>
     </StepLayout>

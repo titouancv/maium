@@ -110,9 +110,14 @@
         "skipButton": "Passer",
         "backButton": "Retour",
         "cancelButton": "Annuler",
+        "locationLabel": "Localisation",
+        "locationPlaceholder": "Ville, Pays",
         "subStep1Title": "Entreprise",
         "subStep2Title": "Poste",
-        "subStep3Title": "Durée"
+        "subStep3Title": "Durée",
+        "subStep4Title": "Description",
+        "subStep5Title": "Site web",
+        "subStep6Title": "Localisation"
       },
       "step6": {
         "title": "Parcours éducatif",
@@ -142,10 +147,14 @@
         "backButton": "Retour",
         "cancelButton": "Annuler",
         "editButton": "Modifier",
+        "locationLabel": "Localisation",
+        "locationPlaceholder": "Ville, Pays",
         "subStep1Title": "École",
         "subStep2Title": "Domaine d'étude",
         "subStep3Title": "Durée",
-        "subStep4Title": "Détails"
+        "subStep4Title": "Description",
+        "subStep5Title": "Site web",
+        "subStep6Title": "Localisation"
       },
       "duplicateEmailError": "Cette adresse e-mail est déjà utilisée.",
       "duplicatePseudoError": "Ce pseudo est déjà utilisé.",

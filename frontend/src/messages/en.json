@@ -110,9 +110,14 @@
         "skipButton": "Skip",
         "backButton": "Back",
         "cancelButton": "Cancel",
+        "locationLabel": "Location",
+        "locationPlaceholder": "City, Country",
         "subStep1Title": "Company",
         "subStep2Title": "Position",
-        "subStep3Title": "Duration"
+        "subStep3Title": "Duration",
+        "subStep4Title": "Description",
+        "subStep5Title": "Website",
+        "subStep6Title": "Location"
       },
       "step6": {
         "title": "Educational background",
@@ -142,10 +147,14 @@
         "cancelButton": "Cancel",
         "nextButton": "Next",
         "editButton": "Edit",
+        "locationLabel": "Location",
+        "locationPlaceholder": "City, Country",
         "subStep1Title": "School",
         "subStep2Title": "Field of study",
         "subStep3Title": "Duration",
-        "subStep4Title": "Details"
+        "subStep4Title": "Description",
+        "subStep5Title": "Website",
+        "subStep6Title": "Location"
       },
       "duplicateEmailError": "This email address is already in use.",
       "duplicatePseudoError": "This username is already in use.",

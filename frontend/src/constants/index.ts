@@ -18,3 +18,7 @@ export const API = {
   USERS_PSEUDO_CHECK: "/api/users/pseudo",
   AUTH_LOGOUT: "/api/auth/logout",
 } as const;
+
+export const EXTERNAL_API = {
+  PHOTON_GEOCODE: "https://photon.komoot.io/api/",
+} as const;

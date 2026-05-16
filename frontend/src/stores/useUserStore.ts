@@ -5,6 +5,7 @@ export interface ProfessionalExperience {
   role: string;
   description?: string;
   website?: string;
+  location?: string;
   startDate: string;
   endDate?: string;
   current: boolean;
@@ -15,6 +16,7 @@ export interface EducationalExperience {
   fieldOfStudy: string;
   description?: string;
   website?: string;
+  location?: string;
   startYear: string;
   endYear?: string;
 }

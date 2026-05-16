@@ -7,6 +7,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useTranslations } from "next-intl";
 import { TextInput } from "@/components/ui/TextInput";
 import { DateInput } from "@/components/ui/DateInput";
+import { LocationInput } from "@/components/ui/LocationInput";
 import { StepLayout } from "@/components/layout/StepLayout";
 
 const YEAR = /^\d{4}$/;
@@ -16,8 +17,9 @@ export interface EducationalExperienceFormData {
   fieldOfStudy: string;
   description: string;
   website: string;
+  location: string;
   startYear: string;
-  endYear: string; // empty string means no end year
+  endYear: string;
 }
 
 interface Props {
@@ -35,16 +37,16 @@ export const EducationalExperienceSubWizard = ({
 }: Props) => {
   const t = useTranslations("auth.signup.step6");
   const [subStep, setSubStep] = useState(1);
-  const TOTAL = 4;
+  const TOTAL = 6;
   const endYearRef = useRef<HTMLInputElement>(null);
-  const websiteRef = useRef<HTMLInputElement>(null);
 
   const schema = z
     .object({
       school: z.string().min(1, t("schoolRequired")),
       fieldOfStudy: z.string().min(1, t("fieldOfStudyRequired")),
       description: z.string().max(500).or(z.literal("")),
-      website: z.union([z.string().url(t("websiteInvalid")), z.literal("")]),
+      website: z.union([z.string().url({ message: t("websiteInvalid") }), z.literal("")]),
+      location: z.string().max(100).or(z.literal("")),
       startYear: z.string().regex(YEAR, t("startYearRequired")),
       endYear: z.union([z.string().regex(YEAR), z.literal("")]),
     })
@@ -70,6 +72,7 @@ export const EducationalExperienceSubWizard = ({
       fieldOfStudy: initialData?.fieldOfStudy ?? "",
       description: initialData?.description ?? "",
       website: initialData?.website ?? "",
+      location: initialData?.location ?? "",
       startYear: initialData?.startYear ?? "",
       endYear: initialData?.endYear ?? "",
     },
@@ -79,7 +82,9 @@ export const EducationalExperienceSubWizard = ({
     1: ["school"],
     2: ["fieldOfStudy"],
     3: ["startYear", "endYear"],
-    4: ["description", "website"],
+    4: ["description"],
+    5: ["website"],
+    6: ["location"],
   };
 
   const handlePrimary = async () => {
@@ -97,6 +102,8 @@ export const EducationalExperienceSubWizard = ({
     t("subStep2Title"),
     t("subStep3Title"),
     t("subStep4Title"),
+    t("subStep5Title"),
+    t("subStep6Title"),
   ];
 
   return (
@@ -177,28 +184,47 @@ export const EducationalExperienceSubWizard = ({
         )}
 
         {subStep === 4 && (
-          <>
-            <TextInput
-              placeholder={t("descriptionPlaceholder")}
-              infoLabel={errors.description?.message}
-              infoType={errors.description ? "error" : "info"}
-              enterKeyHint="next"
-              autoFocus
-              {...register("description")}
-              onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); websiteRef.current?.focus(); } }}
-            />
-            <TextInput
-              placeholder={t("websitePlaceholder")}
-              infoLabel={errors.website?.message}
-              infoType={errors.website ? "error" : "info"}
-              inputMode="url"
-              autoCapitalize="none"
-              enterKeyHint="done"
-              {...register("website")}
-              ref={(el) => { websiteRef.current = el; }}
-              onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); void handlePrimary(); } }}
-            />
-          </>
+          <TextInput
+            placeholder={t("descriptionPlaceholder")}
+            infoLabel={errors.description?.message}
+            infoType={errors.description ? "error" : "info"}
+            enterKeyHint="next"
+            autoFocus
+            {...register("description")}
+            onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); void handlePrimary(); } }}
+          />
+        )}
+
+        {subStep === 5 && (
+          <TextInput
+            placeholder={t("websitePlaceholder")}
+            infoLabel={errors.website?.message}
+            infoType={errors.website ? "error" : "info"}
+            inputMode="url"
+            autoCapitalize="none"
+            enterKeyHint="next"
+            autoFocus
+            {...register("website")}
+            onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); void handlePrimary(); } }}
+          />
+        )}
+
+        {subStep === 6 && (
+          <Controller
+            name="location"
+            control={control}
+            render={({ field }) => (
+              <LocationInput
+                placeholder={t("locationPlaceholder")}
+                value={field.value}
+                onChange={field.onChange}
+                onBlur={field.onBlur}
+                name={field.name}
+                error={errors.location?.message}
+                autoFocus
+              />
+            )}
+          />
         )}
       </div>
     </StepLayout>

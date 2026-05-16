@@ -15,7 +15,9 @@ const MONTH_YEAR = /^\d{4}-(0[1-9]|1[0-2])$/;
 const YEAR = /^\d{4}$/;
 
 export type ExperienceStepMode = "empty" | "list";
-export interface ExperienceStepHandle { addEntry: () => void; }
+export interface ExperienceStepHandle {
+  addEntry: () => void;
+}
 export type { ExperienceStepHandle as Step4Handle };
 export type { ExperienceStepMode as Step4Mode };
 
@@ -37,6 +39,9 @@ interface ItemDisplay {
   subtitle: string;
   startPeriod: string;
   endPeriod?: string;
+  location?: string;
+  website?: string;
+  description?: string;
   presentLabel?: string;
 }
 
@@ -56,7 +61,12 @@ const ExperienceStepInner = forwardRef<
 >(({ config, onNext, onValidityChange, onModeChange }, ref) => {
   const router = useRouter();
 
-  const { control, handleSubmit, trigger, formState: { isValid } } = useForm<FormItems>({
+  const {
+    control,
+    handleSubmit,
+    trigger,
+    formState: { isValid },
+  } = useForm<FormItems>({
     resolver: config.resolver,
     mode: "onChange",
     defaultValues: config.defaultValues,
@@ -65,11 +75,21 @@ const ExperienceStepInner = forwardRef<
   const { fields } = useFieldArray({ control, name: "items" });
   const mode: ExperienceStepMode = fields.length === 0 ? "empty" : "list";
 
-  useEffect(() => { trigger(); }, [trigger]);
-  useEffect(() => { onValidityChange?.(isValid); }, [isValid, onValidityChange]);
-  useEffect(() => { onModeChange?.(mode); }, [mode, onModeChange]);
+  useEffect(() => {
+    trigger();
+  }, [trigger]);
+  useEffect(() => {
+    onValidityChange?.(isValid);
+  }, [isValid, onValidityChange]);
+  useEffect(() => {
+    onModeChange?.(mode);
+  }, [mode, onModeChange]);
 
-  useImperativeHandle(ref, () => ({ addEntry: () => router.push(config.baseUrl) }), [router, config.baseUrl]);
+  useImperativeHandle(
+    ref,
+    () => ({ addEntry: () => router.push(config.baseUrl) }),
+    [router, config.baseUrl],
+  );
 
   return (
     <form
@@ -108,7 +128,9 @@ ExperienceStepInner.displayName = "ExperienceStepInner";
 export const StepExperience = forwardRef<ExperienceStepHandle, Props>(
   ({ type, onNext, onValidityChange, onModeChange }, ref) => {
     const isPro = type === "professional";
-    const t = useTranslations(isPro ? "auth.signup.step5" : "auth.signup.step6");
+    const t = useTranslations(
+      isPro ? "auth.signup.step5" : "auth.signup.step6",
+    );
     const { user } = useUserStore();
 
     const baseUrl = isPro
@@ -117,25 +139,48 @@ export const StepExperience = forwardRef<ExperienceStepHandle, Props>(
 
     const config: StepConfig = isPro
       ? {
-          resolver: zodResolver(z.object({
-            items: z.array(
-              z.object({
-                company: z.string().min(1, t("companyRequired")),
-                role: z.string().min(1, t("roleRequired")),
-                startDate: z.string().regex(MONTH_YEAR, t("startDateRequired")),
-                endDate: z.union([z.string().regex(MONTH_YEAR, t("endDateRequired")), z.literal("")]).optional(),
-              }).refine(
-                (d) => !d.endDate || !MONTH_YEAR.test(d.endDate) || d.endDate >= d.startDate,
-                { message: t("endDateBeforeStart"), path: ["endDate"] },
+          resolver: zodResolver(
+            z.object({
+              items: z.array(
+                z
+                  .object({
+                    company: z.string().min(1, t("companyRequired")),
+                    role: z.string().min(1, t("roleRequired")),
+                    startDate: z
+                      .string()
+                      .regex(MONTH_YEAR, t("startDateRequired")),
+                    endDate: z
+                      .union([
+                        z.string().regex(MONTH_YEAR, t("endDateRequired")),
+                        z.literal(""),
+                      ])
+                      .optional(),
+                    description: z.string().max(500).or(z.literal("")),
+                    website: z.union([
+                      z.string().url({ message: t("websiteInvalid") }),
+                      z.literal(""),
+                    ]),
+                    location: z.string().max(100).or(z.literal("")),
+                  })
+                  .refine(
+                    (d) =>
+                      !d.endDate ||
+                      !MONTH_YEAR.test(d.endDate) ||
+                      d.endDate >= d.startDate,
+                    { message: t("endDateBeforeStart"), path: ["endDate"] },
+                  ),
               ),
-            ),
-          })) as unknown as Resolver<FormItems>,
+            }),
+          ) as unknown as Resolver<FormItems>,
           defaultValues: {
             items: (user?.professionalExperiences ?? []).map((e) => ({
               company: e.company ?? "",
               role: e.role ?? "",
               startDate: e.startDate ?? "",
               endDate: e.endDate ?? "",
+              description: e.description ?? "",
+              website: e.website ?? "",
+              location: e.location ?? "",
             })),
           },
           baseUrl,
@@ -148,6 +193,9 @@ export const StepExperience = forwardRef<ExperienceStepHandle, Props>(
               startDate: item.startDate,
               endDate: item.endDate || undefined,
               current: !item.endDate,
+              description: item.description || undefined,
+              website: item.website || undefined,
+              location: item.location || undefined,
             })),
           }),
           getDisplay: (item) => ({
@@ -155,31 +203,45 @@ export const StepExperience = forwardRef<ExperienceStepHandle, Props>(
             subtitle: item.role,
             startPeriod: item.startDate,
             endPeriod: item.endDate || undefined,
+            location: item.location || undefined,
+            website: item.website || undefined,
             presentLabel: t("presentLabel"),
           }),
         }
       : {
-          resolver: zodResolver(z.object({
-            items: z.array(
-              z.object({
-                school: z.string().min(1, t("schoolRequired")),
-                fieldOfStudy: z.string().min(1, t("fieldOfStudyRequired")),
-                description: z.string().max(500).or(z.literal("")),
-                website: z.union([z.string().url({ message: t("websiteInvalid") }), z.literal("")]),
-                startYear: z.string().regex(YEAR, t("startYearRequired")),
-                endYear: z.union([z.string().regex(YEAR), z.literal("")]),
-              }).refine(
-                (d) => !d.endYear || !YEAR.test(d.endYear) || Number(d.endYear) >= Number(d.startYear),
-                { message: t("endYearBeforeStart"), path: ["endYear"] },
+          resolver: zodResolver(
+            z.object({
+              items: z.array(
+                z
+                  .object({
+                    school: z.string().min(1, t("schoolRequired")),
+                    fieldOfStudy: z.string().min(1, t("fieldOfStudyRequired")),
+                    description: z.string().max(500).or(z.literal("")),
+                    website: z.union([
+                      z.string().url({ message: t("websiteInvalid") }),
+                      z.literal(""),
+                    ]),
+                    location: z.string().max(100).or(z.literal("")),
+                    startYear: z.string().regex(YEAR, t("startYearRequired")),
+                    endYear: z.union([z.string().regex(YEAR), z.literal("")]),
+                  })
+                  .refine(
+                    (d) =>
+                      !d.endYear ||
+                      !YEAR.test(d.endYear) ||
+                      Number(d.endYear) >= Number(d.startYear),
+                    { message: t("endYearBeforeStart"), path: ["endYear"] },
+                  ),
               ),
-            ),
-          })) as unknown as Resolver<FormItems>,
+            }),
+          ) as unknown as Resolver<FormItems>,
           defaultValues: {
             items: (user?.educationalExperiences ?? []).map((e) => ({
               school: e.school ?? "",
               fieldOfStudy: e.fieldOfStudy ?? "",
               description: e.description ?? "",
               website: e.website ?? "",
+              location: e.location ?? "",
               startYear: e.startYear ?? "",
               endYear: e.endYear ?? "",
             })),
@@ -193,6 +255,7 @@ export const StepExperience = forwardRef<ExperienceStepHandle, Props>(
               fieldOfStudy: item.fieldOfStudy,
               description: item.description || undefined,
               website: item.website || undefined,
+              location: item.location || undefined,
               startYear: item.startYear,
               endYear: item.endYear || undefined,
             })),
@@ -202,6 +265,8 @@ export const StepExperience = forwardRef<ExperienceStepHandle, Props>(
             subtitle: item.fieldOfStudy,
             startPeriod: item.startYear,
             endPeriod: item.endYear || undefined,
+            location: item.location || undefined,
+            website: item.website || undefined,
           }),
         };
 
