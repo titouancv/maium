@@ -2,7 +2,8 @@
 
 import { useMemo } from "react";
 import { useWatch, type Control, type FieldArrayWithId } from "react-hook-form";
-import { ExperienceItem, type Experience } from "./ExperienceItem";
+import { ExperienceItem } from "./ExperienceItem";
+import { ExperienceFormData } from "./ExperienceSubWizard";
 
 type ItemRecord = Record<string, string>;
 type FormItems = { items: ItemRecord[] };
@@ -10,8 +11,9 @@ type FormItems = { items: ItemRecord[] };
 interface Props {
   fields: FieldArrayWithId<FormItems, "items">[];
   control: Control<FormItems>;
-  getDisplay: (item: ItemRecord) => Omit<Experience, "editLabel" | "onEdit">;
-  editLabel: string;
+  getDisplay: (
+    item: ItemRecord,
+  ) => Omit<ExperienceFormData, "editLabel" | "onEdit">;
   onEdit: (index: number) => void;
 }
 
@@ -19,25 +21,22 @@ const ItemRow = ({
   index,
   control,
   getDisplay,
-  editLabel,
   onEdit,
 }: {
   index: number;
   control: Control<FormItems>;
   getDisplay: Props["getDisplay"];
-  editLabel: string;
   onEdit: () => void;
 }) => {
   const items = useWatch({ control, name: "items" });
   const display = getDisplay(items?.[index] ?? {});
-  return <ExperienceItem {...display} editLabel={editLabel} onEdit={onEdit} />;
+  return <ExperienceItem {...display} onEdit={onEdit} />;
 };
 
 export const ExperienceList = ({
   fields,
   control,
   getDisplay,
-  editLabel,
   onEdit,
 }: Props) => {
   const items = useWatch({ control, name: "items" });
@@ -70,7 +69,6 @@ export const ExperienceList = ({
           index={originalIndex}
           control={control}
           getDisplay={getDisplay}
-          editLabel={editLabel}
           onEdit={() => onEdit(originalIndex)}
         />
       ))}

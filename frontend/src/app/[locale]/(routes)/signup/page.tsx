@@ -3,11 +3,7 @@ import { SignupWizard } from "@/components/content/SignupContent";
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import { ROUTES } from "@/constants";
-import type {
-  UserState,
-  ProfessionalExperience,
-  EducationalExperience,
-} from "@/stores/useUserStore";
+import type { UserState, Experience } from "@/stores/useUserStore";
 
 export default async function SignupPage() {
   const supabase = await createClient();
@@ -41,11 +37,9 @@ export default async function SignupPage() {
       pseudo: profile?.pseudo ?? undefined,
       dob: profile?.dob ?? undefined,
       professionalExperiences:
-        (profile?.professional_experiences as unknown as ProfessionalExperience[] | null) ??
-        [],
+        (profile?.professional_experiences as unknown as Experience[] | null) ?? [],
       educationalExperiences:
-        (profile?.educational_experiences as unknown as EducationalExperience[] | null) ??
-        [],
+        (profile?.educational_experiences as unknown as Experience[] | null) ?? [],
     };
   }
 

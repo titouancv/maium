@@ -6,13 +6,9 @@ import { useRouter } from "@/i18n/navigation";
 import { useUserStore } from "@/stores/useUserStore";
 import { ROUTES } from "@/constants";
 import {
-  ProfessionalExperienceSubWizard,
-  type ProfessionalExperienceFormData,
-} from "../custom/experience/ProfessionalExperienceSubWizard";
-import {
-  EducationalExperienceSubWizard,
-  type EducationalExperienceFormData,
-} from "../custom/experience/EducationalExperienceSubWizard";
+  ExperienceSubWizard,
+  type ExperienceFormData,
+} from "../custom/experience/ExperienceSubWizard";
 
 interface Props {
   type: "professional" | "educational";
@@ -37,78 +33,45 @@ export const ExperienceContent = ({ type }: Props) => {
 
   if (!user) return null;
 
+  const isEdu = type === "educational";
+  const namespace = isEdu
+    ? "experience.educational"
+    : "experience.professional";
+  const dateMode = "MM-YYYY";
+  const experiences = isEdu
+    ? user.educationalExperiences
+    : user.professionalExperiences;
+  const storeKey = isEdu
+    ? "educationalExperiences"
+    : ("professionalExperiences" as const);
+
+  const initialData = index !== null ? experiences?.[index] : undefined;
+
   const handleCancel = () => router.push(returnUrl);
 
-  if (type === "professional") {
-    const initialData =
-      index !== null ? user.professionalExperiences?.[index] : undefined;
-
-    const handleSave = (data: ProfessionalExperienceFormData) => {
-      const current = user.professionalExperiences ?? [];
-      const entry = {
-        ...data,
-        endDate: data.endDate || undefined,
-        current: !data.endDate,
-      };
-      const updated =
-        index !== null
-          ? current.map((e, i) => (i === index ? entry : e))
-          : [...current, entry];
-      setUser({ professionalExperiences: updated });
-      router.push(returnUrl);
-    };
-
-    const handleDelete = () => {
-      if (index !== null) {
-        const current = user.professionalExperiences ?? [];
-        setUser({
-          professionalExperiences: current.filter((_, i) => i !== index),
-        });
-      }
-      router.push(returnUrl);
-    };
-
-    return (
-      <ProfessionalExperienceSubWizard
-        initialData={initialData}
-        onSave={handleSave}
-        onCancel={handleCancel}
-        onDelete={index !== null ? handleDelete : undefined}
-      />
-    );
-  }
-
-  const initialData =
-    index !== null ? user.educationalExperiences?.[index] : undefined;
-
-  const handleSave = (data: EducationalExperienceFormData) => {
-    const current = user.educationalExperiences ?? [];
-    const entry = {
-      ...data,
-      description: data.description || undefined,
-      website: data.website || undefined,
-      endYear: data.endYear || undefined,
-    };
+  const handleSave = (data: ExperienceFormData) => {
+    const current = experiences ?? [];
+    const entry = { ...data, endPeriod: data.endPeriod || undefined };
     const updated =
       index !== null
         ? current.map((e, i) => (i === index ? entry : e))
         : [...current, entry];
-    setUser({ educationalExperiences: updated });
+    setUser({ [storeKey]: updated });
     router.push(returnUrl);
   };
 
   const handleDelete = () => {
     if (index !== null) {
-      const current = user.educationalExperiences ?? [];
-      setUser({
-        educationalExperiences: current.filter((_, i) => i !== index),
-      });
+      const current = experiences ?? [];
+      setUser({ [storeKey]: current.filter((_, i) => i !== index) });
     }
     router.push(returnUrl);
   };
 
   return (
-    <EducationalExperienceSubWizard
+    <ExperienceSubWizard
+      namespace={namespace}
+      dateMode={dateMode}
       initialData={initialData}
       onSave={handleSave}
       onCancel={handleCancel}

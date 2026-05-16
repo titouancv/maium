@@ -1,24 +1,13 @@
 import { create } from "zustand";
 
-export interface ProfessionalExperience {
-  company: string;
+export interface Experience {
+  organization: string;
   role: string;
+  startPeriod: string;
+  endPeriod?: string;
   description?: string;
   website?: string;
   location?: string;
-  startDate: string;
-  endDate?: string;
-  current: boolean;
-}
-
-export interface EducationalExperience {
-  school: string;
-  fieldOfStudy: string;
-  description?: string;
-  website?: string;
-  location?: string;
-  startYear: string;
-  endYear?: string;
 }
 
 export interface UserState {
@@ -29,8 +18,8 @@ export interface UserState {
   pseudo?: string;
   dob?: string;
   supabaseId?: string;
-  professionalExperiences?: ProfessionalExperience[];
-  educationalExperiences?: EducationalExperience[];
+  professionalExperiences?: Experience[];
+  educationalExperiences?: Experience[];
 }
 
 interface UserStore {

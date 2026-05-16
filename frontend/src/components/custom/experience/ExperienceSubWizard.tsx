@@ -12,53 +12,54 @@ import { StepLayout } from "@/components/layout/StepLayout";
 
 const MONTH_YEAR = /^\d{4}-(0[1-9]|1[0-2])$/;
 
-export interface ProfessionalExperienceFormData {
-  company: string;
+export interface ExperienceFormData {
+  organization: string;
   role: string;
-  startDate: string;
-  endDate?: string;
+  startPeriod: string;
+  endPeriod?: string;
   description: string;
   website: string;
   location: string;
 }
 
 interface Props {
-  initialData?: Partial<ProfessionalExperienceFormData>;
-  onSave: (data: ProfessionalExperienceFormData) => void;
+  namespace: string;
+  dateMode: "MM-YYYY" | "YYYY";
+  initialData?: Partial<ExperienceFormData>;
+  onSave: (data: ExperienceFormData) => void;
   onCancel: () => void;
   onDelete?: () => void;
 }
 
-export const ProfessionalExperienceSubWizard = ({
+export const ExperienceSubWizard = ({
+  namespace,
+  dateMode,
   initialData,
   onSave,
   onCancel,
   onDelete,
 }: Props) => {
-  const t = useTranslations("auth.signup.step5");
+  const t = useTranslations(namespace);
+  const tCommon = useTranslations("common");
   const [subStep, setSubStep] = useState(1);
-  const endDateRef = useRef<HTMLInputElement>(null);
+  const endPeriodRef = useRef<HTMLInputElement>(null);
   const TOTAL = 6;
 
   const schema = z
     .object({
-      company: z.string().min(1, t("companyRequired")),
+      organization: z.string().min(1, t("organizationRequired")),
       role: z.string().min(1, t("roleRequired")),
-      startDate: z.string().regex(MONTH_YEAR, t("startDateRequired")),
-      endDate: z
-        .union([
-          z.string().regex(MONTH_YEAR, t("endDateRequired")),
-          z.literal(""),
-        ])
+      startPeriod: z.string().regex(MONTH_YEAR, t("startPeriodRequired")),
+      endPeriod: z
+        .union([z.string().regex(MONTH_YEAR), z.literal("")])
         .optional(),
       description: z.string().max(500).or(z.literal("")),
       website: z.union([z.string().url({ message: t("websiteInvalid") }), z.literal("")]),
       location: z.string().max(100).or(z.literal("")),
     })
     .refine(
-      (d) =>
-        !d.endDate || !MONTH_YEAR.test(d.endDate) || d.endDate >= d.startDate,
-      { message: t("endDateBeforeStart"), path: ["endDate"] },
+      (d) => !d.endPeriod || !MONTH_YEAR.test(d.endPeriod) || d.endPeriod >= d.startPeriod,
+      { message: t("endPeriodBeforeStart"), path: ["endPeriod"] },
     );
 
   const {
@@ -67,24 +68,24 @@ export const ProfessionalExperienceSubWizard = ({
     trigger,
     handleSubmit,
     formState: { errors },
-  } = useForm<ProfessionalExperienceFormData>({
+  } = useForm<ExperienceFormData>({
     resolver: zodResolver(schema),
     mode: "onChange",
     defaultValues: {
-      company: initialData?.company ?? "",
+      organization: initialData?.organization ?? "",
       role: initialData?.role ?? "",
-      startDate: initialData?.startDate ?? "",
-      endDate: initialData?.endDate ?? "",
+      startPeriod: initialData?.startPeriod ?? "",
+      endPeriod: initialData?.endPeriod ?? "",
       description: initialData?.description ?? "",
       website: initialData?.website ?? "",
       location: initialData?.location ?? "",
     },
   });
 
-  const stepFields: Record<number, (keyof ProfessionalExperienceFormData)[]> = {
-    1: ["company"],
+  const stepFields: Record<number, (keyof ExperienceFormData)[]> = {
+    1: ["organization"],
     2: ["role"],
-    3: ["startDate", "endDate"],
+    3: ["startPeriod", "endPeriod"],
     4: ["description"],
     5: ["website"],
     6: ["location"],
@@ -116,8 +117,8 @@ export const ProfessionalExperienceSubWizard = ({
       totalSteps={TOTAL}
       isCancelable={true}
       onCancel={onCancel}
-      cancelLabel={t("cancelButton")}
-      primaryLabel={subStep < TOTAL ? t("nextButton") : t("saveButton")}
+      cancelLabel={tCommon("cancelButton")}
+      primaryLabel={subStep < TOTAL ? tCommon("nextButton") : t("saveButton")}
       onPrimary={handlePrimary}
       secondaryLabel={t("removeEntry")}
       onSecondary={onDelete}
@@ -125,13 +126,13 @@ export const ProfessionalExperienceSubWizard = ({
       <div className="flex flex-col gap-3">
         {subStep === 1 && (
           <TextInput
-            placeholder={t("companyPlaceholder")}
-            infoLabel={errors.company?.message}
-            infoType={errors.company ? "error" : "info"}
+            placeholder={t("organizationPlaceholder")}
+            infoLabel={errors.organization?.message}
+            infoType={errors.organization ? "error" : "info"}
             autoCapitalize="words"
             enterKeyHint="next"
             autoFocus
-            {...register("company")}
+            {...register("organization")}
             onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); void handlePrimary(); } }}
           />
         )}
@@ -152,33 +153,33 @@ export const ProfessionalExperienceSubWizard = ({
         {subStep === 3 && (
           <div className="flex w-full gap-2">
             <Controller
-              name="startDate"
+              name="startPeriod"
               control={control}
               render={({ field }) => (
                 <DateInput
-                  mode="MM-YYYY"
+                  mode={dateMode}
                   value={field.value}
                   onChange={field.onChange}
                   onBlur={field.onBlur}
                   name={field.name}
-                  error={errors.startDate?.message}
+                  error={errors.startPeriod?.message}
                   autoFocus
-                  onEnter={() => endDateRef.current?.focus()}
+                  onEnter={() => endPeriodRef.current?.focus()}
                 />
               )}
             />
             <Controller
-              name="endDate"
+              name="endPeriod"
               control={control}
               render={({ field }) => (
                 <DateInput
-                  ref={endDateRef}
-                  mode="MM-YYYY"
+                  ref={endPeriodRef}
+                  mode={dateMode}
                   value={field.value}
                   onChange={field.onChange}
                   onBlur={field.onBlur}
                   name={field.name}
-                  error={errors.endDate?.message}
+                  error={errors.endPeriod?.message}
                   onEnter={() => void handlePrimary()}
                 />
               )}

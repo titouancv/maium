@@ -43,6 +43,7 @@ export const SignupWizard = ({
   const [step5Mode, setStep5Mode] = useState<Step4Mode>("empty");
   const router = useRouter();
   const t = useTranslations("auth.signup");
+  const tCommon = useTranslations("common");
   const { setUser, user } = useUserStore();
 
   useEffect(() => {
@@ -140,27 +141,27 @@ export const SignupWizard = ({
     step4Mode === "list"
       ? {
           formId: FORM_ID,
-          primaryLabel: t("step5.nextButton"),
+          primaryLabel: tCommon("nextButton"),
           secondaryLabel: t("step5.addEntry"),
           onSecondary: () => {
             step4Ref.current?.addEntry();
           },
         }
-      : { formId: FORM_ID, primaryLabel: t("step5.nextButton") };
+      : { formId: FORM_ID, primaryLabel: tCommon("nextButton") };
 
   const stepNavProps = {
-    1: { formId: FORM_ID, primaryLabel: t("step2.nextButton") },
-    2: { formId: FORM_ID, primaryLabel: t("step3.nextButton") },
-    3: { formId: FORM_ID, primaryLabel: t("step4.nextButton") },
+    1: { formId: FORM_ID, primaryLabel: tCommon("nextButton") },
+    2: { formId: FORM_ID, primaryLabel: tCommon("nextButton") },
+    3: { formId: FORM_ID, primaryLabel: tCommon("nextButton") },
     4: step4NavProps,
     5: step5Mode === "list"
       ? {
           formId: FORM_ID,
-          primaryLabel: t("step6.nextButton"),
+          primaryLabel: tCommon("nextButton"),
           secondaryLabel: t("step6.addEntry"),
           onSecondary: () => { step5Ref.current?.addEntry(); },
         }
-      : { formId: FORM_ID, primaryLabel: t("step6.nextButton") },
+      : { formId: FORM_ID, primaryLabel: tCommon("nextButton") },
   }[step];
 
   return (
@@ -175,7 +176,7 @@ export const SignupWizard = ({
           title={stepTitles[step] ?? t("title")}
           step={step}
           totalSteps={TOTAL_STEPS}
-          primaryDisabled={!isStepValid}
+          primaryDisabled={step < 4 && !isStepValid}
           primaryLoading={isLoading}
           {...stepNavProps}
         >

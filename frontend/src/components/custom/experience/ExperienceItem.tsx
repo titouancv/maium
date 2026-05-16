@@ -2,34 +2,24 @@
 
 import Image from "next/image";
 import { Button } from "@/components/ui/Button";
+import { ExperienceFormData } from "./ExperienceSubWizard";
+import { useTranslations } from "next-intl";
 
-export interface Experience {
-  title: string;
-  subtitle: string;
-  startPeriod: string;
-  endPeriod?: string;
-  description?: string;
-  website?: string;
-  location?: string;
-  presentLabel?: string;
-  sinceLabel?: string;
-  editLabel: string;
+export interface ExperienceProps extends ExperienceFormData {
   onEdit: () => void;
 }
 
 export const ExperienceItem = ({
-  title,
-  subtitle,
+  organization,
+  role,
   startPeriod,
   endPeriod,
   location,
   website,
-  description,
-  presentLabel,
-  sinceLabel,
-  editLabel,
   onEdit,
-}: Experience) => {
+}: ExperienceProps) => {
+  const t = useTranslations("common");
+
   const calculerDuree = (dateDebut: string, dateFin: string): string => {
     const [anneeDebut, moisDebut] = dateDebut.split("-").map(Number);
     const [anneeFin, moisFin] = dateFin.split("-").map(Number);
@@ -51,7 +41,7 @@ export const ExperienceItem = ({
   const formatPeriod = (startDate: string, endDate?: string): string => {
     const [startYear] = startDate.split("-").map(Number);
     if (!endDate) {
-      return sinceLabel ? `${sinceLabel} ${startYear}` : `${startYear}`;
+      return `${t("sinceLabel")} ${startYear}`;
     }
     const [endYear] = endDate.split("-").map(Number);
     if (startYear === endYear) {
@@ -86,8 +76,8 @@ export const ExperienceItem = ({
                 }}
               />
             )}
-            <span className="truncate">{title}</span>
-            <span className="text-txt/80 truncate">{", " + subtitle}</span>
+            <span className="truncate">{organization}</span>
+            <span className="text-txt/80 truncate">{", " + role}</span>
           </a>
           <div className="flex flex-col gap-0.5">
             {location && (
@@ -120,7 +110,7 @@ export const ExperienceItem = ({
           className="shrink-0"
           onClick={onEdit}
         >
-          {editLabel}
+          {t("editButton")}
         </Button>
       </div>
     </div>
