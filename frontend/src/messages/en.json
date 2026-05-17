@@ -33,9 +33,10 @@
     "nationality": "Nationality",
     "location": "Location",
     "phonePlaceholder": "Phone number",
-    "nationalityPlaceholder": "Nationality",
-    "locationPlaceholder": "City, Country",
+    "nationalityPlaceholder": "France",
+    "locationPlaceholder": "Paris, France",
     "saveButton": "Save",
+    "deleteButton": "Delete",
     "professionalExperiencesLabel": "Professional experiences",
     "educationalExperiencesLabel": "Educational background",
     "editName": "Edit name",
@@ -46,7 +47,7 @@
     "editLocation": "Edit location",
     "editProfessionalExperiences": "Professional experiences",
     "editEducationalExperiences": "Educational background",
-    "noExperiences": "No entries yet",
+    "noExperiences": "No experiences yet",
     "saveError": "Failed to save. Please try again."
   },
   "welcome": {

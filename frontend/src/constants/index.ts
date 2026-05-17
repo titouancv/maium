@@ -23,6 +23,7 @@ export const API = {
 
 export const EXTERNAL_API = {
   PHOTON_GEOCODE: "https://photon.komoot.io/api/",
+  RESTCOUNTRIES: "https://restcountries.com/v3.1",
 } as const;
 
 export const SIGNUP_FORM_ID = "signup-step-form";

@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { useRouter } from "@/i18n/navigation";
 import { PageLayout } from "@/components/layout";
-import { InfoField } from "@/components/custom/settings/InfoField";
+import { MenuList } from "@/components/ui";
 import {
   EditInfoOverlay,
   type EditableField,
@@ -28,56 +28,54 @@ export const SettingsPersonalDataContent = ({
   return (
     <PageLayout title={t("mesInformations")} backLabel={t("backButton")}>
       {user && (
-        <div className="flex flex-col">
-          <InfoField
-            label={tHome("name")}
-            value={`${user.first_name} ${user.last_name}`}
-            onEdit={() => setEditingField("name")}
-          />
-          <InfoField
-            label={tHome("pseudo")}
-            value={user.pseudo}
-            onEdit={() => setEditingField("pseudo")}
-          />
-          <InfoField
-            label={tHome("dob")}
-            value={user.dob}
-            onEdit={() => setEditingField("dob")}
-          />
-          <InfoField
-            label={t("phone")}
-            value={user.phone}
-            onEdit={() => setEditingField("phone")}
-          />
-          <InfoField
-            label={t("nationality")}
-            value={user.nationality}
-            onEdit={() => setEditingField("nationality")}
-          />
-          <InfoField
-            label={t("location")}
-            value={user.location}
-            onEdit={() => setEditingField("location")}
-          />
-          <InfoField
-            label={t("professionalExperiencesLabel")}
-            value={
-              user.professional_experiences?.length
+        <MenuList
+          items={[
+            {
+              label: tHome("name"),
+              value: `${user.first_name} ${user.last_name}`,
+              onClick: () => setEditingField("name"),
+            },
+            {
+              label: tHome("pseudo"),
+              value: user.pseudo ?? undefined,
+              onClick: () => setEditingField("pseudo"),
+            },
+            {
+              label: tHome("dob"),
+              value: user.dob ?? undefined,
+              onClick: () => setEditingField("dob"),
+            },
+            {
+              label: t("phone"),
+              value: user.phone ?? undefined,
+              onClick: () => setEditingField("phone"),
+            },
+            {
+              label: t("nationality"),
+              value: user.nationality ?? undefined,
+              onClick: () => setEditingField("nationality"),
+            },
+            {
+              label: t("location"),
+              value: user.location ?? undefined,
+              onClick: () => setEditingField("location"),
+            },
+            {
+              label: t("professionalExperiencesLabel"),
+              value: user.professional_experiences?.length
                 ? String(user.professional_experiences.length)
-                : undefined
-            }
-            onEdit={() => setEditingField("professionalExperiences")}
-          />
-          <InfoField
-            label={t("educationalExperiencesLabel")}
-            value={
-              user.educational_experiences?.length
+                : undefined,
+              onClick: () => setEditingField("professionalExperiences"),
+            },
+            {
+              label: t("educationalExperiencesLabel"),
+              value: user.educational_experiences?.length
                 ? String(user.educational_experiences.length)
-                : undefined
-            }
-            onEdit={() => setEditingField("educationalExperiences")}
-          />
-        </div>
+                : undefined,
+              onClick: () => setEditingField("educationalExperiences"),
+            },
+          ]}
+        />
       )}
 
       {editingField && user && (

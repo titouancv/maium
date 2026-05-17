@@ -33,9 +33,10 @@
     "nationality": "Nationalité",
     "location": "Localisation",
     "phonePlaceholder": "Numéro de téléphone",
-    "nationalityPlaceholder": "Nationalité",
-    "locationPlaceholder": "Ville, Pays",
+    "nationalityPlaceholder": "France",
+    "locationPlaceholder": "Paris, France",
     "saveButton": "Enregistrer",
+    "deleteButton": "Supprimer",
     "professionalExperiencesLabel": "Expériences professionnelles",
     "educationalExperiencesLabel": "Parcours éducatif",
     "editName": "Modifier le nom",
@@ -46,7 +47,7 @@
     "editLocation": "Modifier la localisation",
     "editProfessionalExperiences": "Expériences professionnelles",
     "editEducationalExperiences": "Parcours éducatif",
-    "noExperiences": "Aucune entrée pour l'instant",
+    "noExperiences": "Aucune expérience pour l'instant",
     "saveError": "Échec de l'enregistrement. Veuillez réessayer."
   },
   "welcome": {

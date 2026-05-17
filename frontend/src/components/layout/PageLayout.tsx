@@ -25,7 +25,12 @@ export const PageLayout = ({
         {/* Header */}
         <div className="flex shrink-0 items-center justify-between pt-16 md:pt-16">
           <Title label={title} size="h1" />
-          <Button variant="ghost" type="button" size="sm" onClick={handleBack}>
+          <Button
+            variant="ghost"
+            type="button"
+            size="none"
+            onClick={handleBack}
+          >
             {backLabel}
           </Button>
         </div>

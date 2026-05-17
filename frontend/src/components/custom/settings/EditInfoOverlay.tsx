@@ -1,18 +1,22 @@
 "use client";
 
 import { useState } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, useFieldArray, Controller } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useTranslations } from "next-intl";
 import { API, SIGNUP_FORM_ID } from "@/constants";
-import { Button } from "@/components/ui/Button";
-import { TextInput } from "@/components/ui/TextInput";
-import { Title } from "@/components/ui/Title";
+import { LocationInput } from "@/components/ui/LocationInput";
+import { NationalityInput } from "@/components/ui/NationalityInput";
+import { PhoneInput } from "@/components/ui/PhoneInput";
+import { StepLayout } from "@/components/layout/StepLayout";
 import { StepName, StepPseudo, StepDob } from "@/components/custom/signup";
-import { ExperienceItem, ExperienceSubWizard } from "@/components/custom/experience";
+import {
+  ExperienceList,
+  ExperienceSubWizard,
+} from "@/components/custom/experience";
 import type { UserData } from "@/types/user";
-import type { Experience, ExperienceFormData } from "@/types/experience";
+import type { ExperienceFormData } from "@/types/experience";
 import type { UserState } from "@/stores/useUserStore";
 
 export type EditableField =
@@ -39,18 +43,13 @@ export const EditInfoOverlay = ({ field, user, onClose, onSaved }: Props) => {
   const [isSaving, setIsSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isFormValid, setIsFormValid] = useState(false);
-  const [experiences, setExperiences] = useState<Experience[]>(
-    field === "professionalExperiences"
-      ? (user.professional_experiences ?? [])
-      : (user.educational_experiences ?? []),
-  );
   const [editingExperienceIndex, setEditingExperienceIndex] = useState<
     number | "new" | null
   >(null);
 
   const textSchema = z.object({ value: z.string().min(1) });
   const {
-    register: registerText,
+    control: textControl,
     handleSubmit: handleTextSubmit,
     formState: { isValid: isTextValid },
   } = useForm({
@@ -65,6 +64,31 @@ export const EditInfoOverlay = ({ field, user, onClose, onSaved }: Props) => {
             : (user.location ?? ""),
     },
   });
+
+  const { control: expControl, getValues: getExpValues } = useForm<{
+    items: Record<string, string>[];
+  }>({
+    defaultValues: {
+      items: (field === "professionalExperiences"
+        ? (user.professional_experiences ?? [])
+        : (user.educational_experiences ?? [])
+      ).map((e) => ({
+        organization: e.organization ?? "",
+        role: e.role ?? "",
+        startPeriod: e.startPeriod ?? "",
+        endPeriod: e.endPeriod ?? "",
+        description: e.description ?? "",
+        website: e.website ?? "",
+        location: e.location ?? "",
+      })),
+    },
+  });
+  const {
+    fields: expFields,
+    append: appendExp,
+    update: updateExp,
+    remove: removeExp,
+  } = useFieldArray({ control: expControl, name: "items" });
 
   const isSimpleStepField = ["name", "pseudo", "dob"].includes(field);
   const isTextInputField = ["phone", "nationality", "location"].includes(field);
@@ -111,26 +135,40 @@ export const EditInfoOverlay = ({ field, user, onClose, onSaved }: Props) => {
       field === "professionalExperiences"
         ? "professionalExperiences"
         : "educationalExperiences";
-    save({ [key]: experiences });
+    save({
+      [key]: getExpValues("items").map((item) => ({
+        organization: item.organization,
+        role: item.role,
+        startPeriod: item.startPeriod,
+        endPeriod: item.endPeriod || undefined,
+        description: item.description || undefined,
+        website: item.website || undefined,
+        location: item.location || undefined,
+      })),
+    });
   };
 
   const handleExperienceSave = (data: ExperienceFormData) => {
-    const entry: Experience = { ...data, endPeriod: data.endPeriod || undefined };
+    const entry = {
+      organization: data.organization,
+      role: data.role,
+      startPeriod: data.startPeriod,
+      endPeriod: data.endPeriod ?? "",
+      description: data.description ?? "",
+      website: data.website ?? "",
+      location: data.location ?? "",
+    };
     if (editingExperienceIndex === "new") {
-      setExperiences((prev) => [...prev, entry]);
+      appendExp(entry);
     } else if (typeof editingExperienceIndex === "number") {
-      setExperiences((prev) =>
-        prev.map((e, i) => (i === editingExperienceIndex ? entry : e)),
-      );
+      updateExp(editingExperienceIndex, entry);
     }
     setEditingExperienceIndex(null);
   };
 
   const handleExperienceDelete = () => {
     if (typeof editingExperienceIndex === "number") {
-      setExperiences((prev) =>
-        prev.filter((_, i) => i !== editingExperienceIndex),
-      );
+      removeExp(editingExperienceIndex);
     }
     setEditingExperienceIndex(null);
   };
@@ -139,6 +177,37 @@ export const EditInfoOverlay = ({ field, user, onClose, onSaved }: Props) => {
     field === "educationalExperiences"
       ? "experience.educational"
       : "experience.professional";
+
+  const primaryHandler = isTextInputField
+    ? handleTextSave
+    : isExperienceField
+      ? handleSaveExperiences
+      : undefined;
+
+  const primaryDisabled = isSimpleStepField
+    ? !isFormValid
+    : isTextInputField
+      ? !isTextValid
+      : false;
+
+  const secondaryLabel = isExperienceField
+    ? tCommon("addButton")
+    : isTextInputField
+      ? t("deleteButton")
+      : undefined;
+
+  const textFieldHasValue =
+    field === "phone"
+      ? !!user.phone
+      : field === "nationality"
+        ? !!user.nationality
+        : !!user.location;
+
+  const secondaryHandler = isExperienceField
+    ? () => setEditingExperienceIndex("new")
+    : isTextInputField && textFieldHasValue
+      ? () => save({ [field]: null })
+      : undefined;
 
   const overlayTitle: Record<EditableField, string> = {
     name: t("editName"),
@@ -151,21 +220,26 @@ export const EditInfoOverlay = ({ field, user, onClose, onSaved }: Props) => {
     educationalExperiences: t("editEducationalExperiences"),
   };
 
-  const textPlaceholder: Partial<Record<EditableField, string>> = {
-    phone: t("phonePlaceholder"),
-    nationality: t("nationalityPlaceholder"),
-    location: t("locationPlaceholder"),
-  };
-
   if (isExperienceField && editingExperienceIndex !== null) {
     return (
-      <div className="fixed inset-0 z-50 bg-surface-50">
+      <div className="bg-surface-50 fixed inset-0 z-50">
         <ExperienceSubWizard
           namespace={namespace}
           dateMode="MM-YYYY"
           initialData={
             typeof editingExperienceIndex === "number"
-              ? experiences[editingExperienceIndex]
+              ? (() => {
+                  const item = getExpValues("items")[editingExperienceIndex];
+                  return {
+                    organization: item.organization,
+                    role: item.role,
+                    startPeriod: item.startPeriod,
+                    endPeriod: item.endPeriod || undefined,
+                    description: item.description || undefined,
+                    website: item.website || undefined,
+                    location: item.location || undefined,
+                  };
+                })()
               : undefined
           }
           onSave={handleExperienceSave}
@@ -181,17 +255,25 @@ export const EditInfoOverlay = ({ field, user, onClose, onSaved }: Props) => {
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex flex-col bg-surface-50">
-      {/* Header */}
-      <div className="flex shrink-0 items-center justify-between px-6 pt-16">
-        <Title label={overlayTitle[field]} size="h1" />
-        <Button variant="ghost" type="button" size="sm" onClick={onClose}>
-          {tCommon("cancelButton")}
-        </Button>
-      </div>
-
-      {/* Content */}
-      <div className="min-h-0 flex-1 overflow-y-auto px-6 pt-10 pb-32">
+    <div className="bg-surface-50 fixed inset-0 z-50 px-6">
+      <StepLayout
+        title={overlayTitle[field]}
+        step={1}
+        totalSteps={1}
+        isCancelable
+        onCancel={onClose}
+        cancelLabel={tCommon("cancelButton")}
+        primaryLabel={t("saveButton")}
+        formId={isSimpleStepField ? SIGNUP_FORM_ID : undefined}
+        onPrimary={primaryHandler}
+        primaryDisabled={primaryDisabled}
+        primaryLoading={isSaving}
+        secondaryLabel={secondaryLabel}
+        onSecondary={secondaryHandler}
+        centerContent={
+          field === "location" || field === "nationality" ? false : undefined
+        }
+      >
         {field === "name" && (
           <StepName
             onNext={handleName}
@@ -214,85 +296,71 @@ export const EditInfoOverlay = ({ field, user, onClose, onSaved }: Props) => {
             onValidityChange={setIsFormValid}
           />
         )}
-        {isTextInputField && (
-          <TextInput
-            placeholder={textPlaceholder[field] ?? ""}
-            inputMode="text"
-            autoFocus
-            {...registerText("value")}
+        {field === "phone" && (
+          <Controller
+            control={textControl}
+            name="value"
+            render={({ field: f }) => (
+              <PhoneInput
+                value={f.value}
+                onChange={f.onChange}
+                onBlur={f.onBlur}
+                autoFocus
+              />
+            )}
           />
         )}
-        {isExperienceField && (
-          <div className="flex flex-col gap-4">
-            {experiences.length === 0 ? (
-              <p className="text-sm text-txt-muted">{t("noExperiences")}</p>
-            ) : (
-              <div className="flex flex-col gap-4">
-                {experiences.map((exp, i) => (
-                  <ExperienceItem
-                    key={i}
-                    {...exp}
-                    description={exp.description ?? ""}
-                    website={exp.website ?? ""}
-                    location={exp.location ?? ""}
-                    onEdit={() => setEditingExperienceIndex(i)}
-                  />
-                ))}
-              </div>
+        {field === "nationality" && (
+          <Controller
+            control={textControl}
+            name="value"
+            render={({ field: f }) => (
+              <NationalityInput
+                placeholder={t("nationalityPlaceholder")}
+                value={f.value}
+                onChange={f.onChange}
+                onBlur={f.onBlur}
+                autoFocus
+              />
             )}
-            <Button
-              variant="outline"
-              type="button"
-              onClick={() => setEditingExperienceIndex("new")}
-            >
-              {tCommon("addButton")}
-            </Button>
-          </div>
+          />
         )}
-        {error && <p className="mt-4 text-sm text-error">{error}</p>}
-      </div>
-
-      {/* Footer */}
-      <div
-        className="fixed inset-x-0 px-6 pb-8"
-        style={{ bottom: "env(safe-area-inset-bottom, 0px)" }}
-      >
-        {isExperienceField ? (
-          <Button
-            variant="primary"
-            type="button"
-            size="lg"
-            className="w-full"
-            onClick={handleSaveExperiences}
-            isLoading={isSaving}
-          >
-            {t("saveButton")}
-          </Button>
-        ) : isTextInputField ? (
-          <Button
-            variant="primary"
-            type="button"
-            size="lg"
-            className="w-full"
-            onClick={handleTextSave}
-            disabled={!isTextValid}
-            isLoading={isSaving}
-          >
-            {t("saveButton")}
-          </Button>
-        ) : (
-          <Button
-            type="submit"
-            form={SIGNUP_FORM_ID}
-            size="lg"
-            className="w-full"
-            disabled={isSimpleStepField && !isFormValid}
-            isLoading={isSaving}
-          >
-            {t("saveButton")}
-          </Button>
+        {field === "location" && (
+          <Controller
+            control={textControl}
+            name="value"
+            render={({ field: f }) => (
+              <LocationInput
+                placeholder={t("locationPlaceholder")}
+                value={f.value}
+                onChange={f.onChange}
+                onBlur={f.onBlur}
+                autoFocus
+              />
+            )}
+          />
         )}
-      </div>
+        {isExperienceField &&
+          (expFields.length === 0 ? (
+            <p className="text-txt-muted text-sm">{t("noExperiences")}</p>
+          ) : (
+            <ExperienceList
+              fields={expFields}
+              control={expControl}
+              getDisplay={(item) => ({
+                organization: item.organization ?? "",
+                role: item.role ?? "",
+                startPeriod: item.startPeriod ?? "",
+                endPeriod: item.endPeriod || undefined,
+                description: item.description ?? "",
+                website: item.website ?? "",
+                location: item.location ?? "",
+              })}
+              onEdit={(index) => setEditingExperienceIndex(index)}
+            />
+          ))}
+        {error && <p className="text-error mt-4 text-sm">{error}</p>}
+      </StepLayout>
     </div>
   );
 };

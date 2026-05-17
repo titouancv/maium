@@ -5,7 +5,7 @@ export const INVERSE_COLORS =
 export const OUTLINE_COLORS =
   "text-txt border-b border-brd-200 hover:bg-surface-200 inset-shadow-primary-200/80 dark:inset-shadow-primary-400/80";
 export const GHOST_COLORS =
-  "bg-transparent text-txt hover:bg-surface-200 shadow-none inset-shadow-transparent";
+  "bg-transparent text-txt hover:text-primary shadow-none inset-shadow-transparent";
 
 export type UIVariant = "primary" | "inverse" | "outline" | "ghost";
 
