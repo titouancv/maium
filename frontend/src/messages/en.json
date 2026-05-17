@@ -28,7 +28,14 @@
     "deleteAccountButton": "Delete account",
     "deleteAccountConfirm": "Are you sure? This action is irreversible.",
     "deleteAccountConfirmButton": "Yes, delete",
-    "deleteAccountCancelButton": "Cancel"
+    "deleteAccountCancelButton": "Cancel",
+    "phone": "Phone number",
+    "nationality": "Nationality",
+    "location": "Location",
+    "phonePlaceholder": "Phone number",
+    "nationalityPlaceholder": "Nationality",
+    "locationPlaceholder": "City, Country",
+    "saveButton": "Save"
   },
   "welcome": {
     "greeting": "Welcome, {name}!",

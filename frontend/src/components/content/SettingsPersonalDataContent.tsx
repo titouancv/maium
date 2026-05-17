@@ -1,15 +1,6 @@
-"use client";
-
 import { useTranslations } from "next-intl";
 import { PageLayout } from "@/components/layout";
-
-interface UserData {
-  email: string;
-  first_name: string;
-  last_name: string;
-  pseudo: string;
-  dob: string;
-}
+import { UserData } from "@/types";
 
 interface SettingsPersonalDataContentProps {
   user: UserData | null;
@@ -29,7 +20,8 @@ export const SettingsPersonalDataContent = ({
             <strong>{tHome("email")}:</strong> {user.email}
           </li>
           <li>
-            <strong>{tHome("name")}:</strong> {user.first_name} {user.last_name}
+            <strong>{tHome("name")}:</strong> {user.first_name}{" "}
+            {user.last_name}
           </li>
           <li>
             <strong>{tHome("pseudo")}:</strong> {user.pseudo}
@@ -37,6 +29,21 @@ export const SettingsPersonalDataContent = ({
           <li>
             <strong>{tHome("dob")}:</strong> {user.dob}
           </li>
+          {user.phone && (
+            <li>
+              <strong>{t("phone")}:</strong> {user.phone}
+            </li>
+          )}
+          {user.nationality && (
+            <li>
+              <strong>{t("nationality")}:</strong> {user.nationality}
+            </li>
+          )}
+          {user.location && (
+            <li>
+              <strong>{t("location")}:</strong> {user.location}
+            </li>
+          )}
         </ul>
       )}
     </PageLayout>

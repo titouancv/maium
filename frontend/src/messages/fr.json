@@ -28,7 +28,14 @@
     "deleteAccountButton": "Supprimer le compte",
     "deleteAccountConfirm": "Êtes-vous sûr ? Cette action est irréversible.",
     "deleteAccountConfirmButton": "Oui, supprimer",
-    "deleteAccountCancelButton": "Annuler"
+    "deleteAccountCancelButton": "Annuler",
+    "phone": "Numéro de téléphone",
+    "nationality": "Nationalité",
+    "location": "Localisation",
+    "phonePlaceholder": "Numéro de téléphone",
+    "nationalityPlaceholder": "Nationalité",
+    "locationPlaceholder": "Ville, Pays",
+    "saveButton": "Enregistrer"
   },
   "welcome": {
     "greeting": "Bienvenue, {name} !",
