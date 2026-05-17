@@ -3,6 +3,7 @@ export * from "./ui";
 export const ROUTES = {
   HOME: "/",
   SIGNUP: "/signup",
+  SETTINGS: "/settings",
   UPDATE_EXPERIENCE_PRO: "/update-experience/professional",
   UPDATE_EXPERIENCE_EDU: "/update-experience/educational",
   AUTH_CALLBACK: "/auth/callback",
