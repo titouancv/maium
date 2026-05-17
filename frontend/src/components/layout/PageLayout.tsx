@@ -54,7 +54,7 @@ export const PageLayout = ({
         <div className="min-h-0 flex-1 overflow-y-auto">{children}</div>
       </div>
 
-      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 md:bottom-14">
+      <div className="absolute bottom-6 left-1/2 -translate-x-1/2 md:bottom-14">
         <Tabs tabs={tabs} />
       </div>
     </div>
