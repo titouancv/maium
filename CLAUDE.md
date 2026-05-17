@@ -51,30 +51,54 @@ Key difference: the middleware file is **`src/proxy.ts`**, not `src/middleware.t
 
 ### Auth (Supabase)
 
-Two Supabase client factories — always pick the right one:
+Three Supabase client factories — always pick the right one:
 
 - `@/lib/supabase` → `createBrowserClient()` — Client Components, event handlers
-- `@/lib/supabase` → `createServerClient()` — Server Components, API routes, middleware
+- `@/lib/supabase` → `createClient()` (server) — Server Components, API routes, middleware
+- `@/lib/supabase/admin` → `createAdminClient()` — service-role operations only (e.g. deleting a user from `auth.users`); requires `SUPABASE_SERVICE_ROLE_KEY`
 
 **Always use `supabase.auth.getUser()`**, never `getSession()`. `getSession()` reads from the cookie without re-validating with the server; `getUser()` does a round-trip and is the only safe option for authorization checks.
 
-OAuth flow: Google/Apple → Supabase → redirect to `/auth/callback` → `exchangeCodeForSession` → redirect to `ROUTES.HOME`.
+### Signup Flows
 
-### Signup Wizard
+There are two signup paths that share the same wizard UI (`src/components/content/SignupContent.tsx`, exported as `SignupWizard`):
 
-The signup flow is a 4-step wizard (`src/components/auth/SignupWizard.tsx`). Each step collects partial user data and calls `useUserStore.setUser()` to merge it into Zustand state. On the final step, all accumulated data is POSTed to `POST /api/users`, which creates the Supabase auth user and inserts into `public.users` in a single request.
+**Email/password signup** (no existing Supabase user):
+- Step 0: OAuth entry point (Google) — email/password is handled via `POST /api/users`
+- Steps 1–5: Name → Pseudo → DoB → Professional experiences → Educational experiences
+- On finish: `POST /api/users` creates the auth user and inserts into `public.users` in one request
+
+**OAuth signup** (Google/Apple → Supabase triggers `handle_new_oauth_user()`):
+- A DB trigger auto-creates a partial `public.users` row (id, email, first_name, last_name) on OAuth signup
+- The signup page detects an existing Supabase user, resumes the wizard from the right step (computed from what's already filled in `public.users`), and sets `initialUser.supabaseId`
+- Each wizard step calls `PATCH /api/users/me` instead of buffering locally
+- On finish: `PATCH /api/users/me` updates the profile and marks `onboarding_completed = true`
+
+OAuth flow: Google/Apple → Supabase → `/auth/callback` → `exchangeCodeForSession` → `ROUTES.SIGNUP` (to complete the wizard).
+
+### API Routes
+
+| Method | Path | Purpose |
+|--------|------|---------|
+| `POST` | `/api/users` | Create user (email/password signup) |
+| `PATCH` | `/api/users/me` | Update profile fields / mark onboarding complete |
+| `DELETE` | `/api/users/me` | Delete account (uses admin client) |
+| `GET` | `/api/users/pseudo` | Check pseudo availability |
+| `POST` | `/api/auth/logout` | Sign out |
+| `GET` | `/api/health` | Health check |
 
 ### Database Schema (`public.users`)
 
 ```sql
-id                       uuid  (= Supabase auth.users.id)
-email                    text  unique
+id                       uuid     (= Supabase auth.users.id)
+email                    text     unique
 first_name               text
 last_name                text
-pseudo                   text  unique
+pseudo                   text     unique
 dob                      date
-professional_experiences jsonb default '[]'
-educational_experiences  jsonb default '[]'
+onboarding_completed     boolean  not null default false
+professional_experiences jsonb    default '[]'
+educational_experiences  jsonb    default '[]'
 created_at               timestamptz
 ```
 
@@ -100,26 +124,34 @@ RLS is enabled. Policies allow users to read/insert/update only their own row (`
 ```
 frontend/src/
 ├── app/
-│   ├── [locale]/(routes)/     # All locale-aware pages
-│   ├── api/                   # API route handlers
-│   └── auth/callback/         # OAuth callback handler
+│   ├── [locale]/(routes)/         # All locale-aware pages (home, signup, update-experience/[type])
+│   ├── [locale]/auth/callback/    # OAuth callback handler (locale-aware)
+│   ├── app/auth/callback/         # OAuth callback (non-locale fallback)
+│   └── api/                       # API route handlers
 ├── components/
-│   ├── ui/                    # Atomic components (Button, Input…)
-│   └── [feature]/             # Feature-scoped components
-├── constants/                 # ALL constants, paths, config — never inline
-│   ├── routes.ts              # ROUTES object
-│   ├── path.ts                # Legacy — prefer routes.ts
-│   └── index.ts               # Re-exports everything
+│   ├── ui/                        # Atomic components (Button, Input, Select…)
+│   ├── layout/                    # Layout wrappers (StepLayout)
+│   ├── content/                   # Page-level content components (HomeContent, SignupContent, ExperienceContent)
+│   ├── custom/signup/             # Signup wizard steps (StepName, StepPseudo, StepDob, StepExperience…)
+│   ├── custom/experience/         # Experience list/form components
+│   └── overlay/                   # Overlays (WelcomeOverlay, LoadingOverlay)
+├── constants/                     # ALL constants, paths, config — never inline
+│   └── index.ts                   # Re-exports ROUTES, API, EXTERNAL_API, UI constants
 ├── i18n/
-│   ├── routing.ts             # next-intl routing config
-│   ├── navigation.ts          # Locale-aware Link/useRouter wrappers
-│   └── request.ts             # Server-side locale config
-├── lib/supabase/              # Client/server Supabase factories
+│   ├── routing.ts                 # next-intl routing config
+│   ├── navigation.ts              # Locale-aware Link/useRouter wrappers
+│   └── request.ts                 # Server-side locale config
+├── lib/
+│   ├── supabase/                  # client.ts, server.ts, admin.ts, index.ts
+│   └── validators/user.ts         # Zod schemas (CreateUserSchema, UpdateUserSchema)
 ├── messages/
-│   ├── en.json                # English translations
-│   └── fr.json                # French translations (must stay in sync)
-├── proxy.ts                   # Middleware (i18n + session refresh)
-└── stores/useUserStore.ts     # Zustand store (signup wizard state)
+│   ├── en.json                    # English translations
+│   └── fr.json                    # French translations (must stay in sync)
+├── stores/
+│   ├── useUserStore.ts            # Signup wizard state (UserState, Experience)
+│   └── useLoadingStore.ts         # Loading overlay suppression flag
+├── proxy.ts                       # Middleware (i18n + session refresh)
+└── actions/ hooks/ services/ types/ utils/   # Empty — reserved for future use
 ```
 
 ---
@@ -129,11 +161,21 @@ frontend/src/
 Every route path, API endpoint, and config value lives in `src/constants/`. Import from `@/constants` everywhere.
 
 ```ts
-// src/constants/routes.ts
-export const ROUTES = { HOME: "/", SIGNUP: "/signup" } as const;
+export const ROUTES = {
+  HOME: "/",
+  SIGNUP: "/signup",
+  UPDATE_EXPERIENCE_PRO: "/update-experience/professional",
+  UPDATE_EXPERIENCE_EDU: "/update-experience/educational",
+  AUTH_CALLBACK: "/auth/callback",
+} as const;
 
-// src/constants/api.ts
-export const API = { USERS: "/api/users" } as const;
+export const API = {
+  HEALTH: "/api/health",
+  USERS: "/api/users",
+  USERS_ME: "/api/users/me",
+  USERS_PSEUDO_CHECK: "/api/users/pseudo",
+  AUTH_LOGOUT: "/api/auth/logout",
+} as const;
 ```
 
 Never hardcode paths or URLs inline.
