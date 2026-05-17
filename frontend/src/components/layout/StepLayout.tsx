@@ -43,6 +43,10 @@ export const StepLayout = ({
   const [keyboardHeight, setKeyboardHeight] = useState(0);
 
   useEffect(() => {
+    document.title = title.toLowerCase() + " • maium";
+  }, [title]);
+
+  useEffect(() => {
     const viewport = window.visualViewport;
     if (!viewport) return;
 

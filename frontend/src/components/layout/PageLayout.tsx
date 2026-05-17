@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect } from "react";
 import { useRouter } from "@/i18n/navigation";
 import { Button, Title } from "../ui";
 
@@ -18,6 +19,10 @@ export const PageLayout = ({
 }: PageLayoutProps) => {
   const router = useRouter();
   const handleBack = onBack ?? (() => router.back());
+
+  useEffect(() => {
+    document.title = title.toLowerCase() + " • maium";
+  }, [title]);
 
   return (
     <div className="flex h-dvh flex-col md:h-screen md:items-center md:justify-center">
