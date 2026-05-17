@@ -14,7 +14,7 @@ interface HomeContentProps {
 }
 
 export const HomeContent = ({ user }: HomeContentProps) => {
-  const t = useTranslations("home");
+  const t = useTranslations("nav");
   const router = useRouter();
 
   const needsWelcome = user?.onboarding_completed === false;
@@ -74,7 +74,7 @@ export const HomeContent = ({ user }: HomeContentProps) => {
   };
 
   return (
-    <PageLayout title={"maium"}>
+    <PageLayout title={t("home")}>
       {showOverlay && user && (
         <div
           className={cn(
@@ -86,33 +86,6 @@ export const HomeContent = ({ user }: HomeContentProps) => {
             firstName={user.first_name}
             onEnter={handleWelcomeEnter}
           />
-        </div>
-      )}
-      {user && (
-        <div className="flex w-full flex-col items-start gap-6 md:max-w-sm">
-          <div className="flex w-full items-center justify-between">
-            <button
-              onClick={() => router.push(ROUTES.SETTINGS)}
-              className="hover:bg-surface-100 ml-auto rounded-full p-2 transition-colors"
-              aria-label={t("settingsButton")}
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="20"
-                height="20"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                className="text-txt-muted"
-              >
-                <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z" />
-                <circle cx="12" cy="12" r="3" />
-              </svg>
-            </button>
-          </div>
         </div>
       )}
     </PageLayout>

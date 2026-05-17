@@ -1,4 +1,8 @@
 {
+  "nav": {
+    "home": "Accueil",
+    "settings": "Paramètres"
+  },
   "common": {
     "loading": "Chargement",
     "nextButton": "Suivant",

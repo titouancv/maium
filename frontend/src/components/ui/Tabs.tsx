@@ -1,8 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { Link, usePathname } from "@/i18n/navigation";
 
 export interface TabItem {
   name: string;
@@ -25,7 +24,7 @@ export function Tabs({
   const pathname = usePathname();
 
   return (
-    <div className="hide-scrollbar flex gap-2 overflow-x-auto px-1">
+    <div className="hide-scrollbar bg-inverse-50 text-txt-inverse flex gap-2 overflow-x-auto rounded-full px-1 py-1">
       {tabs.map((tab, idx) => {
         const isString = typeof tab === "string";
         const name = isString ? tab : tab.name;
@@ -40,7 +39,7 @@ export function Tabs({
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.2 }}
               className={`relative z-10 ${
-                isActive ? "text-on-primary" : "text-txt hover:text-primary"
+                isActive ? "text-on-primary" : "hover:text-primary"
               }`}
             >
               {name}
