@@ -255,7 +255,7 @@ export const EditInfoOverlay = ({ field, user, onClose, onSaved }: Props) => {
   }
 
   return (
-    <div className="bg-surface-50 fixed inset-0 z-50 px-6">
+    <div className="bg-surface-50 fixed inset-0 z-50 p-4">
       <StepLayout
         title={overlayTitle[field]}
         step={1}
