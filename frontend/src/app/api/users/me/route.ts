@@ -45,9 +45,9 @@ export async function PATCH(request: NextRequest) {
       updates.professional_experiences = professionalExperiences;
     if (educationalExperiences !== undefined)
       updates.educational_experiences = educationalExperiences;
-    if (phone !== undefined) updates.phone = phone;
-    if (nationality !== undefined) updates.nationality = nationality;
-    if (location !== undefined) updates.location = location;
+    if (phone !== undefined) updates.phone = phone ?? null;
+    if (nationality !== undefined) updates.nationality = nationality ?? null;
+    if (location !== undefined) updates.location = location ?? null;
 
     const { error: dbError } = await supabase
       .from("users")

@@ -43,7 +43,6 @@ export const StepLayout = ({
   const [keyboardHeight, setKeyboardHeight] = useState(0);
 
   useEffect(() => {
-    console.log(centerContent);
     const viewport = window.visualViewport;
     if (!viewport) return;
 
@@ -65,7 +64,7 @@ export const StepLayout = ({
 
   return (
     <div className="flex h-dvh flex-col md:h-screen md:items-center md:justify-center md:px-0">
-      <div className="flex h-full w-full flex-col md:h-screen md:max-w-md">
+      <div className="flex h-full w-full flex-col md:h-screen md:max-w-lg">
         {/* Header */}
         <div className="flex shrink-0 items-center justify-between pt-16 md:pt-[150px]">
           <Title label={title} size="h1" />
@@ -87,7 +86,7 @@ export const StepLayout = ({
             centerContent === true && "flex items-center justify-center",
           )}
         >
-          <div className="w-full md:max-w-md">{children}</div>
+          <div className="w-full">{children}</div>
         </div>
 
         {/* Buttons — fixed above keyboard on mobile, inline on desktop */}

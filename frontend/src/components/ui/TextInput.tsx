@@ -1,4 +1,5 @@
 import React, { forwardRef } from "react";
+import { cn } from "@/lib/utils";
 
 export interface TextInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   infoLabel?: string;
@@ -18,11 +19,13 @@ export const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
       <div className="flex w-full flex-col gap-1.5">
         <input
           ref={ref}
-          className={`h-12 w-full transition-all placeholder:uppercase ${
+          className={cn(
+            "h-12 w-full transition-all placeholder:uppercase rounded-xl p-1 outline-none",
             infoType === "error"
               ? "text-error bg-error/10"
-              : "text-txt hover:bg-surface-100 focus:bg-surface-100"
-          } rounded-xl p-1 outline-none ${className}`}
+              : "text-txt hover:bg-surface-100 focus:bg-surface-100",
+            className
+          )}
           {...props}
         />
         <span className={`${infoColors[infoType]} pl-1 text-xs`}>

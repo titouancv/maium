@@ -82,9 +82,9 @@ export const UpdateUserSchema = z
     onboardingCompleted: z.boolean().optional(),
     professionalExperiences: z.array(ExperienceSchema).optional(),
     educationalExperiences: z.array(ExperienceSchema).optional(),
-    phone: z.string().optional(),
-    nationality: z.string().optional(),
-    location: z.string().optional(),
+    phone: z.string().nullable().optional(),
+    nationality: z.string().nullable().optional(),
+    location: z.string().nullable().optional(),
   })
   .refine((data) => Object.values(data).some((v) => v !== undefined), {
     message: "At least one field must be provided",

@@ -1,6 +1,15 @@
+"use client";
+
+import { useState } from "react";
 import { useTranslations } from "next-intl";
+import { useRouter } from "@/i18n/navigation";
 import { PageLayout } from "@/components/layout";
-import { UserData } from "@/types";
+import { MenuList } from "@/components/ui";
+import {
+  EditInfoOverlay,
+  type EditableField,
+} from "@/components/custom/settings/EditInfoOverlay";
+import type { UserData } from "@/types";
 
 interface SettingsPersonalDataContentProps {
   user: UserData | null;
@@ -11,40 +20,71 @@ export const SettingsPersonalDataContent = ({
 }: SettingsPersonalDataContentProps) => {
   const t = useTranslations("settings");
   const tHome = useTranslations("home");
+  const router = useRouter();
+  const [editingField, setEditingField] = useState<EditableField | null>(null);
+
+  const handleSaved = () => router.refresh();
 
   return (
     <PageLayout title={t("mesInformations")} backLabel={t("backButton")}>
       {user && (
-        <ul className="space-y-2">
-          <li>
-            <strong>{tHome("email")}:</strong> {user.email}
-          </li>
-          <li>
-            <strong>{tHome("name")}:</strong> {user.first_name}{" "}
-            {user.last_name}
-          </li>
-          <li>
-            <strong>{tHome("pseudo")}:</strong> {user.pseudo}
-          </li>
-          <li>
-            <strong>{tHome("dob")}:</strong> {user.dob}
-          </li>
-          {user.phone && (
-            <li>
-              <strong>{t("phone")}:</strong> {user.phone}
-            </li>
-          )}
-          {user.nationality && (
-            <li>
-              <strong>{t("nationality")}:</strong> {user.nationality}
-            </li>
-          )}
-          {user.location && (
-            <li>
-              <strong>{t("location")}:</strong> {user.location}
-            </li>
-          )}
-        </ul>
+        <MenuList
+          items={[
+            {
+              label: tHome("name"),
+              value: `${user.first_name} ${user.last_name}`,
+              onClick: () => setEditingField("name"),
+            },
+            {
+              label: tHome("pseudo"),
+              value: user.pseudo ?? undefined,
+              onClick: () => setEditingField("pseudo"),
+            },
+            {
+              label: tHome("dob"),
+              value: user.dob ?? undefined,
+              onClick: () => setEditingField("dob"),
+            },
+            {
+              label: t("phone"),
+              value: user.phone ?? undefined,
+              onClick: () => setEditingField("phone"),
+            },
+            {
+              label: t("nationality"),
+              value: user.nationality ?? undefined,
+              onClick: () => setEditingField("nationality"),
+            },
+            {
+              label: t("location"),
+              value: user.location ?? undefined,
+              onClick: () => setEditingField("location"),
+            },
+            {
+              label: t("professionalExperiencesLabel"),
+              value: user.professional_experiences?.length
+                ? String(user.professional_experiences.length)
+                : undefined,
+              onClick: () => setEditingField("professionalExperiences"),
+            },
+            {
+              label: t("educationalExperiencesLabel"),
+              value: user.educational_experiences?.length
+                ? String(user.educational_experiences.length)
+                : undefined,
+              onClick: () => setEditingField("educationalExperiences"),
+            },
+          ]}
+        />
+      )}
+
+      {editingField && user && (
+        <EditInfoOverlay
+          field={editingField}
+          user={user}
+          onClose={() => setEditingField(null)}
+          onSaved={handleSaved}
+        />
       )}
     </PageLayout>
   );

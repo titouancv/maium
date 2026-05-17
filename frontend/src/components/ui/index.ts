@@ -13,6 +13,8 @@ export * from "./TextInput";
 export * from "./TextArea";
 export * from "./DateInput";
 export * from "./LocationInput";
+export * from "./NationalityInput";
+export * from "./PhoneInput";
 export * from "./SlideToEnter";
 export * from "./StepCounter";
 export * from "./Title";
