@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useLoadingStore } from "@/stores/useLoadingStore";
-import { Title } from "./Title";
+import { Title } from "../ui";
 
 // visible       → monté, opacity-100
 // transitioning → monté, opacity-0  (sortie uniquement)

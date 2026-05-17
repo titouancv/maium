@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
-import { LoadingOverlay } from "@/components/ui/LoadingOverlay";
+import { LoadingOverlay } from "@/components/overlay/LoadingOverlay";
 import { useLoadingStore } from "@/stores/useLoadingStore";
 
 export function Providers({ children }: { children: React.ReactNode }) {

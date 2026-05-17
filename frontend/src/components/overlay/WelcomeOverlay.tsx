@@ -1,36 +1,24 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import { useRouter } from "@/i18n/navigation";
 import { Button } from "@/components/ui/Button";
 import { SlideToEnter, Title } from "@/components/ui";
-import { ROUTES } from "@/constants";
 
 interface WelcomeContentProps {
   firstName: string;
-  lastName: string;
-  pseudo: string;
-  dob: string;
-  email: string;
-  professionalExperiences: unknown[];
-  educationalExperiences: unknown[];
+  onEnter: () => void;
 }
 
-export const WelcomeContent = ({ firstName }: WelcomeContentProps) => {
+export const WelcomeOverlay = ({ firstName, onEnter }: WelcomeContentProps) => {
   const t = useTranslations("welcome");
-  const router = useRouter();
 
   const handleEnterApp = () => {
-    fetch("/api/users/me", {
-      method: "PATCH",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ onboardingCompleted: true }),
-    });
-    router.push(`${ROUTES.HOME}?confetti=1`);
+    onEnter();
+    return;
   };
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center gap-12">
+    <div className="bg-surface-50 flex min-h-screen flex-col items-center justify-center gap-12">
       <div className="flex max-w-md flex-col items-start justify-center gap-8">
         <div className="flex flex-col items-center gap-2">
           <Title label={t("greeting", { name: firstName })} size="h1" />

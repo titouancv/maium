@@ -4,7 +4,6 @@ export * from "./List";
 export * from "./PasswordInput";
 export * from "./SearchInput";
 export * from "./Select";
-export * from "./LoadingOverlay";
 export * from "./Skeleton";
 export * from "./Spinner";
 export * from "./SwipeAction";

@@ -1,12 +1,13 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/Button";
 import { API, ROUTES } from "@/constants";
 import { useRouter } from "@/i18n/navigation";
 import { Section } from "../ui";
+import { WelcomeOverlay } from "../overlay/WelcomeOverlay";
+import { cn } from "@/lib/utils";
 
 interface UserData {
   email: string;
@@ -14,6 +15,7 @@ interface UserData {
   last_name: string;
   pseudo: string;
   dob: string;
+  onboarding_completed: boolean;
 }
 
 interface HomeContentProps {
@@ -23,7 +25,13 @@ interface HomeContentProps {
 export const HomeContent = ({ user }: HomeContentProps) => {
   const t = useTranslations("home");
   const router = useRouter();
-  const searchParams = useSearchParams();
+
+  const needsWelcome = user?.onboarding_completed === false;
+  const [showOverlay, setShowOverlay] = useState(needsWelcome);
+  const [overlayVisible, setOverlayVisible] = useState(needsWelcome);
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
+  const [isDeletingAccount, setIsDeletingAccount] = useState(false);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
   useEffect(() => {
     if (!user) {
@@ -31,10 +39,15 @@ export const HomeContent = ({ user }: HomeContentProps) => {
     }
   }, [user, router]);
 
-  useEffect(() => {
-    if (searchParams.get("confetti") !== "1") return;
-    if (window.innerWidth >= 768) {
-      import("canvas-confetti").then(({ default: confetti }) => {
+  const handleWelcomeEnter = () => {
+    fetch(API.USERS_ME, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ onboardingCompleted: true }),
+    });
+    setOverlayVisible(false);
+    import("canvas-confetti").then(({ default: confetti }) => {
+      if (window.innerWidth >= 768) {
         confetti({
           particleCount: 120,
           angle: 45,
@@ -49,9 +62,7 @@ export const HomeContent = ({ user }: HomeContentProps) => {
           origin: { x: 1, y: 1 },
           startVelocity: 50,
         });
-      });
-    } else {
-      import("canvas-confetti").then(({ default: confetti }) => {
+      } else {
         confetti({
           particleCount: 120,
           angle: 315,
@@ -70,16 +81,10 @@ export const HomeContent = ({ user }: HomeContentProps) => {
           gravity: 0.7,
           scalar: 0.8,
         });
-      });
-    }
-    const url = new URL(window.location.href);
-    url.searchParams.delete("confetti");
-    window.history.replaceState(null, "", url.toString());
-  }, [searchParams]);
-
-  const [isLoggingOut, setIsLoggingOut] = useState(false);
-  const [isDeletingAccount, setIsDeletingAccount] = useState(false);
-  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+      }
+    });
+    setTimeout(() => setShowOverlay(false), 500);
+  };
 
   const handleLogout = async () => {
     setIsLoggingOut(true);
@@ -97,6 +102,19 @@ export const HomeContent = ({ user }: HomeContentProps) => {
 
   return (
     <div className="flex min-h-screen flex-col items-center justify-center gap-6">
+      {showOverlay && user && (
+        <div
+          className={cn(
+            "fixed inset-0 z-50 transition-opacity duration-500",
+            overlayVisible ? "opacity-100" : "pointer-events-none opacity-0",
+          )}
+        >
+          <WelcomeOverlay
+            firstName={user.first_name}
+            onEnter={handleWelcomeEnter}
+          />
+        </div>
+      )}
       {user && (
         <div className="flex w-full flex-col items-start gap-6 md:max-w-sm">
           <Section title={t("userData")} padding="lg">

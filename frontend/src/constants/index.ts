@@ -5,8 +5,7 @@ export const ROUTES = {
   SIGNUP: "/signup",
   UPDATE_EXPERIENCE_PRO: "/update-experience/professional",
   UPDATE_EXPERIENCE_EDU: "/update-experience/educational",
-  WELCOME: "/welcome",
-  AUTH_CALLBACK: "/auth/callback",
+AUTH_CALLBACK: "/auth/callback",
 } as const;
 
 export const CONFIG = {} as const;
