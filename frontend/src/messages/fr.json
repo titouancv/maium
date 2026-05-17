@@ -15,7 +15,13 @@
     "name": "Nom complet",
     "pseudo": "Pseudo",
     "dob": "Date de naissance",
-    "settingsButton": "Paramètres",
+    "settingsButton": "Paramètres"
+  },
+  "settings": {
+    "title": "Paramètres",
+    "backButton": "Retour",
+    "monCompte": "Mon compte",
+    "mesInformations": "Mes informations",
     "logoutButton": "Se déconnecter",
     "deleteAccountButton": "Supprimer le compte",
     "deleteAccountConfirm": "Êtes-vous sûr ? Cette action est irréversible.",
