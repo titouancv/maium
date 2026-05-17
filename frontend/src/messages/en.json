@@ -35,7 +35,19 @@
     "phonePlaceholder": "Phone number",
     "nationalityPlaceholder": "Nationality",
     "locationPlaceholder": "City, Country",
-    "saveButton": "Save"
+    "saveButton": "Save",
+    "professionalExperiencesLabel": "Professional experiences",
+    "educationalExperiencesLabel": "Educational background",
+    "editName": "Edit name",
+    "editPseudo": "Edit username",
+    "editDob": "Edit date of birth",
+    "editPhone": "Edit phone number",
+    "editNationality": "Edit nationality",
+    "editLocation": "Edit location",
+    "editProfessionalExperiences": "Professional experiences",
+    "editEducationalExperiences": "Educational background",
+    "noExperiences": "No entries yet",
+    "saveError": "Failed to save. Please try again."
   },
   "welcome": {
     "greeting": "Welcome, {name}!",
