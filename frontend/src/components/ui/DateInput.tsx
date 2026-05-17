@@ -9,6 +9,7 @@ interface DateInputProps {
   onChange?: (value: string) => void;
   onBlur?: () => void;
   onEnter?: () => void;
+  onComplete?: () => void;
   name?: string;
   error?: string;
   autoComplete?: string;
@@ -80,7 +81,7 @@ const MODE_CONFIGS: Record<DateMode, ModeConfig> = {
 };
 
 export const DateInput = forwardRef<HTMLInputElement, DateInputProps>(
-  ({ value, onChange, onBlur, onEnter, name, error, autoComplete, autoFocus, mode = "DD-MM-YYYY" }, forwardedRef) => {
+  ({ value, onChange, onBlur, onEnter, onComplete, name, error, autoComplete, autoFocus, mode = "DD-MM-YYYY" }, forwardedRef) => {
     const config = MODE_CONFIGS[mode];
     const [digits, setDigits] = useState(() => config.fromISO(value ?? ""));
     const localRef = useRef<HTMLInputElement>(null);
@@ -100,10 +101,20 @@ export const DateInput = forwardRef<HTMLInputElement, DateInputProps>(
         const next = digits + e.key;
         setDigits(next);
         onChange?.(config.toISO(next));
+        if (next.length === config.maxDigits) onComplete?.();
       } else if (e.key === "Backspace" && digits.length > 0) {
         const next = digits.slice(0, -1);
         setDigits(next);
         onChange?.(config.toISO(next));
+      }
+    };
+
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+      const newDigits = e.target.value.replace(/\D/g, "").slice(0, config.maxDigits);
+      if (newDigits !== digits) {
+        setDigits(newDigits);
+        onChange?.(config.toISO(newDigits));
+        if (newDigits.length === config.maxDigits) onComplete?.();
       }
     };
 
@@ -115,6 +126,7 @@ export const DateInput = forwardRef<HTMLInputElement, DateInputProps>(
       );
       setDigits(next);
       onChange?.(config.toISO(next));
+      if (next.length === config.maxDigits) onComplete?.();
     };
 
     const resetCursor = () => {
@@ -144,7 +156,7 @@ export const DateInput = forwardRef<HTMLInputElement, DateInputProps>(
           value={config.buildDisplay(digits)}
           onKeyDown={handleKeyDown}
           onPaste={handlePaste}
-          onChange={() => {}}
+          onChange={handleChange}
           onClick={resetCursor}
           onFocus={resetCursor}
           onBlur={onBlur}

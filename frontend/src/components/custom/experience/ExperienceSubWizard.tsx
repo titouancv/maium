@@ -182,6 +182,7 @@ export const ExperienceSubWizard = ({
                   error={errors.startPeriod?.message}
                   autoFocus
                   onEnter={() => endPeriodRef.current?.focus()}
+                  onComplete={() => endPeriodRef.current?.focus()}
                 />
               )}
             />
@@ -198,6 +199,7 @@ export const ExperienceSubWizard = ({
                   name={field.name}
                   error={errors.endPeriod?.message}
                   onEnter={() => void handlePrimary()}
+                  onComplete={() => void handlePrimary()}
                 />
               )}
             />

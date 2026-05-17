@@ -66,6 +66,7 @@ export const StepDob = ({
             autoFocus
             autoComplete="bday"
             error={field.value?.length === 10 ? (errors.dob?.message as string) : undefined}
+            onComplete={handleSubmit(onNext)}
           />
         )}
       />
