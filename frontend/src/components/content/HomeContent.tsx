@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
-import { Button } from "@/components/ui/Button";
 import { API, ROUTES } from "@/constants";
 import { useRouter } from "@/i18n/navigation";
 import { Section } from "../ui";
@@ -29,10 +28,6 @@ export const HomeContent = ({ user }: HomeContentProps) => {
   const needsWelcome = user?.onboarding_completed === false;
   const [showOverlay, setShowOverlay] = useState(needsWelcome);
   const [overlayVisible, setOverlayVisible] = useState(needsWelcome);
-  const [isLoggingOut, setIsLoggingOut] = useState(false);
-  const [isDeletingAccount, setIsDeletingAccount] = useState(false);
-  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
-
   useEffect(() => {
     if (!user) {
       router.replace(ROUTES.SIGNUP);
@@ -86,20 +81,6 @@ export const HomeContent = ({ user }: HomeContentProps) => {
     setTimeout(() => setShowOverlay(false), 500);
   };
 
-  const handleLogout = async () => {
-    setIsLoggingOut(true);
-    await fetch(API.AUTH_LOGOUT, { method: "POST" });
-    router.push(ROUTES.HOME);
-    router.refresh();
-  };
-
-  const handleDeleteAccount = async () => {
-    setIsDeletingAccount(true);
-    await fetch(API.USERS_ME, { method: "DELETE" });
-    router.push(ROUTES.HOME);
-    router.refresh();
-  };
-
   return (
     <div className="flex min-h-screen flex-col items-center justify-center gap-6">
       {showOverlay && user && (
@@ -117,6 +98,29 @@ export const HomeContent = ({ user }: HomeContentProps) => {
       )}
       {user && (
         <div className="flex w-full flex-col items-start gap-6 md:max-w-sm">
+          <div className="flex w-full items-center justify-between">
+            <button
+              onClick={() => router.push(ROUTES.SETTINGS)}
+              className="ml-auto rounded-full p-2 transition-colors hover:bg-surface-100"
+              aria-label={t("settingsButton")}
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                className="text-txt-muted"
+              >
+                <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z" />
+                <circle cx="12" cy="12" r="3" />
+              </svg>
+            </button>
+          </div>
           <Section title={t("userData")} padding="lg">
             <ul className="space-y-2">
               <li>
@@ -133,40 +137,6 @@ export const HomeContent = ({ user }: HomeContentProps) => {
               </li>
             </ul>
           </Section>
-          <Button
-            variant="outline"
-            onClick={handleLogout}
-            isLoading={isLoggingOut}
-          >
-            {t("logoutButton")}
-          </Button>
-          {!showDeleteConfirm ? (
-            <Button
-              variant="primary"
-              onClick={() => setShowDeleteConfirm(true)}
-            >
-              {t("deleteAccountButton")}
-            </Button>
-          ) : (
-            <div className="flex flex-col gap-2">
-              <p className="text-txt text-sm">{t("deleteAccountConfirm")}</p>
-              <div className="flex gap-2">
-                <Button
-                  variant="outline"
-                  onClick={() => setShowDeleteConfirm(false)}
-                >
-                  {t("deleteAccountCancelButton")}
-                </Button>
-                <Button
-                  variant="primary"
-                  onClick={handleDeleteAccount}
-                  isLoading={isDeletingAccount}
-                >
-                  {t("deleteAccountConfirmButton")}
-                </Button>
-              </div>
-            </div>
-          )}
         </div>
       )}
     </div>

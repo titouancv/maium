@@ -16,3 +16,4 @@ export * from "./LocationInput";
 export * from "./SlideToEnter";
 export * from "./StepCounter";
 export * from "./Title";
+export * from "./MenuList";
