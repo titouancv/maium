@@ -105,7 +105,7 @@ export const HomeContent = ({ user }: HomeContentProps) => {
       {showOverlay && user && (
         <div
           className={cn(
-            "fixed inset-0 z-50 transition-opacity duration-500",
+            "fixed inset-0 z-50 p-4 transition-opacity duration-500",
             overlayVisible ? "opacity-100" : "pointer-events-none opacity-0",
           )}
         >
