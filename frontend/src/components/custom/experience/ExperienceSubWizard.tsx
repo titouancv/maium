@@ -97,6 +97,7 @@ export const ExperienceSubWizard = ({
       onPrimary={handlePrimary}
       secondaryLabel={t("removeEntry")}
       onSecondary={onDelete}
+      centerContent={subStep === 6 ? false : undefined}
     >
       <div className="flex flex-col gap-3">
         {subStep === 1 && (

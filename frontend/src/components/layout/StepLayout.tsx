@@ -19,6 +19,7 @@ interface StepLayoutProps {
   primaryLabel?: string;
   primaryDisabled?: boolean;
   primaryLoading?: boolean;
+  centerContent?: boolean;
   children: React.ReactNode;
 }
 
@@ -36,11 +37,13 @@ export const StepLayout = ({
   primaryLabel,
   primaryDisabled,
   primaryLoading,
+  centerContent,
   children,
 }: StepLayoutProps) => {
   const [keyboardHeight, setKeyboardHeight] = useState(0);
 
   useEffect(() => {
+    console.log(centerContent);
     const viewport = window.visualViewport;
     if (!viewport) return;
 
@@ -76,7 +79,14 @@ export const StepLayout = ({
         </div>
 
         {/* Content */}
-        <div className="min-h-0 flex-1 overflow-y-auto pt-10 pb-32 text-xl md:flex md:items-center md:justify-center md:pt-0 md:pb-0">
+        <div
+          className={cn(
+            "min-h-0 flex-1 overflow-y-auto pt-10 pb-32 text-xl",
+            centerContent === undefined &&
+              "md:flex md:items-center md:justify-center md:py-0",
+            centerContent === true && "flex items-center justify-center",
+          )}
+        >
           <div className="w-full md:max-w-md">{children}</div>
         </div>
 

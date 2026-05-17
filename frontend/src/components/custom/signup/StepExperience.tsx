@@ -84,12 +84,12 @@ const ExperienceStepInner = forwardRef<
       className="flex flex-col gap-4"
     >
       {mode === "empty" && (
-        <div className="">
+        <div className="flex w-full justify-center">
           <Button
             type="button"
             variant="outline"
             size="md"
-            className="w-full"
+            className="md:w-full"
             onClick={() => router.push(config.baseUrl)}
           >
             {config.addEntryLabel}

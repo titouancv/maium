@@ -51,7 +51,6 @@ export function LocationInput({
 
   useEffect(() => {
     if (debounceRef.current) clearTimeout(debounceRef.current);
-    // Use 0ms delay when clearing so it's not synchronous, but still instant
     const delay = query.length < 2 ? 0 : 300;
     debounceRef.current = setTimeout(async () => {
       if (query.length < 2) {
@@ -103,6 +102,7 @@ export function LocationInput({
         value={query}
         name={name}
         autoFocus={autoFocus}
+        autoComplete="off"
         infoLabel={error}
         infoType={error ? "error" : "info"}
         onChange={(e) => {
@@ -112,11 +112,11 @@ export function LocationInput({
         onBlur={onBlur}
       />
       {isOpen && (
-        <ul className="bg-surface-50 border-brd-200 absolute z-50 mt-1 w-full overflow-hidden rounded-xl border shadow-lg">
+        <ul className="absolute z-50 mt-1 w-full overflow-hidden rounded-sm backdrop-blur-sm">
           {suggestions.map((s) => (
             <li
               key={s}
-              className="text-txt hover:bg-surface-100 cursor-pointer px-4 py-3 text-sm"
+              className="text-txt hover:bg-surface-100 cursor-pointer rounded-sm px-4 py-3 text-sm"
               onMouseDown={(e) => {
                 e.preventDefault();
                 handleSelect(s);

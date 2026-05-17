@@ -45,6 +45,9 @@ export const SignupWizard = ({
   const t = useTranslations("auth.signup");
   const tCommon = useTranslations("common");
   const { setUser, user } = useUserStore();
+  const isCentered =
+    (step === 4 && step4Mode === "empty") ||
+    (step === 5 && step5Mode === "empty");
 
   useEffect(() => {
     if (!user && Object.keys(initialUser).length > 0) {
@@ -76,9 +79,7 @@ export const SignupWizard = ({
       const res = await patchProfile(data);
       if (!res.ok) {
         setError(
-          res.status === 409
-            ? t("duplicatePseudoError")
-            : t("signupError"),
+          res.status === 409 ? t("duplicatePseudoError") : t("signupError"),
         );
         return;
       }
@@ -188,6 +189,7 @@ export const SignupWizard = ({
           totalSteps={TOTAL_STEPS}
           primaryDisabled={step < 4 && !isStepValid}
           primaryLoading={isLoading}
+          centerContent={isCentered ? true : undefined}
           {...stepNavProps}
         >
           {step === 1 && (
