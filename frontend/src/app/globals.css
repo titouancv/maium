@@ -160,7 +160,7 @@
   --color-inverse-800: var(--color-inverse-800);
 
   --color-txt: var(--color-txt);
-  --color-txt-muted: var(--color-txt-muted);
+  --color-txt-muted: var(--dark-400);
   --color-txt-placeholder: var(--color-txt-placeholder);
   --color-txt-inverse: var(--color-txt-inverse);
 
