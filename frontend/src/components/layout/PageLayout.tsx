@@ -36,7 +36,7 @@ export const PageLayout = ({
     <div className="relative flex h-dvh flex-col md:h-screen md:items-center md:justify-center">
       <div className="flex h-full w-full flex-col gap-8 md:h-screen md:max-w-5xl">
         {/* Header */}
-        <div className="flex shrink-0 items-center justify-between pt-12 md:pt-16">
+        <div className="flex shrink-0 items-center justify-between pt-6 md:pt-16">
           <Title label={title} size="h1" />
           {backLabel && (
             <Button
