@@ -4,10 +4,10 @@ import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
 import { API, ROUTES } from "@/constants";
 import { useRouter } from "@/i18n/navigation";
-import { Section } from "../ui";
 import { WelcomeOverlay } from "../overlay/WelcomeOverlay";
 import { cn } from "@/lib/utils";
 import { UserData } from "@/types";
+import { PageLayout } from "../layout";
 
 interface HomeContentProps {
   user: UserData | null;
@@ -74,7 +74,7 @@ export const HomeContent = ({ user }: HomeContentProps) => {
   };
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center gap-6">
+    <PageLayout title={"maium"}>
       {showOverlay && user && (
         <div
           className={cn(
@@ -93,7 +93,7 @@ export const HomeContent = ({ user }: HomeContentProps) => {
           <div className="flex w-full items-center justify-between">
             <button
               onClick={() => router.push(ROUTES.SETTINGS)}
-              className="ml-auto rounded-full p-2 transition-colors hover:bg-surface-100"
+              className="hover:bg-surface-100 ml-auto rounded-full p-2 transition-colors"
               aria-label={t("settingsButton")}
             >
               <svg
@@ -113,24 +113,8 @@ export const HomeContent = ({ user }: HomeContentProps) => {
               </svg>
             </button>
           </div>
-          <Section title={t("userData")} padding="lg">
-            <ul className="space-y-2">
-              <li>
-                <strong>{t("email")}:</strong> {user.email}
-              </li>
-              <li>
-                <strong>{t("name")}:</strong> {user.first_name} {user.last_name}
-              </li>
-              <li>
-                <strong>{t("pseudo")}:</strong> {user.pseudo}
-              </li>
-              <li>
-                <strong>{t("dob")}:</strong> {user.dob}
-              </li>
-            </ul>
-          </Section>
         </div>
       )}
-    </div>
+    </PageLayout>
   );
 };

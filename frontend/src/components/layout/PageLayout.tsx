@@ -14,7 +14,7 @@ interface PageLayoutProps {
 export const PageLayout = ({
   title,
   onBack,
-  backLabel = "Back",
+  backLabel,
   children,
 }: PageLayoutProps) => {
   const router = useRouter();
@@ -30,14 +30,16 @@ export const PageLayout = ({
         {/* Header */}
         <div className="flex shrink-0 items-center justify-between pt-16 md:pt-16">
           <Title label={title} size="h1" />
-          <Button
-            variant="ghost"
-            type="button"
-            size="none"
-            onClick={handleBack}
-          >
-            {backLabel}
-          </Button>
+          {backLabel && (
+            <Button
+              variant="ghost"
+              type="button"
+              size="none"
+              onClick={handleBack}
+            >
+              {backLabel}
+            </Button>
+          )}
         </div>
 
         {/* Content */}
