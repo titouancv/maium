@@ -1,10 +1,11 @@
 import { createClient } from "@/lib/supabase/server";
 import { type NextRequest, NextResponse } from "next/server";
+import { ROUTES } from "@/constants";
 
 export async function POST(request: NextRequest) {
   const supabase = await createClient();
   await supabase.auth.signOut();
 
   const origin = new URL(request.url).origin;
-  return NextResponse.redirect(new URL("/", origin));
+  return NextResponse.redirect(new URL(ROUTES.HOME, origin));
 }

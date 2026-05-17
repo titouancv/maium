@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { Button } from "@/components/ui/Button";
-import { ExperienceFormData } from "./ExperienceSubWizard";
+import type { ExperienceFormData } from "@/types/experience";
 import { useTranslations } from "next-intl";
 
 export interface ExperienceProps extends ExperienceFormData {
@@ -33,10 +33,9 @@ export const ExperienceItem = ({
     const mois = (diffMois % 12) + 1;
 
     if (annees > 0) {
-      return `${annees} an${annees > 1 ? "s" : ""}`;
-    } else {
-      return `${mois} mois`;
+      return t("yearsCount", { count: annees });
     }
+    return t("monthsCount", { count: mois });
   };
   const formatPeriod = (startDate: string, endDate?: string): string => {
     const [startYear] = startDate.split("-").map(Number);

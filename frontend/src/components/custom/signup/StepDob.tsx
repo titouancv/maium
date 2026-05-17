@@ -7,6 +7,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useTranslations } from "next-intl";
 import { DateInput } from "@/components/ui/DateInput";
 import { UserState, useUserStore } from "@/stores/useUserStore";
+import { SIGNUP_FORM_ID } from "@/constants";
 
 export const StepDob = ({
   onNext,
@@ -53,7 +54,7 @@ export const StepDob = ({
 
   return (
     <form
-      id="signup-step-form"
+      id={SIGNUP_FORM_ID}
       onSubmit={handleSubmit(onNext)}
       className="space-y-4"
     >

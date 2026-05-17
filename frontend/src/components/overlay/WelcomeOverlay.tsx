@@ -12,11 +12,6 @@ interface WelcomeContentProps {
 export const WelcomeOverlay = ({ firstName, onEnter }: WelcomeContentProps) => {
   const t = useTranslations("welcome");
 
-  const handleEnterApp = () => {
-    onEnter();
-    return;
-  };
-
   return (
     <div className="bg-surface-50 flex min-h-screen flex-col items-center justify-center gap-12">
       <div className="flex max-w-md flex-col items-start justify-center gap-8">
@@ -30,13 +25,13 @@ export const WelcomeOverlay = ({ firstName, onEnter }: WelcomeContentProps) => {
         </div>
       </div>
 
-      <Button className="hidden md:inline-flex" onClick={handleEnterApp}>
+      <Button className="hidden md:inline-flex" onClick={onEnter}>
         {t("enterApp")}
       </Button>
       <SlideToEnter
         className="md:hidden"
         label={t("slideToEnter")}
-        onConfirm={handleEnterApp}
+        onConfirm={onEnter}
       />
     </div>
   );

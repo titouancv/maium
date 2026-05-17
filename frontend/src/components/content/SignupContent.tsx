@@ -5,7 +5,7 @@ import { useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { useRouter } from "@/i18n/navigation";
 import { useUserStore, type UserState } from "@/stores/useUserStore";
-import { ROUTES, API } from "@/constants";
+import { ROUTES, API, SIGNUP_FORM_ID } from "@/constants";
 import { StepLayout } from "../layout/StepLayout";
 import { GoogleSignInButton } from "../custom/signup/GoogleSignInButton";
 import { StepName } from "../custom/signup/StepName";
@@ -13,8 +13,8 @@ import { StepPseudo } from "../custom/signup/StepPseudo";
 import { StepDob } from "../custom/signup/StepDob";
 import {
   StepExperience,
-  type Step4Handle,
-  type Step4Mode,
+  type ExperienceStepHandle,
+  type ExperienceStepMode,
 } from "../custom/signup/StepExperience";
 import { Title } from "../ui";
 
@@ -37,10 +37,10 @@ export const SignupWizard = ({
   const [error, setError] = useState<string | null>(null);
   const [isStepValid, setIsStepValid] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const step4Ref = useRef<Step4Handle>(null);
-  const [step4Mode, setStep4Mode] = useState<Step4Mode>("empty");
-  const step5Ref = useRef<Step4Handle>(null);
-  const [step5Mode, setStep5Mode] = useState<Step4Mode>("empty");
+  const step4Ref = useRef<ExperienceStepHandle>(null);
+  const [step4Mode, setStep4Mode] = useState<ExperienceStepMode>("empty");
+  const step5Ref = useRef<ExperienceStepHandle>(null);
+  const [step5Mode, setStep5Mode] = useState<ExperienceStepMode>("empty");
   const router = useRouter();
   const t = useTranslations("auth.signup");
   const tCommon = useTranslations("common");
@@ -58,23 +58,28 @@ export const SignupWizard = ({
     setStep(newStep);
   };
 
+  const patchProfile = async (body: unknown) => {
+    setIsLoading(true);
+    const res = await fetch(API.USERS_ME, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body),
+    });
+    setIsLoading(false);
+    return res;
+  };
+
   const nextStep = async (data: Partial<UserState>) => {
     setError(null);
 
     if (initialUser.supabaseId) {
-      setIsLoading(true);
-      const res = await fetch(API.USERS_ME, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
-      });
-      setIsLoading(false);
+      const res = await patchProfile(data);
       if (!res.ok) {
-        if (res.status === 409) {
-          setError(t("duplicatePseudoError"));
-        } else {
-          setError(t("signupError"));
-        }
+        setError(
+          res.status === 409
+            ? t("duplicatePseudoError")
+            : t("signupError"),
+        );
         return;
       }
     }
@@ -88,31 +93,35 @@ export const SignupWizard = ({
     const merged = { ...user, ...data };
     const isOAuth = !!initialUser.supabaseId;
 
-    setIsLoading(true);
-    const res = await fetch(isOAuth ? API.USERS_ME : API.USERS, {
-      method: isOAuth ? "PATCH" : "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(
-        isOAuth
-          ? {
-              firstName: merged.firstName,
-              lastName: merged.lastName,
-              pseudo: merged.pseudo,
-              dob: merged.dob,
-              professionalExperiences: merged.professionalExperiences ?? [],
-              educationalExperiences: merged.educationalExperiences ?? [],
-            }
-          : {
-              email: merged.email,
-              password: merged.password,
-              firstName: merged.firstName,
-              lastName: merged.lastName,
-              pseudo: merged.pseudo,
-              dob: merged.dob,
-            },
-      ),
-    });
-    setIsLoading(false);
+    const oauthBody = {
+      firstName: merged.firstName,
+      lastName: merged.lastName,
+      pseudo: merged.pseudo,
+      dob: merged.dob,
+      professionalExperiences: merged.professionalExperiences ?? [],
+      educationalExperiences: merged.educationalExperiences ?? [],
+    };
+    const createBody = {
+      email: merged.email,
+      password: merged.password,
+      firstName: merged.firstName,
+      lastName: merged.lastName,
+      pseudo: merged.pseudo,
+      dob: merged.dob,
+    };
+
+    let res: Response;
+    if (isOAuth) {
+      res = await patchProfile(oauthBody);
+    } else {
+      setIsLoading(true);
+      res = await fetch(API.USERS, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(createBody),
+      });
+      setIsLoading(false);
+    }
 
     if (res.ok) {
       if (!isOAuth) {
@@ -127,8 +136,6 @@ export const SignupWizard = ({
     }
   };
 
-  const FORM_ID = "signup-step-form";
-
   const stepTitles: Record<number, string> = {
     1: t("step2.title"),
     2: t("step3.title"),
@@ -140,31 +147,31 @@ export const SignupWizard = ({
   const step4NavProps =
     step4Mode === "list"
       ? {
-          formId: FORM_ID,
+          formId: SIGNUP_FORM_ID,
           primaryLabel: tCommon("nextButton"),
           secondaryLabel: tCommon("addButton"),
           onSecondary: () => {
             step4Ref.current?.addEntry();
           },
         }
-      : { formId: FORM_ID, primaryLabel: tCommon("nextButton") };
+      : { formId: SIGNUP_FORM_ID, primaryLabel: tCommon("nextButton") };
 
   const stepNavProps = {
-    1: { formId: FORM_ID, primaryLabel: tCommon("nextButton") },
-    2: { formId: FORM_ID, primaryLabel: tCommon("nextButton") },
-    3: { formId: FORM_ID, primaryLabel: tCommon("nextButton") },
+    1: { formId: SIGNUP_FORM_ID, primaryLabel: tCommon("nextButton") },
+    2: { formId: SIGNUP_FORM_ID, primaryLabel: tCommon("nextButton") },
+    3: { formId: SIGNUP_FORM_ID, primaryLabel: tCommon("nextButton") },
     4: step4NavProps,
     5:
       step5Mode === "list"
         ? {
-            formId: FORM_ID,
+            formId: SIGNUP_FORM_ID,
             primaryLabel: tCommon("nextButton"),
             secondaryLabel: tCommon("addButton"),
             onSecondary: () => {
               step5Ref.current?.addEntry();
             },
           }
-        : { formId: FORM_ID, primaryLabel: tCommon("nextButton") },
+        : { formId: SIGNUP_FORM_ID, primaryLabel: tCommon("nextButton") },
   }[step];
 
   return (
@@ -223,7 +230,7 @@ export const SignupWizard = ({
               onModeChange={setStep5Mode}
             />
           )}
-          {error && <p className="text-sm text-red-500">{error}</p>}
+          {error && <p className="text-error text-sm">{error}</p>}
         </StepLayout>
       )}
     </>

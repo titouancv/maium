@@ -8,17 +8,15 @@ import { useTranslations } from "next-intl";
 import { useRouter } from "@/i18n/navigation";
 import { Button } from "@/components/ui/Button";
 import { type UserState, useUserStore } from "@/stores/useUserStore";
-import { ROUTES } from "@/constants";
+import { ROUTES, SIGNUP_FORM_ID } from "@/constants";
 import { ExperienceList } from "../experience/ExperienceList";
-import { ExperienceFormData } from "../experience/ExperienceSubWizard";
+import type { ExperienceFormData, ExperienceType } from "@/types/experience";
 import { ExperienceSchema } from "@/lib/validators/user";
 
 export type ExperienceStepMode = "empty" | "list";
 export interface ExperienceStepHandle {
   addEntry: () => void;
 }
-export type { ExperienceStepHandle as Step4Handle };
-export type { ExperienceStepMode as Step4Mode };
 
 interface SharedProps {
   onNext: (d: Partial<UserState>) => void;
@@ -26,7 +24,7 @@ interface SharedProps {
   onModeChange?: (mode: ExperienceStepMode) => void;
 }
 
-type Props = SharedProps & { type: "professional" | "educational" };
+type Props = SharedProps & { type: ExperienceType };
 
 // ─── Generic inner component ──────────────────────────────────────────────────
 
@@ -81,7 +79,7 @@ const ExperienceStepInner = forwardRef<
 
   return (
     <form
-      id="signup-step-form"
+      id={SIGNUP_FORM_ID}
       onSubmit={handleSubmit((d) => onNext(config.toStore(d.items)))}
       className="flex flex-col gap-4"
     >

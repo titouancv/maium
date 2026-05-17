@@ -1,9 +1,10 @@
 import { Suspense } from "react";
 import { SignupWizard } from "@/components/content/SignupContent";
 import { createClient } from "@/lib/supabase/server";
-import { redirect } from "next/navigation";
+import { redirect } from "@/i18n/navigation";
 import { ROUTES } from "@/constants";
-import type { UserState, Experience } from "@/stores/useUserStore";
+import type { UserState } from "@/stores/useUserStore";
+import type { Experience } from "@/types/experience";
 
 export default async function SignupPage() {
   const supabase = await createClient();

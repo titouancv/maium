@@ -1,14 +1,5 @@
 import { create } from "zustand";
-
-export interface Experience {
-  organization: string;
-  role: string;
-  startPeriod: string;
-  endPeriod?: string;
-  description?: string;
-  website?: string;
-  location?: string;
-}
+import type { Experience } from "@/types/experience";
 
 export interface UserState {
   email?: string;

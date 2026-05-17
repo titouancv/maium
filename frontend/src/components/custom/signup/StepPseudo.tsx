@@ -7,7 +7,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useTranslations } from "next-intl";
 import { TextInput } from "@/components/ui/TextInput";
 import { UserState, useUserStore } from "@/stores/useUserStore";
-import { API } from "@/constants";
+import { API, SIGNUP_FORM_ID } from "@/constants";
 
 type AvailabilityStatus = "idle" | "checking" | "available" | "taken";
 
@@ -108,7 +108,7 @@ export const StepPseudo = ({
 
   return (
     <form
-      id="signup-step-form"
+      id={SIGNUP_FORM_ID}
       onSubmit={handleSubmit(onNext)}
       className="space-y-4"
     >

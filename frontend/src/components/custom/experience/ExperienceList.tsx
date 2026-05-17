@@ -3,7 +3,7 @@
 import { useMemo } from "react";
 import { useWatch, type Control, type FieldArrayWithId } from "react-hook-form";
 import { ExperienceItem } from "./ExperienceItem";
-import { ExperienceFormData } from "./ExperienceSubWizard";
+import type { ExperienceFormData } from "@/types/experience";
 
 type ItemRecord = Record<string, string>;
 type FormItems = { items: ItemRecord[] };

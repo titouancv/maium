@@ -42,7 +42,7 @@ export const AppleSignInButton = () => {
         </svg>
         {t("appleButton")}
       </Button>
-      {error && <p className="text-sm text-red-500">{error}</p>}
+      {error && <p className="text-error text-sm">{error}</p>}
     </div>
   );
 };

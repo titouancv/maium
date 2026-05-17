@@ -1,8 +1,7 @@
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
 import { ExperienceContent } from "@/components/content/ExperienceContent";
-
-type ExperienceType = "professional" | "educational";
+import { EXPERIENCE_TYPES, type ExperienceType } from "@/types/experience";
 
 export default async function Page({
   params,
@@ -10,7 +9,7 @@ export default async function Page({
   params: Promise<{ type: string }>;
 }) {
   const { type } = await params;
-  if (type !== "professional" && type !== "educational") notFound();
+  if (!EXPERIENCE_TYPES.includes(type as ExperienceType)) notFound();
 
   return (
     <Suspense>

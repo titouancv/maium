@@ -2,7 +2,6 @@
 
 import { useRef, useState } from "react";
 import { useForm, Controller } from "react-hook-form";
-import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useTranslations } from "next-intl";
 import { TextInput } from "@/components/ui/TextInput";
@@ -10,18 +9,8 @@ import { TextArea } from "@/components/ui/TextArea";
 import { DateInput } from "@/components/ui/DateInput";
 import { LocationInput } from "@/components/ui/LocationInput";
 import { StepLayout } from "@/components/layout/StepLayout";
-
-const MONTH_YEAR = /^\d{4}-(0[1-9]|1[0-2])$/;
-
-export interface ExperienceFormData {
-  organization: string;
-  role: string;
-  startPeriod: string;
-  endPeriod?: string;
-  description: string;
-  website: string;
-  location: string;
-}
+import { makeExperienceFormSchema } from "@/lib/validators/user";
+import type { ExperienceFormData } from "@/types/experience";
 
 interface Props {
   namespace: string;
@@ -46,28 +35,7 @@ export const ExperienceSubWizard = ({
   const endPeriodRef = useRef<HTMLInputElement>(null);
   const TOTAL = 6;
 
-  const schema = z
-    .object({
-      organization: z.string().min(1, t("organizationRequired")),
-      role: z.string().min(1, t("roleRequired")),
-      startPeriod: z.string().regex(MONTH_YEAR, t("startPeriodRequired")),
-      endPeriod: z
-        .union([z.string().regex(MONTH_YEAR), z.literal("")])
-        .optional(),
-      description: z.string().or(z.literal("")),
-      website: z.union([
-        z.url({ message: t("websiteInvalid") }),
-        z.literal(""),
-      ]),
-      location: z.string().max(100).or(z.literal("")),
-    })
-    .refine(
-      (d) =>
-        !d.endPeriod ||
-        !MONTH_YEAR.test(d.endPeriod) ||
-        d.endPeriod >= d.startPeriod,
-      { message: t("endPeriodBeforeStart"), path: ["endPeriod"] },
-    );
+  const schema = makeExperienceFormSchema(t);
 
   const {
     register,

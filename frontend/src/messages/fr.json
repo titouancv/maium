@@ -1,21 +1,15 @@
 {
   "common": {
-    "save": "Enregistrer",
-    "cancel": "Annuler",
     "loading": "Chargement",
-    "error": "Une erreur s'est produite.",
     "nextButton": "Suivant",
-    "backButton": "Retour",
-    "skipButton": "Passer",
     "cancelButton": "Annuler",
     "addButton": "Ajouter",
     "editButton": "Modifier",
-    "sinceLabel": "depuis"
+    "sinceLabel": "depuis",
+    "yearsCount": "{count, plural, one {# an} other {# ans}}",
+    "monthsCount": "{count, plural, one {# mois} other {# mois}}"
   },
   "home": {
-    "title": "Bienvenue",
-    "description": "Ceci est la page d'accueil",
-    "signupButton": "Créer un compte",
     "userData": "Vos informations",
     "email": "Email",
     "name": "Nom complet",
@@ -29,15 +23,6 @@
   },
   "welcome": {
     "greeting": "Bienvenue, {name} !",
-    "subtitle": "Votre profil est prêt.",
-    "personalInfo": "Informations personnelles",
-    "professionalExperience": "Expérience professionnelle",
-    "educationalExperience": "Parcours éducatif",
-    "email": "Email",
-    "name": "Nom complet",
-    "pseudo": "Pseudo",
-    "dob": "Date de naissance",
-    "noExperiences": "Aucune expérience ajoutée pour l'instant.",
     "enterApp": "Accéder à l'application",
     "slideToEnter": "Glissez pour entrer",
     "founderMessage": "Merci d'avoir rejoint maium. On a construit cette application avec passion, et on espère qu'elle t'accompagnera longtemps. Bienvenue dans l'aventure ! 🥳",
@@ -55,16 +40,13 @@
       },
       "step2": {
         "title": "Quel est votre nom ?",
-        "firstNameLabel": "Prénom",
         "firstNamePlaceholder": "Prénom",
-        "lastNameLabel": "Nom",
         "lastNamePlaceholder": "Nom",
         "firstNameRequired": "Le prénom est requis",
         "lastNameRequired": "Le nom est requis"
       },
       "step3": {
         "title": "Choisissez votre pseudo",
-        "pseudoLabel": "Pseudo",
         "pseudoPlaceholder": "Pseudo",
         "pseudoMinLength": "Le pseudo doit contenir au moins 3 caractères",
         "pseudoChecking": "Vérification...",
@@ -73,21 +55,14 @@
       },
       "step4": {
         "title": "Quelle est votre date de naissance ?",
-        "dobLabel": "Date de naissance",
-        "dobPlaceholder": "AAAA-MM-JJ",
         "dobInvalid": "Veuillez entrer une date valide",
-        "dobFuture": "La date de naissance ne peut pas être dans le futur",
-        "submitButton": "Suivant"
+        "dobFuture": "La date de naissance ne peut pas être dans le futur"
       },
       "step5": {
-        "title": "Expérience professionnelle",
-        "subtitle": "Parlez-nous de votre carrière (optionnel)",
-        "addEntry": "Ajouter un poste"
+        "title": "Expérience professionnelle"
       },
       "step6": {
-        "title": "Parcours éducatif",
-        "subtitle": "Parlez-nous de vos études (optionnel)",
-        "addEntry": "Ajouter une école"
+        "title": "Parcours éducatif"
       },
       "duplicateEmailError": "Cette adresse e-mail est déjà utilisée.",
       "duplicatePseudoError": "Ce pseudo est déjà utilisé.",
@@ -116,7 +91,6 @@
       "endPeriodBeforeStart": "La date de fin doit être après la date de début",
       "websiteInvalid": "Veuillez entrer une URL valide",
       "saveButton": "Enregistrer",
-      "presentLabel": "En cours",
       "subStep1Title": "Entreprise",
       "subStep2Title": "Poste",
       "subStep3Title": "Durée",

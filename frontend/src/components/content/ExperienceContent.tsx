@@ -5,13 +5,11 @@ import { useSearchParams } from "next/navigation";
 import { useRouter } from "@/i18n/navigation";
 import { useUserStore } from "@/stores/useUserStore";
 import { ROUTES } from "@/constants";
-import {
-  ExperienceSubWizard,
-  type ExperienceFormData,
-} from "../custom/experience/ExperienceSubWizard";
+import { ExperienceSubWizard } from "../custom/experience/ExperienceSubWizard";
+import type { ExperienceFormData, ExperienceType } from "@/types/experience";
 
 interface Props {
-  type: "professional" | "educational";
+  type: ExperienceType;
 }
 
 export const ExperienceContent = ({ type }: Props) => {

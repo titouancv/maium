@@ -5,7 +5,7 @@ export const ROUTES = {
   SIGNUP: "/signup",
   UPDATE_EXPERIENCE_PRO: "/update-experience/professional",
   UPDATE_EXPERIENCE_EDU: "/update-experience/educational",
-AUTH_CALLBACK: "/auth/callback",
+  AUTH_CALLBACK: "/auth/callback",
 } as const;
 
 export const CONFIG = {} as const;
@@ -21,3 +21,5 @@ export const API = {
 export const EXTERNAL_API = {
   PHOTON_GEOCODE: "https://photon.komoot.io/api/",
 } as const;
+
+export const SIGNUP_FORM_ID = "signup-step-form";

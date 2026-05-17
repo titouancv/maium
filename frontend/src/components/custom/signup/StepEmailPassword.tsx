@@ -8,6 +8,7 @@ import { TextInput } from "@/components/ui/TextInput";
 import { PasswordInput } from "@/components/ui/PasswordInput";
 import { Button } from "@/components/ui/Button";
 import { useUserStore, type UserState } from "@/stores/useUserStore";
+import { SIGNUP_FORM_ID } from "@/constants";
 
 const schema = z.object({
   email: z.string().email(),
@@ -35,7 +36,11 @@ export const StepEmailPassword = ({
   });
 
   return (
-    <form onSubmit={handleSubmit(onNext)} className="space-y-4">
+    <form
+      id={SIGNUP_FORM_ID}
+      onSubmit={handleSubmit(onNext)}
+      className="space-y-4"
+    >
       <TextInput
         placeholder={t("emailPlaceholder")}
         infoLabel={errors.email?.message as string}

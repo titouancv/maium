@@ -1,11 +1,13 @@
 import { z } from "zod";
 
+export const MONTH_YEAR_REGEX = /^\d{4}-(0[1-9]|1[0-2])$/;
+
 const optionalUrl = z
   .union([z.url(), z.literal("")])
   .optional()
   .transform((v) => (v ? v : undefined));
 
-const period = z.string().regex(/^\d{4}-(0[1-9]|1[0-2])$/);
+const period = z.string().regex(MONTH_YEAR_REGEX);
 const optionalPeriod = z
   .union([period, z.literal("")])
   .optional()
@@ -27,6 +29,35 @@ export const ExperienceSchema = z
   });
 
 export type ExperienceInput = z.infer<typeof ExperienceSchema>;
+
+type TranslateFn = (key: string) => string;
+
+export function makeExperienceFormSchema(t: TranslateFn) {
+  return z
+    .object({
+      organization: z.string().min(1, t("organizationRequired")).max(120),
+      role: z.string().min(1, t("roleRequired")).max(120),
+      startPeriod: z
+        .string()
+        .regex(MONTH_YEAR_REGEX, t("startPeriodRequired")),
+      endPeriod: z
+        .union([z.string().regex(MONTH_YEAR_REGEX), z.literal("")])
+        .optional(),
+      description: z.string().or(z.literal("")),
+      website: z.union([
+        z.url({ message: t("websiteInvalid") }),
+        z.literal(""),
+      ]),
+      location: z.string().max(100).or(z.literal("")),
+    })
+    .refine(
+      (d) =>
+        !d.endPeriod ||
+        !MONTH_YEAR_REGEX.test(d.endPeriod) ||
+        d.endPeriod >= d.startPeriod,
+      { message: t("endPeriodBeforeStart"), path: ["endPeriod"] },
+    );
+}
 
 export const CreateUserSchema = z.object({
   email: z.string().email(),

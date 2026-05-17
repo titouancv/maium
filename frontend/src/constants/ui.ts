@@ -15,3 +15,5 @@ export const UI_VARIANTS: Record<UIVariant, string> = {
   outline: OUTLINE_COLORS,
   ghost: GHOST_COLORS,
 };
+
+export type UISize = "none" | "sm" | "md" | "lg";

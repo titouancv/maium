@@ -1,21 +1,15 @@
 {
   "common": {
-    "save": "Save",
-    "cancel": "Cancel",
     "loading": "Loading",
-    "error": "Something went wrong.",
     "nextButton": "Next",
-    "backButton": "Back",
-    "skipButton": "Skip",
     "cancelButton": "Cancel",
     "addButton": "Add",
     "editButton": "Edit",
-    "sinceLabel": "since"
+    "sinceLabel": "since",
+    "yearsCount": "{count, plural, one {# year} other {# years}}",
+    "monthsCount": "{count, plural, one {# month} other {# months}}"
   },
   "home": {
-    "title": "Welcome",
-    "description": "This is the home page",
-    "signupButton": "Sign up",
     "userData": "Your information",
     "email": "Email",
     "name": "Full name",
@@ -29,15 +23,6 @@
   },
   "welcome": {
     "greeting": "Welcome, {name}!",
-    "subtitle": "Your profile is all set.",
-    "personalInfo": "Personal info",
-    "professionalExperience": "Professional experience",
-    "educationalExperience": "Educational experience",
-    "email": "Email",
-    "name": "Full name",
-    "pseudo": "Username",
-    "dob": "Date of birth",
-    "noExperiences": "No experiences added yet.",
     "enterApp": "Enter the app",
     "slideToEnter": "Slide to enter",
     "founderMessage": "Thank you for joining maium. We built this app with passion, and we hope it'll be with you for a long time. Welcome to the adventure! 🥳",
@@ -55,16 +40,13 @@
       },
       "step2": {
         "title": "What's your name?",
-        "firstNameLabel": "First name",
         "firstNamePlaceholder": "First name",
-        "lastNameLabel": "Last name",
         "lastNamePlaceholder": "Last name",
         "firstNameRequired": "First name is required",
         "lastNameRequired": "Last name is required"
       },
       "step3": {
         "title": "Choose your username",
-        "pseudoLabel": "Username",
         "pseudoPlaceholder": "Username",
         "pseudoMinLength": "Username must be at least 3 characters",
         "pseudoChecking": "Checking...",
@@ -73,21 +55,14 @@
       },
       "step4": {
         "title": "When's your birthday?",
-        "dobLabel": "Date of birth",
-        "dobPlaceholder": "YYYY-MM-DD",
         "dobInvalid": "Please enter a valid date",
-        "dobFuture": "Date of birth cannot be in the future",
-        "submitButton": "Next"
+        "dobFuture": "Date of birth cannot be in the future"
       },
       "step5": {
-        "title": "Professional experience",
-        "subtitle": "Tell us about your career (optional)",
-        "addEntry": "Add a position"
+        "title": "Professional experience"
       },
       "step6": {
-        "title": "Educational background",
-        "subtitle": "Tell us about your education (optional)",
-        "addEntry": "Add a school"
+        "title": "Educational background"
       },
       "duplicateEmailError": "This email address is already in use.",
       "duplicatePseudoError": "This username is already in use.",
@@ -116,7 +91,6 @@
       "endPeriodBeforeStart": "End date must be after start date",
       "websiteInvalid": "Please enter a valid URL",
       "saveButton": "Save",
-      "presentLabel": "Present",
       "subStep1Title": "Company",
       "subStep2Title": "Position",
       "subStep3Title": "Duration",
