@@ -31,7 +31,7 @@ export default async function RootLayout({
       lang={locale}
       className={`${cabinetGrotesk.variable} h-full overflow-hidden antialiased`}
     >
-      <body className="flex h-full flex-col overflow-hidden p-4 font-bold">
+      <body className="flex h-full flex-col overflow-hidden font-bold">
         <NextIntlClientProvider messages={messages}>
           <Providers>{children}</Providers>
         </NextIntlClientProvider>

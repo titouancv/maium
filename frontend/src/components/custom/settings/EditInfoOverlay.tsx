@@ -9,6 +9,7 @@ import { API, SIGNUP_FORM_ID } from "@/constants";
 import { LocationInput } from "@/components/ui/LocationInput";
 import { NationalityInput } from "@/components/ui/NationalityInput";
 import { PhoneInput } from "@/components/ui/PhoneInput";
+import { Button, ChipList, TextInput, TextArea } from "@/components/ui";
 import { StepLayout } from "@/components/layout/StepLayout";
 import { StepName, StepPseudo, StepDob } from "@/components/custom/signup";
 import {
@@ -27,7 +28,12 @@ export type EditableField =
   | "nationality"
   | "location"
   | "professionalExperiences"
-  | "educationalExperiences";
+  | "educationalExperiences"
+  | "personalExperiences"
+  | "socialNetworks"
+  | "hobbies"
+  | "skills"
+  | "projects";
 
 interface Props {
   field: EditableField;
@@ -35,6 +41,70 @@ interface Props {
   onClose: () => void;
   onSaved: () => void;
 }
+
+const hobbySchema = z.object({
+  title: z.string().min(1).max(100),
+  description: z.string().max(500),
+});
+type HobbyData = z.infer<typeof hobbySchema>;
+
+interface HobbySubFormProps {
+  initialData?: HobbyData;
+  onSave: (data: HobbyData) => void;
+  onCancel: () => void;
+  onDelete?: () => void;
+}
+
+const HobbySubForm = ({
+  initialData,
+  onSave,
+  onCancel,
+  onDelete,
+}: HobbySubFormProps) => {
+  const t = useTranslations("settings");
+  const tCommon = useTranslations("common");
+  const {
+    register,
+    handleSubmit,
+    formState: { isValid },
+  } = useForm<HobbyData>({
+    resolver: zodResolver(hobbySchema),
+    mode: "onChange",
+    defaultValues: initialData ?? { title: "", description: "" },
+  });
+
+  return (
+    <StepLayout
+      title={t("editHobbies")}
+      step={1}
+      totalSteps={1}
+      isCancelable
+      onCancel={onCancel}
+      cancelLabel={tCommon("cancelButton")}
+      primaryLabel={t("saveButton")}
+      formId={SIGNUP_FORM_ID}
+      primaryDisabled={!isValid}
+      secondaryLabel={onDelete ? t("deleteButton") : undefined}
+      onSecondary={onDelete}
+    >
+      <form
+        id={SIGNUP_FORM_ID}
+        onSubmit={handleSubmit(onSave)}
+        className="flex flex-col gap-4"
+      >
+        <TextInput
+          placeholder={t("hobbyTitlePlaceholder")}
+          autoFocus
+          {...register("title")}
+        />
+        <TextArea
+          placeholder={t("hobbyDescriptionPlaceholder")}
+          {...register("description")}
+        />
+      </form>
+    </StepLayout>
+  );
+};
 
 export const EditInfoOverlay = ({ field, user, onClose, onSaved }: Props) => {
   const t = useTranslations("settings");
@@ -44,6 +114,23 @@ export const EditInfoOverlay = ({ field, user, onClose, onSaved }: Props) => {
   const [error, setError] = useState<string | null>(null);
   const [isFormValid, setIsFormValid] = useState(false);
   const [editingExperienceIndex, setEditingExperienceIndex] = useState<
+    number | "new" | null
+  >(null);
+
+  const [strItems, setStrItems] = useState<string[]>(
+    field === "skills"
+      ? (user.skills ?? [])
+      : field === "socialNetworks"
+        ? (user.social_networks ?? [])
+        : field === "projects"
+          ? (user.projects ?? [])
+          : [],
+  );
+  const [strDraft, setStrDraft] = useState("");
+  const [strDraftError, setStrDraftError] = useState<string | null>(null);
+
+  const [hobbyItems, setHobbyItems] = useState<HobbyData[]>(user.hobbies ?? []);
+  const [editingHobbyIndex, setEditingHobbyIndex] = useState<
     number | "new" | null
   >(null);
 
@@ -71,7 +158,9 @@ export const EditInfoOverlay = ({ field, user, onClose, onSaved }: Props) => {
     defaultValues: {
       items: (field === "professionalExperiences"
         ? (user.professional_experiences ?? [])
-        : (user.educational_experiences ?? [])
+        : field === "educationalExperiences"
+          ? (user.educational_experiences ?? [])
+          : (user.personal_experiences ?? [])
       ).map((e) => ({
         organization: e.organization ?? "",
         role: e.role ?? "",
@@ -95,7 +184,11 @@ export const EditInfoOverlay = ({ field, user, onClose, onSaved }: Props) => {
   const isExperienceField = [
     "professionalExperiences",
     "educationalExperiences",
+    "personalExperiences",
   ].includes(field);
+  const isSkillsField = field === "skills";
+  const isUrlListField = ["socialNetworks", "projects"].includes(field);
+  const isHobbiesField = field === "hobbies";
 
   const save = async (payload: Record<string, unknown>) => {
     setIsSaving(true);
@@ -122,9 +215,7 @@ export const EditInfoOverlay = ({ field, user, onClose, onSaved }: Props) => {
 
   const handleName = (d: Partial<UserState>) =>
     save({ firstName: d.firstName, lastName: d.lastName });
-
   const handlePseudo = (d: Partial<UserState>) => save({ pseudo: d.pseudo });
-
   const handleDob = (d: Partial<UserState>) => save({ dob: d.dob });
 
   const handleTextSave = () =>
@@ -134,7 +225,9 @@ export const EditInfoOverlay = ({ field, user, onClose, onSaved }: Props) => {
     const key =
       field === "professionalExperiences"
         ? "professionalExperiences"
-        : "educationalExperiences";
+        : field === "educationalExperiences"
+          ? "educationalExperiences"
+          : "personalExperiences";
     save({
       [key]: getExpValues("items").map((item) => ({
         organization: item.organization,
@@ -173,6 +266,45 @@ export const EditInfoOverlay = ({ field, user, onClose, onSaved }: Props) => {
     setEditingExperienceIndex(null);
   };
 
+  const handleAddStrItem = () => {
+    const val = strDraft.trim();
+    if (!val) return;
+    if (isUrlListField) {
+      const result = z.url().safeParse(val);
+      if (!result.success) {
+        setStrDraftError(t("urlInvalid"));
+        return;
+      }
+    }
+    setStrItems([...strItems, val]);
+    setStrDraft("");
+    setStrDraftError(null);
+  };
+
+  const handleSaveStrItems = () => {
+    if (field === "skills") save({ skills: strItems });
+    else if (field === "socialNetworks") save({ socialNetworks: strItems });
+    else if (field === "projects") save({ projects: strItems });
+  };
+
+  const handleHobbySave = (data: HobbyData) => {
+    if (editingHobbyIndex === "new") {
+      setHobbyItems([...hobbyItems, data]);
+    } else if (typeof editingHobbyIndex === "number") {
+      setHobbyItems(
+        hobbyItems.map((h, i) => (i === editingHobbyIndex ? data : h)),
+      );
+    }
+    setEditingHobbyIndex(null);
+  };
+
+  const handleHobbyDelete = () => {
+    if (typeof editingHobbyIndex === "number") {
+      setHobbyItems(hobbyItems.filter((_, i) => i !== editingHobbyIndex));
+    }
+    setEditingHobbyIndex(null);
+  };
+
   const namespace =
     field === "educationalExperiences"
       ? "experience.educational"
@@ -182,7 +314,11 @@ export const EditInfoOverlay = ({ field, user, onClose, onSaved }: Props) => {
     ? handleTextSave
     : isExperienceField
       ? handleSaveExperiences
-      : undefined;
+      : isSkillsField || isUrlListField
+        ? handleSaveStrItems
+        : isHobbiesField
+          ? () => save({ hobbies: hobbyItems })
+          : undefined;
 
   const primaryDisabled = isSimpleStepField
     ? !isFormValid
@@ -190,11 +326,12 @@ export const EditInfoOverlay = ({ field, user, onClose, onSaved }: Props) => {
       ? !isTextValid
       : false;
 
-  const secondaryLabel = isExperienceField
-    ? tCommon("addButton")
-    : isTextInputField
-      ? t("deleteButton")
-      : undefined;
+  const secondaryLabel =
+    isExperienceField || isHobbiesField
+      ? tCommon("addButton")
+      : isTextInputField
+        ? t("deleteButton")
+        : undefined;
 
   const textFieldHasValue =
     field === "phone"
@@ -205,9 +342,11 @@ export const EditInfoOverlay = ({ field, user, onClose, onSaved }: Props) => {
 
   const secondaryHandler = isExperienceField
     ? () => setEditingExperienceIndex("new")
-    : isTextInputField && textFieldHasValue
-      ? () => save({ [field]: null })
-      : undefined;
+    : isHobbiesField
+      ? () => setEditingHobbyIndex("new")
+      : isTextInputField && textFieldHasValue
+        ? () => save({ [field]: null })
+        : undefined;
 
   const overlayTitle: Record<EditableField, string> = {
     name: t("editName"),
@@ -218,6 +357,11 @@ export const EditInfoOverlay = ({ field, user, onClose, onSaved }: Props) => {
     location: t("editLocation"),
     professionalExperiences: t("editProfessionalExperiences"),
     educationalExperiences: t("editEducationalExperiences"),
+    personalExperiences: t("editPersonalExperiences"),
+    socialNetworks: t("editSocialNetworks"),
+    hobbies: t("editHobbies"),
+    skills: t("editSkills"),
+    projects: t("editProjects"),
   };
 
   if (isExperienceField && editingExperienceIndex !== null) {
@@ -254,8 +398,29 @@ export const EditInfoOverlay = ({ field, user, onClose, onSaved }: Props) => {
     );
   }
 
+  if (isHobbiesField && editingHobbyIndex !== null) {
+    return (
+      <div className="bg-surface-50 fixed inset-0 z-50">
+        <HobbySubForm
+          initialData={
+            typeof editingHobbyIndex === "number"
+              ? hobbyItems[editingHobbyIndex]
+              : undefined
+          }
+          onSave={handleHobbySave}
+          onCancel={() => setEditingHobbyIndex(null)}
+          onDelete={
+            typeof editingHobbyIndex === "number"
+              ? handleHobbyDelete
+              : undefined
+          }
+        />
+      </div>
+    );
+  }
+
   return (
-    <div className="bg-surface-50 fixed inset-0 z-50 p-4">
+    <div className="bg-surface-50 fixed inset-0 z-50">
       <StepLayout
         title={overlayTitle[field]}
         step={1}
@@ -358,6 +523,153 @@ export const EditInfoOverlay = ({ field, user, onClose, onSaved }: Props) => {
               })}
               onEdit={(index) => setEditingExperienceIndex(index)}
             />
+          ))}
+        {isSkillsField && (
+          <div className="flex flex-col gap-4">
+            <div className="flex items-start gap-2">
+              <TextInput
+                placeholder={t("skills")}
+                value={strDraft}
+                onChange={(e) => {
+                  setStrDraft(e.target.value);
+                  setStrDraftError(null);
+                }}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    e.preventDefault();
+                    handleAddStrItem();
+                  }
+                }}
+                infoLabel={strDraftError ?? ""}
+                infoType={strDraftError ? "error" : "info"}
+              />
+              <Button
+                variant="outline"
+                size="sm"
+                type="button"
+                className="mt-1 shrink-0"
+                onClick={handleAddStrItem}
+              >
+                {tCommon("addButton")}
+              </Button>
+            </div>
+            <ChipList
+              items={strItems}
+              onRemove={(i) =>
+                setStrItems(strItems.filter((_, idx) => idx !== i))
+              }
+              emptyLabel={t("noSkills")}
+            />
+          </div>
+        )}
+        {isUrlListField && (
+          <div className="flex flex-col gap-4">
+            <div className="flex items-start gap-2">
+              <TextInput
+                placeholder="https://..."
+                value={strDraft}
+                onChange={(e) => {
+                  setStrDraft(e.target.value);
+                  setStrDraftError(null);
+                }}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    e.preventDefault();
+                    handleAddStrItem();
+                  }
+                }}
+                infoLabel={strDraftError ?? ""}
+                infoType={strDraftError ? "error" : "info"}
+              />
+              <Button
+                variant="outline"
+                size="sm"
+                type="button"
+                className="mt-1 shrink-0"
+                onClick={handleAddStrItem}
+              >
+                {tCommon("addButton")}
+              </Button>
+            </div>
+            {strItems.length === 0 ? (
+              <p className="text-txt-muted text-sm">
+                {field === "socialNetworks"
+                  ? t("noSocialNetworks")
+                  : t("noProjects")}
+              </p>
+            ) : (
+              <ul className="flex flex-col gap-2">
+                {strItems.map((url, i) => (
+                  <li
+                    key={`${url}-${i}`}
+                    className="border-brd-200 flex items-center justify-between gap-2 rounded-xl border p-3"
+                  >
+                    <span className="text-txt truncate text-sm">{url}</span>
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setStrItems(strItems.filter((_, idx) => idx !== i))
+                      }
+                      className="text-txt-muted hover:text-error shrink-0 transition-colors"
+                      aria-label="Remove"
+                    >
+                      <svg
+                        width="14"
+                        height="14"
+                        viewBox="0 0 8 8"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="1.5"
+                        strokeLinecap="round"
+                      >
+                        <line x1="1" y1="1" x2="7" y2="7" />
+                        <line x1="7" y1="1" x2="1" y2="7" />
+                      </svg>
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+        )}
+        {isHobbiesField &&
+          (hobbyItems.length === 0 ? (
+            <p className="text-txt-muted text-sm">{t("noHobbies")}</p>
+          ) : (
+            <ul className="flex flex-col gap-2">
+              {hobbyItems.map((hobby, i) => (
+                <li key={i}>
+                  <button
+                    type="button"
+                    onClick={() => setEditingHobbyIndex(i)}
+                    className="border-brd-200 flex w-full items-center justify-between rounded-xl border p-3 text-left"
+                  >
+                    <div className="min-w-0">
+                      <p className="text-txt font-medium">{hobby.title}</p>
+                      {hobby.description && (
+                        <p className="text-txt-muted truncate text-sm">
+                          {hobby.description}
+                        </p>
+                      )}
+                    </div>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="text-txt-muted ml-2 h-4 w-4 shrink-0"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                      strokeWidth={2}
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M9 5l7 7-7 7"
+                      />
+                    </svg>
+                  </button>
+                </li>
+              ))}
+            </ul>
           ))}
         {error && <p className="text-error mt-4 text-sm">{error}</p>}
       </StepLayout>

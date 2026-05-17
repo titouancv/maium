@@ -74,6 +74,41 @@ export const SettingsPersonalDataContent = ({
                 : undefined,
               onClick: () => setEditingField("educationalExperiences"),
             },
+            {
+              label: t("personalExperiences"),
+              value: user.personal_experiences?.length
+                ? String(user.personal_experiences.length)
+                : undefined,
+              onClick: () => setEditingField("personalExperiences"),
+            },
+            {
+              label: t("skills"),
+              value: user.skills?.length
+                ? String(user.skills.length)
+                : undefined,
+              onClick: () => setEditingField("skills"),
+            },
+            {
+              label: t("socialNetworks"),
+              value: user.social_networks?.length
+                ? String(user.social_networks.length)
+                : undefined,
+              onClick: () => setEditingField("socialNetworks"),
+            },
+            {
+              label: t("projects"),
+              value: user.projects?.length
+                ? String(user.projects.length)
+                : undefined,
+              onClick: () => setEditingField("projects"),
+            },
+            {
+              label: t("hobbies"),
+              value: user.hobbies?.length
+                ? String(user.hobbies.length)
+                : undefined,
+              onClick: () => setEditingField("hobbies"),
+            },
           ]}
         />
       )}

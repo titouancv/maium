@@ -67,10 +67,10 @@ export const StepLayout = ({
   }, []);
 
   return (
-    <div className="flex h-dvh flex-col md:h-screen md:items-center md:justify-center">
+    <div className="flex h-dvh flex-col p-4 md:h-screen md:items-center md:justify-center">
       <div className="flex h-full w-full flex-col md:h-screen md:max-w-lg">
         {/* Header */}
-        <div className="flex shrink-0 items-center justify-between pt-6 md:pt-16">
+        <div className="flex shrink-0 items-center justify-between pt-6 md:pt-12">
           <Title label={title} size="h1" />
           {isCancelable ? (
             <Button

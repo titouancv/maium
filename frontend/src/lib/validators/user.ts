@@ -70,6 +70,11 @@ export const CreateUserSchema = z.object({
 
 export type CreateUserInput = z.infer<typeof CreateUserSchema>;
 
+const HobbySchema = z.object({
+  title: z.string().min(1).max(100),
+  description: z.string().max(500),
+});
+
 export const UpdateUserSchema = z
   .object({
     firstName: z.string().min(1).max(50).optional(),
@@ -85,6 +90,11 @@ export const UpdateUserSchema = z
     phone: z.string().nullable().optional(),
     nationality: z.string().nullable().optional(),
     location: z.string().nullable().optional(),
+    socialNetworks: z.array(z.string().url()).optional(),
+    hobbies: z.array(HobbySchema).optional(),
+    personalExperiences: z.array(ExperienceSchema).optional(),
+    skills: z.array(z.string().min(1).max(50)).optional(),
+    projects: z.array(z.string().url()).optional(),
   })
   .refine((data) => Object.values(data).some((v) => v !== undefined), {
     message: "At least one field must be provided",

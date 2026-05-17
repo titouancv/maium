@@ -1,5 +1,10 @@
 import { Experience } from "./experience";
 
+export interface Hobby {
+  title: string;
+  description: string;
+}
+
 export interface UserData {
   email: string;
   first_name: string;
@@ -12,4 +17,9 @@ export interface UserData {
   location?: string | null;
   professional_experiences?: Experience[];
   educational_experiences?: Experience[];
+  social_networks?: string[];
+  hobbies?: Hobby[];
+  personal_experiences?: Experience[];
+  skills?: string[];
+  projects?: string[];
 }

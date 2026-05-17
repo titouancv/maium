@@ -1,4 +1,6 @@
 export * from "./Button";
+export * from "./Chip";
+export * from "./ChipList";
 export * from "./Section";
 export * from "./List";
 export * from "./PasswordInput";
