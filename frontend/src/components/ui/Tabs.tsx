@@ -30,7 +30,9 @@ export function Tabs({
         const name = isString ? tab : tab.name;
         const href = isString ? undefined : tab.href;
 
-        const isActive = href ? pathname === href : activeTab === idx;
+        const isActive = href
+          ? pathname === href || pathname.startsWith(href + "/")
+          : activeTab === idx;
 
         const content = (
           <>
