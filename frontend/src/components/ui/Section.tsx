@@ -1,8 +1,9 @@
 import React from "react";
+import { UISize } from "@/constants";
 import { Title, TitleSize } from "./Title";
 
-export interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
-  padding?: "none" | "sm" | "md" | "lg";
+export interface SectionProps extends React.HTMLAttributes<HTMLDivElement> {
+  padding?: UISize;
   title?: string;
 }
 
@@ -12,8 +13,8 @@ export function Section({
   title,
   children,
   ...props
-}: CardProps) {
-  const cardTitleSize: { [key in "none" | "sm" | "md" | "lg"]: TitleSize } = {
+}: SectionProps) {
+  const cardTitleSize: Record<UISize, TitleSize> = {
     none: "h4",
     sm: "h3",
     md: "h3",

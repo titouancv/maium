@@ -1,4 +1,5 @@
 import { Suspense } from "react";
+import { getLocale } from "next-intl/server";
 import { SignupWizard } from "@/components/content/SignupContent";
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "@/i18n/navigation";
@@ -7,6 +8,7 @@ import type { UserState } from "@/stores/useUserStore";
 import type { Experience } from "@/types/experience";
 
 export default async function SignupPage() {
+  const locale = await getLocale();
   const supabase = await createClient();
 
   const {
@@ -26,7 +28,7 @@ export default async function SignupPage() {
       .single();
 
     if (profile?.onboarding_completed) {
-      redirect(ROUTES.HOME);
+      redirect({ href: ROUTES.HOME, locale });
     }
 
     initialStep = profile?.dob ? 4 : profile?.pseudo ? 3 : 1;

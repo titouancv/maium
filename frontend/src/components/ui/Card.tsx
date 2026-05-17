@@ -1,8 +1,8 @@
 import React from "react";
-import { UI_VARIANTS, UIVariant } from "@/constants";
+import { UI_VARIANTS, UIVariant, UISize } from "@/constants";
 
 export interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
-  padding?: "none" | "sm" | "md" | "lg";
+  padding?: UISize;
   variant?: UIVariant;
 }
 
@@ -15,7 +15,7 @@ export function Card({
 }: CardProps) {
   const baseStyle =
     "flex flex-col gap-4 rounded-md items-center justify-center shadow-md inset-shadow-sm";
-  const cardPadding: { [key in "none" | "sm" | "md" | "lg"]: string } = {
+  const cardPadding: Record<UISize, string> = {
     none: "",
     sm: "p-2",
     md: "p-4",

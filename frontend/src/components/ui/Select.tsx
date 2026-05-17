@@ -1,11 +1,12 @@
 import React, { forwardRef } from "react";
+import { UISize } from "@/constants";
 import { Button, ButtonVariant } from "./Button";
 
 export interface SelectProps extends React.SelectHTMLAttributes<HTMLSelectElement> {
   label?: string;
   error?: string;
   variant?: ButtonVariant;
-  buttonSize?: "none" | "sm" | "md" | "lg";
+  buttonSize?: UISize;
 }
 
 export const Select = forwardRef<HTMLSelectElement, SelectProps>(
@@ -21,7 +22,7 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
     },
     ref,
   ) => {
-    const sizes = {
+    const sizes: Record<UISize, string> = {
       none: "text-base",
       sm: "py-1 px-4 text-sm",
       md: "py-2 px-6 text-base",
