@@ -70,7 +70,7 @@ export const StepLayout = ({
     <div className="flex h-dvh flex-col md:h-screen md:items-center md:justify-center md:px-0">
       <div className="flex h-full w-full flex-col md:h-screen md:max-w-lg">
         {/* Header */}
-        <div className="flex shrink-0 items-center justify-between pt-16 md:pt-[150px]">
+        <div className="flex shrink-0 items-center justify-between pt-12 md:pt-16">
           <Title label={title} size="h1" />
           {isCancelable ? (
             <Button variant="ghost" type="button" size="sm" onClick={onCancel}>
