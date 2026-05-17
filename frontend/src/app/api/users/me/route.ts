@@ -29,6 +29,9 @@ export async function PATCH(request: NextRequest) {
       onboardingCompleted,
       professionalExperiences,
       educationalExperiences,
+      phone,
+      nationality,
+      location,
     } = parsed.data;
 
     const updates: Record<string, unknown> = {};
@@ -42,6 +45,9 @@ export async function PATCH(request: NextRequest) {
       updates.professional_experiences = professionalExperiences;
     if (educationalExperiences !== undefined)
       updates.educational_experiences = educationalExperiences;
+    if (phone !== undefined) updates.phone = phone;
+    if (nationality !== undefined) updates.nationality = nationality;
+    if (location !== undefined) updates.location = location;
 
     const { error: dbError } = await supabase
       .from("users")

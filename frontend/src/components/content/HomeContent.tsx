@@ -7,15 +7,7 @@ import { useRouter } from "@/i18n/navigation";
 import { Section } from "../ui";
 import { WelcomeOverlay } from "../overlay/WelcomeOverlay";
 import { cn } from "@/lib/utils";
-
-interface UserData {
-  email: string;
-  first_name: string;
-  last_name: string;
-  pseudo: string;
-  dob: string;
-  onboarding_completed: boolean;
-}
+import { UserData } from "@/types";
 
 interface HomeContentProps {
   user: UserData | null;
