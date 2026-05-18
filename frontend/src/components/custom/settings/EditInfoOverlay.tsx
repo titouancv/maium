@@ -9,16 +9,20 @@ import { API, SIGNUP_FORM_ID } from "@/constants";
 import { LocationInput } from "@/components/ui/LocationInput";
 import { NationalityInput } from "@/components/ui/NationalityInput";
 import { PhoneInput } from "@/components/ui/PhoneInput";
-import { Button, ChipList, TextInput, TextArea } from "@/components/ui";
 import { StepLayout } from "@/components/layout/StepLayout";
 import { StepName, StepPseudo, StepDob } from "@/components/custom/signup";
 import {
   ExperienceList,
   ExperienceSubWizard,
 } from "@/components/custom/experience";
+import { HobbySubForm } from "./HobbySubForm";
+import { HobbyList } from "./HobbyList";
+import { SkillsField } from "./SkillsField";
+import { UrlListField } from "./UrlListField";
 import type { UserData } from "@/types/user";
 import type { ExperienceFormData } from "@/types/experience";
 import type { UserState } from "@/stores/useUserStore";
+import type { HobbyData } from "./HobbySubForm";
 
 export type EditableField =
   | "name"
@@ -42,69 +46,7 @@ interface Props {
   onSaved: () => void;
 }
 
-const hobbySchema = z.object({
-  title: z.string().min(1).max(100),
-  description: z.string().max(500),
-});
-type HobbyData = z.infer<typeof hobbySchema>;
-
-interface HobbySubFormProps {
-  initialData?: HobbyData;
-  onSave: (data: HobbyData) => void;
-  onCancel: () => void;
-  onDelete?: () => void;
-}
-
-const HobbySubForm = ({
-  initialData,
-  onSave,
-  onCancel,
-  onDelete,
-}: HobbySubFormProps) => {
-  const t = useTranslations("settings");
-  const tCommon = useTranslations("common");
-  const {
-    register,
-    handleSubmit,
-    formState: { isValid },
-  } = useForm<HobbyData>({
-    resolver: zodResolver(hobbySchema),
-    mode: "onChange",
-    defaultValues: initialData ?? { title: "", description: "" },
-  });
-
-  return (
-    <StepLayout
-      title={t("editHobbies")}
-      step={1}
-      totalSteps={1}
-      isCancelable
-      onCancel={onCancel}
-      cancelLabel={tCommon("cancelButton")}
-      primaryLabel={t("saveButton")}
-      formId={SIGNUP_FORM_ID}
-      primaryDisabled={!isValid}
-      secondaryLabel={onDelete ? t("deleteButton") : undefined}
-      onSecondary={onDelete}
-    >
-      <form
-        id={SIGNUP_FORM_ID}
-        onSubmit={handleSubmit(onSave)}
-        className="flex flex-col gap-4"
-      >
-        <TextInput
-          placeholder={t("hobbyTitlePlaceholder")}
-          autoFocus
-          {...register("title")}
-        />
-        <TextArea
-          placeholder={t("hobbyDescriptionPlaceholder")}
-          {...register("description")}
-        />
-      </form>
-    </StepLayout>
-  );
-};
+const textSchema = z.object({ value: z.string().min(1) });
 
 export const EditInfoOverlay = ({ field, user, onClose, onSaved }: Props) => {
   const t = useTranslations("settings");
@@ -134,7 +76,6 @@ export const EditInfoOverlay = ({ field, user, onClose, onSaved }: Props) => {
     number | "new" | null
   >(null);
 
-  const textSchema = z.object({ value: z.string().min(1) });
   const {
     control: textControl,
     handleSubmit: handleTextSubmit,
@@ -251,18 +192,15 @@ export const EditInfoOverlay = ({ field, user, onClose, onSaved }: Props) => {
       website: data.website ?? "",
       location: data.location ?? "",
     };
-    if (editingExperienceIndex === "new") {
-      appendExp(entry);
-    } else if (typeof editingExperienceIndex === "number") {
+    if (editingExperienceIndex === "new") appendExp(entry);
+    else if (typeof editingExperienceIndex === "number")
       updateExp(editingExperienceIndex, entry);
-    }
     setEditingExperienceIndex(null);
   };
 
   const handleExperienceDelete = () => {
-    if (typeof editingExperienceIndex === "number") {
+    if (typeof editingExperienceIndex === "number")
       removeExp(editingExperienceIndex);
-    }
     setEditingExperienceIndex(null);
   };
 
@@ -288,20 +226,17 @@ export const EditInfoOverlay = ({ field, user, onClose, onSaved }: Props) => {
   };
 
   const handleHobbySave = (data: HobbyData) => {
-    if (editingHobbyIndex === "new") {
-      setHobbyItems([...hobbyItems, data]);
-    } else if (typeof editingHobbyIndex === "number") {
+    if (editingHobbyIndex === "new") setHobbyItems([...hobbyItems, data]);
+    else if (typeof editingHobbyIndex === "number")
       setHobbyItems(
         hobbyItems.map((h, i) => (i === editingHobbyIndex ? data : h)),
       );
-    }
     setEditingHobbyIndex(null);
   };
 
   const handleHobbyDelete = () => {
-    if (typeof editingHobbyIndex === "number") {
+    if (typeof editingHobbyIndex === "number")
       setHobbyItems(hobbyItems.filter((_, i) => i !== editingHobbyIndex));
-    }
     setEditingHobbyIndex(null);
   };
 
@@ -436,7 +371,9 @@ export const EditInfoOverlay = ({ field, user, onClose, onSaved }: Props) => {
         secondaryLabel={secondaryLabel}
         onSecondary={secondaryHandler}
         centerContent={
-          field === "location" || field === "nationality" ? false : undefined
+          field === "location" || field === "nationality" || isUrlListField
+            ? false
+            : undefined
         }
       >
         {field === "name" && (
@@ -525,151 +462,43 @@ export const EditInfoOverlay = ({ field, user, onClose, onSaved }: Props) => {
             />
           ))}
         {isSkillsField && (
-          <div className="flex flex-col gap-4">
-            <div className="flex items-start gap-2">
-              <TextInput
-                placeholder={t("skills")}
-                value={strDraft}
-                onChange={(e) => {
-                  setStrDraft(e.target.value);
-                  setStrDraftError(null);
-                }}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter") {
-                    e.preventDefault();
-                    handleAddStrItem();
-                  }
-                }}
-                infoLabel={strDraftError ?? ""}
-                infoType={strDraftError ? "error" : "info"}
-              />
-              <Button
-                variant="outline"
-                type="button"
-                className="mt-1 shrink-0"
-                onClick={handleAddStrItem}
-              >
-                {tCommon("addButton")}
-              </Button>
-            </div>
-            <ChipList
-              items={strItems}
-              onRemove={(i) =>
-                setStrItems(strItems.filter((_, idx) => idx !== i))
-              }
-              emptyLabel={t("noSkills")}
-            />
-          </div>
+          <SkillsField
+            items={strItems}
+            draft={strDraft}
+            draftError={strDraftError}
+            onDraftChange={(val) => {
+              setStrDraft(val);
+              setStrDraftError(null);
+            }}
+            onAdd={handleAddStrItem}
+            onRemove={(i) =>
+              setStrItems(strItems.filter((_, idx) => idx !== i))
+            }
+          />
         )}
         {isUrlListField && (
-          <div className="flex flex-col gap-4">
-            <div className="flex items-start gap-2">
-              <TextInput
-                placeholder="https://..."
-                value={strDraft}
-                onChange={(e) => {
-                  setStrDraft(e.target.value);
-                  setStrDraftError(null);
-                }}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter") {
-                    e.preventDefault();
-                    handleAddStrItem();
-                  }
-                }}
-                infoLabel={strDraftError ?? ""}
-                infoType={strDraftError ? "error" : "info"}
-              />
-              <Button
-                variant="outline"
-                size="sm"
-                type="button"
-                className="mt-1 shrink-0"
-                onClick={handleAddStrItem}
-              >
-                {tCommon("addButton")}
-              </Button>
-            </div>
-            {strItems.length === 0 ? (
-              <p className="text-txt-muted text-sm">
-                {field === "socialNetworks"
-                  ? t("noSocialNetworks")
-                  : t("noProjects")}
-              </p>
-            ) : (
-              <ul className="flex flex-col gap-2">
-                {strItems.map((url, i) => (
-                  <li
-                    key={`${url}-${i}`}
-                    className="border-brd-200 flex items-center justify-between gap-2 rounded-xl border p-3"
-                  >
-                    <span className="text-txt truncate text-sm">{url}</span>
-                    <button
-                      type="button"
-                      onClick={() =>
-                        setStrItems(strItems.filter((_, idx) => idx !== i))
-                      }
-                      className="text-txt-muted hover:text-error shrink-0 transition-colors"
-                      aria-label="Remove"
-                    >
-                      <svg
-                        width="14"
-                        height="14"
-                        viewBox="0 0 8 8"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="1.5"
-                        strokeLinecap="round"
-                      >
-                        <line x1="1" y1="1" x2="7" y2="7" />
-                        <line x1="7" y1="1" x2="1" y2="7" />
-                      </svg>
-                    </button>
-                  </li>
-                ))}
-              </ul>
-            )}
-          </div>
+          <UrlListField
+            items={strItems}
+            draft={strDraft}
+            draftError={strDraftError}
+            onDraftChange={(val) => {
+              setStrDraft(val);
+              setStrDraftError(null);
+            }}
+            onAdd={handleAddStrItem}
+            onRemove={(i) =>
+              setStrItems(strItems.filter((_, idx) => idx !== i))
+            }
+            isSocialNetwork={field === "socialNetworks"}
+          />
         )}
-        {isHobbiesField &&
-          (hobbyItems.length === 0 ? (
-            <p className="text-txt-muted text-sm">{t("noHobbies")}</p>
-          ) : (
-            <ul className="flex flex-col gap-2">
-              {hobbyItems.map((hobby, i) => (
-                <li key={i}>
-                  <button
-                    type="button"
-                    onClick={() => setEditingHobbyIndex(i)}
-                    className="border-brd-200 flex w-full items-center justify-between rounded-xl border p-3 text-left"
-                  >
-                    <div className="min-w-0">
-                      <p className="text-txt font-medium">{hobby.title}</p>
-                      {hobby.description && (
-                        <p className="text-txt-muted truncate text-sm">
-                          {hobby.description}
-                        </p>
-                      )}
-                    </div>
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="text-txt-muted ml-2 h-4 w-4 shrink-0"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                      strokeWidth={2}
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M9 5l7 7-7 7"
-                      />
-                    </svg>
-                  </button>
-                </li>
-              ))}
-            </ul>
-          ))}
+        {isHobbiesField && (
+          <HobbyList
+            items={hobbyItems}
+            onEdit={setEditingHobbyIndex}
+            emptyLabel={t("noHobbies")}
+          />
+        )}
         {error && <p className="text-error mt-4 text-sm">{error}</p>}
       </StepLayout>
     </div>

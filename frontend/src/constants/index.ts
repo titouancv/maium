@@ -19,6 +19,7 @@ export const API = {
   USERS_ME: "/api/users/me",
   USERS_PSEUDO_CHECK: "/api/users/pseudo",
   AUTH_LOGOUT: "/api/auth/logout",
+  URL_TITLE: "/api/url-title",
 } as const;
 
 export const EXTERNAL_API = {
