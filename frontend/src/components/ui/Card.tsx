@@ -14,7 +14,7 @@ export function Card({
   ...props
 }: CardProps) {
   const baseStyle =
-    "flex flex-col gap-4 rounded-md items-center justify-center shadow-md inset-shadow-sm";
+    "flex flex-col gap-4 rounded-md items-center justify-center";
   const cardPadding: Record<UISize, string> = {
     none: "",
     sm: "p-2",

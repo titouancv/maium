@@ -10,7 +10,7 @@ export interface ChipProps {
 
 export function Chip({
   label,
-  variant = "outline",
+  variant = "outlineSecondary",
   onRemove,
   className,
 }: ChipProps) {

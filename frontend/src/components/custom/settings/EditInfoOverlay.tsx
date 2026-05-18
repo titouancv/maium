@@ -545,7 +545,6 @@ export const EditInfoOverlay = ({ field, user, onClose, onSaved }: Props) => {
               />
               <Button
                 variant="outline"
-                size="sm"
                 type="button"
                 className="mt-1 shrink-0"
                 onClick={handleAddStrItem}

@@ -13,7 +13,7 @@ export interface ChipListProps {
 
 export function ChipList({
   items,
-  variant = "outline",
+  variant = "outlineMuted",
   onRemove,
   emptyLabel,
   className,
