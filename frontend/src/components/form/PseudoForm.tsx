@@ -16,10 +16,7 @@ interface PseudoFormProps {
   defaultValue?: string;
 }
 
-export const PseudoForm = ({
-  onChange,
-  defaultValue,
-}: PseudoFormProps) => {
+export const PseudoForm = ({ onChange, defaultValue }: PseudoFormProps) => {
   const t = useTranslations("auth.signup.step3");
   const { user } = useUserStore();
   const schema = z.object({

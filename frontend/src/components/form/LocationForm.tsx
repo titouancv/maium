@@ -13,10 +13,7 @@ interface LocationFormProps {
   defaultValue?: string;
 }
 
-export const LocationForm = ({
-  onChange,
-  defaultValue,
-}: LocationFormProps) => {
+export const LocationForm = ({ onChange, defaultValue }: LocationFormProps) => {
   const t = useTranslations("settings");
 
   const schema = z.object({

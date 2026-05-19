@@ -87,7 +87,8 @@ export const StepPseudo = ({
   }, [pseudo, user?.pseudo, defaultPseudo, clearErrors, setError, t]);
 
   const getInfoLabel = () => {
-    if (touchedFields.pseudo && errors.pseudo?.message) return errors.pseudo.message;
+    if (touchedFields.pseudo && errors.pseudo?.message)
+      return errors.pseudo.message;
     if (availabilityStatus === "checking") return t("pseudoChecking");
     if (availabilityStatus === "available") return t("pseudoAvailable");
     return undefined;

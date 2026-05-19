@@ -14,10 +14,7 @@ interface FullNameFormProps {
   defaultValue?: { firstName?: string; lastName?: string };
 }
 
-export const FullNameForm = ({
-  onChange,
-  defaultValue,
-}: FullNameFormProps) => {
+export const FullNameForm = ({ onChange, defaultValue }: FullNameFormProps) => {
   const t = useTranslations("auth.signup.step2");
   const { user } = useUserStore();
 
