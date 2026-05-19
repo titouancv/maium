@@ -55,11 +55,21 @@ export const FullNameForm = ({
   }, [isValid, onValidityChange]);
 
   return (
-    <form id={SIGNUP_FORM_ID} onSubmit={handleSubmit(onNext)} className="space-y-4">
+    <form
+      id={SIGNUP_FORM_ID}
+      onSubmit={handleSubmit(onNext)}
+      className="space-y-4"
+    >
       <TextInput
         placeholder={t("firstNamePlaceholder")}
-        infoLabel={touchedFields.firstName ? (errors.firstName?.message as string) : undefined}
-        infoType={touchedFields.firstName && errors.firstName ? "error" : "info"}
+        infoLabel={
+          touchedFields.firstName
+            ? (errors.firstName?.message as string)
+            : undefined
+        }
+        infoType={
+          touchedFields.firstName && errors.firstName ? "error" : "info"
+        }
         inputMode="text"
         autoCapitalize="words"
         autoComplete="given-name"
@@ -74,7 +84,11 @@ export const FullNameForm = ({
       />
       <TextInput
         placeholder={t("lastNamePlaceholder")}
-        infoLabel={touchedFields.lastName ? (errors.lastName?.message as string) : undefined}
+        infoLabel={
+          touchedFields.lastName
+            ? (errors.lastName?.message as string)
+            : undefined
+        }
         infoType={touchedFields.lastName && errors.lastName ? "error" : "info"}
         inputMode="text"
         autoCapitalize="words"

@@ -13,7 +13,12 @@ interface KeysFormProps {
   onChange: (keys: string[]) => void;
 }
 
-export const KeysForm = ({ defaultKeys, placeholder, emptyLabel, onChange }: KeysFormProps) => {
+export const KeysForm = ({
+  defaultKeys,
+  placeholder,
+  emptyLabel,
+  onChange,
+}: KeysFormProps) => {
   const tCommon = useTranslations("common");
 
   const [items, setItems] = useState<string[]>(defaultKeys ?? []);
@@ -50,7 +55,12 @@ export const KeysForm = ({ defaultKeys, placeholder, emptyLabel, onChange }: Key
           infoLabel=""
           infoType="info"
         />
-        <Button variant="outline" type="button" className="mt-1 shrink-0" onClick={handleAdd}>
+        <Button
+          variant="outline"
+          type="button"
+          className="mt-1 shrink-0"
+          onClick={handleAdd}
+        >
           {tCommon("addButton")}
         </Button>
       </div>

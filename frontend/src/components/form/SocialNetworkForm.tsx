@@ -10,7 +10,10 @@ interface SocialNetworkFormProps {
   onChange: (socialNetworks: string[]) => void;
 }
 
-export const SocialNetworkForm = ({ defaultSocialNetworks, onChange }: SocialNetworkFormProps) => {
+export const SocialNetworkForm = ({
+  defaultSocialNetworks,
+  onChange,
+}: SocialNetworkFormProps) => {
   const t = useTranslations("settings");
 
   const [items, setItems] = useState<string[]>(defaultSocialNetworks ?? []);

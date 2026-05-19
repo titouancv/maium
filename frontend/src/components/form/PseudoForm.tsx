@@ -95,7 +95,8 @@ export const PseudoForm = ({
   }, [isValid, availabilityStatus, onValidityChange]);
 
   const getInfoLabel = () => {
-    if (touchedFields.pseudo && errors.pseudo?.message) return errors.pseudo.message;
+    if (touchedFields.pseudo && errors.pseudo?.message)
+      return errors.pseudo.message;
     if (availabilityStatus === "checking") return t("pseudoChecking");
     if (availabilityStatus === "available") return t("pseudoAvailable");
     return undefined;
@@ -109,7 +110,11 @@ export const PseudoForm = ({
   };
 
   return (
-    <form id={SIGNUP_FORM_ID} onSubmit={handleSubmit(onNext)} className="space-y-4">
+    <form
+      id={SIGNUP_FORM_ID}
+      onSubmit={handleSubmit(onNext)}
+      className="space-y-4"
+    >
       <TextInput
         placeholder={t("pseudoPlaceholder")}
         infoLabel={getInfoLabel()}

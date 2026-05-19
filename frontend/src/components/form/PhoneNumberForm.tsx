@@ -44,7 +44,11 @@ export const PhoneNumberForm = ({
   }, [isValid, onValidityChange]);
 
   return (
-    <form id={SIGNUP_FORM_ID} onSubmit={handleSubmit(onNext)} className="space-y-4">
+    <form
+      id={SIGNUP_FORM_ID}
+      onSubmit={handleSubmit(onNext)}
+      className="space-y-4"
+    >
       <Controller
         name="phone"
         control={control}

@@ -15,7 +15,11 @@ interface DateFormProps {
   onValidityChange?: (isValid: boolean) => void;
 }
 
-export const DateForm = ({ onNext, defaultDob, onValidityChange }: DateFormProps) => {
+export const DateForm = ({
+  onNext,
+  defaultDob,
+  onValidityChange,
+}: DateFormProps) => {
   const t = useTranslations("auth.signup.step4");
   const { user } = useUserStore();
 
@@ -51,7 +55,11 @@ export const DateForm = ({ onNext, defaultDob, onValidityChange }: DateFormProps
   }, [isValid, onValidityChange]);
 
   return (
-    <form id={SIGNUP_FORM_ID} onSubmit={handleSubmit(onNext)} className="space-y-4">
+    <form
+      id={SIGNUP_FORM_ID}
+      onSubmit={handleSubmit(onNext)}
+      className="space-y-4"
+    >
       <Controller
         name="dob"
         control={control}

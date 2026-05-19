@@ -50,7 +50,9 @@ export const ExperienceSubForm = ({
   const tCommon = useTranslations("common");
   const [subStep, setSubStep] = useState(1);
   const [subValues, setSubValues] = useState<SubValues>(initialValues);
-  const [subErrors, setSubErrors] = useState<Partial<Record<keyof SubValues, string>>>({});
+  const [subErrors, setSubErrors] = useState<
+    Partial<Record<keyof SubValues, string>>
+  >({});
 
   const advance = () => {
     if (subStep === 1 && !subValues.organization.trim()) {
@@ -75,7 +77,8 @@ export const ExperienceSubForm = ({
     isCancelable: true,
     onCancel,
     cancelLabel: tCommon("cancelButton"),
-    primaryLabel: subStep < TOTAL_SUB_STEPS ? tCommon("nextButton") : t("saveButton"),
+    primaryLabel:
+      subStep < TOTAL_SUB_STEPS ? tCommon("nextButton") : t("saveButton"),
     secondaryLabel: t("removeEntry"),
     onSecondary: isDeletable ? onDelete : undefined,
   };
@@ -126,7 +129,11 @@ export const ExperienceSubForm = ({
         defaultEndDate={subValues.endPeriod}
         mode={dateMode}
         onChange={(start, end) => {
-          setSubValues((prev) => ({ ...prev, startPeriod: start, endPeriod: end }));
+          setSubValues((prev) => ({
+            ...prev,
+            startPeriod: start,
+            endPeriod: end,
+          }));
           setSubErrors((prev) => ({ ...prev, startPeriod: undefined }));
         }}
         startError={subErrors.startPeriod}
