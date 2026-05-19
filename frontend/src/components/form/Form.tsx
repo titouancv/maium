@@ -13,6 +13,7 @@ import { TextForm } from "./TextForm";
 import { LongTextForm } from "./LongTextForm";
 import { DateRangeForm } from "./DateRangeForm";
 import { ExperiencesForm } from "./ExperiencesForm";
+import { PseudoForm } from "./PseudoForm";
 import type { DateMode } from "@/components/ui/DateInput";
 import type { Experience } from "@/types/experience";
 
@@ -44,7 +45,8 @@ export type FormType =
   | "text"
   | "longText"
   | "dateRange"
-  | "experiences";
+  | "experiences"
+  | "pseudo";
 
 type FormProps =
   | (BaseProps & {
@@ -121,6 +123,12 @@ type FormProps =
       dateMode?: "MM-YYYY" | "YYYY";
       defaultExperiences?: Experience[];
       onChange: (experiences: Experience[]) => void;
+    })
+  | (BaseProps & {
+      type: "pseudo";
+      onNext: (d: { pseudo: string }) => void;
+      defaultPseudo?: string;
+      onValidityChange?: (isValid: boolean) => void;
     });
 
 const renderContent = (
@@ -221,6 +229,14 @@ const renderContent = (
           defaultExperiences={props.defaultExperiences}
           onChange={props.onChange}
           onSubFormChange={onSubFormChange}
+        />
+      );
+    case "pseudo":
+      return (
+        <PseudoForm
+          onNext={props.onNext}
+          defaultPseudo={props.defaultPseudo}
+          onValidityChange={props.onValidityChange}
         />
       );
   }

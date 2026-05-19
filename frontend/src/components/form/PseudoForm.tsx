@@ -6,40 +6,21 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useTranslations } from "next-intl";
 import { TextInput } from "@/components/ui/TextInput";
-import { StepLayout } from "@/components/layout/StepLayout";
-import { UserState, useUserStore } from "@/stores/useUserStore";
+import { useUserStore } from "@/stores/useUserStore";
 import { API, SIGNUP_FORM_ID } from "@/constants";
 
 type AvailabilityStatus = "idle" | "checking" | "available" | "taken";
 
 interface PseudoFormProps {
-  onNext: (d: Partial<UserState>) => void;
+  onNext: (d: { pseudo: string }) => void;
   defaultPseudo?: string;
   onValidityChange?: (isValid: boolean) => void;
-  title: string;
-  step: number;
-  totalSteps: number;
-  primaryLabel: string;
-  primaryDisabled?: boolean;
-  primaryLoading?: boolean;
-  isCancelable?: boolean;
-  onCancel?: () => void;
-  cancelLabel?: string;
 }
 
 export const PseudoForm = ({
   onNext,
   defaultPseudo,
   onValidityChange,
-  title,
-  step,
-  totalSteps,
-  primaryLabel,
-  primaryDisabled,
-  primaryLoading,
-  isCancelable,
-  onCancel,
-  cancelLabel,
 }: PseudoFormProps) => {
   const t = useTranslations("auth.signup.step3");
   const { user } = useUserStore();
@@ -128,35 +109,18 @@ export const PseudoForm = ({
   };
 
   return (
-    <StepLayout
-      title={title}
-      step={step}
-      totalSteps={totalSteps}
-      formId={SIGNUP_FORM_ID}
-      primaryLabel={primaryLabel}
-      primaryDisabled={primaryDisabled}
-      primaryLoading={primaryLoading}
-      isCancelable={isCancelable}
-      onCancel={onCancel}
-      cancelLabel={cancelLabel}
-    >
-      <form
-        id={SIGNUP_FORM_ID}
-        onSubmit={handleSubmit(onNext)}
-        className="space-y-4"
-      >
-        <TextInput
-          placeholder={t("pseudoPlaceholder")}
-          infoLabel={getInfoLabel()}
-          infoType={getInfoType()}
-          inputMode="text"
-          autoCapitalize="none"
-          autoCorrect="off"
-          autoComplete="username"
-          enterKeyHint="done"
-          {...register("pseudo")}
-        />
-      </form>
-    </StepLayout>
+    <form id={SIGNUP_FORM_ID} onSubmit={handleSubmit(onNext)} className="space-y-4">
+      <TextInput
+        placeholder={t("pseudoPlaceholder")}
+        infoLabel={getInfoLabel()}
+        infoType={getInfoType()}
+        inputMode="text"
+        autoCapitalize="none"
+        autoCorrect="off"
+        autoComplete="username"
+        enterKeyHint="done"
+        {...register("pseudo")}
+      />
+    </form>
   );
 };
