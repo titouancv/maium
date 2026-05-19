@@ -8,7 +8,7 @@ import { MenuList } from "@/components/ui";
 import {
   EditInfoOverlay,
   type EditableField,
-} from "@/components/custom/settings/EditInfoOverlay";
+} from "@/components/ui/custom/settings/EditInfoOverlay";
 import type { UserData } from "@/types";
 
 interface SettingsPersonalDataContentProps {

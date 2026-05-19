@@ -10,11 +10,11 @@ import { LocationInput } from "@/components/ui/LocationInput";
 import { NationalityInput } from "@/components/ui/NationalityInput";
 import { PhoneInput } from "@/components/ui/PhoneInput";
 import { StepLayout } from "@/components/layout/StepLayout";
-import { StepName, StepPseudo, StepDob } from "@/components/custom/signup";
+import { StepName, StepPseudo, StepDob } from "@/components/ui/custom/signup";
 import {
   ExperienceList,
   ExperienceSubWizard,
-} from "@/components/custom/experience";
+} from "@/components/ui/custom/experience";
 import { HobbySubForm } from "./HobbySubForm";
 import { HobbyList } from "./HobbyList";
 import { SkillsField } from "./SkillsField";

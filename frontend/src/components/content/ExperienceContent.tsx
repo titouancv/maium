@@ -5,7 +5,7 @@ import { useSearchParams } from "next/navigation";
 import { useRouter } from "@/i18n/navigation";
 import { useUserStore } from "@/stores/useUserStore";
 import { ROUTES } from "@/constants";
-import { ExperienceSubWizard } from "../custom/experience/ExperienceSubWizard";
+import { ExperienceSubWizard } from "../ui/custom/experience/ExperienceSubWizard";
 import type { ExperienceFormData, ExperienceType } from "@/types/experience";
 
 interface Props {

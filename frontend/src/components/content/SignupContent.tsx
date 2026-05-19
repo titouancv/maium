@@ -7,15 +7,15 @@ import { useRouter } from "@/i18n/navigation";
 import { useUserStore, type UserState } from "@/stores/useUserStore";
 import { ROUTES, API, SIGNUP_FORM_ID } from "@/constants";
 import { StepLayout } from "../layout/StepLayout";
-import { GoogleSignInButton } from "../custom/signup/GoogleSignInButton";
-import { StepName } from "../custom/signup/StepName";
-import { StepPseudo } from "../custom/signup/StepPseudo";
-import { StepDob } from "../custom/signup/StepDob";
+import { GoogleSignInButton } from "../ui/custom/signup/GoogleSignInButton";
+import { StepName } from "../ui/custom/signup/StepName";
+import { StepPseudo } from "../ui/custom/signup/StepPseudo";
+import { StepDob } from "../ui/custom/signup/StepDob";
 import {
   StepExperience,
   type ExperienceStepHandle,
   type ExperienceStepMode,
-} from "../custom/signup/StepExperience";
+} from "../ui/custom/signup/StepExperience";
 import { Title } from "../ui";
 
 interface SignupWizardProps {
