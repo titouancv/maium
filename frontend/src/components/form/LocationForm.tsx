@@ -9,13 +9,13 @@ import { LocationInput } from "@/components/ui";
 import { SIGNUP_FORM_ID } from "@/constants";
 
 interface LocationFormProps {
-  onNext: (d: { location: string }) => void;
+  onChange: (d: { location: string }) => void;
   defaultValue?: string;
   onValidityChange?: (isValid: boolean) => void;
 }
 
 export const LocationForm = ({
-  onNext,
+  onChange,
   defaultValue,
   onValidityChange,
 }: LocationFormProps) => {
@@ -49,7 +49,7 @@ export const LocationForm = ({
   return (
     <form
       id={SIGNUP_FORM_ID}
-      onSubmit={handleSubmit(onNext)}
+      onSubmit={handleSubmit(onChange)}
       className="space-y-4"
     >
       <Controller

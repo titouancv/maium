@@ -8,13 +8,13 @@ import { PhoneInput } from "@/components/ui/PhoneInput";
 import { SIGNUP_FORM_ID } from "@/constants";
 
 interface PhoneNumberFormProps {
-  onNext: (d: { phone: string }) => void;
+  onChange: (d: { phone: string }) => void;
   defaultValue?: string;
   onValidityChange?: (isValid: boolean) => void;
 }
 
 export const PhoneNumberForm = ({
-  onNext,
+  onChange,
   defaultValue,
   onValidityChange,
 }: PhoneNumberFormProps) => {
@@ -31,7 +31,7 @@ export const PhoneNumberForm = ({
     resolver: zodResolver(schema),
     mode: "onChange",
     defaultValues: {
-      phone: defaultPhone ?? "",
+      phone: defaultValue ?? "",
     },
   });
 
@@ -46,7 +46,7 @@ export const PhoneNumberForm = ({
   return (
     <form
       id={SIGNUP_FORM_ID}
-      onSubmit={handleSubmit(onNext)}
+      onSubmit={handleSubmit(onChange)}
       className="space-y-4"
     >
       <Controller

@@ -6,7 +6,7 @@ import { DateInput, DateMode } from "@/components/ui/DateInput";
 interface DateRangeFormProps {
   defaultValue?: { defaultStartDate?: string; defaultEndDate?: string };
   mode?: DateMode;
-  onChange: (startDate: string, endDate: string) => void;
+  onChange: (d: { startDate: string; endDate: string }) => void;
   startError?: string;
   endError?: string;
 }
@@ -24,12 +24,12 @@ export const DateRangeForm = ({
 
   const handleStartChange = (value: string) => {
     startDate.current = value;
-    onChange(startDate.current, endDate.current);
+    onChange({ startDate: startDate.current, endDate: endDate.current });
   };
 
   const handleEndChange = (value: string) => {
     endDate.current = value;
-    onChange(startDate.current, endDate.current);
+    onChange({ startDate: startDate.current, endDate: endDate.current });
   };
 
   return (

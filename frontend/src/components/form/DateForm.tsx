@@ -10,13 +10,13 @@ import { useUserStore } from "@/stores/useUserStore";
 import { SIGNUP_FORM_ID } from "@/constants";
 
 interface DateFormProps {
-  onNext: (d: { dob: string }) => void;
+  onChange: (d: { dob: string }) => void;
   defaultValue?: string;
   onValidityChange?: (isValid: boolean) => void;
 }
 
 export const DateForm = ({
-  onNext,
+  onChange,
   defaultValue,
   onValidityChange,
 }: DateFormProps) => {
@@ -57,7 +57,7 @@ export const DateForm = ({
   return (
     <form
       id={SIGNUP_FORM_ID}
-      onSubmit={handleSubmit(onNext)}
+      onSubmit={handleSubmit(onChange)}
       className="space-y-4"
     >
       <Controller
@@ -73,7 +73,7 @@ export const DateForm = ({
                 ? (errors.dob?.message as string)
                 : undefined
             }
-            onComplete={handleSubmit(onNext)}
+            onComplete={handleSubmit(onChange)}
           />
         )}
       />

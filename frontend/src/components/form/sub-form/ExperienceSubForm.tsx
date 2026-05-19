@@ -125,14 +125,16 @@ export const ExperienceSubForm = ({
         {...baseFormProps}
         type="dateRange"
         title={t("subStep3Title")}
-        defaultStartDate={subValues.startPeriod}
-        defaultEndDate={subValues.endPeriod}
+        defaultValue={{
+          defaultStartDate: subValues.startPeriod,
+          defaultEndDate: subValues.endPeriod,
+        }}
         mode={dateMode}
-        onChange={(start, end) => {
+        onChange={({ startDate, endDate }) => {
           setSubValues((prev) => ({
             ...prev,
-            startPeriod: start,
-            endPeriod: end,
+            startPeriod: startDate,
+            endPeriod: endDate,
           }));
           setSubErrors((prev) => ({ ...prev, startPeriod: undefined }));
         }}
@@ -174,8 +176,8 @@ export const ExperienceSubForm = ({
       type="location"
       title={t("subStep6Title")}
       formId={SIGNUP_FORM_ID}
-      defaultLocation={subValues.location}
-      onNext={({ location }) => onSave({ ...subValues, location })}
+      defaultValue={subValues.location}
+      onChange={({ location }) => onSave({ ...subValues, location })}
     />
   );
 };

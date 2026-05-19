@@ -10,13 +10,13 @@ import { useUserStore } from "@/stores/useUserStore";
 import { SIGNUP_FORM_ID } from "@/constants";
 
 interface FullNameFormProps {
-  onNext: (d: { firstName: string; lastName: string }) => void;
+  onChange: (d: { firstName: string; lastName: string }) => void;
   defaultValue?: { firstName?: string; lastName?: string };
   onValidityChange?: (isValid: boolean) => void;
 }
 
 export const FullNameForm = ({
-  onNext,
+  onChange,
   defaultValue,
   onValidityChange,
 }: FullNameFormProps) => {
@@ -55,7 +55,7 @@ export const FullNameForm = ({
   return (
     <form
       id={SIGNUP_FORM_ID}
-      onSubmit={handleSubmit(onNext)}
+      onSubmit={handleSubmit(onChange)}
       className="space-y-4"
     >
       <TextInput

@@ -12,13 +12,13 @@ import { API, SIGNUP_FORM_ID } from "@/constants";
 type AvailabilityStatus = "idle" | "checking" | "available" | "taken";
 
 interface PseudoFormProps {
-  onNext: (d: { pseudo: string }) => void;
+  onChange: (d: { pseudo: string }) => void;
   defaultValue?: string;
   onValidityChange?: (isValid: boolean) => void;
 }
 
 export const PseudoForm = ({
-  onNext,
+  onChange,
   defaultValue,
   onValidityChange,
 }: PseudoFormProps) => {
@@ -112,7 +112,7 @@ export const PseudoForm = ({
   return (
     <form
       id={SIGNUP_FORM_ID}
-      onSubmit={handleSubmit(onNext)}
+      onSubmit={handleSubmit(onChange)}
       className="space-y-4"
     >
       <TextInput

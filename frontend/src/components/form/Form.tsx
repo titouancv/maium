@@ -36,106 +36,73 @@ type BaseProps = {
   cancelLabel?: string;
 };
 
-export type FormType =
-  | "date"
-  | "fullName"
-  | "hobbies"
-  | "keys"
-  | "location"
-  | "phoneNumber"
-  | "socialNetwork"
-  | "urls"
-  | "text"
-  | "longText"
-  | "dateRange"
-  | "experiences"
-  | "pseudo";
+export type FormValueMap = {
+  date: { dob: string };
+  fullName: { firstName: string; lastName: string };
+  hobbies: HobbyData[];
+  keys: string[];
+  location: { location: string };
+  phoneNumber: { phone: string };
+  socialNetwork: string[];
+  urls: string[];
+  text: string;
+  longText: string;
+  dateRange: { startDate: string; endDate: string };
+  experiences: Experience[];
+  pseudo: { pseudo: string };
+};
 
-export type FormProps =
-  | (BaseProps & {
-      type: "date";
-      onNext: (d: { dob: string }) => void;
-      defaultValue?: string;
-      onValidityChange?: (isValid: boolean) => void;
-    })
-  | (BaseProps & {
-      type: "fullName";
-      onNext: (d: { firstName: string; lastName: string }) => void;
-      defaultValue?: { firstName?: string; lastName?: string };
-      onValidityChange?: (isValid: boolean) => void;
-    })
-  | (BaseProps & {
-      type: "keys";
-      placeholder: string;
-      emptyLabel: string;
-      onChange: (keys: string[]) => void;
-      defaultValue?: string[];
-    })
-  | (BaseProps & {
-      type: "location";
-      onNext: (d: { location: string }) => void;
-      defaultValue?: string;
-      onValidityChange?: (isValid: boolean) => void;
-    })
-  | (BaseProps & {
-      type: "phoneNumber";
-      onNext: (d: { phone: string }) => void;
-      defaultValue?: string;
-      onValidityChange?: (isValid: boolean) => void;
-    })
-  | (BaseProps & {
-      type: "socialNetwork";
-      defaultValue?: string[];
-      onChange: (socialNetworks: string[]) => void;
-    })
-  | (BaseProps & {
-      type: "urls";
-      defaultValue?: string[];
-      onChange: (urls: string[]) => void;
-    })
-  | (BaseProps & {
-      type: "text";
-      placeholder: string;
-      defaultValue?: string;
-      onChange: (value: string) => void;
-      infoLabel?: string;
-      infoType?: "error" | "success" | "info";
-    })
-  | (BaseProps & {
-      type: "longText";
-      placeholder: string;
-      defaultValue?: string;
-      onChange: (value: string) => void;
-      infoLabel?: string;
-      infoType?: "error" | "success" | "info";
-      rows?: number;
-    })
-  | (BaseProps & {
-      type: "dateRange";
-      defaultValue?: { defaultStartDate?: string; defaultEndDate?: string };
-      mode?: DateMode;
-      onChange: (startDate: string, endDate: string) => void;
-      startError?: string;
-      endError?: string;
-    })
-  | (BaseProps & {
-      type: "experiences";
-      namespace: string;
-      dateMode?: "MM-YYYY" | "YYYY";
-      defaultValue?: Experience[];
-      onChange: (experiences: Experience[]) => void;
-    })
-  | (BaseProps & {
-      type: "pseudo";
-      onNext: (d: { pseudo: string }) => void;
-      defaultValue?: string;
-      onValidityChange?: (isValid: boolean) => void;
-    })
-  | (BaseProps & {
-      type: "hobbies";
-      defaultValue?: HobbyData[];
-      onChange: (hobbies: HobbyData[]) => void;
-    });
+export type FormDefaultValueMap = {
+  date: string;
+  fullName: { firstName?: string; lastName?: string };
+  hobbies: HobbyData[];
+  keys: string[];
+  location: string;
+  phoneNumber: string;
+  socialNetwork: string[];
+  urls: string[];
+  text: string;
+  longText: string;
+  dateRange: { defaultStartDate?: string; defaultEndDate?: string };
+  experiences: Experience[];
+  pseudo: string;
+};
+
+export type FormConfigMap = {
+  date: never;
+  fullName: never;
+  hobbies: never;
+  keys: { placeholder: string; emptyLabel: string };
+  location: never;
+  phoneNumber: never;
+  socialNetwork: never;
+  urls: never;
+  text: {
+    placeholder: string;
+    infoLabel?: string;
+    infoType?: "error" | "success" | "info";
+  };
+  longText: {
+    placeholder: string;
+    infoLabel?: string;
+    infoType?: "error" | "success" | "info";
+    rows?: number;
+  };
+  dateRange: { mode?: DateMode; startError?: string; endError?: string };
+  experiences: { namespace: string; dateMode?: "MM-YYYY" | "YYYY" };
+  pseudo: never;
+};
+
+export type FormType = keyof FormValueMap;
+
+export type FormProps = {
+  [K in FormType]: BaseProps & {
+    type: K;
+    defaultValue?: FormDefaultValueMap[K];
+    onChange: (value: FormValueMap[K]) => void;
+    onValidityChange?: (isValid: boolean) => void;
+  } & (FormConfigMap[K] extends never ? unknown : FormConfigMap[K]);
+}[FormType];
 
 const renderContent = (
   props: FormProps,
@@ -145,7 +112,7 @@ const renderContent = (
     case "date":
       return (
         <DateForm
-          onNext={props.onNext}
+          onChange={props.onChange}
           defaultValue={props.defaultValue}
           onValidityChange={props.onValidityChange}
         />
@@ -153,7 +120,7 @@ const renderContent = (
     case "fullName":
       return (
         <FullNameForm
-          onNext={props.onNext}
+          onChange={props.onChange}
           defaultValue={props.defaultValue}
           onValidityChange={props.onValidityChange}
         />
@@ -170,7 +137,7 @@ const renderContent = (
     case "location":
       return (
         <LocationForm
-          onNext={props.onNext}
+          onChange={props.onChange}
           defaultValue={props.defaultValue}
           onValidityChange={props.onValidityChange}
         />
@@ -178,7 +145,7 @@ const renderContent = (
     case "phoneNumber":
       return (
         <PhoneNumberForm
-          onNext={props.onNext}
+          onChange={props.onChange}
           defaultValue={props.defaultValue}
           onValidityChange={props.onValidityChange}
         />
@@ -238,7 +205,7 @@ const renderContent = (
     case "pseudo":
       return (
         <PseudoForm
-          onNext={props.onNext}
+          onChange={props.onChange}
           defaultValue={props.defaultValue}
           onValidityChange={props.onValidityChange}
         />
@@ -256,9 +223,6 @@ const renderContent = (
 
 export const Form = (props: FormProps) => {
   const [isSubFormActive, setIsSubFormActive] = useState(false);
-  const isItemListEmpty = Array.isArray(props.defaultValue)
-    ? props.defaultValue.length === 0
-    : false;
 
   const baseProps: BaseProps = {
     title: props.title,
