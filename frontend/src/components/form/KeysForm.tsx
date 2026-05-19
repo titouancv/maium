@@ -7,21 +7,21 @@ import { ChipList } from "@/components/ui/ChipList";
 import { Button } from "@/components/ui/Button";
 
 interface KeysFormProps {
-  defaultKeys?: string[];
+  defaultValue?: string[];
   placeholder: string;
   emptyLabel: string;
   onChange: (keys: string[]) => void;
 }
 
 export const KeysForm = ({
-  defaultKeys,
+  defaultValue,
   placeholder,
   emptyLabel,
   onChange,
 }: KeysFormProps) => {
   const tCommon = useTranslations("common");
 
-  const [items, setItems] = useState<string[]>(defaultKeys ?? []);
+  const [items, setItems] = useState<string[]>(defaultValue ?? []);
   const [draft, setDraft] = useState("");
 
   const handleAdd = () => {

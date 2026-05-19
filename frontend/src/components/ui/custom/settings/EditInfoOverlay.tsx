@@ -1,28 +1,13 @@
 "use client";
 
 import { useState } from "react";
-import { useForm, useFieldArray, Controller } from "react-hook-form";
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { useTranslations } from "next-intl";
 import { API, SIGNUP_FORM_ID } from "@/constants";
-import { LocationInput } from "@/components/ui/LocationInput";
-import { NationalityInput } from "@/components/ui/NationalityInput";
-import { PhoneInput } from "@/components/ui/PhoneInput";
-import { StepLayout } from "@/components/layout/StepLayout";
-import { StepName, StepPseudo, StepDob } from "@/components/ui/custom/signup";
-import {
-  ExperienceList,
-  ExperienceSubWizard,
-} from "@/components/ui/custom/experience";
-import { HobbySubForm } from "./HobbySubForm";
-import { HobbyList } from "./HobbyList";
-import { SkillsField } from "./SkillsField";
-import { UrlListField } from "./UrlListField";
+import { Form } from "@/components/form";
+import type { FormProps } from "@/components/form";
 import type { UserData } from "@/types/user";
-import type { ExperienceFormData } from "@/types/experience";
-import type { UserState } from "@/stores/useUserStore";
-import type { HobbyData } from "./HobbySubForm";
+import type { Experience } from "@/types/experience";
+import type { HobbyData } from "@/components/ui/custom/settings/HobbySubForm";
 
 export type EditableField =
   | "name"
@@ -46,8 +31,6 @@ interface Props {
   onSaved: () => void;
 }
 
-const textSchema = z.object({ value: z.string().min(1) });
-
 export const EditInfoOverlay = ({ field, user, onClose, onSaved }: Props) => {
   const t = useTranslations("settings");
   const tCommon = useTranslations("common");
@@ -55,81 +38,27 @@ export const EditInfoOverlay = ({ field, user, onClose, onSaved }: Props) => {
   const [isSaving, setIsSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isFormValid, setIsFormValid] = useState(false);
-  const [editingExperienceIndex, setEditingExperienceIndex] = useState<
-    number | "new" | null
-  >(null);
 
-  const [strItems, setStrItems] = useState<string[]>(
-    field === "skills"
-      ? (user.skills ?? [])
-      : field === "socialNetworks"
-        ? (user.social_networks ?? [])
-        : field === "projects"
-          ? (user.projects ?? [])
-          : [],
+  const [currentExperiences, setCurrentExperiences] = useState<Experience[]>(
+    () => {
+      if (field === "professionalExperiences")
+        return user.professional_experiences ?? [];
+      if (field === "educationalExperiences")
+        return user.educational_experiences ?? [];
+      if (field === "personalExperiences")
+        return user.personal_experiences ?? [];
+      return [];
+    },
   );
-  const [strDraft, setStrDraft] = useState("");
-  const [strDraftError, setStrDraftError] = useState<string | null>(null);
-
-  const [hobbyItems, setHobbyItems] = useState<HobbyData[]>(user.hobbies ?? []);
-  const [editingHobbyIndex, setEditingHobbyIndex] = useState<
-    number | "new" | null
-  >(null);
-
-  const {
-    control: textControl,
-    handleSubmit: handleTextSubmit,
-    formState: { isValid: isTextValid },
-  } = useForm({
-    resolver: zodResolver(textSchema),
-    mode: "onChange",
-    defaultValues: {
-      value:
-        field === "phone"
-          ? (user.phone ?? "")
-          : field === "nationality"
-            ? (user.nationality ?? "")
-            : (user.location ?? ""),
-    },
+  const [currentStrItems, setCurrentStrItems] = useState<string[]>(() => {
+    if (field === "skills") return user.skills ?? [];
+    if (field === "socialNetworks") return user.social_networks ?? [];
+    if (field === "projects") return user.projects ?? [];
+    return [];
   });
-
-  const { control: expControl, getValues: getExpValues } = useForm<{
-    items: Record<string, string>[];
-  }>({
-    defaultValues: {
-      items: (field === "professionalExperiences"
-        ? (user.professional_experiences ?? [])
-        : field === "educationalExperiences"
-          ? (user.educational_experiences ?? [])
-          : (user.personal_experiences ?? [])
-      ).map((e) => ({
-        organization: e.organization ?? "",
-        role: e.role ?? "",
-        startPeriod: e.startPeriod ?? "",
-        endPeriod: e.endPeriod ?? "",
-        description: e.description ?? "",
-        website: e.website ?? "",
-        location: e.location ?? "",
-      })),
-    },
-  });
-  const {
-    fields: expFields,
-    append: appendExp,
-    update: updateExp,
-    remove: removeExp,
-  } = useFieldArray({ control: expControl, name: "items" });
-
-  const isSimpleStepField = ["name", "pseudo", "dob"].includes(field);
-  const isTextInputField = ["phone", "nationality", "location"].includes(field);
-  const isExperienceField = [
-    "professionalExperiences",
-    "educationalExperiences",
-    "personalExperiences",
-  ].includes(field);
-  const isSkillsField = field === "skills";
-  const isUrlListField = ["socialNetworks", "projects"].includes(field);
-  const isHobbiesField = field === "hobbies";
+  const [currentHobbies, setCurrentHobbies] = useState<HobbyData[]>(
+    user.hobbies ?? [],
+  );
 
   const save = async (payload: Record<string, unknown>) => {
     setIsSaving(true);
@@ -154,135 +83,6 @@ export const EditInfoOverlay = ({ field, user, onClose, onSaved }: Props) => {
     }
   };
 
-  const handleName = (d: Partial<UserState>) =>
-    save({ firstName: d.firstName, lastName: d.lastName });
-  const handlePseudo = (d: Partial<UserState>) => save({ pseudo: d.pseudo });
-  const handleDob = (d: Partial<UserState>) => save({ dob: d.dob });
-
-  const handleTextSave = () =>
-    handleTextSubmit(({ value }) => save({ [field]: value }))();
-
-  const handleSaveExperiences = () => {
-    const key =
-      field === "professionalExperiences"
-        ? "professionalExperiences"
-        : field === "educationalExperiences"
-          ? "educationalExperiences"
-          : "personalExperiences";
-    save({
-      [key]: getExpValues("items").map((item) => ({
-        organization: item.organization,
-        role: item.role,
-        startPeriod: item.startPeriod,
-        endPeriod: item.endPeriod || undefined,
-        description: item.description || undefined,
-        website: item.website || undefined,
-        location: item.location || undefined,
-      })),
-    });
-  };
-
-  const handleExperienceSave = (data: ExperienceFormData) => {
-    const entry = {
-      organization: data.organization,
-      role: data.role,
-      startPeriod: data.startPeriod,
-      endPeriod: data.endPeriod ?? "",
-      description: data.description ?? "",
-      website: data.website ?? "",
-      location: data.location ?? "",
-    };
-    if (editingExperienceIndex === "new") appendExp(entry);
-    else if (typeof editingExperienceIndex === "number")
-      updateExp(editingExperienceIndex, entry);
-    setEditingExperienceIndex(null);
-  };
-
-  const handleExperienceDelete = () => {
-    if (typeof editingExperienceIndex === "number")
-      removeExp(editingExperienceIndex);
-    setEditingExperienceIndex(null);
-  };
-
-  const handleAddStrItem = () => {
-    const val = strDraft.trim();
-    if (!val) return;
-    if (isUrlListField) {
-      const result = z.url().safeParse(val);
-      if (!result.success) {
-        setStrDraftError(t("urlInvalid"));
-        return;
-      }
-    }
-    setStrItems([...strItems, val]);
-    setStrDraft("");
-    setStrDraftError(null);
-  };
-
-  const handleSaveStrItems = () => {
-    if (field === "skills") save({ skills: strItems });
-    else if (field === "socialNetworks") save({ socialNetworks: strItems });
-    else if (field === "projects") save({ projects: strItems });
-  };
-
-  const handleHobbySave = (data: HobbyData) => {
-    if (editingHobbyIndex === "new") setHobbyItems([...hobbyItems, data]);
-    else if (typeof editingHobbyIndex === "number")
-      setHobbyItems(
-        hobbyItems.map((h, i) => (i === editingHobbyIndex ? data : h)),
-      );
-    setEditingHobbyIndex(null);
-  };
-
-  const handleHobbyDelete = () => {
-    if (typeof editingHobbyIndex === "number")
-      setHobbyItems(hobbyItems.filter((_, i) => i !== editingHobbyIndex));
-    setEditingHobbyIndex(null);
-  };
-
-  const namespace =
-    field === "educationalExperiences"
-      ? "experience.educational"
-      : "experience.professional";
-
-  const primaryHandler = isTextInputField
-    ? handleTextSave
-    : isExperienceField
-      ? handleSaveExperiences
-      : isSkillsField || isUrlListField
-        ? handleSaveStrItems
-        : isHobbiesField
-          ? () => save({ hobbies: hobbyItems })
-          : undefined;
-
-  const primaryDisabled = isSimpleStepField
-    ? !isFormValid
-    : isTextInputField
-      ? !isTextValid
-      : false;
-
-  const secondaryLabel =
-    isExperienceField || isHobbiesField
-      ? tCommon("addButton")
-      : isTextInputField
-        ? t("deleteButton")
-        : undefined;
-
-  const textFieldHasValue =
-    field === "phone"
-      ? !!user.phone
-      : field === "nationality"
-        ? !!user.nationality
-        : !!user.location;
-
-  const secondaryHandler = isExperienceField
-    ? () => setEditingExperienceIndex("new")
-    : isHobbiesField
-      ? () => setEditingHobbyIndex("new")
-      : isTextInputField && textFieldHasValue
-        ? () => save({ [field]: null })
-        : undefined;
-
   const overlayTitle: Record<EditableField, string> = {
     name: t("editName"),
     pseudo: t("editPseudo"),
@@ -299,208 +99,168 @@ export const EditInfoOverlay = ({ field, user, onClose, onSaved }: Props) => {
     projects: t("editProjects"),
   };
 
-  if (isExperienceField && editingExperienceIndex !== null) {
-    return (
-      <div className="bg-surface-50 fixed inset-0 z-50">
-        <ExperienceSubWizard
-          namespace={namespace}
-          dateMode="MM-YYYY"
-          initialData={
-            typeof editingExperienceIndex === "number"
-              ? (() => {
-                  const item = getExpValues("items")[editingExperienceIndex];
-                  return {
-                    organization: item.organization,
-                    role: item.role,
-                    startPeriod: item.startPeriod,
-                    endPeriod: item.endPeriod || undefined,
-                    description: item.description || undefined,
-                    website: item.website || undefined,
-                    location: item.location || undefined,
-                  };
-                })()
-              : undefined
-          }
-          onSave={handleExperienceSave}
-          onCancel={() => setEditingExperienceIndex(null)}
-          onDelete={
-            typeof editingExperienceIndex === "number"
-              ? handleExperienceDelete
-              : undefined
-          }
-        />
-      </div>
-    );
-  }
+  const base = {
+    title: overlayTitle[field],
+    step: 1,
+    totalSteps: 1,
+    isCancelable: true,
+    onCancel: onClose,
+    cancelLabel: tCommon("cancelButton"),
+    primaryLabel: t("saveButton"),
+    primaryLoading: isSaving,
+    errorLabel: error ?? undefined,
+  };
 
-  if (isHobbiesField && editingHobbyIndex !== null) {
-    return (
-      <div className="bg-surface-50 fixed inset-0 z-50">
-        <HobbySubForm
-          initialData={
-            typeof editingHobbyIndex === "number"
-              ? hobbyItems[editingHobbyIndex]
-              : undefined
-          }
-          onSave={handleHobbySave}
-          onCancel={() => setEditingHobbyIndex(null)}
-          onDelete={
-            typeof editingHobbyIndex === "number"
-              ? handleHobbyDelete
-              : undefined
-          }
-        />
-      </div>
-    );
-  }
+  const getFormProps = (): FormProps => {
+    switch (field) {
+      case "name":
+        return {
+          ...base,
+          type: "fullName",
+          formId: SIGNUP_FORM_ID,
+          onNext: (d) => save({ firstName: d.firstName, lastName: d.lastName }),
+          defaultValue: {
+            firstName: user.first_name,
+            lastName: user.last_name,
+          },
+          onValidityChange: setIsFormValid,
+          primaryDisabled: !isFormValid,
+        };
+      case "pseudo":
+        return {
+          ...base,
+          type: "pseudo",
+          formId: SIGNUP_FORM_ID,
+          onNext: (d) => save({ pseudo: d.pseudo }),
+          defaultValue: user.pseudo,
+          onValidityChange: setIsFormValid,
+          primaryDisabled: !isFormValid,
+        };
+      case "dob":
+        return {
+          ...base,
+          type: "date",
+          formId: SIGNUP_FORM_ID,
+          onNext: (d) => save({ dob: d.dob }),
+          defaultValue: user.dob,
+          onValidityChange: setIsFormValid,
+          primaryDisabled: !isFormValid,
+        };
+      case "phone":
+        return {
+          ...base,
+          type: "phoneNumber",
+          formId: SIGNUP_FORM_ID,
+          onNext: (d) => save({ phone: d.phone }),
+          defaultValue: user.phone ?? "",
+          onValidityChange: setIsFormValid,
+          primaryDisabled: !isFormValid,
+          secondaryLabel: user.phone ? t("deleteButton") : undefined,
+          onSecondary: user.phone ? () => save({ phone: null }) : undefined,
+        };
+      case "nationality":
+        return {
+          ...base,
+          type: "location",
+          formId: SIGNUP_FORM_ID,
+          onNext: (d) => save({ nationality: d.location }),
+          defaultValue: user.nationality ?? "",
+          onValidityChange: setIsFormValid,
+          primaryDisabled: !isFormValid,
+          secondaryLabel: user.nationality ? t("deleteButton") : undefined,
+          onSecondary: user.nationality
+            ? () => save({ nationality: null })
+            : undefined,
+          centerContent: false,
+        };
+      case "location":
+        return {
+          ...base,
+          type: "location",
+          formId: SIGNUP_FORM_ID,
+          onNext: (d) => save({ location: d.location }),
+          defaultValue: user.location ?? "",
+          onValidityChange: setIsFormValid,
+          primaryDisabled: !isFormValid,
+          secondaryLabel: user.location ? t("deleteButton") : undefined,
+          onSecondary: user.location
+            ? () => save({ location: null })
+            : undefined,
+          centerContent: false,
+        };
+      case "professionalExperiences":
+        return {
+          ...base,
+          type: "experiences",
+          namespace: "experience.professional",
+          dateMode: "MM-YYYY",
+          defaultValue: user.professional_experiences ?? [],
+          onChange: (exps) => setCurrentExperiences(exps),
+          onPrimary: () =>
+            save({ professionalExperiences: currentExperiences }),
+        };
+      case "educationalExperiences":
+        return {
+          ...base,
+          type: "experiences",
+          namespace: "experience.educational",
+          dateMode: "MM-YYYY",
+          defaultValue: user.educational_experiences ?? [],
+          onChange: (exps) => setCurrentExperiences(exps),
+          onPrimary: () => save({ educationalExperiences: currentExperiences }),
+        };
+      case "personalExperiences":
+        return {
+          ...base,
+          type: "experiences",
+          namespace: "experience.professional",
+          dateMode: "MM-YYYY",
+          defaultValue: user.personal_experiences ?? [],
+          onChange: (exps) => setCurrentExperiences(exps),
+          onPrimary: () => save({ personalExperiences: currentExperiences }),
+        };
+      case "skills":
+        return {
+          ...base,
+          type: "keys",
+          placeholder: t("skills"),
+          emptyLabel: t("noSkills"),
+          defaultValue: user.skills ?? [],
+          onChange: (items) => setCurrentStrItems(items),
+          onPrimary: () => save({ skills: currentStrItems }),
+        };
+      case "socialNetworks":
+        return {
+          ...base,
+          type: "socialNetwork",
+          defaultValue: user.social_networks ?? [],
+          onChange: (items) => setCurrentStrItems(items),
+          onPrimary: () => save({ socialNetworks: currentStrItems }),
+          centerContent: false,
+        };
+      case "projects":
+        return {
+          ...base,
+          type: "urls",
+          defaultValue: user.projects ?? [],
+          onChange: (items) => setCurrentStrItems(items),
+          onPrimary: () => save({ projects: currentStrItems }),
+          centerContent: false,
+        };
+      case "hobbies":
+        return {
+          ...base,
+          type: "hobbies",
+          defaultValue: user.hobbies ?? [],
+          onChange: (hobbies) => setCurrentHobbies(hobbies),
+          onPrimary: () => save({ hobbies: currentHobbies }),
+        };
+    }
+  };
 
   return (
     <div className="bg-surface-50 fixed inset-0 z-50">
-      <StepLayout
-        title={overlayTitle[field]}
-        step={1}
-        totalSteps={1}
-        isCancelable
-        onCancel={onClose}
-        cancelLabel={tCommon("cancelButton")}
-        primaryLabel={t("saveButton")}
-        formId={isSimpleStepField ? SIGNUP_FORM_ID : undefined}
-        onPrimary={primaryHandler}
-        primaryDisabled={primaryDisabled}
-        primaryLoading={isSaving}
-        secondaryLabel={secondaryLabel}
-        onSecondary={secondaryHandler}
-        centerContent={
-          field === "location" || field === "nationality" || isUrlListField
-            ? false
-            : undefined
-        }
-      >
-        {field === "name" && (
-          <StepName
-            onNext={handleName}
-            defaultFirstName={user.first_name}
-            defaultLastName={user.last_name}
-            onValidityChange={setIsFormValid}
-          />
-        )}
-        {field === "pseudo" && (
-          <StepPseudo
-            onNext={handlePseudo}
-            defaultPseudo={user.pseudo}
-            onValidityChange={setIsFormValid}
-          />
-        )}
-        {field === "dob" && (
-          <StepDob
-            onNext={handleDob}
-            defaultDob={user.dob}
-            onValidityChange={setIsFormValid}
-          />
-        )}
-        {field === "phone" && (
-          <Controller
-            control={textControl}
-            name="value"
-            render={({ field: f }) => (
-              <PhoneInput
-                value={f.value}
-                onChange={f.onChange}
-                onBlur={f.onBlur}
-                autoFocus
-              />
-            )}
-          />
-        )}
-        {field === "nationality" && (
-          <Controller
-            control={textControl}
-            name="value"
-            render={({ field: f }) => (
-              <NationalityInput
-                placeholder={t("nationalityPlaceholder")}
-                value={f.value}
-                onChange={f.onChange}
-                onBlur={f.onBlur}
-                autoFocus
-              />
-            )}
-          />
-        )}
-        {field === "location" && (
-          <Controller
-            control={textControl}
-            name="value"
-            render={({ field: f }) => (
-              <LocationInput
-                placeholder={t("locationPlaceholder")}
-                value={f.value}
-                onChange={f.onChange}
-                onBlur={f.onBlur}
-                autoFocus
-              />
-            )}
-          />
-        )}
-        {isExperienceField &&
-          (expFields.length === 0 ? (
-            <p className="text-txt-muted text-sm">{t("noExperiences")}</p>
-          ) : (
-            <ExperienceList
-              fields={expFields}
-              control={expControl}
-              getDisplay={(item) => ({
-                organization: item.organization ?? "",
-                role: item.role ?? "",
-                startPeriod: item.startPeriod ?? "",
-                endPeriod: item.endPeriod || undefined,
-                description: item.description ?? "",
-                website: item.website ?? "",
-                location: item.location ?? "",
-              })}
-              onEdit={(index) => setEditingExperienceIndex(index)}
-            />
-          ))}
-        {isSkillsField && (
-          <SkillsField
-            items={strItems}
-            draft={strDraft}
-            draftError={strDraftError}
-            onDraftChange={(val) => {
-              setStrDraft(val);
-              setStrDraftError(null);
-            }}
-            onAdd={handleAddStrItem}
-            onRemove={(i) =>
-              setStrItems(strItems.filter((_, idx) => idx !== i))
-            }
-          />
-        )}
-        {isUrlListField && (
-          <UrlListField
-            items={strItems}
-            draft={strDraft}
-            draftError={strDraftError}
-            onDraftChange={(val) => {
-              setStrDraft(val);
-              setStrDraftError(null);
-            }}
-            onAdd={handleAddStrItem}
-            onRemove={(i) =>
-              setStrItems(strItems.filter((_, idx) => idx !== i))
-            }
-            isSocialNetwork={field === "socialNetworks"}
-          />
-        )}
-        {isHobbiesField && (
-          <HobbyList
-            items={hobbyItems}
-            onEdit={setEditingHobbyIndex}
-            emptyLabel={t("noHobbies")}
-          />
-        )}
-        {error && <p className="text-error mt-4 text-sm">{error}</p>}
-      </StepLayout>
+      <Form {...getFormProps()} />
     </div>
   );
 };

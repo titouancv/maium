@@ -6,17 +6,17 @@ import { useTranslations } from "next-intl";
 import { UrlListField } from "@/components/ui/custom/settings/UrlListField";
 
 interface SocialNetworkFormProps {
-  defaultSocialNetworks?: string[];
+  defaultValue?: string[];
   onChange: (socialNetworks: string[]) => void;
 }
 
 export const SocialNetworkForm = ({
-  defaultSocialNetworks,
+  defaultValue,
   onChange,
 }: SocialNetworkFormProps) => {
   const t = useTranslations("settings");
 
-  const [items, setItems] = useState<string[]>(defaultSocialNetworks ?? []);
+  const [items, setItems] = useState<string[]>(defaultValue ?? []);
   const [draft, setDraft] = useState("");
   const [draftError, setDraftError] = useState<string | null>(null);
 

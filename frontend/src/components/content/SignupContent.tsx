@@ -6,7 +6,7 @@ import { useTranslations } from "next-intl";
 import { useRouter } from "@/i18n/navigation";
 import { useUserStore, type UserState } from "@/stores/useUserStore";
 import { ROUTES, API, SIGNUP_FORM_ID } from "@/constants";
-import { StepLayout } from "../layout/StepLayout";
+import { FormLayout } from "../layout/FormLayout";
 import { GoogleSignInButton } from "../ui/custom/signup/GoogleSignInButton";
 import { StepName } from "../ui/custom/signup/StepName";
 import { StepPseudo } from "../ui/custom/signup/StepPseudo";
@@ -183,7 +183,7 @@ export const SignupWizard = ({
           <GoogleSignInButton />
         </div>
       ) : (
-        <StepLayout
+        <FormLayout
           title={stepTitles[step] ?? t("title")}
           step={step}
           totalSteps={TOTAL_STEPS}
@@ -233,7 +233,7 @@ export const SignupWizard = ({
             />
           )}
           {error && <p className="text-error text-sm">{error}</p>}
-        </StepLayout>
+        </FormLayout>
       )}
     </>
   );

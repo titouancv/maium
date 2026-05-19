@@ -1,2 +1,2 @@
-export * from "./StepLayout";
+export * from "./FormLayout";
 export * from "./PageLayout";

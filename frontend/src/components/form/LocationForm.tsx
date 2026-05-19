@@ -5,18 +5,18 @@ import { useForm, Controller } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useTranslations } from "next-intl";
-import { LocationInput } from "@/components/ui/LocationInput";
+import { LocationInput } from "@/components/ui";
 import { SIGNUP_FORM_ID } from "@/constants";
 
 interface LocationFormProps {
   onNext: (d: { location: string }) => void;
-  defaultLocation?: string;
+  defaultValue?: string;
   onValidityChange?: (isValid: boolean) => void;
 }
 
 export const LocationForm = ({
   onNext,
-  defaultLocation,
+  defaultValue,
   onValidityChange,
 }: LocationFormProps) => {
   const t = useTranslations("settings");
@@ -34,7 +34,7 @@ export const LocationForm = ({
     resolver: zodResolver(schema),
     mode: "onChange",
     defaultValues: {
-      location: defaultLocation ?? "",
+      location: defaultValue ?? "",
     },
   });
 

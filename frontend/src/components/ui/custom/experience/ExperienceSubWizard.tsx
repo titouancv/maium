@@ -7,8 +7,8 @@ import { useTranslations } from "next-intl";
 import { TextInput } from "@/components/ui/TextInput";
 import { TextArea } from "@/components/ui/TextArea";
 import { DateInput } from "@/components/ui/DateInput";
-import { LocationInput } from "@/components/ui/LocationInput";
-import { StepLayout } from "@/components/layout/StepLayout";
+import { LocationInput } from "@/components/ui";
+import { FormLayout } from "@/components/layout/FormLayout";
 import { makeExperienceFormSchema } from "@/lib/validators/user";
 import type { ExperienceFormData } from "@/types/experience";
 
@@ -86,7 +86,7 @@ export const ExperienceSubWizard = ({
   ];
 
   return (
-    <StepLayout
+    <FormLayout
       title={titles[subStep - 1]}
       step={subStep}
       totalSteps={TOTAL}
@@ -223,6 +223,6 @@ export const ExperienceSubWizard = ({
           />
         )}
       </div>
-    </StepLayout>
+    </FormLayout>
   );
 };

@@ -6,14 +6,14 @@ import { useTranslations } from "next-intl";
 import { UrlListField } from "@/components/ui/custom/settings/UrlListField";
 
 interface UrlsFormProps {
-  defaultUrls?: string[];
+  defaultValue?: string[];
   onChange: (urls: string[]) => void;
 }
 
-export const UrlsForm = ({ defaultUrls, onChange }: UrlsFormProps) => {
+export const UrlsForm = ({ defaultValue, onChange }: UrlsFormProps) => {
   const t = useTranslations("settings");
 
-  const [items, setItems] = useState<string[]>(defaultUrls ?? []);
+  const [items, setItems] = useState<string[]>(defaultValue ?? []);
   const [draft, setDraft] = useState("");
   const [draftError, setDraftError] = useState<string | null>(null);
 

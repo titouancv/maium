@@ -9,13 +9,13 @@ import { SIGNUP_FORM_ID } from "@/constants";
 
 interface PhoneNumberFormProps {
   onNext: (d: { phone: string }) => void;
-  defaultPhone?: string;
+  defaultValue?: string;
   onValidityChange?: (isValid: boolean) => void;
 }
 
 export const PhoneNumberForm = ({
   onNext,
-  defaultPhone,
+  defaultValue,
   onValidityChange,
 }: PhoneNumberFormProps) => {
   const schema = z.object({

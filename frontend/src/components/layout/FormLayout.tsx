@@ -23,7 +23,7 @@ interface StepLayoutProps {
   children: React.ReactNode;
 }
 
-export const StepLayout = ({
+export const FormLayout = ({
   title,
   step,
   totalSteps,

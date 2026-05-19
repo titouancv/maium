@@ -4,8 +4,7 @@ import { useRef } from "react";
 import { DateInput, DateMode } from "@/components/ui/DateInput";
 
 interface DateRangeFormProps {
-  defaultStartDate?: string;
-  defaultEndDate?: string;
+  defaultValue?: { defaultStartDate?: string; defaultEndDate?: string };
   mode?: DateMode;
   onChange: (startDate: string, endDate: string) => void;
   startError?: string;
@@ -13,16 +12,15 @@ interface DateRangeFormProps {
 }
 
 export const DateRangeForm = ({
-  defaultStartDate = "",
-  defaultEndDate = "",
+  defaultValue = { defaultStartDate: "", defaultEndDate: "" },
   mode = "MM-YYYY",
   onChange,
   startError,
   endError,
 }: DateRangeFormProps) => {
   const endRef = useRef<HTMLInputElement>(null);
-  const startDate = useRef(defaultStartDate);
-  const endDate = useRef(defaultEndDate);
+  const startDate = useRef(defaultValue.defaultStartDate ?? "");
+  const endDate = useRef(defaultValue.defaultEndDate ?? "");
 
   const handleStartChange = (value: string) => {
     startDate.current = value;
@@ -38,7 +36,7 @@ export const DateRangeForm = ({
     <div className="flex w-full gap-2">
       <DateInput
         mode={mode}
-        value={defaultStartDate}
+        value={defaultValue.defaultStartDate}
         onChange={handleStartChange}
         error={startError}
         autoFocus
@@ -48,7 +46,7 @@ export const DateRangeForm = ({
       <DateInput
         ref={endRef}
         mode={mode}
-        value={defaultEndDate}
+        value={defaultValue.defaultEndDate}
         onChange={handleEndChange}
         error={endError}
       />

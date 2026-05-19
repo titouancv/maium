@@ -12,7 +12,7 @@ import type { Experience } from "@/types/experience";
 interface ExperiencesFormProps {
   namespace: string;
   dateMode?: "MM-YYYY" | "YYYY";
-  defaultExperiences?: Experience[];
+  defaultValue?: Experience[];
   onChange: (experiences: Experience[]) => void;
   onSubFormChange?: (active: boolean) => void;
 }
@@ -23,7 +23,7 @@ type FormItems = { items: ItemRecord[] };
 export const ExperiencesForm = ({
   namespace,
   dateMode = "MM-YYYY",
-  defaultExperiences,
+  defaultValue,
   onChange,
   onSubFormChange,
 }: ExperiencesFormProps) => {
@@ -32,7 +32,7 @@ export const ExperiencesForm = ({
 
   const { control, getValues } = useForm<FormItems>({
     defaultValues: {
-      items: (defaultExperiences ?? []).map((e) => ({
+      items: (defaultValue ?? []).map((e) => ({
         organization: e.organization ?? "",
         role: e.role ?? "",
         startPeriod: e.startPeriod ?? "",

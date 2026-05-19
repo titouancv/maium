@@ -13,13 +13,13 @@ type AvailabilityStatus = "idle" | "checking" | "available" | "taken";
 
 interface PseudoFormProps {
   onNext: (d: { pseudo: string }) => void;
-  defaultPseudo?: string;
+  defaultValue?: string;
   onValidityChange?: (isValid: boolean) => void;
 }
 
 export const PseudoForm = ({
   onNext,
-  defaultPseudo,
+  defaultValue,
   onValidityChange,
 }: PseudoFormProps) => {
   const t = useTranslations("auth.signup.step3");
@@ -40,7 +40,7 @@ export const PseudoForm = ({
     resolver: zodResolver(schema),
     mode: "onChange",
     defaultValues: {
-      pseudo: user?.pseudo || defaultPseudo || "",
+      pseudo: user?.pseudo || defaultValue || "",
     },
   });
 
@@ -60,7 +60,7 @@ export const PseudoForm = ({
       return () => clearTimeout(timer);
     }
 
-    if (pseudo === user?.pseudo || pseudo === defaultPseudo) {
+    if (pseudo === user?.pseudo || pseudo === defaultValue) {
       const timer = setTimeout(() => {
         setAvailabilityStatus("available");
         clearErrors("pseudo");
@@ -88,7 +88,7 @@ export const PseudoForm = ({
     }, 500);
 
     return () => clearTimeout(timer);
-  }, [pseudo, user?.pseudo, defaultPseudo, clearErrors, setError, t]);
+  }, [pseudo, user?.pseudo, defaultValue, clearErrors, setError, t]);
 
   useEffect(() => {
     onValidityChange?.(isValid && availabilityStatus === "available");

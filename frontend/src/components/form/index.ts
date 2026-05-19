@@ -1,5 +1,6 @@
 export { Form } from "./Form";
-export type { FormType } from "./Form";
+export type { FormType, FormProps } from "./Form";
+export { HobbiesForm } from "./HobbiesForm";
 export { PseudoForm } from "./PseudoForm";
 export { DateForm } from "./DateForm";
 export { FullNameForm } from "./FullNameForm";

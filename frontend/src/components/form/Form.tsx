@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { StepLayout } from "@/components/layout/StepLayout";
+import { FormLayout } from "@/components/layout/FormLayout";
 import { DateForm } from "./DateForm";
 import { FullNameForm } from "./FullNameForm";
 import { KeysForm } from "./KeysForm";
@@ -13,7 +13,9 @@ import { TextForm } from "./TextForm";
 import { LongTextForm } from "./LongTextForm";
 import { DateRangeForm } from "./DateRangeForm";
 import { ExperiencesForm } from "./ExperiencesForm";
+import { HobbiesForm } from "./HobbiesForm";
 import { PseudoForm } from "./PseudoForm";
+import type { HobbyData } from "@/components/ui/custom/settings/HobbySubForm";
 import type { DateMode } from "@/components/ui/DateInput";
 import type { Experience } from "@/types/experience";
 
@@ -37,6 +39,7 @@ type BaseProps = {
 export type FormType =
   | "date"
   | "fullName"
+  | "hobbies"
   | "keys"
   | "location"
   | "phoneNumber"
@@ -48,18 +51,17 @@ export type FormType =
   | "experiences"
   | "pseudo";
 
-type FormProps =
+export type FormProps =
   | (BaseProps & {
       type: "date";
       onNext: (d: { dob: string }) => void;
-      defaultDob?: string;
+      defaultValue?: string;
       onValidityChange?: (isValid: boolean) => void;
     })
   | (BaseProps & {
       type: "fullName";
       onNext: (d: { firstName: string; lastName: string }) => void;
-      defaultFirstName?: string;
-      defaultLastName?: string;
+      defaultValue?: { firstName?: string; lastName?: string };
       onValidityChange?: (isValid: boolean) => void;
     })
   | (BaseProps & {
@@ -67,28 +69,28 @@ type FormProps =
       placeholder: string;
       emptyLabel: string;
       onChange: (keys: string[]) => void;
-      defaultKeys?: string[];
+      defaultValue?: string[];
     })
   | (BaseProps & {
       type: "location";
       onNext: (d: { location: string }) => void;
-      defaultLocation?: string;
+      defaultValue?: string;
       onValidityChange?: (isValid: boolean) => void;
     })
   | (BaseProps & {
       type: "phoneNumber";
       onNext: (d: { phone: string }) => void;
-      defaultPhone?: string;
+      defaultValue?: string;
       onValidityChange?: (isValid: boolean) => void;
     })
   | (BaseProps & {
       type: "socialNetwork";
-      defaultSocialNetworks?: string[];
+      defaultValue?: string[];
       onChange: (socialNetworks: string[]) => void;
     })
   | (BaseProps & {
       type: "urls";
-      defaultUrls?: string[];
+      defaultValue?: string[];
       onChange: (urls: string[]) => void;
     })
   | (BaseProps & {
@@ -110,8 +112,7 @@ type FormProps =
     })
   | (BaseProps & {
       type: "dateRange";
-      defaultStartDate?: string;
-      defaultEndDate?: string;
+      defaultValue?: { defaultStartDate?: string; defaultEndDate?: string };
       mode?: DateMode;
       onChange: (startDate: string, endDate: string) => void;
       startError?: string;
@@ -121,14 +122,19 @@ type FormProps =
       type: "experiences";
       namespace: string;
       dateMode?: "MM-YYYY" | "YYYY";
-      defaultExperiences?: Experience[];
+      defaultValue?: Experience[];
       onChange: (experiences: Experience[]) => void;
     })
   | (BaseProps & {
       type: "pseudo";
       onNext: (d: { pseudo: string }) => void;
-      defaultPseudo?: string;
+      defaultValue?: string;
       onValidityChange?: (isValid: boolean) => void;
+    })
+  | (BaseProps & {
+      type: "hobbies";
+      defaultValue?: HobbyData[];
+      onChange: (hobbies: HobbyData[]) => void;
     });
 
 const renderContent = (
@@ -140,7 +146,7 @@ const renderContent = (
       return (
         <DateForm
           onNext={props.onNext}
-          defaultDob={props.defaultDob}
+          defaultValue={props.defaultValue}
           onValidityChange={props.onValidityChange}
         />
       );
@@ -148,8 +154,7 @@ const renderContent = (
       return (
         <FullNameForm
           onNext={props.onNext}
-          defaultFirstName={props.defaultFirstName}
-          defaultLastName={props.defaultLastName}
+          defaultValue={props.defaultValue}
           onValidityChange={props.onValidityChange}
         />
       );
@@ -159,14 +164,14 @@ const renderContent = (
           placeholder={props.placeholder}
           emptyLabel={props.emptyLabel}
           onChange={props.onChange}
-          defaultKeys={props.defaultKeys}
+          defaultValue={props.defaultValue}
         />
       );
     case "location":
       return (
         <LocationForm
           onNext={props.onNext}
-          defaultLocation={props.defaultLocation}
+          defaultValue={props.defaultValue}
           onValidityChange={props.onValidityChange}
         />
       );
@@ -174,20 +179,20 @@ const renderContent = (
       return (
         <PhoneNumberForm
           onNext={props.onNext}
-          defaultPhone={props.defaultPhone}
+          defaultValue={props.defaultValue}
           onValidityChange={props.onValidityChange}
         />
       );
     case "socialNetwork":
       return (
         <SocialNetworkForm
-          defaultSocialNetworks={props.defaultSocialNetworks}
+          defaultValue={props.defaultValue}
           onChange={props.onChange}
         />
       );
     case "urls":
       return (
-        <UrlsForm defaultUrls={props.defaultUrls} onChange={props.onChange} />
+        <UrlsForm defaultValue={props.defaultValue} onChange={props.onChange} />
       );
     case "text":
       return (
@@ -213,8 +218,7 @@ const renderContent = (
     case "dateRange":
       return (
         <DateRangeForm
-          defaultStartDate={props.defaultStartDate}
-          defaultEndDate={props.defaultEndDate}
+          defaultValue={props.defaultValue}
           mode={props.mode}
           onChange={props.onChange}
           startError={props.startError}
@@ -226,7 +230,7 @@ const renderContent = (
         <ExperiencesForm
           namespace={props.namespace}
           dateMode={props.dateMode}
-          defaultExperiences={props.defaultExperiences}
+          defaultValue={props.defaultValue}
           onChange={props.onChange}
           onSubFormChange={onSubFormChange}
         />
@@ -235,8 +239,16 @@ const renderContent = (
       return (
         <PseudoForm
           onNext={props.onNext}
-          defaultPseudo={props.defaultPseudo}
+          defaultValue={props.defaultValue}
           onValidityChange={props.onValidityChange}
+        />
+      );
+    case "hobbies":
+      return (
+        <HobbiesForm
+          defaultValue={props.defaultValue}
+          onChange={props.onChange}
+          onSubFormChange={onSubFormChange}
         />
       );
   }
@@ -244,6 +256,9 @@ const renderContent = (
 
 export const Form = (props: FormProps) => {
   const [isSubFormActive, setIsSubFormActive] = useState(false);
+  const isItemListEmpty = Array.isArray(props.defaultValue)
+    ? props.defaultValue.length === 0
+    : false;
 
   const baseProps: BaseProps = {
     title: props.title,
@@ -266,5 +281,5 @@ export const Form = (props: FormProps) => {
 
   if (isSubFormActive) return content;
 
-  return <StepLayout {...baseProps}>{content}</StepLayout>;
+  return <FormLayout {...baseProps}>{content}</FormLayout>;
 };

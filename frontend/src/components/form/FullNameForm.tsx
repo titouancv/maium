@@ -11,15 +11,13 @@ import { SIGNUP_FORM_ID } from "@/constants";
 
 interface FullNameFormProps {
   onNext: (d: { firstName: string; lastName: string }) => void;
-  defaultFirstName?: string;
-  defaultLastName?: string;
+  defaultValue?: { firstName?: string; lastName?: string };
   onValidityChange?: (isValid: boolean) => void;
 }
 
 export const FullNameForm = ({
   onNext,
-  defaultFirstName,
-  defaultLastName,
+  defaultValue,
   onValidityChange,
 }: FullNameFormProps) => {
   const t = useTranslations("auth.signup.step2");
@@ -40,8 +38,8 @@ export const FullNameForm = ({
     resolver: zodResolver(schema),
     mode: "onChange",
     defaultValues: {
-      firstName: user?.firstName || defaultFirstName || "",
-      lastName: user?.lastName || defaultLastName || "",
+      firstName: user?.firstName || defaultValue?.firstName || "",
+      lastName: user?.lastName || defaultValue?.lastName || "",
     },
   });
 

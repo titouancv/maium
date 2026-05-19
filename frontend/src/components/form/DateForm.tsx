@@ -11,13 +11,13 @@ import { SIGNUP_FORM_ID } from "@/constants";
 
 interface DateFormProps {
   onNext: (d: { dob: string }) => void;
-  defaultDob?: string;
+  defaultValue?: string;
   onValidityChange?: (isValid: boolean) => void;
 }
 
 export const DateForm = ({
   onNext,
-  defaultDob,
+  defaultValue,
   onValidityChange,
 }: DateFormProps) => {
   const t = useTranslations("auth.signup.step4");
@@ -42,7 +42,7 @@ export const DateForm = ({
     resolver: zodResolver(schema),
     mode: "onChange",
     defaultValues: {
-      dob: user?.dob || defaultDob || "",
+      dob: user?.dob || defaultValue || "",
     },
   });
 
