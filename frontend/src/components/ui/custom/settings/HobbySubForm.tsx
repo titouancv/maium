@@ -49,7 +49,6 @@ export const HobbySubForm = ({
       cancelLabel={tCommon("cancelButton")}
       primaryLabel={t("saveButton")}
       formId={SIGNUP_FORM_ID}
-      primaryDisabled={!isValid}
       secondaryLabel={onDelete ? t("deleteButton") : undefined}
       onSecondary={onDelete}
     >

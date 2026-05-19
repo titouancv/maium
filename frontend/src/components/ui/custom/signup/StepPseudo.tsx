@@ -14,11 +14,9 @@ type AvailabilityStatus = "idle" | "checking" | "available" | "taken";
 export const StepPseudo = ({
   onNext,
   defaultPseudo,
-  onValidityChange,
 }: {
   onNext: (d: Partial<UserState>) => void;
   defaultPseudo?: string;
-  onValidityChange?: (isValid: boolean) => void;
 }) => {
   const t = useTranslations("auth.signup.step3");
   const { user } = useUserStore();
@@ -87,10 +85,6 @@ export const StepPseudo = ({
 
     return () => clearTimeout(timer);
   }, [pseudo, user?.pseudo, defaultPseudo, clearErrors, setError, t]);
-
-  useEffect(() => {
-    onValidityChange?.(isValid && availabilityStatus === "available");
-  }, [isValid, availabilityStatus, onValidityChange]);
 
   const getInfoLabel = () => {
     if (touchedFields.pseudo && errors.pseudo?.message) return errors.pseudo.message;

@@ -12,13 +12,11 @@ import { SIGNUP_FORM_ID } from "@/constants";
 interface FullNameFormProps {
   onChange: (d: { firstName: string; lastName: string }) => void;
   defaultValue?: { firstName?: string; lastName?: string };
-  onValidityChange?: (isValid: boolean) => void;
 }
 
 export const FullNameForm = ({
   onChange,
   defaultValue,
-  onValidityChange,
 }: FullNameFormProps) => {
   const t = useTranslations("auth.signup.step2");
   const { user } = useUserStore();
@@ -47,10 +45,6 @@ export const FullNameForm = ({
     trigger();
     setFocus("firstName");
   }, []);
-
-  useEffect(() => {
-    onValidityChange?.(isValid);
-  }, [isValid, onValidityChange]);
 
   return (
     <form

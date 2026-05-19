@@ -19,7 +19,7 @@ import type { HobbyData } from "@/components/ui/custom/settings/HobbySubForm";
 import type { DateMode } from "@/components/ui/DateInput";
 import type { Experience } from "@/types/experience";
 
-type BaseProps = {
+export type FormBaseProps = {
   title: string;
   step: number;
   totalSteps: number;
@@ -28,7 +28,6 @@ type BaseProps = {
   onSecondary?: () => void;
   secondaryLabel?: string;
   primaryLabel?: string;
-  primaryDisabled?: boolean;
   primaryLoading?: boolean;
   centerContent?: boolean;
   isCancelable?: boolean;
@@ -96,11 +95,10 @@ export type FormConfigMap = {
 export type FormType = keyof FormValueMap;
 
 export type FormProps = {
-  [K in FormType]: BaseProps & {
+  [K in FormType]: FormBaseProps & {
     type: K;
     defaultValue?: FormDefaultValueMap[K];
     onChange: (value: FormValueMap[K]) => void;
-    onValidityChange?: (isValid: boolean) => void;
   } & (FormConfigMap[K] extends never ? unknown : FormConfigMap[K]);
 }[FormType];
 
@@ -111,18 +109,13 @@ const renderContent = (
   switch (props.type) {
     case "date":
       return (
-        <DateForm
-          onChange={props.onChange}
-          defaultValue={props.defaultValue}
-          onValidityChange={props.onValidityChange}
-        />
+        <DateForm onChange={props.onChange} defaultValue={props.defaultValue} />
       );
     case "fullName":
       return (
         <FullNameForm
           onChange={props.onChange}
           defaultValue={props.defaultValue}
-          onValidityChange={props.onValidityChange}
         />
       );
     case "keys":
@@ -139,7 +132,6 @@ const renderContent = (
         <LocationForm
           onChange={props.onChange}
           defaultValue={props.defaultValue}
-          onValidityChange={props.onValidityChange}
         />
       );
     case "phoneNumber":
@@ -147,7 +139,6 @@ const renderContent = (
         <PhoneNumberForm
           onChange={props.onChange}
           defaultValue={props.defaultValue}
-          onValidityChange={props.onValidityChange}
         />
       );
     case "socialNetwork":
@@ -207,7 +198,6 @@ const renderContent = (
         <PseudoForm
           onChange={props.onChange}
           defaultValue={props.defaultValue}
-          onValidityChange={props.onValidityChange}
         />
       );
     case "hobbies":
@@ -224,7 +214,7 @@ const renderContent = (
 export const Form = (props: FormProps) => {
   const [isSubFormActive, setIsSubFormActive] = useState(false);
 
-  const baseProps: BaseProps = {
+  const FormbaseProps: FormBaseProps = {
     title: props.title,
     step: props.step,
     totalSteps: props.totalSteps,
@@ -233,7 +223,6 @@ export const Form = (props: FormProps) => {
     onSecondary: props.onSecondary,
     secondaryLabel: props.secondaryLabel,
     primaryLabel: props.primaryLabel,
-    primaryDisabled: props.primaryDisabled,
     primaryLoading: props.primaryLoading,
     centerContent: props.centerContent,
     isCancelable: props.isCancelable,
@@ -245,5 +234,5 @@ export const Form = (props: FormProps) => {
 
   if (isSubFormActive) return content;
 
-  return <FormLayout {...baseProps}>{content}</FormLayout>;
+  return <FormLayout {...FormbaseProps}>{content}</FormLayout>;
 };

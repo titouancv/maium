@@ -20,7 +20,6 @@ export interface ExperienceStepHandle {
 
 interface SharedProps {
   onNext: (d: Partial<UserState>) => void;
-  onValidityChange?: (isValid: boolean) => void;
   onModeChange?: (mode: ExperienceStepMode) => void;
 }
 
@@ -44,7 +43,7 @@ interface StepConfig {
 const ExperienceStepInner = forwardRef<
   ExperienceStepHandle,
   SharedProps & { config: StepConfig }
->(({ config, onNext, onValidityChange, onModeChange }, ref) => {
+>(({ config, onNext, onModeChange }, ref) => {
   const router = useRouter();
 
   const {
@@ -64,9 +63,6 @@ const ExperienceStepInner = forwardRef<
   useEffect(() => {
     trigger();
   }, [trigger]);
-  useEffect(() => {
-    onValidityChange?.(isValid);
-  }, [isValid, onValidityChange]);
   useEffect(() => {
     onModeChange?.(mode);
   }, [mode, onModeChange]);
@@ -113,7 +109,7 @@ ExperienceStepInner.displayName = "ExperienceStepInner";
 // ─── Public component ─────────────────────────────────────────────────────────
 
 export const StepExperience = forwardRef<ExperienceStepHandle, Props>(
-  ({ type, onNext, onValidityChange, onModeChange }, ref) => {
+  ({ type, onNext, onModeChange }, ref) => {
     const isPro = type === "professional";
     const t = useTranslations(
       isPro ? "experience.professional" : "experience.educational",
@@ -175,7 +171,6 @@ export const StepExperience = forwardRef<ExperienceStepHandle, Props>(
         ref={ref}
         config={config}
         onNext={onNext}
-        onValidityChange={onValidityChange}
         onModeChange={onModeChange}
       />
     );

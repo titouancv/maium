@@ -14,13 +14,11 @@ type AvailabilityStatus = "idle" | "checking" | "available" | "taken";
 interface PseudoFormProps {
   onChange: (d: { pseudo: string }) => void;
   defaultValue?: string;
-  onValidityChange?: (isValid: boolean) => void;
 }
 
 export const PseudoForm = ({
   onChange,
   defaultValue,
-  onValidityChange,
 }: PseudoFormProps) => {
   const t = useTranslations("auth.signup.step3");
   const { user } = useUserStore();
@@ -89,10 +87,6 @@ export const PseudoForm = ({
 
     return () => clearTimeout(timer);
   }, [pseudo, user?.pseudo, defaultValue, clearErrors, setError, t]);
-
-  useEffect(() => {
-    onValidityChange?.(isValid && availabilityStatus === "available");
-  }, [isValid, availabilityStatus, onValidityChange]);
 
   const getInfoLabel = () => {
     if (touchedFields.pseudo && errors.pseudo?.message)

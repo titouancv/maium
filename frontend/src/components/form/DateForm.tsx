@@ -12,14 +12,9 @@ import { SIGNUP_FORM_ID } from "@/constants";
 interface DateFormProps {
   onChange: (d: { dob: string }) => void;
   defaultValue?: string;
-  onValidityChange?: (isValid: boolean) => void;
 }
 
-export const DateForm = ({
-  onChange,
-  defaultValue,
-  onValidityChange,
-}: DateFormProps) => {
+export const DateForm = ({ onChange, defaultValue }: DateFormProps) => {
   const t = useTranslations("auth.signup.step4");
   const { user } = useUserStore();
 
@@ -37,7 +32,7 @@ export const DateForm = ({
     control,
     handleSubmit,
     trigger,
-    formState: { errors, isValid },
+    formState: { errors },
   } = useForm({
     resolver: zodResolver(schema),
     mode: "onChange",
@@ -49,10 +44,6 @@ export const DateForm = ({
   useEffect(() => {
     trigger();
   }, [trigger]);
-
-  useEffect(() => {
-    onValidityChange?.(isValid);
-  }, [isValid, onValidityChange]);
 
   return (
     <form

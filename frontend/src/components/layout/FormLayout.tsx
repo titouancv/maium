@@ -4,22 +4,9 @@ import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
 import { Title, StepCounter } from "@/components/ui";
 import { Button } from "@/components/ui/Button";
+import { FormBaseProps } from "../form/Form";
 
-interface StepLayoutProps {
-  title: string;
-  step: number;
-  totalSteps: number;
-  isCancelable?: boolean;
-  onCancel?: () => void;
-  cancelLabel?: string;
-  formId?: string;
-  onPrimary?: () => void;
-  onSecondary?: () => void;
-  secondaryLabel?: string;
-  primaryLabel?: string;
-  primaryDisabled?: boolean;
-  primaryLoading?: boolean;
-  centerContent?: boolean;
+interface StepLayoutProps extends FormBaseProps {
   children: React.ReactNode;
 }
 
@@ -35,7 +22,6 @@ export const FormLayout = ({
   onSecondary,
   secondaryLabel,
   primaryLabel,
-  primaryDisabled,
   primaryLoading,
   centerContent,
   children,
@@ -130,7 +116,6 @@ export const FormLayout = ({
                 form={formId}
                 size="lg"
                 className="w-full"
-                disabled={primaryDisabled}
                 isLoading={primaryLoading}
                 onClick={!formId ? onPrimary : undefined}
               >

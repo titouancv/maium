@@ -37,7 +37,6 @@ export const EditInfoOverlay = ({ field, user, onClose, onSaved }: Props) => {
 
   const [isSaving, setIsSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [isFormValid, setIsFormValid] = useState(false);
 
   const [currentExperiences, setCurrentExperiences] = useState<Experience[]>(
     () => {
@@ -124,8 +123,6 @@ export const EditInfoOverlay = ({ field, user, onClose, onSaved }: Props) => {
             firstName: user.first_name,
             lastName: user.last_name,
           },
-          onValidityChange: setIsFormValid,
-          primaryDisabled: !isFormValid,
         };
       case "pseudo":
         return {
@@ -134,8 +131,6 @@ export const EditInfoOverlay = ({ field, user, onClose, onSaved }: Props) => {
           formId: SIGNUP_FORM_ID,
           onChange: (d) => save({ pseudo: d.pseudo }),
           defaultValue: user.pseudo,
-          onValidityChange: setIsFormValid,
-          primaryDisabled: !isFormValid,
         };
       case "dob":
         return {
@@ -144,8 +139,6 @@ export const EditInfoOverlay = ({ field, user, onClose, onSaved }: Props) => {
           formId: SIGNUP_FORM_ID,
           onChange: (d) => save({ dob: d.dob }),
           defaultValue: user.dob,
-          onValidityChange: setIsFormValid,
-          primaryDisabled: !isFormValid,
         };
       case "phone":
         return {
@@ -154,8 +147,6 @@ export const EditInfoOverlay = ({ field, user, onClose, onSaved }: Props) => {
           formId: SIGNUP_FORM_ID,
           onChange: (d) => save({ phone: d.phone }),
           defaultValue: user.phone ?? "",
-          onValidityChange: setIsFormValid,
-          primaryDisabled: !isFormValid,
           secondaryLabel: user.phone ? t("deleteButton") : undefined,
           onSecondary: user.phone ? () => save({ phone: null }) : undefined,
         };
@@ -166,8 +157,6 @@ export const EditInfoOverlay = ({ field, user, onClose, onSaved }: Props) => {
           formId: SIGNUP_FORM_ID,
           onChange: (d) => save({ nationality: d.location }),
           defaultValue: user.nationality ?? "",
-          onValidityChange: setIsFormValid,
-          primaryDisabled: !isFormValid,
           secondaryLabel: user.nationality ? t("deleteButton") : undefined,
           onSecondary: user.nationality
             ? () => save({ nationality: null })
@@ -181,8 +170,6 @@ export const EditInfoOverlay = ({ field, user, onClose, onSaved }: Props) => {
           formId: SIGNUP_FORM_ID,
           onChange: (d) => save({ location: d.location }),
           defaultValue: user.location ?? "",
-          onValidityChange: setIsFormValid,
-          primaryDisabled: !isFormValid,
           secondaryLabel: user.location ? t("deleteButton") : undefined,
           onSecondary: user.location
             ? () => save({ location: null })

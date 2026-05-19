@@ -13,12 +13,10 @@ export const StepName = ({
   onNext,
   defaultFirstName,
   defaultLastName,
-  onValidityChange,
 }: {
   onNext: (d: Partial<UserState>) => void;
   defaultFirstName?: string;
   defaultLastName?: string;
-  onValidityChange?: (isValid: boolean) => void;
 }) => {
   const t = useTranslations("auth.signup.step2");
   const { user } = useUserStore();
@@ -45,10 +43,6 @@ export const StepName = ({
     trigger();
     setFocus("firstName");
   }, []);
-
-  useEffect(() => {
-    onValidityChange?.(isValid);
-  }, [isValid]);
 
   return (
     <form

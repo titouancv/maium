@@ -187,7 +187,6 @@ export const SignupWizard = ({
           title={stepTitles[step] ?? t("title")}
           step={step}
           totalSteps={TOTAL_STEPS}
-          primaryDisabled={step < 4 && !isStepValid}
           primaryLoading={isLoading}
           centerContent={isCentered ? true : undefined}
           {...stepNavProps}
@@ -197,29 +196,19 @@ export const SignupWizard = ({
               onNext={nextStep}
               defaultFirstName={initialUser.firstName}
               defaultLastName={initialUser.lastName}
-              onValidityChange={setIsStepValid}
             />
           )}
           {step === 2 && (
-            <StepPseudo
-              onNext={nextStep}
-              defaultPseudo={initialUser.pseudo}
-              onValidityChange={setIsStepValid}
-            />
+            <StepPseudo onNext={nextStep} defaultPseudo={initialUser.pseudo} />
           )}
           {step === 3 && (
-            <StepDob
-              onNext={nextStep}
-              onValidityChange={setIsStepValid}
-              defaultDob={initialUser.dob}
-            />
+            <StepDob onNext={nextStep} defaultDob={initialUser.dob} />
           )}
           {step === 4 && (
             <StepExperience
               type="professional"
               ref={step4Ref}
               onNext={nextStep}
-              onValidityChange={setIsStepValid}
               onModeChange={setStep4Mode}
             />
           )}
@@ -228,7 +217,6 @@ export const SignupWizard = ({
               type="educational"
               ref={step5Ref}
               onNext={finish}
-              onValidityChange={setIsStepValid}
               onModeChange={setStep5Mode}
             />
           )}

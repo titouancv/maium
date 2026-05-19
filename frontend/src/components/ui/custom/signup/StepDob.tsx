@@ -11,11 +11,9 @@ import { SIGNUP_FORM_ID } from "@/constants";
 
 export const StepDob = ({
   onNext,
-  onValidityChange,
   defaultDob,
 }: {
   onNext: (d: Partial<UserState>) => void;
-  onValidityChange?: (isValid: boolean) => void;
   defaultDob?: string;
 }) => {
   const t = useTranslations("auth.signup.step4");
@@ -47,10 +45,6 @@ export const StepDob = ({
   useEffect(() => {
     trigger();
   }, [trigger]);
-
-  useEffect(() => {
-    onValidityChange?.(isValid);
-  }, [isValid, onValidityChange]);
 
   return (
     <form

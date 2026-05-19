@@ -11,13 +11,11 @@ import { SIGNUP_FORM_ID } from "@/constants";
 interface LocationFormProps {
   onChange: (d: { location: string }) => void;
   defaultValue?: string;
-  onValidityChange?: (isValid: boolean) => void;
 }
 
 export const LocationForm = ({
   onChange,
   defaultValue,
-  onValidityChange,
 }: LocationFormProps) => {
   const t = useTranslations("settings");
 
@@ -41,10 +39,6 @@ export const LocationForm = ({
   useEffect(() => {
     trigger();
   }, [trigger]);
-
-  useEffect(() => {
-    onValidityChange?.(isValid);
-  }, [isValid, onValidityChange]);
 
   return (
     <form

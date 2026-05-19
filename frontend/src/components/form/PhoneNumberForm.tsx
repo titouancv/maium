@@ -10,13 +10,11 @@ import { SIGNUP_FORM_ID } from "@/constants";
 interface PhoneNumberFormProps {
   onChange: (d: { phone: string }) => void;
   defaultValue?: string;
-  onValidityChange?: (isValid: boolean) => void;
 }
 
 export const PhoneNumberForm = ({
   onChange,
   defaultValue,
-  onValidityChange,
 }: PhoneNumberFormProps) => {
   const schema = z.object({
     phone: z.string().min(1),
@@ -38,10 +36,6 @@ export const PhoneNumberForm = ({
   useEffect(() => {
     trigger();
   }, [trigger]);
-
-  useEffect(() => {
-    onValidityChange?.(isValid);
-  }, [isValid, onValidityChange]);
 
   return (
     <form
