@@ -28,89 +28,99 @@ export const SettingsPersonalDataContent = ({
   return (
     <PageLayout title={t("mesInformations")} backLabel={t("backButton")}>
       {user && (
-        <MenuList
-          items={[
-            {
-              label: tHome("name"),
-              value: `${user.first_name} ${user.last_name}`,
-              onClick: () => setEditingField("name"),
-            },
-            {
-              label: tHome("pseudo"),
-              value: user.pseudo ?? undefined,
-              onClick: () => setEditingField("pseudo"),
-            },
-            {
-              label: tHome("dob"),
-              value: user.dob ?? undefined,
-              onClick: () => setEditingField("dob"),
-            },
-            {
-              label: t("phone"),
-              value: user.phone ?? undefined,
-              onClick: () => setEditingField("phone"),
-            },
-            {
-              label: t("nationality"),
-              value: user.nationality ?? undefined,
-              onClick: () => setEditingField("nationality"),
-            },
-            {
-              label: t("location"),
-              value: user.location ?? undefined,
-              onClick: () => setEditingField("location"),
-            },
-            {
-              label: t("professionalExperiencesLabel"),
-              value: user.professional_experiences?.length
-                ? String(user.professional_experiences.length)
-                : undefined,
-              onClick: () => setEditingField("professionalExperiences"),
-            },
-            {
-              label: t("educationalExperiencesLabel"),
-              value: user.educational_experiences?.length
-                ? String(user.educational_experiences.length)
-                : undefined,
-              onClick: () => setEditingField("educationalExperiences"),
-            },
-            {
-              label: t("personalExperiences"),
-              value: user.personal_experiences?.length
-                ? String(user.personal_experiences.length)
-                : undefined,
-              onClick: () => setEditingField("personalExperiences"),
-            },
-            {
-              label: t("skills"),
-              value: user.skills?.length
-                ? String(user.skills.length)
-                : undefined,
-              onClick: () => setEditingField("skills"),
-            },
-            {
-              label: t("socialNetworks"),
-              value: user.social_networks?.length
-                ? String(user.social_networks.length)
-                : undefined,
-              onClick: () => setEditingField("socialNetworks"),
-            },
-            {
-              label: t("projects"),
-              value: user.projects?.length
-                ? String(user.projects.length)
-                : undefined,
-              onClick: () => setEditingField("projects"),
-            },
-            {
-              label: t("hobbies"),
-              value: user.hobbies?.length
-                ? String(user.hobbies.length)
-                : undefined,
-              onClick: () => setEditingField("hobbies"),
-            },
-          ]}
-        />
+        <div className="flex flex-col gap-12">
+          <MenuList
+            items={[
+              {
+                label: tHome("name"),
+                value: `${user.first_name} ${user.last_name}`,
+                onClick: () => setEditingField("name"),
+              },
+              {
+                label: tHome("pseudo"),
+                value: user.pseudo ?? undefined,
+                onClick: () => setEditingField("pseudo"),
+              },
+              {
+                label: tHome("dob"),
+                value: user.dob ?? undefined,
+                onClick: () => setEditingField("dob"),
+              },
+              {
+                label: t("phone"),
+                value: user.phone ?? undefined,
+                onClick: () => setEditingField("phone"),
+              },
+              {
+                label: t("nationality"),
+                value: user.nationality ?? undefined,
+                onClick: () => setEditingField("nationality"),
+              },
+              {
+                label: t("location"),
+                value: user.location ?? undefined,
+                onClick: () => setEditingField("location"),
+              },
+            ]}
+          />
+          <MenuList
+            items={[
+              {
+                label: t("professionalExperiencesLabel"),
+                value: user.professional_experiences?.length
+                  ? String(user.professional_experiences.length)
+                  : undefined,
+                onClick: () => setEditingField("professionalExperiences"),
+              },
+              {
+                label: t("educationalExperiencesLabel"),
+                value: user.educational_experiences?.length
+                  ? String(user.educational_experiences.length)
+                  : undefined,
+                onClick: () => setEditingField("educationalExperiences"),
+              },
+              {
+                label: t("personalExperiences"),
+                value: user.personal_experiences?.length
+                  ? String(user.personal_experiences.length)
+                  : undefined,
+                onClick: () => setEditingField("personalExperiences"),
+              },
+            ]}
+          />
+          <MenuList
+            items={[
+              {
+                label: t("skills"),
+                value: user.skills?.length
+                  ? String(user.skills.length)
+                  : undefined,
+                onClick: () => setEditingField("skills"),
+              },
+              {
+                label: t("socialNetworks"),
+                value: user.social_networks?.length
+                  ? String(user.social_networks.length)
+                  : undefined,
+                onClick: () => setEditingField("socialNetworks"),
+              },
+              {
+                label: t("projects"),
+                value: user.projects?.length
+                  ? String(user.projects.length)
+                  : undefined,
+                onClick: () => setEditingField("projects"),
+              },
+              {
+                label: t("hobbies"),
+                value: user.hobbies?.length
+                  ? String(user.hobbies.length)
+                  : undefined,
+                onClick: () => setEditingField("hobbies"),
+              },
+            ]}
+          />
+        </div>
       )}
 
       {editingField && user && (
