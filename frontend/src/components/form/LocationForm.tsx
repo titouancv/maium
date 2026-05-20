@@ -17,7 +17,7 @@ export const LocationForm = ({ onChange, defaultValue }: LocationFormProps) => {
   const t = useTranslations("settings");
 
   const schema = z.object({
-    location: z.string().min(1),
+    location: z.string(),
   });
 
   const {

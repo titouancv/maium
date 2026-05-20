@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { Form } from "../Form";
+import type { FormProps } from "../Form";
 import { SIGNUP_FORM_ID } from "@/constants";
 
 export type SubValues = {
@@ -71,7 +72,7 @@ export const ExperienceSubForm = ({
     setSubStep((s) => s + 1);
   };
 
-  const baseFormProps = {
+  const base = {
     step: subStep,
     totalSteps: TOTAL_SUB_STEPS,
     isCancelable: true,
@@ -83,101 +84,91 @@ export const ExperienceSubForm = ({
     onSecondary: isDeletable ? onDelete : undefined,
   };
 
-  if (subStep === 1)
-    return (
-      <Form
-        {...baseFormProps}
-        type="text"
-        title={t("subStep1Title")}
-        placeholder={t("organizationPlaceholder")}
-        defaultValue={subValues.organization}
-        onChange={(v) => {
-          setSubValues((prev) => ({ ...prev, organization: v }));
-          setSubErrors((prev) => ({ ...prev, organization: undefined }));
-        }}
-        infoLabel={subErrors.organization}
-        infoType={subErrors.organization ? "error" : "info"}
-        onPrimary={advance}
-      />
-    );
+  const getFormProps = (): FormProps => {
+    switch (subStep) {
+      case 1:
+        return {
+          ...base,
+          type: "text",
+          title: t("subStep1Title"),
+          placeholder: t("organizationPlaceholder"),
+          defaultValue: subValues.organization,
+          onChange: (v) => {
+            setSubValues((prev) => ({ ...prev, organization: v }));
+            setSubErrors((prev) => ({ ...prev, organization: undefined }));
+          },
+          infoLabel: subErrors.organization,
+          infoType: subErrors.organization ? "error" : "info",
+          onPrimary: advance,
+        };
+      case 2:
+        return {
+          ...base,
+          type: "text",
+          title: t("subStep2Title"),
+          placeholder: t("rolePlaceholder"),
+          defaultValue: subValues.role,
+          onChange: (v) => {
+            setSubValues((prev) => ({ ...prev, role: v }));
+            setSubErrors((prev) => ({ ...prev, role: undefined }));
+          },
+          infoLabel: subErrors.role,
+          infoType: subErrors.role ? "error" : "info",
+          onPrimary: advance,
+        };
+      case 3:
+        return {
+          ...base,
+          type: "dateRange",
+          title: t("subStep3Title"),
+          defaultValue: {
+            defaultStartDate: subValues.startPeriod,
+            defaultEndDate: subValues.endPeriod,
+          },
+          mode: dateMode,
+          onChange: ({ startDate, endDate }) => {
+            setSubValues((prev) => ({
+              ...prev,
+              startPeriod: startDate,
+              endPeriod: endDate,
+            }));
+            setSubErrors((prev) => ({ ...prev, startPeriod: undefined }));
+          },
+          startError: subErrors.startPeriod,
+          onPrimary: advance,
+        };
+      case 4:
+        return {
+          ...base,
+          type: "longText",
+          title: t("subStep4Title"),
+          placeholder: t("descriptionPlaceholder"),
+          defaultValue: subValues.description,
+          onChange: (v) => setSubValues((prev) => ({ ...prev, description: v })),
+          rows: 10,
+          onPrimary: advance,
+        };
+      case 5:
+        return {
+          ...base,
+          type: "text",
+          title: t("subStep5Title"),
+          placeholder: t("websitePlaceholder"),
+          defaultValue: subValues.website,
+          onChange: (v) => setSubValues((prev) => ({ ...prev, website: v })),
+          onPrimary: advance,
+        };
+      default:
+        return {
+          ...base,
+          type: "location",
+          title: t("subStep6Title"),
+          formId: SIGNUP_FORM_ID,
+          defaultValue: subValues.location,
+          onChange: ({ location }) => onSave({ ...subValues, location }),
+        };
+    }
+  };
 
-  if (subStep === 2)
-    return (
-      <Form
-        {...baseFormProps}
-        type="text"
-        title={t("subStep2Title")}
-        placeholder={t("rolePlaceholder")}
-        defaultValue={subValues.role}
-        onChange={(v) => {
-          setSubValues((prev) => ({ ...prev, role: v }));
-          setSubErrors((prev) => ({ ...prev, role: undefined }));
-        }}
-        infoLabel={subErrors.role}
-        infoType={subErrors.role ? "error" : "info"}
-        onPrimary={advance}
-      />
-    );
-
-  if (subStep === 3)
-    return (
-      <Form
-        {...baseFormProps}
-        type="dateRange"
-        title={t("subStep3Title")}
-        defaultValue={{
-          defaultStartDate: subValues.startPeriod,
-          defaultEndDate: subValues.endPeriod,
-        }}
-        mode={dateMode}
-        onChange={({ startDate, endDate }) => {
-          setSubValues((prev) => ({
-            ...prev,
-            startPeriod: startDate,
-            endPeriod: endDate,
-          }));
-          setSubErrors((prev) => ({ ...prev, startPeriod: undefined }));
-        }}
-        startError={subErrors.startPeriod}
-        onPrimary={advance}
-      />
-    );
-
-  if (subStep === 4)
-    return (
-      <Form
-        {...baseFormProps}
-        type="longText"
-        title={t("subStep4Title")}
-        placeholder={t("descriptionPlaceholder")}
-        defaultValue={subValues.description}
-        onChange={(v) => setSubValues((prev) => ({ ...prev, description: v }))}
-        rows={10}
-        onPrimary={advance}
-      />
-    );
-
-  if (subStep === 5)
-    return (
-      <Form
-        {...baseFormProps}
-        type="text"
-        title={t("subStep5Title")}
-        placeholder={t("websitePlaceholder")}
-        defaultValue={subValues.website}
-        onChange={(v) => setSubValues((prev) => ({ ...prev, website: v }))}
-        onPrimary={advance}
-      />
-    );
-
-  return (
-    <Form
-      {...baseFormProps}
-      type="location"
-      title={t("subStep6Title")}
-      formId={SIGNUP_FORM_ID}
-      defaultValue={subValues.location}
-      onChange={({ location }) => onSave({ ...subValues, location })}
-    />
-  );
+  return <Form key={subStep} {...getFormProps()} />;
 };
