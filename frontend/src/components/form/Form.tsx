@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import { FormLayout } from "@/components/layout/FormLayout";
 import { DateForm } from "./DateForm";
 import { FullNameForm } from "./FullNameForm";
@@ -102,10 +101,7 @@ export type FormProps = {
   } & (FormConfigMap[K] extends never ? unknown : FormConfigMap[K]);
 }[FormType];
 
-const renderContent = (
-  props: FormProps,
-  onSubFormChange: (active: boolean) => void,
-) => {
+const renderContent = (props: FormProps) => {
   switch (props.type) {
     case "date":
       return (
@@ -190,7 +186,6 @@ const renderContent = (
           dateMode={props.dateMode}
           defaultValue={props.defaultValue}
           onChange={props.onChange}
-          onSubFormChange={onSubFormChange}
         />
       );
     case "pseudo":
@@ -205,15 +200,12 @@ const renderContent = (
         <HobbiesForm
           defaultValue={props.defaultValue}
           onChange={props.onChange}
-          onSubFormChange={onSubFormChange}
         />
       );
   }
 };
 
 export const Form = (props: FormProps) => {
-  const [isSubFormActive, setIsSubFormActive] = useState(false);
-
   const FormbaseProps: FormBaseProps = {
     title: props.title,
     step: props.step,
@@ -230,9 +222,9 @@ export const Form = (props: FormProps) => {
     cancelLabel: props.cancelLabel,
   };
 
-  const content = renderContent(props, setIsSubFormActive);
-
-  if (isSubFormActive) return content;
-
-  return <FormLayout {...FormbaseProps}>{content}</FormLayout>;
+  return (
+    <FormLayout {...FormbaseProps}>
+      {renderContent(props)}
+    </FormLayout>
+  );
 };

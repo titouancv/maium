@@ -14,7 +14,6 @@ interface ExperiencesFormProps {
   dateMode?: "MM-YYYY" | "YYYY";
   defaultValue?: Experience[];
   onChange: (experiences: Experience[]) => void;
-  onSubFormChange?: (active: boolean) => void;
 }
 
 type ItemRecord = Record<string, string>;
@@ -25,7 +24,6 @@ export const ExperiencesForm = ({
   dateMode = "MM-YYYY",
   defaultValue,
   onChange,
-  onSubFormChange,
 }: ExperiencesFormProps) => {
   const tCommon = useTranslations("common");
   const [editingIndex, setEditingIndex] = useState<number | "new" | null>(null);
@@ -64,15 +62,8 @@ export const ExperiencesForm = ({
     );
   };
 
-  const openSubForm = (index: number | "new") => {
-    setEditingIndex(index);
-    onSubFormChange?.(true);
-  };
-
-  const closeSubForm = () => {
-    setEditingIndex(null);
-    onSubFormChange?.(false);
-  };
+  const openSubForm = (index: number | "new") => setEditingIndex(index);
+  const closeSubForm = () => setEditingIndex(null);
 
   const handleSave = (values: SubValues) => {
     const entry = {
@@ -96,9 +87,10 @@ export const ExperiencesForm = ({
     notifyChange();
   };
 
-  if (editingIndex !== null) {
-    const initialValues =
-      editingIndex === "new"
+  const subFormInitialValues =
+    editingIndex === null
+      ? null
+      : editingIndex === "new"
         ? emptySubValues()
         : (() => {
             const item = getValues("items")[editingIndex];
@@ -113,47 +105,49 @@ export const ExperiencesForm = ({
             };
           })();
 
-    return (
-      <ExperienceSubForm
-        namespace={namespace}
-        dateMode={dateMode}
-        initialValues={initialValues}
-        isDeletable={typeof editingIndex === "number"}
-        onSave={handleSave}
-        onCancel={closeSubForm}
-        onDelete={handleDelete}
-      />
-    );
-  }
-
   return (
-    <div className="flex flex-col gap-4">
-      {fields.length === 0 ? (
-        <Button
-          type="button"
-          variant="outline"
-          size="sm"
-          className="self-start"
-          onClick={() => openSubForm("new")}
-        >
-          {tCommon("addButton")}
-        </Button>
-      ) : (
-        <ExperienceList
-          fields={fields}
-          control={control}
-          getDisplay={(item) => ({
-            organization: item.organization ?? "",
-            role: item.role ?? "",
-            startPeriod: item.startPeriod ?? "",
-            endPeriod: item.endPeriod || undefined,
-            description: item.description ?? "",
-            website: item.website ?? "",
-            location: item.location ?? "",
-          })}
-          onEdit={(index) => openSubForm(index)}
-        />
+    <>
+      <div className="flex flex-col gap-4">
+        {fields.length === 0 ? (
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            className="self-start"
+            onClick={() => openSubForm("new")}
+          >
+            {tCommon("addButton")}
+          </Button>
+        ) : (
+          <ExperienceList
+            fields={fields}
+            control={control}
+            getDisplay={(item) => ({
+              organization: item.organization ?? "",
+              role: item.role ?? "",
+              startPeriod: item.startPeriod ?? "",
+              endPeriod: item.endPeriod || undefined,
+              description: item.description ?? "",
+              website: item.website ?? "",
+              location: item.location ?? "",
+            })}
+            onEdit={(index) => openSubForm(index)}
+          />
+        )}
+      </div>
+      {subFormInitialValues !== null && (
+        <div className="bg-surface-50 fixed inset-0 z-50">
+          <ExperienceSubForm
+            namespace={namespace}
+            dateMode={dateMode}
+            initialValues={subFormInitialValues}
+            isDeletable={typeof editingIndex === "number"}
+            onSave={handleSave}
+            onCancel={closeSubForm}
+            onDelete={handleDelete}
+          />
+        </div>
       )}
-    </div>
+    </>
   );
 };
