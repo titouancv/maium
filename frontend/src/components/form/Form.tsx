@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { FormLayout } from "@/components/layout/FormLayout";
 import { DateForm } from "./DateForm";
 import { FullNameForm } from "./FullNameForm";
@@ -19,7 +20,7 @@ import type { DateMode } from "@/components/ui/DateInput";
 import type { Experience } from "@/types/experience";
 
 export type FormBaseProps = {
-  title: string;
+  title?: string;
   step: number;
   totalSteps: number;
   formId?: string;
@@ -204,9 +205,28 @@ const renderContent = (props: FormProps) => {
   }
 };
 
+const getDefaultTitle = (props: FormProps, t: ReturnType<typeof useTranslations<"form">>): string => {
+  switch (props.type) {
+    case "fullName": return t("fullNameTitle");
+    case "pseudo": return t("pseudoTitle");
+    case "date": return t("dateTitle");
+    case "phoneNumber": return t("phoneNumberTitle");
+    case "location": return t("locationTitle");
+    case "socialNetwork": return t("socialNetworkTitle");
+    case "hobbies": return t("hobbiesTitle");
+    case "keys": return t("keysTitle");
+    case "urls": return t("urlsTitle");
+    case "experiences":
+      if (props.namespace === "experience.educational") return t("experiencesEducationalTitle");
+      return t("experiencesProfessionalTitle");
+    default: return "";
+  }
+};
+
 export const Form = (props: FormProps) => {
+  const t = useTranslations("form");
   const FormbaseProps: FormBaseProps = {
-    title: props.title,
+    title: props.title ?? getDefaultTitle(props, t),
     step: props.step,
     totalSteps: props.totalSteps,
     formId: props.formId,

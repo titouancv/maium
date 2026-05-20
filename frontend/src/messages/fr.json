@@ -127,6 +127,21 @@
       }
     }
   },
+  "form": {
+    "fullNameTitle": "Quel est votre nom ?",
+    "pseudoTitle": "Choisissez votre pseudo",
+    "dateTitle": "Quelle est votre date de naissance ?",
+    "phoneNumberTitle": "Numéro de téléphone",
+    "locationTitle": "Localisation",
+    "nationalityTitle": "Nationalité",
+    "socialNetworkTitle": "Réseaux sociaux",
+    "hobbiesTitle": "Loisirs",
+    "keysTitle": "Compétences",
+    "urlsTitle": "Projets",
+    "experiencesProfessionalTitle": "Expérience professionnelle",
+    "experiencesEducationalTitle": "Parcours éducatif",
+    "experiencesPersonalTitle": "Expériences personnelles"
+  },
   "experience": {
     "professional": {
       "addEntry": "Ajouter un poste",

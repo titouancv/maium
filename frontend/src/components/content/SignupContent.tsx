@@ -36,7 +36,6 @@ export const SignupWizard = ({
     () => initialUser.educationalExperiences ?? [],
   );
   const router = useRouter();
-  const t = useTranslations("auth.signup");
   const tCommon = useTranslations("common");
   const { setUser, user } = useUserStore();
 
@@ -114,14 +113,6 @@ export const SignupWizard = ({
     }
   };
 
-  const stepTitles: Record<number, string> = {
-    1: t("step2.title"),
-    2: t("step3.title"),
-    3: t("step4.title"),
-    4: t("step5.title"),
-    5: t("step6.title"),
-  };
-
   const base = {
     step,
     totalSteps: TOTAL_STEPS,
@@ -135,7 +126,6 @@ export const SignupWizard = ({
         return {
           ...base,
           type: "fullName",
-          title: stepTitles[1],
           formId: SIGNUP_FORM_ID,
           defaultValue: {
             firstName: initialUser.firstName,
@@ -147,7 +137,6 @@ export const SignupWizard = ({
         return {
           ...base,
           type: "pseudo",
-          title: stepTitles[2],
           formId: SIGNUP_FORM_ID,
           defaultValue: initialUser.pseudo,
           onChange: nextStep,
@@ -156,7 +145,6 @@ export const SignupWizard = ({
         return {
           ...base,
           type: "date",
-          title: stepTitles[3],
           formId: SIGNUP_FORM_ID,
           defaultValue: initialUser.dob,
           onChange: nextStep,
@@ -165,7 +153,6 @@ export const SignupWizard = ({
         return {
           ...base,
           type: "experiences",
-          title: stepTitles[4],
           namespace: "experience.professional",
           defaultValue: proExperiences,
           onChange: setProExperiences,
@@ -176,7 +163,6 @@ export const SignupWizard = ({
         return {
           ...base,
           type: "experiences",
-          title: stepTitles[5],
           namespace: "experience.educational",
           defaultValue: eduExperiences,
           onChange: setEduExperiences,

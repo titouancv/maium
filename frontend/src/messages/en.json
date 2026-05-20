@@ -127,6 +127,21 @@
       }
     }
   },
+  "form": {
+    "fullNameTitle": "What's your name?",
+    "pseudoTitle": "Choose your username",
+    "dateTitle": "When's your birthday?",
+    "phoneNumberTitle": "Phone number",
+    "locationTitle": "Location",
+    "nationalityTitle": "Nationality",
+    "socialNetworkTitle": "Social networks",
+    "hobbiesTitle": "Hobbies",
+    "keysTitle": "Skills",
+    "urlsTitle": "Projects",
+    "experiencesProfessionalTitle": "Professional experience",
+    "experiencesEducationalTitle": "Educational background",
+    "experiencesPersonalTitle": "Personal experiences"
+  },
   "experience": {
     "professional": {
       "addEntry": "Add a position",

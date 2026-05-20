@@ -82,24 +82,7 @@ export const EditInfoOverlay = ({ field, user, onClose, onSaved }: Props) => {
     }
   };
 
-  const overlayTitle: Record<EditableField, string> = {
-    name: t("editName"),
-    pseudo: t("editPseudo"),
-    dob: t("editDob"),
-    phone: t("editPhone"),
-    nationality: t("editNationality"),
-    location: t("editLocation"),
-    professionalExperiences: t("editProfessionalExperiences"),
-    educationalExperiences: t("editEducationalExperiences"),
-    personalExperiences: t("editPersonalExperiences"),
-    socialNetworks: t("editSocialNetworks"),
-    hobbies: t("editHobbies"),
-    skills: t("editSkills"),
-    projects: t("editProjects"),
-  };
-
   const base = {
-    title: overlayTitle[field],
     step: 1,
     totalSteps: 1,
     isCancelable: true,
@@ -153,6 +136,7 @@ export const EditInfoOverlay = ({ field, user, onClose, onSaved }: Props) => {
       case "nationality":
         return {
           ...base,
+          title: t("editNationality"),
           type: "location",
           formId: SIGNUP_FORM_ID,
           onChange: (d) => save({ nationality: d.location }),
@@ -198,6 +182,7 @@ export const EditInfoOverlay = ({ field, user, onClose, onSaved }: Props) => {
       case "personalExperiences":
         return {
           ...base,
+          title: t("editPersonalExperiences"),
           type: "experiences",
           namespace: "experience.professional",
           dateMode: "MM-YYYY",
