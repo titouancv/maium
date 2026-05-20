@@ -15,9 +15,9 @@ import { DateRangeForm } from "./DateRangeForm";
 import { ExperiencesForm } from "./ExperiencesForm";
 import { HobbiesForm } from "./HobbiesForm";
 import { PseudoForm } from "./PseudoForm";
-import type { HobbyData } from "@/components/ui/custom/settings/HobbySubForm";
 import type { DateMode } from "@/components/ui/DateInput";
 import type { Experience } from "@/types/experience";
+import { HobbyData } from "../custom";
 
 export type FormBaseProps = {
   title?: string;
@@ -205,21 +205,35 @@ const renderContent = (props: FormProps) => {
   }
 };
 
-const getDefaultTitle = (props: FormProps, t: ReturnType<typeof useTranslations<"form">>): string => {
+const getDefaultTitle = (
+  props: FormProps,
+  t: ReturnType<typeof useTranslations<"form">>,
+): string => {
   switch (props.type) {
-    case "fullName": return t("fullNameTitle");
-    case "pseudo": return t("pseudoTitle");
-    case "date": return t("dateTitle");
-    case "phoneNumber": return t("phoneNumberTitle");
-    case "location": return t("locationTitle");
-    case "socialNetwork": return t("socialNetworkTitle");
-    case "hobbies": return t("hobbiesTitle");
-    case "keys": return t("keysTitle");
-    case "urls": return t("urlsTitle");
+    case "fullName":
+      return t("fullNameTitle");
+    case "pseudo":
+      return t("pseudoTitle");
+    case "date":
+      return t("dateTitle");
+    case "phoneNumber":
+      return t("phoneNumberTitle");
+    case "location":
+      return t("locationTitle");
+    case "socialNetwork":
+      return t("socialNetworkTitle");
+    case "hobbies":
+      return t("hobbiesTitle");
+    case "keys":
+      return t("keysTitle");
+    case "urls":
+      return t("urlsTitle");
     case "experiences":
-      if (props.namespace === "experience.educational") return t("experiencesEducationalTitle");
+      if (props.namespace === "experience.educational")
+        return t("experiencesEducationalTitle");
       return t("experiencesProfessionalTitle");
-    default: return "";
+    default:
+      return "";
   }
 };
 

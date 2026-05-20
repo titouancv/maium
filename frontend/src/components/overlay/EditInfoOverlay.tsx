@@ -7,7 +7,7 @@ import { Form } from "@/components/form";
 import type { FormProps } from "@/components/form";
 import type { UserData } from "@/types/user";
 import type { Experience } from "@/types/experience";
-import type { HobbyData } from "@/components/ui/custom/settings/HobbySubForm";
+import { HobbyData } from "../custom";
 
 export type EditableField =
   | "name"

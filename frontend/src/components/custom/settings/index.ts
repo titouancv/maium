@@ -1,4 +1,3 @@
-export * from "../../../overlay/EditInfoOverlay";
 export * from "./HobbySubForm";
 export * from "./HobbyList";
 export * from "./SkillsField";

@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { z } from "zod";
 import { useTranslations } from "next-intl";
-import { UrlListField } from "@/components/ui/custom/settings/UrlListField";
+import { UrlListField } from "../custom";
 
 interface UrlsFormProps {
   defaultValue?: string[];

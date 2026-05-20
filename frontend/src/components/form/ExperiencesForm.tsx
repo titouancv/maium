@@ -4,10 +4,10 @@ import { useForm, useFieldArray } from "react-hook-form";
 import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/Button";
-import { ExperienceList } from "@/components/ui/custom/experience";
 import { ExperienceSubForm, emptySubValues } from "./sub-form";
 import type { SubValues } from "./sub-form";
 import type { Experience } from "@/types/experience";
+import { ExperienceList } from "../custom";
 
 interface ExperiencesFormProps {
   namespace: string;

@@ -8,9 +8,9 @@ import { useUserStore, type UserState } from "@/stores/useUserStore";
 import { ROUTES, API, SIGNUP_FORM_ID } from "@/constants";
 import { Form } from "../form/Form";
 import type { FormProps } from "../form/Form";
-import { GoogleSignInButton } from "../ui/custom/signup/GoogleSignInButton";
 import { Title } from "../ui";
 import type { Experience } from "@/types/experience";
+import { GoogleSignInButton } from "../custom";
 
 interface SignupWizardProps {
   initialStep?: number;

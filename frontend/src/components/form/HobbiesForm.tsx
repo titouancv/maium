@@ -3,19 +3,13 @@
 import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/Button";
-import { HobbyList } from "@/components/ui/custom/settings/HobbyList";
-import { HobbySubForm } from "@/components/ui/custom/settings/HobbySubForm";
-import type { HobbyData } from "@/components/ui/custom/settings/HobbySubForm";
-
+import { HobbyData, HobbyList, HobbySubForm } from "../custom";
 interface HobbiesFormProps {
   defaultValue?: HobbyData[];
   onChange: (hobbies: HobbyData[]) => void;
 }
 
-export const HobbiesForm = ({
-  defaultValue,
-  onChange,
-}: HobbiesFormProps) => {
+export const HobbiesForm = ({ defaultValue, onChange }: HobbiesFormProps) => {
   const t = useTranslations("settings");
   const tCommon = useTranslations("common");
 
@@ -73,7 +67,9 @@ export const HobbiesForm = ({
             }
             onSave={handleSave}
             onCancel={closeSubForm}
-            onDelete={typeof editingIndex === "number" ? handleDelete : undefined}
+            onDelete={
+              typeof editingIndex === "number" ? handleDelete : undefined
+            }
           />
         </div>
       )}
