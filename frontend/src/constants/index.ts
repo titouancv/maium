@@ -6,8 +6,6 @@ export const ROUTES = {
   SETTINGS: "/settings",
   SETTINGS_ACCOUNT: "/settings/account",
   SETTINGS_PERSONAL_DATA: "/settings/personal-data",
-  UPDATE_EXPERIENCE_PRO: "/update-experience/professional",
-  UPDATE_EXPERIENCE_EDU: "/update-experience/educational",
   AUTH_CALLBACK: "/auth/callback",
 } as const;
 
