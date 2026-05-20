@@ -28,7 +28,6 @@ export type FormBaseProps = {
   secondaryLabel?: string;
   primaryLabel?: string;
   primaryLoading?: boolean;
-  centerContent?: boolean;
   isCancelable?: boolean;
   onCancel?: () => void;
   cancelLabel?: string;
@@ -216,15 +215,10 @@ export const Form = (props: FormProps) => {
     secondaryLabel: props.secondaryLabel,
     primaryLabel: props.primaryLabel,
     primaryLoading: props.primaryLoading,
-    centerContent: props.centerContent,
     isCancelable: props.isCancelable,
     onCancel: props.onCancel,
     cancelLabel: props.cancelLabel,
   };
 
-  return (
-    <FormLayout {...FormbaseProps}>
-      {renderContent(props)}
-    </FormLayout>
-  );
+  return <FormLayout {...FormbaseProps}>{renderContent(props)}</FormLayout>;
 };

@@ -44,47 +44,51 @@ export const FullNameForm = ({ onChange, defaultValue }: FullNameFormProps) => {
   }, []);
 
   return (
-    <form
-      id={SIGNUP_FORM_ID}
-      onSubmit={handleSubmit(onChange)}
-      className="space-y-4"
-    >
-      <TextInput
-        placeholder={t("firstNamePlaceholder")}
-        infoLabel={
-          touchedFields.firstName
-            ? (errors.firstName?.message as string)
-            : undefined
-        }
-        infoType={
-          touchedFields.firstName && errors.firstName ? "error" : "info"
-        }
-        inputMode="text"
-        autoCapitalize="words"
-        autoComplete="given-name"
-        enterKeyHint="next"
-        onKeyDown={(e) => {
-          if (e.key === "Enter") {
-            e.preventDefault();
-            setFocus("lastName");
+    <div className="md:flex md:flex-1 md:flex-col md:justify-center">
+      <form
+        id={SIGNUP_FORM_ID}
+        onSubmit={handleSubmit(onChange)}
+        className="space-y-4"
+      >
+        <TextInput
+          placeholder={t("firstNamePlaceholder")}
+          infoLabel={
+            touchedFields.firstName
+              ? (errors.firstName?.message as string)
+              : undefined
           }
-        }}
-        {...register("firstName")}
-      />
-      <TextInput
-        placeholder={t("lastNamePlaceholder")}
-        infoLabel={
-          touchedFields.lastName
-            ? (errors.lastName?.message as string)
-            : undefined
-        }
-        infoType={touchedFields.lastName && errors.lastName ? "error" : "info"}
-        inputMode="text"
-        autoCapitalize="words"
-        autoComplete="family-name"
-        enterKeyHint="done"
-        {...register("lastName")}
-      />
-    </form>
+          infoType={
+            touchedFields.firstName && errors.firstName ? "error" : "info"
+          }
+          inputMode="text"
+          autoCapitalize="words"
+          autoComplete="given-name"
+          enterKeyHint="next"
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+              e.preventDefault();
+              setFocus("lastName");
+            }
+          }}
+          {...register("firstName")}
+        />
+        <TextInput
+          placeholder={t("lastNamePlaceholder")}
+          infoLabel={
+            touchedFields.lastName
+              ? (errors.lastName?.message as string)
+              : undefined
+          }
+          infoType={
+            touchedFields.lastName && errors.lastName ? "error" : "info"
+          }
+          inputMode="text"
+          autoCapitalize="words"
+          autoComplete="family-name"
+          enterKeyHint="done"
+          {...register("lastName")}
+        />
+      </form>
+    </div>
   );
 };

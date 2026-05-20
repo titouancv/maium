@@ -38,23 +38,25 @@ export const PhoneNumberForm = ({
   }, [trigger]);
 
   return (
-    <form
-      id={SIGNUP_FORM_ID}
-      onSubmit={handleSubmit(onChange)}
-      className="space-y-4"
-    >
-      <Controller
-        name="phone"
-        control={control}
-        render={({ field }) => (
-          <PhoneInput
-            value={field.value}
-            onChange={field.onChange}
-            onBlur={field.onBlur}
-            autoFocus
-          />
-        )}
-      />
-    </form>
+    <div className="md:flex md:flex-1 md:flex-col md:justify-center">
+      <form
+        id={SIGNUP_FORM_ID}
+        onSubmit={handleSubmit(onChange)}
+        className="space-y-4"
+      >
+        <Controller
+          name="phone"
+          control={control}
+          render={({ field }) => (
+            <PhoneInput
+              value={field.value}
+              onChange={field.onChange}
+              onBlur={field.onBlur}
+              autoFocus
+            />
+          )}
+        />
+      </form>
+    </div>
   );
 };

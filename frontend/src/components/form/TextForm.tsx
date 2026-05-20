@@ -26,12 +26,14 @@ export const TextForm = ({
   };
 
   return (
-    <TextInput
-      placeholder={placeholder}
-      value={value}
-      onChange={handleChange}
-      infoLabel={infoLabel}
-      infoType={infoType}
-    />
+    <div className="md:flex md:flex-1 md:flex-col md:justify-center">
+      <TextInput
+        placeholder={placeholder}
+        value={value}
+        onChange={handleChange}
+        infoLabel={infoLabel}
+        infoType={infoType}
+      />
+    </div>
   );
 };

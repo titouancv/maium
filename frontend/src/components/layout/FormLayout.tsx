@@ -23,7 +23,6 @@ export const FormLayout = ({
   secondaryLabel,
   primaryLabel,
   primaryLoading,
-  centerContent,
   children,
 }: StepLayoutProps) => {
   const [keyboardHeight, setKeyboardHeight] = useState(0);
@@ -73,15 +72,8 @@ export const FormLayout = ({
         </div>
 
         {/* Content */}
-        <div
-          className={cn(
-            "min-h-0 flex-1 overflow-y-auto pt-10 pb-32 text-xl",
-            centerContent === undefined &&
-              "md:flex md:items-center md:justify-center md:py-0",
-            centerContent === true && "flex items-center justify-center",
-          )}
-        >
-          <div className="w-full">{children}</div>
+        <div className="flex min-h-0 flex-1 flex-col overflow-y-auto pt-10 pb-32 text-xl md:py-0">
+          {children}
         </div>
 
         {/* Buttons — fixed above keyboard on mobile, inline on desktop */}

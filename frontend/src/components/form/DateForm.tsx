@@ -46,28 +46,30 @@ export const DateForm = ({ onChange, defaultValue }: DateFormProps) => {
   }, [trigger]);
 
   return (
-    <form
-      id={SIGNUP_FORM_ID}
-      onSubmit={handleSubmit(onChange)}
-      className="space-y-4"
-    >
-      <Controller
-        name="dob"
-        control={control}
-        render={({ field }) => (
-          <DateInput
-            {...field}
-            autoFocus
-            autoComplete="bday"
-            error={
-              field.value?.length === 10
-                ? (errors.dob?.message as string)
-                : undefined
-            }
-            onComplete={handleSubmit(onChange)}
-          />
-        )}
-      />
-    </form>
+    <div className="md:flex md:flex-1 md:flex-col md:justify-center">
+      <form
+        id={SIGNUP_FORM_ID}
+        onSubmit={handleSubmit(onChange)}
+        className="space-y-4"
+      >
+        <Controller
+          name="dob"
+          control={control}
+          render={({ field }) => (
+            <DateInput
+              {...field}
+              autoFocus
+              autoComplete="bday"
+              error={
+                field.value?.length === 10
+                  ? (errors.dob?.message as string)
+                  : undefined
+              }
+              onComplete={handleSubmit(onChange)}
+            />
+          )}
+        />
+      </form>
+    </div>
   );
 };

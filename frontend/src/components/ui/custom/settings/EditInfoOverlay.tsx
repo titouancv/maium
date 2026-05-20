@@ -161,7 +161,6 @@ export const EditInfoOverlay = ({ field, user, onClose, onSaved }: Props) => {
           onSecondary: user.nationality
             ? () => save({ nationality: null })
             : undefined,
-          centerContent: false,
         };
       case "location":
         return {
@@ -174,7 +173,6 @@ export const EditInfoOverlay = ({ field, user, onClose, onSaved }: Props) => {
           onSecondary: user.location
             ? () => save({ location: null })
             : undefined,
-          centerContent: false,
         };
       case "professionalExperiences":
         return {
@@ -224,7 +222,6 @@ export const EditInfoOverlay = ({ field, user, onClose, onSaved }: Props) => {
           defaultValue: user.social_networks ?? [],
           onChange: (items) => setCurrentStrItems(items),
           onPrimary: () => save({ socialNetworks: currentStrItems }),
-          centerContent: false,
         };
       case "projects":
         return {
@@ -233,7 +230,6 @@ export const EditInfoOverlay = ({ field, user, onClose, onSaved }: Props) => {
           defaultValue: user.projects ?? [],
           onChange: (items) => setCurrentStrItems(items),
           onPrimary: () => save({ projects: currentStrItems }),
-          centerContent: false,
         };
       case "hobbies":
         return {

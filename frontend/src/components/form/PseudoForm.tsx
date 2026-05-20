@@ -101,22 +101,24 @@ export const PseudoForm = ({ onChange, defaultValue }: PseudoFormProps) => {
   };
 
   return (
-    <form
-      id={SIGNUP_FORM_ID}
-      onSubmit={handleSubmit(onChange)}
-      className="space-y-4"
-    >
-      <TextInput
-        placeholder={t("pseudoPlaceholder")}
-        infoLabel={getInfoLabel()}
-        infoType={getInfoType()}
-        inputMode="text"
-        autoCapitalize="none"
-        autoCorrect="off"
-        autoComplete="username"
-        enterKeyHint="done"
-        {...register("pseudo")}
-      />
-    </form>
+    <div className="md:flex md:flex-1 md:flex-col md:justify-center">
+      <form
+        id={SIGNUP_FORM_ID}
+        onSubmit={handleSubmit(onChange)}
+        className="space-y-4"
+      >
+        <TextInput
+          placeholder={t("pseudoPlaceholder")}
+          infoLabel={getInfoLabel()}
+          infoType={getInfoType()}
+          inputMode="text"
+          autoCapitalize="none"
+          autoCorrect="off"
+          autoComplete="username"
+          enterKeyHint="done"
+          {...register("pseudo")}
+        />
+      </form>
+    </div>
   );
 };

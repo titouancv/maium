@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef, useState } from "react";
+import { cn } from "@/lib/utils";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useTranslations } from "next-intl";
@@ -97,9 +98,8 @@ export const ExperienceSubWizard = ({
       onPrimary={handlePrimary}
       secondaryLabel={t("removeEntry")}
       onSecondary={onDelete}
-      centerContent={subStep === 6 ? false : undefined}
     >
-      <div className="flex flex-col gap-3">
+      <div className={cn("flex flex-col gap-3", subStep !== 6 && "md:flex-1 md:justify-center")}>
         {subStep === 1 && (
           <TextInput
             placeholder={t("organizationPlaceholder")}

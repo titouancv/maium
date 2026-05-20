@@ -33,23 +33,25 @@ export const DateRangeForm = ({
   };
 
   return (
-    <div className="flex w-full gap-2">
-      <DateInput
-        mode={mode}
-        value={defaultValue.defaultStartDate}
-        onChange={handleStartChange}
-        error={startError}
-        autoFocus
-        onComplete={() => endRef.current?.focus()}
-        onEnter={() => endRef.current?.focus()}
-      />
-      <DateInput
-        ref={endRef}
-        mode={mode}
-        value={defaultValue.defaultEndDate}
-        onChange={handleEndChange}
-        error={endError}
-      />
+    <div className="md:flex-1 md:flex md:flex-col md:justify-center">
+      <div className="flex w-full gap-2">
+        <DateInput
+          mode={mode}
+          value={defaultValue.defaultStartDate}
+          onChange={handleStartChange}
+          error={startError}
+          autoFocus
+          onComplete={() => endRef.current?.focus()}
+          onEnter={() => endRef.current?.focus()}
+        />
+        <DateInput
+          ref={endRef}
+          mode={mode}
+          value={defaultValue.defaultEndDate}
+          onChange={handleEndChange}
+          error={endError}
+        />
+      </div>
     </div>
   );
 };
