@@ -119,20 +119,31 @@ export const ExperiencesForm = ({
             {tCommon("addButton")}
           </Button>
         ) : (
-          <ExperienceList
-            fields={fields}
-            control={control}
-            getDisplay={(item) => ({
-              organization: item.organization ?? "",
-              role: item.role ?? "",
-              startPeriod: item.startPeriod ?? "",
-              endPeriod: item.endPeriod || undefined,
-              description: item.description ?? "",
-              website: item.website ?? "",
-              location: item.location ?? "",
-            })}
-            onEdit={(index) => openSubForm(index)}
-          />
+          <>
+            <ExperienceList
+              fields={fields}
+              control={control}
+              getDisplay={(item) => ({
+                organization: item.organization ?? "",
+                role: item.role ?? "",
+                startPeriod: item.startPeriod ?? "",
+                endPeriod: item.endPeriod || undefined,
+                description: item.description ?? "",
+                website: item.website ?? "",
+                location: item.location ?? "",
+              })}
+              onEdit={(index) => openSubForm(index)}
+            />
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              className="self-start"
+              onClick={() => openSubForm("new")}
+            >
+              {tCommon("addButton")}
+            </Button>
+          </>
         )}
       </div>
       {subFormInitialValues !== null && (
