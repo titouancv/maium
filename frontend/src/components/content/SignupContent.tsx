@@ -81,6 +81,7 @@ export const SignupWizard = ({
       dob: merged.dob,
       professionalExperiences: merged.professionalExperiences ?? [],
       educationalExperiences: merged.educationalExperiences ?? [],
+      onboardingCompleted: true,
     };
     const createBody = {
       email: merged.email,

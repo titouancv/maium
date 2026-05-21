@@ -38,7 +38,7 @@ export default async function SignupPage() {
       firstName: profile?.first_name ?? user.user_metadata?.given_name ?? "",
       lastName: profile?.last_name ?? user.user_metadata?.family_name ?? "",
       pseudo: profile?.pseudo ?? undefined,
-      dob: profile?.dob ?? undefined,
+      dob: profile?.dob ? new Date(profile.dob).getTime() : undefined,
       professionalExperiences:
         (profile?.professional_experiences as unknown as Experience[] | null) ?? [],
       educationalExperiences:

@@ -184,6 +184,7 @@ const renderContent = (props: FormProps) => {
     case "experiences":
       return (
         <ExperiencesForm
+          key={props.namespace}
           namespace={props.namespace}
           dateMode={props.dateMode}
           defaultValue={props.defaultValue}
