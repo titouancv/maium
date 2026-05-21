@@ -72,8 +72,8 @@
     "noPersonalExperiences": "No personal experiences yet",
     "noProjects": "No projects yet",
     "urlInvalid": "Please enter a valid URL",
-    "hobbySubStep1Title": "What is this hobby?",
-    "hobbySubStep2Title": "Describe it (optional)",
+    "hobbySubStep1Title": "What's the hobby?",
+    "hobbySubStep2Title": "Tell us more (optional)",
     "hobbyTitleRequired": "Please enter a title",
     "hobbyTitlePlaceholder": "Rock climbing",
     "hobbyDescriptionPlaceholder": "Indoor bouldering and outdoor sport climbing, started 3 years ago."
@@ -103,7 +103,7 @@
         "lastNameRequired": "Last name is required"
       },
       "step3": {
-        "title": "Choose your username",
+        "title": "Pick your username",
         "pseudoPlaceholder": "johndoe42",
         "pseudoMinLength": "Username must be at least 3 characters",
         "pseudoChecking": "Checking...",
@@ -116,10 +116,10 @@
         "dobFuture": "Date of birth cannot be in the future"
       },
       "step5": {
-        "title": "Professional experience"
+        "title": "Your career"
       },
       "step6": {
-        "title": "Educational background"
+        "title": "Your education"
       },
       "duplicateEmailError": "This email address is already in use.",
       "duplicatePseudoError": "This username is already in use.",
@@ -135,18 +135,18 @@
   },
   "form": {
     "fullNameTitle": "What's your name?",
-    "pseudoTitle": "Choose your username",
+    "pseudoTitle": "Pick your username",
     "dateTitle": "When's your birthday?",
-    "phoneNumberTitle": "Phone number",
-    "locationTitle": "Location",
-    "nationalityTitle": "Nationality",
-    "socialNetworkTitle": "Social networks",
-    "hobbiesTitle": "Hobbies",
-    "keysTitle": "Skills",
-    "urlsTitle": "Projects",
-    "experiencesProfessionalTitle": "Professional experience",
-    "experiencesEducationalTitle": "Educational background",
-    "experiencesPersonalTitle": "Personal experiences"
+    "phoneNumberTitle": "How can we reach you?",
+    "locationTitle": "Where are you based?",
+    "nationalityTitle": "Where are you from?",
+    "socialNetworkTitle": "Your links",
+    "hobbiesTitle": "What you're into",
+    "keysTitle": "What you're good at",
+    "urlsTitle": "What you've built",
+    "experiencesProfessionalTitle": "Your career",
+    "experiencesEducationalTitle": "Your education",
+    "experiencesPersonalTitle": "Your story"
   },
   "experience": {
     "professional": {

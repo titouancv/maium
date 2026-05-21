@@ -72,8 +72,8 @@
     "noPersonalExperiences": "Aucune expérience personnelle pour l'instant",
     "noProjects": "Aucun projet pour l'instant",
     "urlInvalid": "Veuillez entrer une URL valide",
-    "hobbySubStep1Title": "Quel est ce loisir ?",
-    "hobbySubStep2Title": "Décrivez-le (optionnel)",
+    "hobbySubStep1Title": "C'est quoi ce loisir ?",
+    "hobbySubStep2Title": "Un peu plus ? (optionnel)",
     "hobbyTitleRequired": "Veuillez saisir un titre",
     "hobbyTitlePlaceholder": "Escalade",
     "hobbyDescriptionPlaceholder": "Bloc en salle et escalade sportive en extérieur, pratiqué depuis 3 ans."
@@ -96,7 +96,7 @@
         "passwordPlaceholder": "••••••••"
       },
       "step2": {
-        "title": "Quel est votre nom ?",
+        "title": "Comment vous appelez-vous ?",
         "firstNamePlaceholder": "Jean",
         "lastNamePlaceholder": "Dupont",
         "firstNameRequired": "Le prénom est requis",
@@ -111,15 +111,15 @@
         "pseudoTaken": "Ce pseudo est déjà utilisé"
       },
       "step4": {
-        "title": "Quelle est votre date de naissance ?",
+        "title": "Vous êtes né(e) quand ?",
         "dobInvalid": "Veuillez entrer une date valide",
         "dobFuture": "La date de naissance ne peut pas être dans le futur"
       },
       "step5": {
-        "title": "Expérience professionnelle"
+        "title": "Votre parcours"
       },
       "step6": {
-        "title": "Parcours éducatif"
+        "title": "Votre formation"
       },
       "duplicateEmailError": "Cette adresse e-mail est déjà utilisée.",
       "duplicatePseudoError": "Ce pseudo est déjà utilisé.",
@@ -134,19 +134,19 @@
     }
   },
   "form": {
-    "fullNameTitle": "Quel est votre nom ?",
+    "fullNameTitle": "Comment vous appelez-vous ?",
     "pseudoTitle": "Choisissez votre pseudo",
-    "dateTitle": "Quelle est votre date de naissance ?",
-    "phoneNumberTitle": "Numéro de téléphone",
-    "locationTitle": "Localisation",
-    "nationalityTitle": "Nationalité",
-    "socialNetworkTitle": "Réseaux sociaux",
-    "hobbiesTitle": "Loisirs",
-    "keysTitle": "Compétences",
-    "urlsTitle": "Projets",
-    "experiencesProfessionalTitle": "Expérience professionnelle",
-    "experiencesEducationalTitle": "Parcours éducatif",
-    "experiencesPersonalTitle": "Expériences personnelles"
+    "dateTitle": "Vous êtes né(e) quand ?",
+    "phoneNumberTitle": "Comment vous joindre ?",
+    "locationTitle": "Où êtes-vous basé(e) ?",
+    "nationalityTitle": "D'où venez-vous ?",
+    "socialNetworkTitle": "Vos liens",
+    "hobbiesTitle": "Ce qui vous passionne",
+    "keysTitle": "Vos points forts",
+    "urlsTitle": "Vos réalisations",
+    "experiencesProfessionalTitle": "Votre parcours",
+    "experiencesEducationalTitle": "Votre formation",
+    "experiencesPersonalTitle": "Votre histoire"
   },
   "experience": {
     "professional": {
