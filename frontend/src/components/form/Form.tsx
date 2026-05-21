@@ -238,7 +238,7 @@ const getDefaultTitle = (
 
 export const Form = (props: FormProps) => {
   const t = useTranslations("form");
-  const FormbaseProps: FormBaseProps = {
+  const FormbaseProps = {
     title: props.title ?? getDefaultTitle(props, t),
     step: props.step,
     totalSteps: props.totalSteps,
