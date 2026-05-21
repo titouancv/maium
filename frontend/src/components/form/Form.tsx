@@ -70,7 +70,7 @@ export type FormConfigMap = {
   date: never;
   fullName: never;
   hobbies: never;
-  keys: { placeholder: string; emptyLabel: string };
+  keys: { placeholder: string };
   location: never;
   phoneNumber: never;
   socialNetwork: never;
@@ -118,7 +118,6 @@ const renderContent = (props: FormProps) => {
       return (
         <KeysForm
           placeholder={props.placeholder}
-          emptyLabel={props.emptyLabel}
           onChange={props.onChange}
           defaultValue={props.defaultValue}
         />

@@ -107,19 +107,21 @@ export const ExperiencesForm = ({
 
   return (
     <>
-      <div className="flex flex-col gap-4">
-        {fields.length === 0 ? (
+      {fields.length === 0 ? (
+        <div className="flex h-full w-full flex-col justify-center">
           <Button
             type="button"
             variant="outline"
-            size="sm"
-            className="self-start"
+            size="lg"
+            className="w-full self-start"
             onClick={() => openSubForm("new")}
           >
             {tCommon("addButton")}
           </Button>
-        ) : (
-          <>
+        </div>
+      ) : (
+        <div className="flex h-full w-full flex-col justify-between gap-4">
+          <div className="flex min-h-0 flex-1 flex-col overflow-y-auto">
             <ExperienceList
               fields={fields}
               control={control}
@@ -134,18 +136,18 @@ export const ExperiencesForm = ({
               })}
               onEdit={(index) => openSubForm(index)}
             />
-            <Button
-              type="button"
-              variant="outline"
-              size="sm"
-              className="self-start"
-              onClick={() => openSubForm("new")}
-            >
-              {tCommon("addButton")}
-            </Button>
-          </>
-        )}
-      </div>
+          </div>
+          <Button
+            type="button"
+            variant="outline"
+            size="lg"
+            className="w-full self-start"
+            onClick={() => openSubForm("new")}
+          >
+            {tCommon("addButton")}
+          </Button>
+        </div>
+      )}
       {subFormInitialValues !== null && (
         <div className="bg-surface-50 fixed inset-0 z-50">
           <ExperienceSubForm

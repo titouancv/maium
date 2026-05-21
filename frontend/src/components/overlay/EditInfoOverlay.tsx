@@ -195,7 +195,6 @@ export const EditInfoOverlay = ({ field, user, onClose, onSaved }: Props) => {
           ...base,
           type: "keys",
           placeholder: t("skills"),
-          emptyLabel: t("noSkills"),
           defaultValue: user.skills ?? [],
           onChange: (items) => setCurrentStrItems(items),
           onPrimary: () => save({ skills: currentStrItems }),

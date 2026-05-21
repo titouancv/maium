@@ -69,6 +69,9 @@
     "noPersonalExperiences": "Aucune expérience personnelle pour l'instant",
     "noProjects": "Aucun projet pour l'instant",
     "urlInvalid": "Veuillez entrer une URL valide",
+    "hobbySubStep1Title": "Quel est ce loisir ?",
+    "hobbySubStep2Title": "Décrivez-le (optionnel)",
+    "hobbyTitleRequired": "Veuillez saisir un titre",
     "hobbyTitlePlaceholder": "Titre",
     "hobbyDescriptionPlaceholder": "Description"
   },

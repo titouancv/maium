@@ -12,7 +12,14 @@ interface Props {
   onRemove: (index: number) => void;
 }
 
-export const SkillsField = ({ items, draft, draftError, onDraftChange, onAdd, onRemove }: Props) => {
+export const SkillsField = ({
+  items,
+  draft,
+  draftError,
+  onDraftChange,
+  onAdd,
+  onRemove,
+}: Props) => {
   const t = useTranslations("settings");
   const tCommon = useTranslations("common");
 
@@ -23,15 +30,25 @@ export const SkillsField = ({ items, draft, draftError, onDraftChange, onAdd, on
           placeholder={t("skills")}
           value={draft}
           onChange={(e) => onDraftChange(e.target.value)}
-          onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); onAdd(); } }}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+              e.preventDefault();
+              onAdd();
+            }
+          }}
           infoLabel={draftError ?? ""}
           infoType={draftError ? "error" : "info"}
         />
-        <Button variant="outline" type="button" className="mt-1 shrink-0" onClick={onAdd}>
+        <Button
+          variant="outline"
+          type="button"
+          className="mt-1 shrink-0"
+          onClick={onAdd}
+        >
           {tCommon("addButton")}
         </Button>
       </div>
-      <ChipList items={items} onRemove={onRemove} emptyLabel={t("noSkills")} />
+      <ChipList items={items} onRemove={onRemove} />
     </div>
   );
 };

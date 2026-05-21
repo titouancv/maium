@@ -14,23 +14,25 @@ const infoColors = {
 };
 
 export const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
-  ({ className = "", infoLabel = "", infoType = "info", ...props }, ref) => {
+  ({ className = "", infoLabel = "", infoType, ...props }, ref) => {
     return (
       <div className="flex w-full flex-col gap-1.5">
         <input
           ref={ref}
           className={cn(
-            "h-12 w-full transition-all placeholder:uppercase rounded-xl p-1 outline-none",
+            "h-12 w-full rounded-xl p-1 transition-all outline-none placeholder:uppercase",
             infoType === "error"
               ? "text-error bg-error/10"
               : "text-txt hover:bg-surface-100 focus:bg-surface-100",
-            className
+            className,
           )}
           {...props}
         />
-        <span className={`${infoColors[infoType]} pl-1 text-xs`}>
-          {infoLabel || " "}
-        </span>
+        {infoType && (
+          <span className={`${infoColors[infoType]} pl-1 text-xs`}>
+            {infoLabel || " "}
+          </span>
+        )}
       </div>
     );
   },

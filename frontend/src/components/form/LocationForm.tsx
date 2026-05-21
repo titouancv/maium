@@ -38,25 +38,27 @@ export const LocationForm = ({ onChange, defaultValue }: LocationFormProps) => {
   }, [trigger]);
 
   return (
-    <form
-      id={SIGNUP_FORM_ID}
-      onSubmit={handleSubmit(onChange)}
-      className="space-y-4"
-    >
-      <Controller
-        name="location"
-        control={control}
-        render={({ field }) => (
-          <LocationInput
-            placeholder={t("locationPlaceholder")}
-            value={field.value}
-            onChange={field.onChange}
-            onBlur={field.onBlur}
-            error={errors.location?.message as string}
-            autoFocus
-          />
-        )}
-      />
-    </form>
+    <div className="flex w-full justify-start">
+      <form
+        id={SIGNUP_FORM_ID}
+        onSubmit={handleSubmit(onChange)}
+        className="w-full space-y-4"
+      >
+        <Controller
+          name="location"
+          control={control}
+          render={({ field }) => (
+            <LocationInput
+              placeholder={t("locationPlaceholder")}
+              value={field.value}
+              onChange={field.onChange}
+              onBlur={field.onBlur}
+              error={errors.location?.message as string}
+              autoFocus
+            />
+          )}
+        />
+      </form>
+    </div>
   );
 };

@@ -72,7 +72,7 @@ export const FormLayout = ({
         </div>
 
         {/* Content */}
-        <div className="flex min-h-0 flex-1 flex-col overflow-y-auto pt-10 pb-32 text-xl md:py-0">
+        <div className="flex min-h-0 flex-1 flex-col overflow-y-auto pt-10 pb-18 md:pb-4">
           {children}
         </div>
 
@@ -80,7 +80,7 @@ export const FormLayout = ({
         {primaryLabel && (formId || onPrimary) && (
           <div
             className={cn(
-              "fixed inset-x-0 px-6 transition-[bottom] duration-300",
+              "fixed inset-x-0 px-4 transition-[bottom] duration-300",
               "md:static md:inset-auto md:px-0 md:pb-[150px]",
               keyboardHeight > 0 ? "pb-4" : "pb-8",
             )}
@@ -91,7 +91,7 @@ export const FormLayout = ({
                   : "env(safe-area-inset-bottom, 0px)",
             }}
           >
-            <div className="flex gap-2 md:mt-4">
+            <div className="flex gap-2">
               {onSecondary && (
                 <Button
                   variant="outline"

@@ -48,7 +48,7 @@ export const UrlListField = ({
   <div className="flex flex-col gap-4">
     <div className="flex items-start gap-2">
       <TextInput
-        placeholder="https://..."
+        placeholder="https://maium.app/..."
         value={draft}
         onChange={(e) => onDraftChange(e.target.value)}
         onKeyDown={(e) => {
