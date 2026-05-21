@@ -33,26 +33,30 @@ export const PageLayout = ({
   ];
 
   return (
-    <div className="relative flex h-dvh flex-col p-4 md:h-screen md:items-center">
-      <div className="flex h-full w-full flex-col gap-8 md:h-screen md:max-w-5xl">
+    <div className="relative flex h-dvh flex-col md:h-screen md:items-center">
+      <div className="flex h-full w-full flex-col gap-8 md:h-screen">
         {/* Header */}
-        <div className="flex shrink-0 items-center justify-between pt-6 md:pt-12">
-          <Title label={title} size="h1" />
-          {backLabel && (
-            <Button
-              variant="ghost"
-              type="button"
-              size="none"
-              onClick={handleBack}
-            >
-              {backLabel}
-            </Button>
-          )}
+        <div className="flex shrink-0 justify-center px-4">
+          <div className="flex w-full max-w-5xl shrink-0 items-center justify-between pt-6 md:pt-12">
+            <Title label={title} size="h1" />
+            {backLabel && (
+              <Button
+                variant="ghost"
+                type="button"
+                size="none"
+                onClick={handleBack}
+              >
+                {backLabel}
+              </Button>
+            )}
+          </div>
         </div>
 
         {/* Content */}
-        <div className="min-h-0 flex-1 overflow-y-auto pb-24 md:pb-32">
+
+        <div className="flex min-h-0 w-full flex-1 flex-col items-center overflow-y-auto px-4">
           {children}
+          <div className="h-24 shrink-0 md:h-32" />
         </div>
       </div>
 

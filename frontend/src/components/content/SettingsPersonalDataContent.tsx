@@ -35,7 +35,7 @@ export const SettingsPersonalDataContent = ({
   return (
     <PageLayout title={t("mesInformations")} backLabel={t("backButton")}>
       {user && (
-        <div className="flex flex-col gap-12">
+        <div className="flex w-full flex-col gap-12 md:max-w-5xl">
           <MenuList
             items={[
               {
@@ -50,7 +50,8 @@ export const SettingsPersonalDataContent = ({
               },
               {
                 label: tHome("dob"),
-                value: user.dob != null ? formatTimestampDate(user.dob) : undefined,
+                value:
+                  user.dob != null ? formatTimestampDate(user.dob) : undefined,
                 onClick: () => setEditingField("dob"),
               },
               {

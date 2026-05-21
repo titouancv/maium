@@ -35,6 +35,7 @@
     "deleteAccountConfirm": "Are you sure? This action is irreversible.",
     "deleteAccountConfirmButton": "Yes, delete",
     "deleteAccountCancelButton": "Cancel",
+    "deleteAccountSlideLabel": "Slide to delete",
     "phone": "Phone number",
     "nationality": "Nationality",
     "location": "Location",

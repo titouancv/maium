@@ -35,6 +35,7 @@
     "deleteAccountConfirm": "Êtes-vous sûr ? Cette action est irréversible.",
     "deleteAccountConfirmButton": "Oui, supprimer",
     "deleteAccountCancelButton": "Annuler",
+    "deleteAccountSlideLabel": "Glisser pour supprimer",
     "phone": "Numéro de téléphone",
     "nationality": "Nationalité",
     "location": "Localisation",

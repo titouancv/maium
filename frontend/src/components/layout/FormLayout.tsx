@@ -53,10 +53,10 @@ export const FormLayout = ({
   }, []);
 
   return (
-    <div className="flex h-dvh flex-col p-4 md:h-screen md:items-center md:justify-center">
+    <div className="flex h-dvh flex-col md:h-screen md:items-center md:justify-center">
       <div className="flex h-full w-full flex-col md:h-screen md:max-w-xl">
         {/* Header */}
-        <div className="flex shrink-0 items-center justify-between pt-6 md:pt-12">
+        <div className="flex shrink-0 items-center justify-between px-4 pt-6 md:pt-12">
           <Title label={title} size="h1" />
           {isCancelable ? (
             <Button
@@ -73,7 +73,7 @@ export const FormLayout = ({
         </div>
 
         {/* Content */}
-        <div className="flex min-h-0 flex-1 flex-col overflow-y-auto pt-10 pb-18 md:pb-4">
+        <div className="flex min-h-0 flex-1 flex-col overflow-y-auto px-4 pt-10 pb-18 md:pb-4">
           {children}
         </div>
 

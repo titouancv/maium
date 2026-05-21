@@ -15,7 +15,9 @@ export const SettingsContent = () => {
 
   return (
     <PageLayout title={t("title")}>
-      <MenuList items={menuItems} />
+      <div className="w-full md:max-w-5xl">
+        <MenuList items={menuItems} />
+      </div>
     </PageLayout>
   );
 };

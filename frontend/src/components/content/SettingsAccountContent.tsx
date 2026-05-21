@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/Button";
+import { SlideToEnter } from "@/components/ui/SlideToEnter";
 import { API, ROUTES } from "@/constants";
 import { useRouter } from "@/i18n/navigation";
 import { PageLayout } from "@/components/layout";
@@ -30,30 +31,37 @@ export const SettingsAccountContent = () => {
 
   return (
     <PageLayout title={t("monCompte")} backLabel={t("backButton")}>
-      <div className="flex flex-col items-start gap-4">
-        <Button
-          variant="outline"
-          onClick={handleLogout}
-          isLoading={isLoggingOut}
-        >
-          {t("logoutButton")}
-        </Button>
+      <div className="flex h-full w-full flex-col items-center justify-center gap-4 md:max-w-5xl">
         {!showDeleteConfirm ? (
-          <Button variant="primary" onClick={() => setShowDeleteConfirm(true)}>
-            {t("deleteAccountButton")}
-          </Button>
+          <>
+            <Button
+              variant="outline"
+              onClick={handleLogout}
+              isLoading={isLoggingOut}
+              className="w-full max-w-xl"
+            >
+              {t("logoutButton")}
+            </Button>
+            <Button
+              variant="primary"
+              onClick={() => setShowDeleteConfirm(true)}
+              className="w-full max-w-xl"
+            >
+              {t("deleteAccountButton")}
+            </Button>
+          </>
         ) : (
-          <div className="flex flex-col gap-2">
-            <p className="text-txt text-sm">{t("deleteAccountConfirm")}</p>
-            <div className="flex gap-2">
-              <Button
-                variant="outline"
-                onClick={() => setShowDeleteConfirm(false)}
-              >
-                {t("deleteAccountCancelButton")}
-              </Button>
+          <div className="flex w-full flex-col items-center justify-center">
+            <div className="flex w-full items-center justify-center md:hidden">
+              <SlideToEnter
+                onConfirm={handleDeleteAccount}
+                label={t("deleteAccountSlideLabel")}
+              />
+            </div>
+            <div className="hidden w-full max-w-xl md:flex">
               <Button
                 variant="primary"
+                className="w-full"
                 onClick={handleDeleteAccount}
                 isLoading={isDeletingAccount}
               >
