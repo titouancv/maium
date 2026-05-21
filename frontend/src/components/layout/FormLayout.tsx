@@ -6,7 +6,8 @@ import { Title, StepCounter } from "@/components/ui";
 import { Button } from "@/components/ui/Button";
 import { FormBaseProps } from "../form/Form";
 
-interface StepLayoutProps extends FormBaseProps {
+interface FormLayoutProps extends Omit<FormBaseProps, "title"> {
+  title: string;
   children: React.ReactNode;
 }
 
@@ -24,7 +25,7 @@ export const FormLayout = ({
   primaryLabel,
   primaryLoading,
   children,
-}: StepLayoutProps) => {
+}: FormLayoutProps) => {
   const [keyboardHeight, setKeyboardHeight] = useState(0);
 
   useEffect(() => {
