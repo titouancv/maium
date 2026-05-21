@@ -31,7 +31,13 @@ export default async function SignupPage() {
       redirect({ href: ROUTES.HOME, locale });
     }
 
-    initialStep = profile?.dob ? 4 : profile?.pseudo ? 3 : 1;
+    initialStep = profile?.dob
+      ? 4
+      : profile?.pseudo
+        ? 3
+        : profile?.first_name && profile?.last_name
+          ? 2
+          : 1;
     initialUser = {
       supabaseId: user.id,
       email: user.email,
