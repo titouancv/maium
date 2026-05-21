@@ -76,6 +76,86 @@ There are two signup paths that share the same wizard UI (`src/components/conten
 
 OAuth flow: Google/Apple → Supabase → `/auth/callback` → `exchangeCodeForSession` → `ROUTES.SIGNUP` (to complete the wizard).
 
+### Form System
+
+All forms go through `<Form />` (`src/components/form/Form.tsx`). It dispatches to the right sub-form based on `type` and wraps everything in `FormLayout` (header with title + step counter, scrollable content area, action buttons fixed above the keyboard on mobile).
+
+#### Available form types
+
+| `type` | What it collects | Submit pattern |
+|--------|-----------------|----------------|
+| `"text"` | Single text input | `formId` |
+| `"longText"` | Multi-line textarea | `formId` |
+| `"fullName"` | First name + last name | `formId` |
+| `"pseudo"` | Username with availability check | `formId` |
+| `"date"` | Date of birth | `formId` |
+| `"dateRange"` | Start / end dates | `formId` |
+| `"phoneNumber"` | Phone number | `formId` |
+| `"location"` | City/country picker | `formId` |
+| `"experiences"` | Experience list editor | `onPrimary` |
+| `"hobbies"` | Hobby picker | `onPrimary` |
+| `"keys"` | Free-form tag list | `onPrimary` |
+| `"urls"` | URL list | `onPrimary` |
+| `"socialNetwork"` | Social network links | `onPrimary` |
+
+#### Two submit patterns
+
+**`formId` pattern** — the sub-form renders a `<form id={formId}>`. The primary button is `type="submit"`, so validation runs on click. `onChange` fires on each change; the submit triggers whatever action is wired to `onChange`.
+
+```tsx
+import { SIGNUP_FORM_ID } from "@/constants";
+
+<Form
+  type="text"
+  formId={SIGNUP_FORM_ID}
+  placeholder={t("myPlaceholder")}
+  step={1}
+  totalSteps={3}
+  primaryLabel={t("next")}
+  onChange={(value) => handleNext(value)}
+/>
+```
+
+**`onPrimary` pattern** — the sub-form has no `<form>`. `onChange` fires on each change (update local state); `onPrimary` fires when the primary button is clicked (use the local state to save).
+
+```tsx
+const [items, setItems] = useState<string[]>([]);
+
+<Form
+  type="keys"
+  placeholder={t("myPlaceholder")}
+  step={2}
+  totalSteps={3}
+  primaryLabel={t("save")}
+  onChange={setItems}
+  onPrimary={() => save({ skills: items })}
+/>
+```
+
+#### Layout props reference
+
+| Prop | Purpose |
+|------|---------|
+| `title` | Overrides the default per-type title |
+| `step` / `totalSteps` | Drives the step counter in the header |
+| `primaryLabel` | Label for the primary button |
+| `primaryLoading` | Shows spinner and disables primary button |
+| `isCancelable` + `onCancel` + `cancelLabel` | Replaces step counter with a cancel button |
+| `secondaryLabel` + `onSecondary` | Adds a second outline button left of the primary |
+| `errorLabel` | Error string shown below the action buttons |
+
+`errorLabel` is managed by the caller with a `useState<string | null>` — set it on API failure, clear it on each attempt. See `EditInfoOverlay` for the full pattern.
+
+#### Adding a new form type
+
+1. Create `src/components/form/MyTypeForm.tsx` — a `"use client"` component. For the `formId` pattern, wrap inputs in `<form id={formId} onSubmit={...}>` and call `onChange` on submit. For the `onPrimary` pattern, call `onChange` on every change.
+2. Register the type in the three maps in `Form.tsx`:
+   - `FormValueMap` — shape that `onChange` emits
+   - `FormDefaultValueMap` — shape of `defaultValue`
+   - `FormConfigMap` — extra required props (use `never` if none)
+3. Add a `case "myType":` in `renderContent` and `getDefaultTitle`.
+4. Export from `src/components/form/index.ts`.
+
 ### API Routes
 
 | Method | Path | Purpose |
@@ -124,17 +204,33 @@ RLS is enabled. Policies allow users to read/insert/update only their own row (`
 ```
 frontend/src/
 ├── app/
-│   ├── [locale]/(routes)/         # All locale-aware pages (home, signup, update-experience/[type])
-│   ├── [locale]/auth/callback/    # OAuth callback handler (locale-aware)
-│   ├── app/auth/callback/         # OAuth callback (non-locale fallback)
+│   ├── [locale]/(routes)/         # Locale-aware pages
+│   │   ├── page.tsx               # Home
+│   │   ├── signup/page.tsx        # Signup wizard
+│   │   └── settings/              # Settings (page, account, personal-data)
+│   ├── [locale]/layout.tsx        # Root locale layout
+│   ├── auth/callback/             # OAuth callback (non-locale)
 │   └── api/                       # API route handlers
+│       ├── users/                 # POST /api/users, PATCH|DELETE /api/users/me, GET /api/users/pseudo
+│       ├── auth/logout/           # POST /api/auth/logout
+│       ├── url-title/             # GET /api/url-title
+│       └── health/                # GET /api/health
 ├── components/
 │   ├── ui/                        # Atomic components (Button, Input, Select…)
-│   ├── layout/                    # Layout wrappers (StepLayout)
-│   ├── content/                   # Page-level content components (HomeContent, SignupContent, ExperienceContent)
-│   ├── custom/signup/             # Signup wizard steps (StepName, StepPseudo, StepDob, StepExperience…)
-│   ├── custom/experience/         # Experience list/form components
-│   └── overlay/                   # Overlays (WelcomeOverlay, LoadingOverlay)
+│   ├── layout/                    # Layout wrappers (FormLayout, PageLayout)
+│   ├── form/                      # Form dispatcher + all sub-forms (see Form System section)
+│   │   └── sub-form/              # Complex sub-forms (ExperienceSubForm, HobbySubForm)
+│   ├── content/                   # Page-level content components
+│   │   ├── HomeContent.tsx
+│   │   ├── SignupContent.tsx       # SignupWizard
+│   │   ├── SettingsContent.tsx
+│   │   ├── SettingsAccountContent.tsx
+│   │   └── SettingsPersonalDataContent.tsx
+│   ├── custom/
+│   │   ├── signup/                # Signup-specific custom components
+│   │   ├── experience/            # Experience list/form components
+│   │   └── settings/              # Settings-specific custom components
+│   └── overlay/                   # Overlays (EditInfoOverlay, LoadingOverlay…)
 ├── constants/                     # ALL constants, paths, config — never inline
 │   └── index.ts                   # Re-exports ROUTES, API, EXTERNAL_API, UI constants
 ├── i18n/
@@ -150,8 +246,9 @@ frontend/src/
 ├── stores/
 │   ├── useUserStore.ts            # Signup wizard state (UserState, Experience)
 │   └── useLoadingStore.ts         # Loading overlay suppression flag
+├── types/                         # Shared TypeScript types (user.ts, experience.ts)
 ├── proxy.ts                       # Middleware (i18n + session refresh)
-└── actions/ hooks/ services/ types/ utils/   # Empty — reserved for future use
+└── actions/ hooks/ services/ utils/   # Reserved for future use
 ```
 
 ---
