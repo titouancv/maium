@@ -139,6 +139,7 @@ export const EditInfoOverlay = ({ field, user, onClose, onSaved }: Props) => {
           title: t("editNationality"),
           type: "location",
           formId: SIGNUP_FORM_ID,
+          format: "country",
           onChange: (d) => save({ nationality: d.location }),
           defaultValue: user.nationality ?? "",
           secondaryLabel: user.nationality ? t("deleteButton") : undefined,

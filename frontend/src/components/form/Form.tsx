@@ -71,7 +71,7 @@ export type FormConfigMap = {
   fullName: never;
   hobbies: never;
   keys: { placeholder: string };
-  location: never;
+  location: { format?: "city-country" | "country" };
   phoneNumber: never;
   socialNetwork: never;
   urls: never;
@@ -127,6 +127,7 @@ const renderContent = (props: FormProps) => {
         <LocationForm
           onChange={props.onChange}
           defaultValue={props.defaultValue}
+          format={props.format}
         />
       );
     case "phoneNumber":

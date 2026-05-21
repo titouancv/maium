@@ -11,7 +11,9 @@
     "editButton": "Edit",
     "sinceLabel": "since",
     "yearsCount": "{count, plural, one {# year} other {# years}}",
-    "monthsCount": "{count, plural, one {# month} other {# months}}"
+    "monthsCount": "{count, plural, one {# month} other {# months}}",
+    "locationSearching": "Searching...",
+    "locationNoResults": "No results found"
   },
   "home": {
     "userData": "Your information",
@@ -39,6 +41,7 @@
     "phonePlaceholder": "+1 (555) 234-5678",
     "nationalityPlaceholder": "France",
     "locationPlaceholder": "Paris, France",
+    "locationCountryPlaceholder": "France",
     "saveButton": "Save",
     "deleteButton": "Delete",
     "professionalExperiencesLabel": "Professional experiences",

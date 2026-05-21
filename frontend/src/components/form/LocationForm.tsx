@@ -11,9 +11,14 @@ import { SIGNUP_FORM_ID } from "@/constants";
 interface LocationFormProps {
   onChange: (d: { location: string }) => void;
   defaultValue?: string;
+  format?: "city-country" | "country";
 }
 
-export const LocationForm = ({ onChange, defaultValue }: LocationFormProps) => {
+export const LocationForm = ({
+  onChange,
+  defaultValue,
+  format = "city-country",
+}: LocationFormProps) => {
   const t = useTranslations("settings");
 
   const schema = z.object({
@@ -24,7 +29,7 @@ export const LocationForm = ({ onChange, defaultValue }: LocationFormProps) => {
     control,
     handleSubmit,
     trigger,
-    formState: { errors, isValid },
+    formState: { errors },
   } = useForm({
     resolver: zodResolver(schema),
     mode: "onChange",
@@ -49,11 +54,12 @@ export const LocationForm = ({ onChange, defaultValue }: LocationFormProps) => {
           control={control}
           render={({ field }) => (
             <LocationInput
-              placeholder={t("locationPlaceholder")}
+              placeholder={t(format === "country" ? "locationCountryPlaceholder" : "locationPlaceholder")}
               value={field.value}
               onChange={field.onChange}
               onBlur={field.onBlur}
               error={errors.location?.message as string}
+              format={format}
               autoFocus
             />
           )}

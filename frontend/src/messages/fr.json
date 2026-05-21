@@ -11,7 +11,9 @@
     "editButton": "Modifier",
     "sinceLabel": "depuis",
     "yearsCount": "{count, plural, one {# an} other {# ans}}",
-    "monthsCount": "{count, plural, one {# mois} other {# mois}}"
+    "monthsCount": "{count, plural, one {# mois} other {# mois}}",
+    "locationSearching": "Recherche...",
+    "locationNoResults": "Aucun résultat"
   },
   "home": {
     "userData": "Vos informations",
@@ -39,6 +41,7 @@
     "phonePlaceholder": "+33 6 12 34 56 78",
     "nationalityPlaceholder": "France",
     "locationPlaceholder": "Paris, France",
+    "locationCountryPlaceholder": "France",
     "saveButton": "Enregistrer",
     "deleteButton": "Supprimer",
     "professionalExperiencesLabel": "Expériences professionnelles",

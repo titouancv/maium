@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
+import { useTranslations } from "next-intl";
 import { SearchInput } from "./SearchInput";
 import { EXTERNAL_API } from "@/constants";
 
@@ -43,8 +44,11 @@ export function LocationInput({
   autoFocus,
   format = "city-country",
 }: LocationInputProps) {
+  const t = useTranslations("common");
   const [query, setQuery] = useState(value);
   const [suggestions, setSuggestions] = useState<string[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isEmpty, setIsEmpty] = useState(false);
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
@@ -53,21 +57,28 @@ export function LocationInput({
     debounceRef.current = setTimeout(async () => {
       if (query.length < 2) {
         setSuggestions([]);
+        setIsLoading(false);
+        setIsEmpty(false);
         return;
       }
+      setIsLoading(true);
+      setIsEmpty(false);
       try {
         const res = await fetch(
           `${EXTERNAL_API.PHOTON_GEOCODE}?q=${encodeURIComponent(query)}&limit=6&lang=en`,
         );
         const data: PhotonResponse = await res.json();
-        setSuggestions(
-          data.features
-            .map((f) => formatSuggestion(f.properties, format))
-            .filter(Boolean)
-            .filter((v, i, a) => a.indexOf(v) === i),
-        );
+        const results = data.features
+          .map((f) => formatSuggestion(f.properties, format))
+          .filter(Boolean)
+          .filter((v, i, a) => a.indexOf(v) === i);
+        setSuggestions(results);
+        setIsEmpty(results.length === 0);
       } catch {
         setSuggestions([]);
+        setIsEmpty(true);
+      } finally {
+        setIsLoading(false);
       }
     }, delay);
     return () => {
@@ -75,19 +86,23 @@ export function LocationInput({
     };
   }, [query, format]);
 
+  const infoLabel = error ?? (isLoading ? t("locationSearching") : isEmpty ? t("locationNoResults") : undefined);
+  const infoType: "error" | "info" = error || isEmpty ? "error" : "info";
+
   return (
     <SearchInput
       placeholder={placeholder}
       value={query}
       name={name}
       autoFocus={autoFocus}
-      infoLabel={error}
-      infoType={error ? "error" : "info"}
+      infoLabel={infoLabel}
+      infoType={infoType}
       suggestions={suggestions}
       onSelect={(s) => {
         setQuery(s);
         onChange(s);
         setSuggestions([]);
+        setIsEmpty(false);
       }}
       onChange={(e) => {
         setQuery(e.target.value);
