@@ -43,6 +43,7 @@ export const KeysForm = ({
         <TextInput
           placeholder={placeholder}
           value={draft}
+          autoFocus
           onChange={(e) => setDraft(e.target.value)}
           onKeyDown={(e) => {
             if (e.key === "Enter") {

@@ -7,6 +7,7 @@ interface DateRangeFormProps {
   defaultValue?: { defaultStartDate?: string; defaultEndDate?: string };
   mode?: DateMode;
   onChange: (d: { startDate: string; endDate: string }) => void;
+  onPrimary?: () => void;
   startError?: string;
   endError?: string;
 }
@@ -15,6 +16,7 @@ export const DateRangeForm = ({
   defaultValue = { defaultStartDate: "", defaultEndDate: "" },
   mode = "MM-YYYY",
   onChange,
+  onPrimary,
   startError,
   endError,
 }: DateRangeFormProps) => {
@@ -50,6 +52,8 @@ export const DateRangeForm = ({
           value={defaultValue.defaultEndDate}
           onChange={handleEndChange}
           error={endError}
+          onComplete={onPrimary}
+          onEnter={onPrimary}
         />
       </div>
     </div>

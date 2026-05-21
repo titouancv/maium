@@ -28,7 +28,7 @@ export const FullNameForm = ({ onChange, defaultValue }: FullNameFormProps) => {
     handleSubmit,
     trigger,
     setFocus,
-    formState: { errors, isValid, touchedFields },
+    formState: { errors, touchedFields },
   } = useForm({
     resolver: zodResolver(schema),
     mode: "onChange",
@@ -86,6 +86,12 @@ export const FullNameForm = ({ onChange, defaultValue }: FullNameFormProps) => {
           autoCapitalize="words"
           autoComplete="family-name"
           enterKeyHint="done"
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+              e.preventDefault();
+              handleSubmit(onChange)();
+            }
+          }}
           {...register("lastName")}
         />
       </form>

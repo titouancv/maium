@@ -153,6 +153,7 @@ const renderContent = (props: FormProps) => {
           placeholder={props.placeholder}
           defaultValue={props.defaultValue}
           onChange={props.onChange}
+          onPrimary={props.onPrimary}
           infoLabel={props.infoLabel}
           infoType={props.infoType}
         />
@@ -174,6 +175,7 @@ const renderContent = (props: FormProps) => {
           defaultValue={props.defaultValue}
           mode={props.mode}
           onChange={props.onChange}
+          onPrimary={props.onPrimary}
           startError={props.startError}
           endError={props.endError}
         />

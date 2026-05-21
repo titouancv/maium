@@ -48,6 +48,7 @@ export const SocialNetworkForm = ({
         <TextInput
           placeholder="https://www.instagram.com/..."
           value={draft}
+          autoFocus
           onChange={(e) => setDraft(e.target.value)}
           onKeyDown={(e) => {
             if (e.key === "Enter") {

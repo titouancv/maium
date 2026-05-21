@@ -30,6 +30,7 @@ export const LongTextForm = ({
   return (
     <TextArea
       placeholder={placeholder}
+      autoFocus
       value={value}
       onChange={handleChange}
       infoLabel={infoLabel}

@@ -7,6 +7,7 @@ interface TextFormProps {
   defaultValue?: string;
   placeholder: string;
   onChange: (value: string) => void;
+  onPrimary?: () => void;
   infoLabel?: string;
   infoType?: "error" | "success" | "info";
 }
@@ -15,6 +16,7 @@ export const TextForm = ({
   defaultValue = "",
   placeholder,
   onChange,
+  onPrimary,
   infoLabel,
   infoType = "info",
 }: TextFormProps) => {
@@ -31,6 +33,14 @@ export const TextForm = ({
         placeholder={placeholder}
         value={value}
         onChange={handleChange}
+        autoFocus
+        onKeyDown={(e) => {
+          if (e.key === "Enter") {
+            e.preventDefault();
+            onPrimary?.();
+          }
+        }}
+        enterKeyHint="done"
         infoLabel={infoLabel}
         infoType={infoType}
       />

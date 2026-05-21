@@ -45,6 +45,7 @@ export const UrlsForm = ({ defaultValue, onChange }: UrlsFormProps) => {
         <TextInput
           placeholder="https://maium.app/..."
           value={draft}
+          autoFocus
           onChange={(e) => setDraft(e.target.value)}
           onKeyDown={(e) => {
             if (e.key === "Enter") {
