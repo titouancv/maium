@@ -36,7 +36,7 @@
     "phone": "Numéro de téléphone",
     "nationality": "Nationalité",
     "location": "Localisation",
-    "phonePlaceholder": "Numéro de téléphone",
+    "phonePlaceholder": "+33 6 12 34 56 78",
     "nationalityPlaceholder": "France",
     "locationPlaceholder": "Paris, France",
     "saveButton": "Enregistrer",
@@ -72,8 +72,8 @@
     "hobbySubStep1Title": "Quel est ce loisir ?",
     "hobbySubStep2Title": "Décrivez-le (optionnel)",
     "hobbyTitleRequired": "Veuillez saisir un titre",
-    "hobbyTitlePlaceholder": "Titre",
-    "hobbyDescriptionPlaceholder": "Description"
+    "hobbyTitlePlaceholder": "Escalade",
+    "hobbyDescriptionPlaceholder": "Bloc en salle et escalade sportive en extérieur, pratiqué depuis 3 ans."
   },
   "welcome": {
     "greeting": "Bienvenue, {name} !",
@@ -88,20 +88,20 @@
       "step1": {
         "title": "Créer un compte",
         "emailLabel": "Adresse email",
-        "emailPlaceholder": "Adresse email",
+        "emailPlaceholder": "jean.dupont@gmail.com",
         "passwordLabel": "Mot de passe",
-        "passwordPlaceholder": "Mot de passe"
+        "passwordPlaceholder": "••••••••"
       },
       "step2": {
         "title": "Quel est votre nom ?",
-        "firstNamePlaceholder": "Prénom",
-        "lastNamePlaceholder": "Nom",
+        "firstNamePlaceholder": "Jean",
+        "lastNamePlaceholder": "Dupont",
         "firstNameRequired": "Le prénom est requis",
         "lastNameRequired": "Le nom est requis"
       },
       "step3": {
         "title": "Choisissez votre pseudo",
-        "pseudoPlaceholder": "Pseudo",
+        "pseudoPlaceholder": "jeandupont42",
         "pseudoMinLength": "Le pseudo doit contenir au moins 3 caractères",
         "pseudoChecking": "Vérification...",
         "pseudoAvailable": "Pseudo disponible",
@@ -149,11 +149,11 @@
     "professional": {
       "addEntry": "Ajouter un poste",
       "removeEntry": "Supprimer",
-      "organizationPlaceholder": "Entreprise",
-      "rolePlaceholder": "Poste",
-      "descriptionPlaceholder": "Description",
-      "websitePlaceholder": "https://...",
-      "locationPlaceholder": "Ville, Pays",
+      "organizationPlaceholder": "maium",
+      "rolePlaceholder": "Ingénieur logiciel",
+      "descriptionPlaceholder": "Développement de l'API principale, réduction du temps de réponse de 40%.",
+      "websitePlaceholder": "https://maium.app/...",
+      "locationPlaceholder": "Paris, France",
       "organizationRequired": "L'entreprise est requise",
       "roleRequired": "Le poste est requis",
       "startPeriodRequired": "La date de début est requise (AAAA-MM)",
@@ -170,11 +170,11 @@
     "educational": {
       "addEntry": "Ajouter une école",
       "removeEntry": "Supprimer",
-      "organizationPlaceholder": "École",
-      "rolePlaceholder": "Domaine d'étude",
-      "descriptionPlaceholder": "Description",
-      "websitePlaceholder": "https://...",
-      "locationPlaceholder": "Ville, Pays",
+      "organizationPlaceholder": "École Polytechnique",
+      "rolePlaceholder": "Informatique",
+      "descriptionPlaceholder": "Spécialisation en machine learning et systèmes distribués.",
+      "websitePlaceholder": "https://polytechnique.edu",
+      "locationPlaceholder": "Palaiseau, France",
       "organizationRequired": "L'école est requise",
       "roleRequired": "Le domaine d'étude est requis",
       "startPeriodRequired": "L'année de début est requise (AAAA)",

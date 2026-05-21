@@ -36,7 +36,7 @@
     "phone": "Phone number",
     "nationality": "Nationality",
     "location": "Location",
-    "phonePlaceholder": "Phone number",
+    "phonePlaceholder": "+1 (555) 234-5678",
     "nationalityPlaceholder": "France",
     "locationPlaceholder": "Paris, France",
     "saveButton": "Save",
@@ -72,8 +72,8 @@
     "hobbySubStep1Title": "What is this hobby?",
     "hobbySubStep2Title": "Describe it (optional)",
     "hobbyTitleRequired": "Please enter a title",
-    "hobbyTitlePlaceholder": "Title",
-    "hobbyDescriptionPlaceholder": "Description"
+    "hobbyTitlePlaceholder": "Rock climbing",
+    "hobbyDescriptionPlaceholder": "Indoor bouldering and outdoor sport climbing, started 3 years ago."
   },
   "welcome": {
     "greeting": "Welcome, {name}!",
@@ -88,20 +88,20 @@
       "step1": {
         "title": "Create an account",
         "emailLabel": "Email address",
-        "emailPlaceholder": "Email address",
+        "emailPlaceholder": "john.doe@gmail.com",
         "passwordLabel": "Password",
-        "passwordPlaceholder": "Password"
+        "passwordPlaceholder": "••••••••"
       },
       "step2": {
         "title": "What's your name?",
-        "firstNamePlaceholder": "First name",
-        "lastNamePlaceholder": "Last name",
+        "firstNamePlaceholder": "John",
+        "lastNamePlaceholder": "Doe",
         "firstNameRequired": "First name is required",
         "lastNameRequired": "Last name is required"
       },
       "step3": {
         "title": "Choose your username",
-        "pseudoPlaceholder": "Username",
+        "pseudoPlaceholder": "johndoe42",
         "pseudoMinLength": "Username must be at least 3 characters",
         "pseudoChecking": "Checking...",
         "pseudoAvailable": "Username available",
@@ -149,11 +149,11 @@
     "professional": {
       "addEntry": "Add a position",
       "removeEntry": "Remove",
-      "organizationPlaceholder": "Company",
-      "rolePlaceholder": "Role",
-      "descriptionPlaceholder": "Description",
-      "websitePlaceholder": "https://...",
-      "locationPlaceholder": "City, Country",
+      "organizationPlaceholder": "maium",
+      "rolePlaceholder": "Software Engineer",
+      "descriptionPlaceholder": "Led development of the core API, improving response time by 40%.",
+      "websitePlaceholder": "https://maium.app/...",
+      "locationPlaceholder": "San Francisco, USA",
       "organizationRequired": "Company is required",
       "roleRequired": "Role is required",
       "startPeriodRequired": "Start date is required (YYYY-MM)",
@@ -170,11 +170,11 @@
     "educational": {
       "addEntry": "Add a school",
       "removeEntry": "Remove",
-      "organizationPlaceholder": "School",
-      "rolePlaceholder": "Field of study",
-      "descriptionPlaceholder": "Description",
-      "websitePlaceholder": "https://...",
-      "locationPlaceholder": "City, Country",
+      "organizationPlaceholder": "MIT",
+      "rolePlaceholder": "Computer Science",
+      "descriptionPlaceholder": "Specialized in machine learning and distributed systems.",
+      "websitePlaceholder": "https://mit.edu",
+      "locationPlaceholder": "Cambridge, USA",
       "organizationRequired": "School is required",
       "roleRequired": "Field of study is required",
       "startPeriodRequired": "Start year is required (YYYY)",
