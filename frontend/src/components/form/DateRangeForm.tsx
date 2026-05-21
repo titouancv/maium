@@ -4,16 +4,16 @@ import { useRef } from "react";
 import { DateInput, DateMode } from "@/components/ui/DateInput";
 
 interface DateRangeFormProps {
-  defaultValue?: { defaultStartDate?: string; defaultEndDate?: string };
+  defaultValue?: { defaultStartDate?: number | null; defaultEndDate?: number | null };
   mode?: DateMode;
-  onChange: (d: { startDate: string; endDate: string }) => void;
+  onChange: (d: { startDate: number | null; endDate: number | null }) => void;
   onPrimary?: () => void;
   startError?: string;
   endError?: string;
 }
 
 export const DateRangeForm = ({
-  defaultValue = { defaultStartDate: "", defaultEndDate: "" },
+  defaultValue = { defaultStartDate: null, defaultEndDate: null },
   mode = "MM-YYYY",
   onChange,
   onPrimary,
@@ -21,15 +21,15 @@ export const DateRangeForm = ({
   endError,
 }: DateRangeFormProps) => {
   const endRef = useRef<HTMLInputElement>(null);
-  const startDate = useRef(defaultValue.defaultStartDate ?? "");
-  const endDate = useRef(defaultValue.defaultEndDate ?? "");
+  const startDate = useRef<number | null>(defaultValue.defaultStartDate ?? null);
+  const endDate = useRef<number | null>(defaultValue.defaultEndDate ?? null);
 
-  const handleStartChange = (value: string) => {
+  const handleStartChange = (value: number | null) => {
     startDate.current = value;
     onChange({ startDate: startDate.current, endDate: endDate.current });
   };
 
-  const handleEndChange = (value: string) => {
+  const handleEndChange = (value: number | null) => {
     endDate.current = value;
     onChange({ startDate: startDate.current, endDate: endDate.current });
   };

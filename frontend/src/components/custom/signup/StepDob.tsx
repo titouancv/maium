@@ -14,31 +14,29 @@ export const StepDob = ({
   defaultDob,
 }: {
   onNext: (d: Partial<UserState>) => void;
-  defaultDob?: string;
+  defaultDob?: number | null;
 }) => {
   const t = useTranslations("auth.signup.step4");
   const { user } = useUserStore();
 
   const schema = z.object({
     dob: z
-      .string()
-      .min(10, t("dobInvalid"))
-      .refine((val) => !isNaN(new Date(val).getTime()), {
-        message: t("dobInvalid"),
-      })
-      .refine((val) => new Date(val) < new Date(), { message: t("dobFuture") }),
+      .number()
+      .nullable()
+      .refine((v) => v !== null, { message: t("dobInvalid") })
+      .refine((v) => v === null || v < Date.now(), { message: t("dobFuture") }),
   });
 
   const {
     control,
     handleSubmit,
     trigger,
-    formState: { errors, isValid, isSubmitted },
+    formState: { errors },
   } = useForm({
     resolver: zodResolver(schema),
     mode: "onChange",
     defaultValues: {
-      dob: user?.dob || defaultDob || "",
+      dob: (user?.dob ?? defaultDob ?? null) as number | null,
     },
   });
 
@@ -46,10 +44,12 @@ export const StepDob = ({
     trigger();
   }, [trigger]);
 
+  const onSubmit = handleSubmit((data) => onNext({ dob: data.dob as number }));
+
   return (
     <form
       id={SIGNUP_FORM_ID}
-      onSubmit={handleSubmit(onNext)}
+      onSubmit={onSubmit}
       className="space-y-4"
     >
       <Controller
@@ -57,15 +57,17 @@ export const StepDob = ({
         control={control}
         render={({ field }) => (
           <DateInput
-            {...field}
+            value={field.value}
+            onChange={field.onChange}
+            onBlur={field.onBlur}
             autoFocus
             autoComplete="bday"
             error={
-              field.value?.length === 10
+              field.value !== null
                 ? (errors.dob?.message as string)
                 : undefined
             }
-            onComplete={handleSubmit(onNext)}
+            onComplete={onSubmit}
           />
         )}
       />

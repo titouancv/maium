@@ -7,7 +7,7 @@ export interface UserState {
   firstName?: string;
   lastName?: string;
   pseudo?: string;
-  dob?: string;
+  dob?: number;
   supabaseId?: string;
   professionalExperiences?: Experience[];
   educationalExperiences?: Experience[];

@@ -43,7 +43,7 @@ export async function PATCH(request: NextRequest) {
     if (firstName !== undefined) updates.first_name = firstName;
     if (lastName !== undefined) updates.last_name = lastName;
     if (pseudo !== undefined) updates.pseudo = pseudo;
-    if (dob !== undefined) updates.dob = dob;
+    if (dob !== undefined) updates.dob = new Date(dob).toISOString().slice(0, 10);
     if (onboardingCompleted !== undefined)
       updates.onboarding_completed = onboardingCompleted;
     if (professionalExperiences !== undefined)

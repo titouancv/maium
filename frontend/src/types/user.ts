@@ -10,7 +10,7 @@ export interface UserData {
   first_name: string;
   last_name: string;
   pseudo: string;
-  dob: string;
+  dob: number | null;
   onboarding_completed?: boolean;
   phone?: string | null;
   nationality?: string | null;

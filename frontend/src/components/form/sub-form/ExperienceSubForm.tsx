@@ -9,8 +9,8 @@ import { SIGNUP_FORM_ID } from "@/constants";
 export type SubValues = {
   organization: string;
   role: string;
-  startPeriod: string;
-  endPeriod: string;
+  startPeriod: number | null;
+  endPeriod: number | null;
   description: string;
   website: string;
   location: string;
@@ -19,8 +19,8 @@ export type SubValues = {
 export const emptySubValues = (): SubValues => ({
   organization: "",
   role: "",
-  startPeriod: "",
-  endPeriod: "",
+  startPeriod: null,
+  endPeriod: null,
   description: "",
   website: "",
   location: "",

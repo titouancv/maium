@@ -51,12 +51,8 @@ export const ExperienceList = ({
     const ongoing = withDisplay.filter((x) => !x.display.endPeriod);
     const finished = withDisplay.filter((x) => !!x.display.endPeriod);
 
-    ongoing.sort((a, b) =>
-      b.display.startPeriod.localeCompare(a.display.startPeriod),
-    );
-    finished.sort((a, b) =>
-      b.display.startPeriod.localeCompare(a.display.startPeriod),
-    );
+    ongoing.sort((a, b) => b.display.startPeriod - a.display.startPeriod);
+    finished.sort((a, b) => b.display.startPeriod - a.display.startPeriod);
 
     return [...ongoing, ...finished].map((x) => x.index);
   }, [items, fields.length, getDisplay]);

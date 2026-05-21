@@ -121,7 +121,7 @@ export const EditInfoOverlay = ({ field, user, onClose, onSaved }: Props) => {
           type: "date",
           formId: SIGNUP_FORM_ID,
           onChange: (d) => save({ dob: d.dob }),
-          defaultValue: user.dob,
+          defaultValue: user.dob ?? null,
         };
       case "phone":
         return {

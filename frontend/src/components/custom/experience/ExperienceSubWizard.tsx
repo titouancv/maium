@@ -10,6 +10,7 @@ import { TextArea } from "@/components/ui/TextArea";
 import { DateInput } from "@/components/ui/DateInput";
 import { LocationInput } from "@/components/ui";
 import { FormLayout } from "@/components/layout/FormLayout";
+import { z } from "zod";
 import { makeExperienceFormSchema } from "@/lib/validators/user";
 import type { ExperienceFormData } from "@/types/experience";
 
@@ -37,6 +38,7 @@ export const ExperienceSubWizard = ({
   const TOTAL = 6;
 
   const schema = makeExperienceFormSchema(t);
+  type FormInput = z.input<typeof schema>;
 
   const {
     register,
@@ -44,14 +46,14 @@ export const ExperienceSubWizard = ({
     trigger,
     handleSubmit,
     formState: { errors },
-  } = useForm<ExperienceFormData>({
+  } = useForm<FormInput, unknown, ExperienceFormData>({
     resolver: zodResolver(schema),
     mode: "onChange",
     defaultValues: {
       organization: initialData?.organization ?? "",
       role: initialData?.role ?? "",
-      startPeriod: initialData?.startPeriod ?? "",
-      endPeriod: initialData?.endPeriod ?? "",
+      startPeriod: initialData?.startPeriod ?? null,
+      endPeriod: initialData?.endPeriod ?? null,
       description: initialData?.description ?? "",
       website: initialData?.website ?? "",
       location: initialData?.location ?? "",

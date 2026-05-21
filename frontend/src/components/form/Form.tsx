@@ -35,7 +35,7 @@ export type FormBaseProps = {
 };
 
 export type FormValueMap = {
-  date: { dob: string };
+  date: { dob: number };
   fullName: { firstName: string; lastName: string };
   hobbies: HobbyData[];
   keys: string[];
@@ -45,13 +45,13 @@ export type FormValueMap = {
   urls: string[];
   text: string;
   longText: string;
-  dateRange: { startDate: string; endDate: string };
+  dateRange: { startDate: number | null; endDate: number | null };
   experiences: Experience[];
   pseudo: { pseudo: string };
 };
 
 export type FormDefaultValueMap = {
-  date: string;
+  date: number | null;
   fullName: { firstName?: string; lastName?: string };
   hobbies: HobbyData[];
   keys: string[];
@@ -61,7 +61,7 @@ export type FormDefaultValueMap = {
   urls: string[];
   text: string;
   longText: string;
-  dateRange: { defaultStartDate?: string; defaultEndDate?: string };
+  dateRange: { defaultStartDate?: number | null; defaultEndDate?: number | null };
   experiences: Experience[];
   pseudo: string;
 };

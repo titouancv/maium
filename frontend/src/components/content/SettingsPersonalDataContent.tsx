@@ -11,6 +11,13 @@ import {
 } from "@/components/overlay/EditInfoOverlay";
 import type { UserData } from "@/types";
 
+function formatTimestampDate(ts: number): string {
+  const d = new Date(ts);
+  const dd = String(d.getUTCDate()).padStart(2, "0");
+  const mm = String(d.getUTCMonth() + 1).padStart(2, "0");
+  return `${dd}/${mm}/${d.getUTCFullYear()}`;
+}
+
 interface SettingsPersonalDataContentProps {
   user: UserData | null;
 }
@@ -43,7 +50,7 @@ export const SettingsPersonalDataContent = ({
               },
               {
                 label: tHome("dob"),
-                value: user.dob ?? undefined,
+                value: user.dob != null ? formatTimestampDate(user.dob) : undefined,
                 onClick: () => setEditingField("dob"),
               },
               {

@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
+
 import { useForm, Controller } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -9,24 +10,27 @@ import { DateInput } from "@/components/ui/DateInput";
 import { useUserStore } from "@/stores/useUserStore";
 import { SIGNUP_FORM_ID } from "@/constants";
 
+const isPastDate = (v: number | null): boolean => v === null || v < Date.now();
 interface DateFormProps {
-  onChange: (d: { dob: string }) => void;
-  defaultValue?: string;
+  onChange: (d: { dob: number }) => void;
+  defaultValue?: number | null;
 }
 
 export const DateForm = ({ onChange, defaultValue }: DateFormProps) => {
   const t = useTranslations("auth.signup.step4");
   const { user } = useUserStore();
 
-  const schema = z.object({
-    dob: z
-      .string()
-      .min(10, t("dobInvalid"))
-      .refine((val) => !isNaN(new Date(val).getTime()), {
-        message: t("dobInvalid"),
-      })
-      .refine((val) => new Date(val) < new Date(), { message: t("dobFuture") }),
-  });
+  const schema = useMemo(
+    () =>
+      z.object({
+        dob: z
+          .number()
+          .nullable()
+          .refine((v) => v !== null, { message: t("dobInvalid") })
+          .refine(isPastDate, { message: t("dobFuture") }),
+      }),
+    [t],
+  );
 
   const {
     control,
@@ -37,7 +41,7 @@ export const DateForm = ({ onChange, defaultValue }: DateFormProps) => {
     resolver: zodResolver(schema),
     mode: "onChange",
     defaultValues: {
-      dob: user?.dob || defaultValue || "",
+      dob: (user?.dob ?? defaultValue ?? null) as number | null,
     },
   });
 
@@ -45,27 +49,29 @@ export const DateForm = ({ onChange, defaultValue }: DateFormProps) => {
     trigger();
   }, [trigger]);
 
+  const onSubmit = handleSubmit((data) =>
+    onChange({ dob: data.dob as number }),
+  );
+
   return (
     <div className="md:flex md:flex-1 md:flex-col md:justify-center">
-      <form
-        id={SIGNUP_FORM_ID}
-        onSubmit={handleSubmit(onChange)}
-        className="space-y-4"
-      >
+      <form id={SIGNUP_FORM_ID} onSubmit={onSubmit} className="space-y-4">
         <Controller
           name="dob"
           control={control}
           render={({ field }) => (
             <DateInput
-              {...field}
+              value={field.value}
+              onChange={field.onChange}
+              onBlur={field.onBlur}
               autoFocus
               autoComplete="bday"
               error={
-                field.value?.length === 10
+                field.value !== null
                   ? (errors.dob?.message as string)
                   : undefined
               }
-              onComplete={handleSubmit(onChange)}
+              onComplete={onSubmit}
             />
           )}
         />

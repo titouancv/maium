@@ -18,7 +18,12 @@ export default async function SettingsPersonalDataPage() {
       .eq("id", authUser.id)
       .single();
 
-    userData = data;
+    userData = data
+      ? {
+          ...data,
+          dob: data.dob ? new Date(data.dob + "T00:00:00Z").getTime() : null,
+        }
+      : null;
   }
 
   return (

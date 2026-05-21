@@ -11,6 +11,7 @@ export async function POST(request: NextRequest) {
     }
 
     const { email, password, firstName, lastName, pseudo, dob } = parsed.data;
+    const dobISO = new Date(dob).toISOString().slice(0, 10);
     const supabase = await createClient();
 
     const { data: authData, error: authError } = await supabase.auth.signUp({
@@ -37,7 +38,7 @@ export async function POST(request: NextRequest) {
         first_name: firstName,
         last_name: lastName,
         pseudo,
-        dob,
+        dob: dobISO,
       })
       .select("id")
       .single();
