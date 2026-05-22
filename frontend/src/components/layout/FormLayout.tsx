@@ -24,7 +24,6 @@ export const FormLayout = ({
   secondaryLabel,
   primaryLabel,
   primaryLoading,
-  errorLabel,
   children,
 }: FormLayoutProps) => {
   const [keyboardHeight, setKeyboardHeight] = useState(0);
@@ -93,33 +92,28 @@ export const FormLayout = ({
                   : "env(safe-area-inset-bottom, 0px)",
             }}
           >
-            <div className="flex flex-col gap-2">
-              <div className="flex gap-2">
-                {onSecondary && (
-                  <Button
-                    variant="outline"
-                    type="button"
-                    onClick={onSecondary}
-                    size="lg"
-                    className="w-full"
-                  >
-                    {secondaryLabel}
-                  </Button>
-                )}
+            <div className="flex gap-2">
+              {onSecondary && (
                 <Button
-                  type={formId ? "submit" : "button"}
-                  form={formId}
+                  variant="outline"
+                  type="button"
+                  onClick={onSecondary}
                   size="lg"
                   className="w-full"
-                  isLoading={primaryLoading}
-                  onClick={!formId ? onPrimary : undefined}
                 >
-                  {primaryLabel}
+                  {secondaryLabel}
                 </Button>
-              </div>
-              {errorLabel && (
-                <p className="text-error text-center text-sm">{errorLabel}</p>
               )}
+              <Button
+                type={formId ? "submit" : "button"}
+                form={formId}
+                size="lg"
+                className="w-full"
+                isLoading={primaryLoading}
+                onClick={!formId ? onPrimary : undefined}
+              >
+                {primaryLabel}
+              </Button>
             </div>
           </div>
         )}

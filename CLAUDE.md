@@ -64,11 +64,13 @@ Three Supabase client factories — always pick the right one:
 There are two signup paths that share the same wizard UI (`src/components/content/SignupContent.tsx`, exported as `SignupWizard`):
 
 **Email/password signup** (no existing Supabase user):
+
 - Step 0: OAuth entry point (Google) — email/password is handled via `POST /api/users`
 - Steps 1–5: Name → Pseudo → DoB → Professional experiences → Educational experiences
 - On finish: `POST /api/users` creates the auth user and inserts into `public.users` in one request
 
 **OAuth signup** (Google/Apple → Supabase triggers `handle_new_oauth_user()`):
+
 - A DB trigger auto-creates a partial `public.users` row (id, email, first_name, last_name) on OAuth signup
 - The signup page detects an existing Supabase user, resumes the wizard from the right step (computed from what's already filled in `public.users`), and sets `initialUser.supabaseId`
 - Each wizard step calls `PATCH /api/users/me` instead of buffering locally
@@ -82,21 +84,21 @@ All forms go through `<Form />` (`src/components/form/Form.tsx`). It dispatches 
 
 #### Available form types
 
-| `type` | What it collects | Submit pattern |
-|--------|-----------------|----------------|
-| `"text"` | Single text input | `formId` |
-| `"longText"` | Multi-line textarea | `formId` |
-| `"fullName"` | First name + last name | `formId` |
-| `"pseudo"` | Username with availability check | `formId` |
-| `"date"` | Date of birth | `formId` |
-| `"dateRange"` | Start / end dates | `formId` |
-| `"phoneNumber"` | Phone number | `formId` |
-| `"location"` | City/country picker | `formId` |
-| `"experiences"` | Experience list editor | `onPrimary` |
-| `"hobbies"` | Hobby picker | `onPrimary` |
-| `"keys"` | Free-form tag list | `onPrimary` |
-| `"urls"` | URL list | `onPrimary` |
-| `"socialNetwork"` | Social network links | `onPrimary` |
+| `type`            | What it collects                 | Submit pattern |
+| ----------------- | -------------------------------- | -------------- |
+| `"text"`          | Single text input                | `formId`       |
+| `"longText"`      | Multi-line textarea              | `formId`       |
+| `"fullName"`      | First name + last name           | `formId`       |
+| `"pseudo"`        | Username with availability check | `formId`       |
+| `"date"`          | Date of birth                    | `formId`       |
+| `"dateRange"`     | Start / end dates                | `formId`       |
+| `"phoneNumber"`   | Phone number                     | `formId`       |
+| `"location"`      | City/country picker              | `formId`       |
+| `"experiences"`   | Experience list editor           | `onPrimary`    |
+| `"hobbies"`       | Hobby picker                     | `onPrimary`    |
+| `"keys"`          | Free-form tag list               | `onPrimary`    |
+| `"urls"`          | URL list                         | `onPrimary`    |
+| `"socialNetwork"` | Social network links             | `onPrimary`    |
 
 #### Two submit patterns
 
@@ -113,7 +115,7 @@ import { SIGNUP_FORM_ID } from "@/constants";
   totalSteps={3}
   primaryLabel={t("next")}
   onChange={(value) => handleNext(value)}
-/>
+/>;
 ```
 
 **`onPrimary` pattern** — the sub-form has no `<form>`. `onChange` fires on each change (update local state); `onPrimary` fires when the primary button is clicked (use the local state to save).
@@ -129,22 +131,19 @@ const [items, setItems] = useState<string[]>([]);
   primaryLabel={t("save")}
   onChange={setItems}
   onPrimary={() => save({ skills: items })}
-/>
+/>;
 ```
 
 #### Layout props reference
 
-| Prop | Purpose |
-|------|---------|
-| `title` | Overrides the default per-type title |
-| `step` / `totalSteps` | Drives the step counter in the header |
-| `primaryLabel` | Label for the primary button |
-| `primaryLoading` | Shows spinner and disables primary button |
-| `isCancelable` + `onCancel` + `cancelLabel` | Replaces step counter with a cancel button |
-| `secondaryLabel` + `onSecondary` | Adds a second outline button left of the primary |
-| `errorLabel` | Error string shown below the action buttons |
-
-`errorLabel` is managed by the caller with a `useState<string | null>` — set it on API failure, clear it on each attempt. See `EditInfoOverlay` for the full pattern.
+| Prop                                        | Purpose                                          |
+| ------------------------------------------- | ------------------------------------------------ |
+| `title`                                     | Overrides the default per-type title             |
+| `step` / `totalSteps`                       | Drives the step counter in the header            |
+| `primaryLabel`                              | Label for the primary button                     |
+| `primaryLoading`                            | Shows spinner and disables primary button        |
+| `isCancelable` + `onCancel` + `cancelLabel` | Replaces step counter with a cancel button       |
+| `secondaryLabel` + `onSecondary`            | Adds a second outline button left of the primary |
 
 #### Adding a new form type
 
@@ -158,14 +157,14 @@ const [items, setItems] = useState<string[]>([]);
 
 ### API Routes
 
-| Method | Path | Purpose |
-|--------|------|---------|
-| `POST` | `/api/users` | Create user (email/password signup) |
-| `PATCH` | `/api/users/me` | Update profile fields / mark onboarding complete |
-| `DELETE` | `/api/users/me` | Delete account (uses admin client) |
-| `GET` | `/api/users/pseudo` | Check pseudo availability |
-| `POST` | `/api/auth/logout` | Sign out |
-| `GET` | `/api/health` | Health check |
+| Method   | Path                | Purpose                                          |
+| -------- | ------------------- | ------------------------------------------------ |
+| `POST`   | `/api/users`        | Create user (email/password signup)              |
+| `PATCH`  | `/api/users/me`     | Update profile fields / mark onboarding complete |
+| `DELETE` | `/api/users/me`     | Delete account (uses admin client)               |
+| `GET`    | `/api/users/pseudo` | Check pseudo availability                        |
+| `POST`   | `/api/auth/logout`  | Sign out                                         |
+| `GET`    | `/api/health`       | Health check                                     |
 
 ### Database Schema (`public.users`)
 

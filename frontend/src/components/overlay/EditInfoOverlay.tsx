@@ -36,7 +36,6 @@ export const EditInfoOverlay = ({ field, user, onClose, onSaved }: Props) => {
   const tCommon = useTranslations("common");
 
   const [isSaving, setIsSaving] = useState(false);
-  const [error, setError] = useState<string | null>(null);
 
   const [currentExperiences, setCurrentExperiences] = useState<Experience[]>(
     () => {
@@ -61,7 +60,6 @@ export const EditInfoOverlay = ({ field, user, onClose, onSaved }: Props) => {
 
   const save = async (payload: Record<string, unknown>) => {
     setIsSaving(true);
-    setError(null);
     try {
       const res = await fetch(API.USERS_ME, {
         method: "PATCH",
@@ -69,14 +67,10 @@ export const EditInfoOverlay = ({ field, user, onClose, onSaved }: Props) => {
         body: JSON.stringify(payload),
       });
       if (!res.ok) {
-        const data = await res.json();
-        setError((data.error as string) ?? t("saveError"));
         return;
       }
       onSaved();
       onClose();
-    } catch {
-      setError(t("saveError"));
     } finally {
       setIsSaving(false);
     }
@@ -90,7 +84,6 @@ export const EditInfoOverlay = ({ field, user, onClose, onSaved }: Props) => {
     cancelLabel: tCommon("cancelButton"),
     primaryLabel: t("saveButton"),
     primaryLoading: isSaving,
-    errorLabel: error ?? undefined,
   };
 
   const getFormProps = (): FormProps => {
