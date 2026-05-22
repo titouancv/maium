@@ -7,7 +7,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useTranslations } from "next-intl";
 import { TextInput } from "@/components/ui/TextInput";
 import { useUserStore } from "@/stores/useUserStore";
-import { API, SIGNUP_FORM_ID } from "@/constants";
+import { API, SIGNUP_FORM_ID, type InfoType } from "@/constants";
 
 type AvailabilityStatus = "idle" | "checking" | "available" | "taken";
 
@@ -30,7 +30,7 @@ export const PseudoForm = ({ onChange, defaultValue }: PseudoFormProps) => {
     setError,
     clearErrors,
     control,
-    formState: { errors, isValid, touchedFields },
+    formState: { errors, touchedFields },
   } = useForm({
     resolver: zodResolver(schema),
     mode: "onChange",
@@ -47,7 +47,7 @@ export const PseudoForm = ({ onChange, defaultValue }: PseudoFormProps) => {
   useEffect(() => {
     trigger();
     setFocus("pseudo");
-  }, []);
+  }, [trigger, setFocus]);
 
   useEffect(() => {
     if (!pseudo || pseudo.length < 3) {
@@ -93,7 +93,7 @@ export const PseudoForm = ({ onChange, defaultValue }: PseudoFormProps) => {
     return undefined;
   };
 
-  const getInfoType = (): "error" | "success" | "info" => {
+  const getInfoType = (): InfoType => {
     if (touchedFields.pseudo && errors.pseudo) return "error";
     if (availabilityStatus === "checking") return "info";
     if (availabilityStatus === "available") return "success";

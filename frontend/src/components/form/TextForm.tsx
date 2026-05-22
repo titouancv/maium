@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { TextInput } from "@/components/ui/TextInput";
+import type { InfoType } from "@/constants";
 
 interface TextFormProps {
   defaultValue?: string;
@@ -9,7 +10,7 @@ interface TextFormProps {
   onChange: (value: string) => void;
   onPrimary?: () => void;
   infoLabel?: string;
-  infoType?: "error" | "success" | "info";
+  infoType?: InfoType;
 }
 
 export const TextForm = ({

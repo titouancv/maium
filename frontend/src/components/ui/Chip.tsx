@@ -1,3 +1,6 @@
+"use client";
+
+import { useTranslations } from "next-intl";
 import { cn } from "@/lib/utils";
 import { UI_VARIANTS, UIVariant } from "@/constants";
 
@@ -14,6 +17,7 @@ export function Chip({
   onRemove,
   className,
 }: ChipProps) {
+  const t = useTranslations("common");
   return (
     <span
       className={cn(
@@ -28,7 +32,7 @@ export function Chip({
           type="button"
           onClick={onRemove}
           className="ml-0.5 inline-flex h-4 w-4 items-center justify-center rounded-full text-current opacity-60 transition-opacity hover:opacity-100"
-          aria-label={`Remove ${label}`}
+          aria-label={t("removeAriaLabel", { label })}
         >
           <svg
             width="8"

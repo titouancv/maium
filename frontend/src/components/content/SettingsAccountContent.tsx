@@ -30,7 +30,7 @@ export const SettingsAccountContent = () => {
   };
 
   return (
-    <PageLayout title={t("monCompte")} backLabel={t("backButton")}>
+    <PageLayout title={t("accountMenuLabel")} backLabel={t("backButton")}>
       <div className="flex h-full w-full flex-col items-center justify-center gap-4 md:max-w-5xl">
         {!showDeleteConfirm ? (
           <>

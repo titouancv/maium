@@ -1,4 +1,5 @@
 import { parseSocialUrl } from "@/lib/socialNetwork";
+import { faviconUrl } from "@/lib/utils";
 
 interface Props {
   url: string;
@@ -18,7 +19,7 @@ export const SocialNetworkItem = ({ url }: Props) => {
       <div className="flex min-w-0 items-center gap-2">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
-          src={`https://www.google.com/s2/favicons?domain=${social.domain}&sz=32`}
+          src={faviconUrl(social.domain)}
           alt={social.name}
           width={20}
           height={20}

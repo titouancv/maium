@@ -79,7 +79,10 @@ export function SlideToEnter({
       </span>
 
       <div
-        className={`${PRIMARY_COLORS} relative z-10 flex h-[52px] w-[52px] shrink-0 cursor-grab touch-none items-center justify-center rounded-full shadow-md inset-shadow-sm active:cursor-grabbing`}
+        className={cn(
+          PRIMARY_COLORS,
+          "relative z-10 flex h-[52px] w-[52px] shrink-0 cursor-grab touch-none items-center justify-center rounded-full shadow-md inset-shadow-sm active:cursor-grabbing",
+        )}
         style={{
           transform: `translateX(${offset}px)`,
           transition: isAnimating

@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { API } from "@/constants";
 import { Skeleton } from "@/components/ui/Skeleton";
+import { faviconUrl } from "@/lib/utils";
 
 const getHostname = (url: string) => {
   try {
@@ -39,7 +40,7 @@ export const UrlItem = ({ url }: Props) => {
     >
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
-        src={`https://www.google.com/s2/favicons?domain=${getHostname(url)}&sz=32`}
+        src={faviconUrl(getHostname(url))}
         alt=""
         width={16}
         height={16}

@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useTranslations } from "next-intl";
-import { API, SIGNUP_FORM_ID } from "@/constants";
+import { API, SIGNUP_FORM_ID, EXPERIENCE_NAMESPACE } from "@/constants";
 import { Form } from "@/components/form";
 import type { FormProps } from "@/components/form";
 import type { UserData } from "@/types/user";
@@ -163,7 +163,7 @@ export const EditInfoOverlay = ({ field, user, onClose, onSaved }: Props) => {
         return {
           ...base,
           type: "experiences",
-          namespace: "experience.professional",
+          namespace: EXPERIENCE_NAMESPACE.professional,
           dateMode: "MM-YYYY",
           defaultValue: user.professional_experiences ?? [],
           onChange: (exps) => setCurrentExperiences(exps),
@@ -174,7 +174,7 @@ export const EditInfoOverlay = ({ field, user, onClose, onSaved }: Props) => {
         return {
           ...base,
           type: "experiences",
-          namespace: "experience.educational",
+          namespace: EXPERIENCE_NAMESPACE.educational,
           dateMode: "MM-YYYY",
           defaultValue: user.educational_experiences ?? [],
           onChange: (exps) => setCurrentExperiences(exps),
@@ -185,7 +185,7 @@ export const EditInfoOverlay = ({ field, user, onClose, onSaved }: Props) => {
           ...base,
           title: t("editPersonalExperiences"),
           type: "experiences",
-          namespace: "experience.professional",
+          namespace: EXPERIENCE_NAMESPACE.professional,
           dateMode: "MM-YYYY",
           defaultValue: user.personal_experiences ?? [],
           onChange: (exps) => setCurrentExperiences(exps),

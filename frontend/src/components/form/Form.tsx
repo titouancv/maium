@@ -18,6 +18,7 @@ import { PseudoForm } from "./PseudoForm";
 import type { DateMode } from "@/components/ui/DateInput";
 import type { Experience } from "@/types/experience";
 import { HobbyData } from "../custom";
+import { EXPERIENCE_NAMESPACE, type ExperienceNamespace, type InfoType } from "@/constants";
 
 export type FormBaseProps = {
   title?: string;
@@ -32,6 +33,7 @@ export type FormBaseProps = {
   isCancelable?: boolean;
   onCancel?: () => void;
   cancelLabel?: string;
+  errorLabel?: string;
 };
 
 export type FormValueMap = {
@@ -78,16 +80,16 @@ export type FormConfigMap = {
   text: {
     placeholder: string;
     infoLabel?: string;
-    infoType?: "error" | "success" | "info";
+    infoType?: InfoType;
   };
   longText: {
     placeholder: string;
     infoLabel?: string;
-    infoType?: "error" | "success" | "info";
+    infoType?: InfoType;
     rows?: number;
   };
   dateRange: { mode?: DateMode; startError?: string; endError?: string };
-  experiences: { namespace: string; dateMode?: "MM-YYYY" | "YYYY" };
+  experiences: { namespace: ExperienceNamespace; dateMode?: "MM-YYYY" | "YYYY" };
   pseudo: never;
 };
 
@@ -232,7 +234,7 @@ const getDefaultTitle = (
     case "urls":
       return t("urlsTitle");
     case "experiences":
-      if (props.namespace === "experience.educational")
+      if (props.namespace === EXPERIENCE_NAMESPACE.educational)
         return t("experiencesEducationalTitle");
       return t("experiencesProfessionalTitle");
     default:
@@ -255,6 +257,7 @@ export const Form = (props: FormProps) => {
     isCancelable: props.isCancelable,
     onCancel: props.onCancel,
     cancelLabel: props.cancelLabel,
+    errorLabel: props.errorLabel,
   };
 
   return <FormLayout {...FormbaseProps}>{renderContent(props)}</FormLayout>;

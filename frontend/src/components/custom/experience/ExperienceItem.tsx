@@ -1,9 +1,11 @@
 "use client";
 
+import { useState } from "react";
 import Image from "next/image";
 import { Button } from "@/components/ui/Button";
 import type { ExperienceFormData } from "@/types/experience";
 import { useTranslations } from "next-intl";
+import { faviconUrl } from "@/lib/utils";
 
 export interface ExperienceProps extends ExperienceFormData {
   onEdit: () => void;
@@ -40,9 +42,8 @@ export const ExperienceItem = ({
     return `${startYear}/${endYear}`;
   };
 
-  const faviconUrl = website
-    ? `https://www.google.com/s2/favicons?domain=${new URL(website).hostname}&sz=32`
-    : null;
+  const favicon = website ? faviconUrl(website) : null;
+  const [now] = useState(() => Date.now());
 
   return (
     <div className="flex items-center gap-4">
@@ -55,9 +56,9 @@ export const ExperienceItem = ({
             target="_blank"
             rel="noopener noreferrer"
           >
-            {faviconUrl && (
+            {favicon && (
               <Image
-                src={faviconUrl}
+                src={favicon}
                 alt=""
                 width={16}
                 height={16}
@@ -80,7 +81,7 @@ export const ExperienceItem = ({
             )}
             <div className="flex flex-nowrap gap-2">
               <span className="text-txt-muted shrink-0 text-sm">
-                {calculerDuree(startPeriod, endPeriod ?? Date.now())}
+                {calculerDuree(startPeriod, endPeriod ?? now)}
               </span>
               <span className="text-txt-muted shrink-0 text-sm">•</span>
               <span

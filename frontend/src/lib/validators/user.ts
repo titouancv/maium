@@ -74,7 +74,7 @@ export const CreateUserSchema = z.object({
 
 export type CreateUserInput = z.infer<typeof CreateUserSchema>;
 
-const HobbySchema = z.object({
+export const HobbySchema = z.object({
   title: z.string().min(1).max(100),
   description: z.string().max(500),
 });

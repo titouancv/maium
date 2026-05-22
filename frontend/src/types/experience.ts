@@ -24,3 +24,6 @@ export interface ExperienceFormData {
   website: string;
   location: string;
 }
+
+export type ExperienceItemRecord = Record<string, string>;
+export type ExperienceFormItems = { items: ExperienceItemRecord[] };

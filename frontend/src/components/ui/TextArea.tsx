@@ -1,17 +1,13 @@
 import React, { forwardRef } from "react";
+import { cn } from "@/lib/utils";
+import { INFO_COLORS, type InfoType } from "@/constants";
 
 export interface TextAreaProps extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {
   infoLabel?: string;
-  infoType?: "error" | "success" | "info";
+  infoType?: InfoType;
   placeholder: string;
   row?: number;
 }
-
-const infoColors = {
-  error: "text-error",
-  success: "text-primary",
-  info: "text-txt",
-};
 
 export const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(
   (
@@ -23,14 +19,17 @@ export const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(
         <textarea
           ref={ref}
           rows={row}
-          className={`h-full w-full resize-none p-2 transition-all placeholder:uppercase ${
+          className={cn(
+            "h-full w-full resize-none p-2 transition-all placeholder:uppercase",
             infoType === "error"
               ? "text-error bg-error/10"
-              : "text-txt hover:bg-surface-100 focus:bg-surface-100"
-          } rounded-xl p-1 outline-none ${className}`}
+              : "text-txt hover:bg-surface-100 focus:bg-surface-100",
+            "rounded-xl p-1 outline-none",
+            className,
+          )}
           {...props}
         />
-        <span className={`${infoColors[infoType]} pl-1 text-xs`}>
+        <span className={cn(INFO_COLORS[infoType], "pl-1 text-xs")}>
           {infoLabel || " "}
         </span>
       </div>

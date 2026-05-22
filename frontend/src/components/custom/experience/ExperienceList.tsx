@@ -3,16 +3,17 @@
 import { useMemo } from "react";
 import { useWatch, type Control, type FieldArrayWithId } from "react-hook-form";
 import { ExperienceItem } from "./ExperienceItem";
-import type { ExperienceFormData } from "@/types/experience";
-
-type ItemRecord = Record<string, string>;
-type FormItems = { items: ItemRecord[] };
+import type {
+  ExperienceFormData,
+  ExperienceFormItems,
+  ExperienceItemRecord,
+} from "@/types/experience";
 
 interface Props {
-  fields: FieldArrayWithId<FormItems, "items">[];
-  control: Control<FormItems>;
+  fields: FieldArrayWithId<ExperienceFormItems, "items">[];
+  control: Control<ExperienceFormItems>;
   getDisplay: (
-    item: ItemRecord,
+    item: ExperienceItemRecord,
   ) => Omit<ExperienceFormData, "editLabel" | "onEdit">;
   onEdit: (index: number) => void;
 }
@@ -24,7 +25,7 @@ const ItemRow = ({
   onEdit,
 }: {
   index: number;
-  control: Control<FormItems>;
+  control: Control<ExperienceFormItems>;
   getDisplay: Props["getDisplay"];
   onEdit: () => void;
 }) => {
@@ -45,7 +46,7 @@ export const ExperienceList = ({
     const allItems = items ?? [];
     const withDisplay = allItems.slice(0, fields.length).map((item, index) => ({
       index,
-      display: getDisplay((item as ItemRecord) ?? {}),
+      display: getDisplay((item as ExperienceItemRecord) ?? {}),
     }));
 
     const ongoing = withDisplay.filter((x) => !x.display.endPeriod);

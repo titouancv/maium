@@ -1,16 +1,12 @@
 "use client";
 
 import { useState } from "react";
-import { z } from "zod";
 import { useTranslations } from "next-intl";
 import { Form } from "../Form";
 import type { FormProps } from "../Form";
+import type { HobbyData } from "@/types/user";
 
-export const hobbySchema = z.object({
-  title: z.string().min(1).max(100),
-  description: z.string().max(500),
-});
-export type HobbyData = z.infer<typeof hobbySchema>;
+export type { HobbyData };
 
 const TOTAL_SUB_STEPS = 2;
 

@@ -1,23 +1,21 @@
 "use client";
 
 import { useForm, useFieldArray } from "react-hook-form";
-import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/Button";
 import { ExperienceSubForm, emptySubValues } from "./sub-form";
 import type { SubValues } from "./sub-form";
-import type { Experience } from "@/types/experience";
+import type { Experience, ExperienceFormItems } from "@/types/experience";
 import { ExperienceList } from "../custom";
+import type { ExperienceNamespace } from "@/constants";
+import { useListEditor } from "@/hooks";
 
 interface ExperiencesFormProps {
-  namespace: string;
+  namespace: ExperienceNamespace;
   dateMode?: "MM-YYYY" | "YYYY";
   defaultValue?: Experience[];
   onChange: (experiences: Experience[]) => void;
 }
-
-type ItemRecord = Record<string, string>;
-type FormItems = { items: ItemRecord[] };
 
 export const ExperiencesForm = ({
   namespace,
@@ -26,9 +24,9 @@ export const ExperiencesForm = ({
   onChange,
 }: ExperiencesFormProps) => {
   const tCommon = useTranslations("common");
-  const [editingIndex, setEditingIndex] = useState<number | "new" | null>(null);
+  const editor = useListEditor();
 
-  const { control, getValues } = useForm<FormItems>({
+  const { control, getValues } = useForm<ExperienceFormItems>({
     defaultValues: {
       items: (defaultValue ?? []).map((e) => ({
         organization: e.organization ?? "",
@@ -62,9 +60,6 @@ export const ExperiencesForm = ({
     );
   };
 
-  const openSubForm = (index: number | "new") => setEditingIndex(index);
-  const closeSubForm = () => setEditingIndex(null);
-
   const handleSave = (values: SubValues) => {
     const entry = {
       organization: values.organization,
@@ -75,25 +70,26 @@ export const ExperiencesForm = ({
       website: values.website,
       location: values.location,
     };
-    if (editingIndex === "new") append(entry);
-    else if (typeof editingIndex === "number") update(editingIndex, entry);
-    closeSubForm();
+    if (editor.editingIndex === "new") append(entry);
+    else if (typeof editor.editingIndex === "number")
+      update(editor.editingIndex, entry);
+    editor.close();
     notifyChange();
   };
 
   const handleDelete = () => {
-    if (typeof editingIndex === "number") remove(editingIndex);
-    closeSubForm();
+    if (typeof editor.editingIndex === "number") remove(editor.editingIndex);
+    editor.close();
     notifyChange();
   };
 
   const subFormInitialValues =
-    editingIndex === null
+    editor.editingIndex === null
       ? null
-      : editingIndex === "new"
+      : editor.editingIndex === "new"
         ? emptySubValues()
         : (() => {
-            const item = getValues("items")[editingIndex];
+            const item = getValues("items")[editor.editingIndex];
             return {
               organization: item.organization ?? "",
               role: item.role ?? "",
@@ -114,7 +110,7 @@ export const ExperiencesForm = ({
             variant="outline"
             size="lg"
             className="w-full self-start"
-            onClick={() => openSubForm("new")}
+            onClick={editor.openNew}
           >
             {tCommon("addButton")}
           </Button>
@@ -134,7 +130,7 @@ export const ExperiencesForm = ({
                 website: item.website ?? "",
                 location: item.location ?? "",
               })}
-              onEdit={(index) => openSubForm(index)}
+              onEdit={editor.openExisting}
             />
           </div>
           <Button
@@ -142,7 +138,7 @@ export const ExperiencesForm = ({
             variant="outline"
             size="lg"
             className="w-full self-start"
-            onClick={() => openSubForm("new")}
+            onClick={editor.openNew}
           >
             {tCommon("addButton")}
           </Button>
@@ -154,9 +150,9 @@ export const ExperiencesForm = ({
             namespace={namespace}
             dateMode={dateMode}
             initialValues={subFormInitialValues}
-            isDeletable={typeof editingIndex === "number"}
+            isDeletable={editor.isEditingExisting}
             onSave={handleSave}
-            onCancel={closeSubForm}
+            onCancel={editor.close}
             onDelete={handleDelete}
           />
         </div>

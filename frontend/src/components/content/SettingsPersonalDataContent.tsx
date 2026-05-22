@@ -33,7 +33,7 @@ export const SettingsPersonalDataContent = ({
   const handleSaved = () => router.refresh();
 
   return (
-    <PageLayout title={t("mesInformations")} backLabel={t("backButton")}>
+    <PageLayout title={t("personalDataMenuLabel")} backLabel={t("backButton")}>
       {user && (
         <div className="flex w-full flex-col gap-12 md:max-w-5xl">
           <MenuList

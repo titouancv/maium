@@ -41,7 +41,7 @@ export const FullNameForm = ({ onChange, defaultValue }: FullNameFormProps) => {
   useEffect(() => {
     trigger();
     setFocus("firstName");
-  }, []);
+  }, [trigger, setFocus]);
 
   return (
     <div className="md:flex md:flex-1 md:flex-col md:justify-center">

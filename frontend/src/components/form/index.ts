@@ -13,3 +13,4 @@ export { TextForm } from "./TextForm";
 export { LongTextForm } from "./LongTextForm";
 export { DateRangeForm } from "./DateRangeForm";
 export { ExperiencesForm } from "./ExperiencesForm";
+export { LinkListForm } from "./LinkListForm";

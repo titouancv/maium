@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useLoadingStore } from "@/stores/useLoadingStore";
 import { Title } from "../ui";
+import { cn } from "@/lib/utils";
 
 // visible       → monté, opacity-100
 // transitioning → monté, opacity-0  (sortie uniquement)
@@ -34,7 +35,10 @@ export function LoadingOverlay() {
 
   return (
     <div
-      className={`bg-surface-50 fixed inset-0 z-50 flex items-center justify-center backdrop-blur-md transition-opacity duration-300 ${phase === "visible" ? "opacity-100" : "opacity-0"}`}
+      className={cn(
+        "bg-surface-50 fixed inset-0 z-50 flex items-center justify-center backdrop-blur-md transition-opacity duration-300",
+        phase === "visible" ? "opacity-100" : "opacity-0",
+      )}
     >
       <Title label={"maium"} size="h1" />
     </div>

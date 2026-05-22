@@ -1,17 +1,12 @@
 import React, { forwardRef } from "react";
 import { cn } from "@/lib/utils";
+import { INFO_COLORS, type InfoType } from "@/constants";
 
 export interface TextInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   infoLabel?: string;
-  infoType?: "error" | "success" | "info";
+  infoType?: InfoType;
   placeholder: string;
 }
-
-const infoColors = {
-  error: "text-error",
-  success: "text-primary",
-  info: "text-txt",
-};
 
 export const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
   ({ className = "", infoLabel = "", infoType, ...props }, ref) => {
@@ -29,8 +24,8 @@ export const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
           {...props}
         />
         {infoType && (
-          <span className={`${infoColors[infoType]} pl-1 text-xs`}>
-            {infoLabel || " "}
+          <span className={cn(INFO_COLORS[infoType], "pl-1 text-xs")}>
+            {infoLabel || " "}
           </span>
         )}
       </div>

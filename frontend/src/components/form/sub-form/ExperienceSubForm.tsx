@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { Form } from "../Form";
 import type { FormProps } from "../Form";
-import { SIGNUP_FORM_ID } from "@/constants";
+import { SIGNUP_FORM_ID, type ExperienceNamespace } from "@/constants";
 
 export type SubValues = {
   organization: string;
@@ -29,7 +29,7 @@ export const emptySubValues = (): SubValues => ({
 const TOTAL_SUB_STEPS = 6;
 
 interface ExperienceSubFormProps {
-  namespace: string;
+  namespace: ExperienceNamespace;
   dateMode?: "MM-YYYY" | "YYYY";
   initialValues: SubValues;
   isDeletable?: boolean;

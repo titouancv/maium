@@ -25,10 +25,10 @@ export default async function proxy(request: NextRequest) {
     }
   );
 
-  // Refresh session — always use getUser(), never getSession(), for security
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  // Refresh session — always use getUser(), never getSession(), for security.
+  // The result is unused; the call exists for the side-effect of writing
+  // refreshed cookies via setAll above.
+  await supabase.auth.getUser();
 
   return response;
 }

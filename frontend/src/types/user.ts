@@ -5,6 +5,8 @@ export interface Hobby {
   description: string;
 }
 
+export type HobbyData = Hobby;
+
 export interface UserData {
   email: string;
   first_name: string;

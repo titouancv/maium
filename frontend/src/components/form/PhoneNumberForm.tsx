@@ -20,12 +20,7 @@ export const PhoneNumberForm = ({
     phone: z.string().min(1),
   });
 
-  const {
-    control,
-    handleSubmit,
-    trigger,
-    formState: { isValid },
-  } = useForm({
+  const { control, handleSubmit, trigger } = useForm({
     resolver: zodResolver(schema),
     mode: "onChange",
     defaultValues: {

@@ -28,3 +28,11 @@ export const UI_VARIANTS: Record<UIVariant, string> = {
 };
 
 export type UISize = "none" | "sm" | "md" | "lg";
+
+export type InfoType = "error" | "success" | "info";
+
+export const INFO_COLORS: Record<InfoType, string> = {
+  error: "text-error",
+  success: "text-primary",
+  info: "text-txt",
+};

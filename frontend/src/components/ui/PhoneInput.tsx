@@ -1,6 +1,7 @@
 "use client";
 
 import React, { forwardRef, useCallback, useLayoutEffect, useRef, useState } from "react";
+import { cn } from "@/lib/utils";
 
 // Format: +XX XXX XXX XXXX (12 digits max)
 // Cursor positions in display string after n digits typed
@@ -109,9 +110,12 @@ export const PhoneInput = forwardRef<HTMLInputElement, PhoneInputProps>(
           onClick={resetCursor}
           onFocus={resetCursor}
           onBlur={onBlur}
-          className={`h-12 w-full transition-all ${
-            error ? "text-error bg-error/10" : "text-txt hover:bg-surface-100 focus:bg-surface-100"
-          } rounded-xl p-1 outline-none`}
+          className={cn(
+            "h-12 w-full rounded-xl p-1 outline-none transition-all",
+            error
+              ? "text-error bg-error/10"
+              : "text-txt hover:bg-surface-100 focus:bg-surface-100",
+          )}
         />
         {error && <span className="text-error pl-1 text-xs">{error}</span>}
       </div>

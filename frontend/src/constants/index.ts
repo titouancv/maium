@@ -9,8 +9,6 @@ export const ROUTES = {
   AUTH_CALLBACK: "/auth/callback",
 } as const;
 
-export const CONFIG = {} as const;
-
 export const API = {
   HEALTH: "/api/health",
   USERS: "/api/users",
@@ -22,7 +20,15 @@ export const API = {
 
 export const EXTERNAL_API = {
   PHOTON_GEOCODE: "https://photon.komoot.io/api/",
-  RESTCOUNTRIES: "https://restcountries.com/v3.1",
+  FAVICON: "https://www.google.com/s2/favicons",
 } as const;
 
 export const SIGNUP_FORM_ID = "signup-step-form";
+
+export const EXPERIENCE_NAMESPACE = {
+  professional: "experience.professional",
+  educational: "experience.educational",
+} as const;
+
+export type ExperienceNamespace =
+  (typeof EXPERIENCE_NAMESPACE)[keyof typeof EXPERIENCE_NAMESPACE];

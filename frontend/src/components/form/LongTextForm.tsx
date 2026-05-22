@@ -2,13 +2,14 @@
 
 import { useState } from "react";
 import { TextArea } from "@/components/ui/TextArea";
+import type { InfoType } from "@/constants";
 
 interface LongTextFormProps {
   defaultValue?: string;
   placeholder: string;
   onChange: (value: string) => void;
   infoLabel?: string;
-  infoType?: "error" | "success" | "info";
+  infoType?: InfoType;
   rows?: number;
 }
 

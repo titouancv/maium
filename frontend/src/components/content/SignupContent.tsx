@@ -5,7 +5,7 @@ import { useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { useRouter } from "@/i18n/navigation";
 import { useUserStore, type UserState } from "@/stores/useUserStore";
-import { ROUTES, API, SIGNUP_FORM_ID } from "@/constants";
+import { ROUTES, API, SIGNUP_FORM_ID, EXPERIENCE_NAMESPACE } from "@/constants";
 import { Form } from "../form/Form";
 import type { FormProps } from "../form/Form";
 import { Title } from "../ui";
@@ -58,13 +58,8 @@ export const SignupWizard = ({
   };
 
   const nextStep = async (data: Partial<UserState>) => {
-    if (initialUser.supabaseId) {
-      const res = await patchProfile(data);
-      if (!res.ok) {
-        return;
-      }
-    }
-
+    const res = await patchProfile(data);
+    if (!res.ok) return;
     setUser(data);
     setStep(step + 1);
   };
@@ -72,43 +67,17 @@ export const SignupWizard = ({
   const finish = async (data: Partial<UserState>) => {
     setUser(data);
     const merged = { ...user, ...data };
-    const isOAuth = !!initialUser.supabaseId;
 
-    const oauthBody = {
+    const res = await patchProfile({
       firstName: merged.firstName,
       lastName: merged.lastName,
       pseudo: merged.pseudo,
       dob: merged.dob,
       professionalExperiences: merged.professionalExperiences ?? [],
       educationalExperiences: merged.educationalExperiences ?? [],
-    };
-    const createBody = {
-      email: merged.email,
-      password: merged.password,
-      firstName: merged.firstName,
-      lastName: merged.lastName,
-      pseudo: merged.pseudo,
-      dob: merged.dob,
-    };
-
-    let res: Response;
-    if (isOAuth) {
-      res = await patchProfile(oauthBody);
-    } else {
-      setIsLoading(true);
-      res = await fetch(API.USERS, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(createBody),
-      });
-      setIsLoading(false);
-    }
+    });
 
     if (res.ok) {
-      if (!isOAuth) {
-        const json = await res.json();
-        setUser({ supabaseId: json.id });
-      }
       router.push(ROUTES.HOME);
     }
   };
@@ -153,7 +122,7 @@ export const SignupWizard = ({
         return {
           ...base,
           type: "experiences",
-          namespace: "experience.professional",
+          namespace: EXPERIENCE_NAMESPACE.professional,
           defaultValue: proExperiences,
           onChange: setProExperiences,
           onPrimary: () =>
@@ -163,7 +132,7 @@ export const SignupWizard = ({
         return {
           ...base,
           type: "experiences",
-          namespace: "experience.educational",
+          namespace: EXPERIENCE_NAMESPACE.educational,
           defaultValue: eduExperiences,
           onChange: setEduExperiences,
           onPrimary: () => finish({ educationalExperiences: eduExperiences }),
