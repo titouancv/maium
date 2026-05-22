@@ -4,26 +4,14 @@ import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
 import { Title, StepCounter } from "@/components/ui";
 import { Button } from "@/components/ui/Button";
+import { FormBaseProps } from "../form/Form";
 
-interface StepLayoutProps {
+interface FormLayoutProps extends Omit<FormBaseProps, "title"> {
   title: string;
-  step: number;
-  totalSteps: number;
-  isCancelable?: boolean;
-  onCancel?: () => void;
-  cancelLabel?: string;
-  formId?: string;
-  onPrimary?: () => void;
-  onSecondary?: () => void;
-  secondaryLabel?: string;
-  primaryLabel?: string;
-  primaryDisabled?: boolean;
-  primaryLoading?: boolean;
-  centerContent?: boolean;
   children: React.ReactNode;
 }
 
-export const StepLayout = ({
+export const FormLayout = ({
   title,
   step,
   totalSteps,
@@ -35,11 +23,9 @@ export const StepLayout = ({
   onSecondary,
   secondaryLabel,
   primaryLabel,
-  primaryDisabled,
   primaryLoading,
-  centerContent,
   children,
-}: StepLayoutProps) => {
+}: FormLayoutProps) => {
   const [keyboardHeight, setKeyboardHeight] = useState(0);
 
   useEffect(() => {
@@ -68,9 +54,9 @@ export const StepLayout = ({
 
   return (
     <div className="flex h-dvh flex-col md:h-screen md:items-center md:justify-center">
-      <div className="flex h-full w-full flex-col md:h-screen md:max-w-lg">
+      <div className="flex h-full w-full flex-col md:h-screen md:max-w-xl">
         {/* Header */}
-        <div className="flex shrink-0 items-center justify-between pt-6 md:pt-16">
+        <div className="flex shrink-0 items-center justify-between px-4 pt-6 md:pt-12">
           <Title label={title} size="h1" />
           {isCancelable ? (
             <Button
@@ -87,22 +73,15 @@ export const StepLayout = ({
         </div>
 
         {/* Content */}
-        <div
-          className={cn(
-            "min-h-0 flex-1 overflow-y-auto pt-10 pb-32 text-xl",
-            centerContent === undefined &&
-              "md:flex md:items-center md:justify-center md:py-0",
-            centerContent === true && "flex items-center justify-center",
-          )}
-        >
-          <div className="w-full">{children}</div>
+        <div className="flex min-h-0 flex-1 flex-col overflow-y-auto px-4 pt-10 pb-18 md:pb-4">
+          {children}
         </div>
 
         {/* Buttons — fixed above keyboard on mobile, inline on desktop */}
         {primaryLabel && (formId || onPrimary) && (
           <div
             className={cn(
-              "fixed inset-x-0 px-6 transition-[bottom] duration-300",
+              "fixed inset-x-0 px-4 transition-[bottom] duration-300",
               "md:static md:inset-auto md:px-0 md:pb-[150px]",
               keyboardHeight > 0 ? "pb-4" : "pb-8",
             )}
@@ -113,7 +92,7 @@ export const StepLayout = ({
                   : "env(safe-area-inset-bottom, 0px)",
             }}
           >
-            <div className="flex gap-2 md:mt-4">
+            <div className="flex gap-2">
               {onSecondary && (
                 <Button
                   variant="outline"
@@ -130,7 +109,6 @@ export const StepLayout = ({
                 form={formId}
                 size="lg"
                 className="w-full"
-                disabled={primaryDisabled}
                 isLoading={primaryLoading}
                 onClick={!formId ? onPrimary : undefined}
               >

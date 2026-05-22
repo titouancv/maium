@@ -6,12 +6,8 @@ export const ROUTES = {
   SETTINGS: "/settings",
   SETTINGS_ACCOUNT: "/settings/account",
   SETTINGS_PERSONAL_DATA: "/settings/personal-data",
-  UPDATE_EXPERIENCE_PRO: "/update-experience/professional",
-  UPDATE_EXPERIENCE_EDU: "/update-experience/educational",
   AUTH_CALLBACK: "/auth/callback",
 } as const;
-
-export const CONFIG = {} as const;
 
 export const API = {
   HEALTH: "/api/health",
@@ -19,11 +15,20 @@ export const API = {
   USERS_ME: "/api/users/me",
   USERS_PSEUDO_CHECK: "/api/users/pseudo",
   AUTH_LOGOUT: "/api/auth/logout",
+  URL_TITLE: "/api/url-title",
 } as const;
 
 export const EXTERNAL_API = {
   PHOTON_GEOCODE: "https://photon.komoot.io/api/",
-  RESTCOUNTRIES: "https://restcountries.com/v3.1",
+  FAVICON: "https://www.google.com/s2/favicons",
 } as const;
 
 export const SIGNUP_FORM_ID = "signup-step-form";
+
+export const EXPERIENCE_NAMESPACE = {
+  professional: "experience.professional",
+  educational: "experience.educational",
+} as const;
+
+export type ExperienceNamespace =
+  (typeof EXPERIENCE_NAMESPACE)[keyof typeof EXPERIENCE_NAMESPACE];

@@ -1,26 +1,26 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
+import { useTranslations } from "next-intl";
 import { SearchInput } from "./SearchInput";
 import { EXTERNAL_API } from "@/constants";
+
+type LocationFormat = "country" | "city-country";
 
 interface PhotonProperties {
   name?: string;
   country?: string;
-  city?: string;
 }
-
 interface PhotonResponse {
   features: { properties: PhotonProperties }[];
 }
 
-function formatSuggestion(props: PhotonProperties): string {
-  const name = props.name ?? "";
+function formatSuggestion(props: PhotonProperties, format: LocationFormat): string {
   const country = props.country ?? "";
-  if (!name) return country;
-  if (name === country) return country;
-  if (country) return `${name}, ${country}`;
-  return name;
+  if (format === "country") return country;
+  const name = props.name ?? "";
+  if (!name || name === country) return country;
+  return country ? `${name}, ${country}` : name;
 }
 
 export interface LocationInputProps {
@@ -31,6 +31,7 @@ export interface LocationInputProps {
   placeholder: string;
   error?: string;
   autoFocus?: boolean;
+  format?: LocationFormat;
 }
 
 export function LocationInput({
@@ -41,13 +42,14 @@ export function LocationInput({
   placeholder,
   error,
   autoFocus,
+  format = "city-country",
 }: LocationInputProps) {
+  const t = useTranslations("common");
   const [query, setQuery] = useState(value);
   const [suggestions, setSuggestions] = useState<string[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isEmpty, setIsEmpty] = useState(false);
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const containerRef = useRef<HTMLDivElement>(null);
-
-  const isOpen = query.length >= 2 && suggestions.length > 0;
 
   useEffect(() => {
     if (debounceRef.current) clearTimeout(debounceRef.current);
@@ -55,78 +57,58 @@ export function LocationInput({
     debounceRef.current = setTimeout(async () => {
       if (query.length < 2) {
         setSuggestions([]);
+        setIsLoading(false);
+        setIsEmpty(false);
         return;
       }
+      setIsLoading(true);
+      setIsEmpty(false);
       try {
         const res = await fetch(
           `${EXTERNAL_API.PHOTON_GEOCODE}?q=${encodeURIComponent(query)}&limit=6&lang=en`,
         );
         const data: PhotonResponse = await res.json();
         const results = data.features
-          .map((f) => formatSuggestion(f.properties))
+          .map((f) => formatSuggestion(f.properties, format))
           .filter(Boolean)
           .filter((v, i, a) => a.indexOf(v) === i);
         setSuggestions(results);
+        setIsEmpty(results.length === 0);
       } catch {
         setSuggestions([]);
+        setIsEmpty(true);
+      } finally {
+        setIsLoading(false);
       }
     }, delay);
     return () => {
       if (debounceRef.current) clearTimeout(debounceRef.current);
     };
-  }, [query]);
+  }, [query, format]);
 
-  useEffect(() => {
-    const handler = (e: MouseEvent) => {
-      if (
-        containerRef.current &&
-        !containerRef.current.contains(e.target as Node)
-      ) {
-        setSuggestions([]);
-      }
-    };
-    document.addEventListener("mousedown", handler);
-    return () => document.removeEventListener("mousedown", handler);
-  }, []);
-
-  const handleSelect = (suggestion: string) => {
-    setQuery(suggestion);
-    onChange(suggestion);
-    setSuggestions([]);
-  };
+  const infoLabel = error ?? (isLoading ? t("locationSearching") : isEmpty ? t("locationNoResults") : undefined);
+  const infoType: "error" | "info" = error || isEmpty ? "error" : "info";
 
   return (
-    <div ref={containerRef} className="relative w-full">
-      <SearchInput
-        placeholder={placeholder}
-        value={query}
-        name={name}
-        autoFocus={autoFocus}
-        autoComplete="off"
-        infoLabel={error}
-        infoType={error ? "error" : "info"}
-        onChange={(e) => {
-          setQuery(e.target.value);
-          onChange(e.target.value);
-        }}
-        onBlur={onBlur}
-      />
-      {isOpen && (
-        <ul className="absolute z-50 mt-1 w-full overflow-hidden rounded-sm backdrop-blur-sm">
-          {suggestions.map((s) => (
-            <li
-              key={s}
-              className="text-txt hover:bg-surface-100 cursor-pointer rounded-sm px-4 py-3 text-sm"
-              onMouseDown={(e) => {
-                e.preventDefault();
-                handleSelect(s);
-              }}
-            >
-              {s}
-            </li>
-          ))}
-        </ul>
-      )}
-    </div>
+    <SearchInput
+      placeholder={placeholder}
+      value={query}
+      name={name}
+      autoFocus={autoFocus}
+      infoLabel={infoLabel}
+      infoType={infoType}
+      suggestions={suggestions}
+      onSelect={(s) => {
+        setQuery(s);
+        onChange(s);
+        setSuggestions([]);
+        setIsEmpty(false);
+      }}
+      onChange={(e) => {
+        setQuery(e.target.value);
+        onChange(e.target.value);
+      }}
+      onBlur={onBlur}
+    />
   );
 }

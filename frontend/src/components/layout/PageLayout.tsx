@@ -33,28 +33,35 @@ export const PageLayout = ({
   ];
 
   return (
-    <div className="relative flex h-dvh flex-col md:h-screen md:items-center md:justify-center">
-      <div className="flex h-full w-full flex-col gap-8 md:h-screen md:max-w-5xl">
+    <div className="relative flex h-dvh flex-col md:h-screen md:items-center">
+      <div className="flex h-full w-full flex-col gap-8 md:h-screen">
         {/* Header */}
-        <div className="flex shrink-0 items-center justify-between pt-6 md:pt-16">
-          <Title label={title} size="h1" />
-          {backLabel && (
-            <Button
-              variant="ghost"
-              type="button"
-              size="none"
-              onClick={handleBack}
-            >
-              {backLabel}
-            </Button>
-          )}
+        <div className="flex shrink-0 justify-center px-4">
+          <div className="flex w-full max-w-5xl shrink-0 items-center justify-between pt-6 md:pt-12">
+            <Title label={title} size="h1" />
+            {backLabel && (
+              <Button
+                variant="ghost"
+                type="button"
+                size="none"
+                onClick={handleBack}
+              >
+                {backLabel}
+              </Button>
+            )}
+          </div>
         </div>
 
         {/* Content */}
-        <div className="min-h-0 flex-1 overflow-y-auto">{children}</div>
+
+        <div className="flex min-h-0 w-full flex-1 flex-col items-center overflow-y-auto px-4">
+          {children}
+          <div className="h-24 shrink-0 md:h-32" />
+        </div>
       </div>
 
-      <div className="absolute bottom-6 left-1/2 -translate-x-1/2 md:bottom-14">
+      <div className="pointer-events-none absolute right-0 bottom-0 left-0 h-12 [mask-image:linear-gradient(to_top,black_20%,transparent)] backdrop-blur-sm" />
+      <div className="absolute bottom-8 left-1/2 -translate-x-1/2">
         <Tabs tabs={tabs} />
       </div>
     </div>

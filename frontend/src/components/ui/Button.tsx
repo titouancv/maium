@@ -22,7 +22,7 @@ export function Button({
 }: ButtonProps) {
   const t = useTranslations("common");
   const baseStyle =
-    "cursor-pointer inline-flex items-center justify-center shadow-md inset-shadow-sm transition-colors duration-300 ease-in-out active:scale-95 disabled:opacity-50 disabled:pointer-events-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-inverse-50";
+    "cursor-pointer inline-flex items-center justify-center active:scale-95 disabled:opacity-50 disabled:pointer-events-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-inverse-50";
   const sizes: Record<UISize, string> = {
     none: "text-base rounded-2xl",
     sm: "py-1 px-4 text-sm rounded-xl",

@@ -55,7 +55,7 @@ export function MenuList({ items }: MenuListProps) {
           </div>
         );
         const className =
-          "group text-txt hover:text-primary flex items-center justify-between rounded-sm py-4 transition-colors w-full text-left";
+          "group text-txt hover:text-primary hover:cursor-pointer flex items-center justify-between rounded-sm py-4 transition-colors w-full text-left";
 
         return (
           <li key={key}>

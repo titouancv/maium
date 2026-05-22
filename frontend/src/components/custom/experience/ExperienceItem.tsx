@@ -1,9 +1,11 @@
 "use client";
 
+import { useState } from "react";
 import Image from "next/image";
 import { Button } from "@/components/ui/Button";
 import type { ExperienceFormData } from "@/types/experience";
 import { useTranslations } from "next-intl";
+import { faviconUrl } from "@/lib/utils";
 
 export interface ExperienceProps extends ExperienceFormData {
   onEdit: () => void;
@@ -20,37 +22,28 @@ export const ExperienceItem = ({
 }: ExperienceProps) => {
   const t = useTranslations("common");
 
-  const calculerDuree = (dateDebut: string, dateFin: string): string => {
-    const [anneeDebut, moisDebut] = dateDebut.split("-").map(Number);
-    const [anneeFin, moisFin] = dateFin.split("-").map(Number);
-
-    const totalMoisDebut = anneeDebut * 12 + (moisDebut - 1);
-    const totalMoisFin = anneeFin * 12 + (moisFin - 1);
-
+  const calculerDuree = (dateDebut: number, dateFin: number): string => {
+    const d1 = new Date(dateDebut);
+    const d2 = new Date(dateFin);
+    const totalMoisDebut = d1.getUTCFullYear() * 12 + d1.getUTCMonth();
+    const totalMoisFin = d2.getUTCFullYear() * 12 + d2.getUTCMonth();
     const diffMois = totalMoisFin - totalMoisDebut;
-
     const annees = Math.floor(diffMois / 12);
     const mois = (diffMois % 12) + 1;
-
-    if (annees > 0) {
-      return t("yearsCount", { count: annees });
-    }
+    if (annees > 0) return t("yearsCount", { count: annees });
     return t("monthsCount", { count: mois });
   };
-  const formatPeriod = (startDate: string, endDate?: string): string => {
-    const [startYear] = startDate.split("-").map(Number);
-    if (!endDate) {
-      return `${t("sinceLabel")} ${startYear}`;
-    }
-    const [endYear] = endDate.split("-").map(Number);
-    if (startYear === endYear) {
-      return `${startYear}`;
-    }
+
+  const formatPeriod = (startDate: number, endDate?: number): string => {
+    const startYear = new Date(startDate).getUTCFullYear();
+    if (!endDate) return `${t("sinceLabel")} ${startYear}`;
+    const endYear = new Date(endDate).getUTCFullYear();
+    if (startYear === endYear) return `${startYear}`;
     return `${startYear}/${endYear}`;
   };
-  const faviconUrl = website
-    ? `https://www.google.com/s2/favicons?domain=${new URL(website).hostname}&sz=32`
-    : null;
+
+  const favicon = website ? faviconUrl(website) : null;
+  const [now] = useState(() => Date.now());
 
   return (
     <div className="flex items-center gap-4">
@@ -63,9 +56,9 @@ export const ExperienceItem = ({
             target="_blank"
             rel="noopener noreferrer"
           >
-            {faviconUrl && (
+            {favicon && (
               <Image
-                src={faviconUrl}
+                src={favicon}
                 alt=""
                 width={16}
                 height={16}
@@ -88,10 +81,7 @@ export const ExperienceItem = ({
             )}
             <div className="flex flex-nowrap gap-2">
               <span className="text-txt-muted shrink-0 text-sm">
-                {calculerDuree(
-                  startPeriod,
-                  endPeriod || new Date().toISOString().slice(0, 7),
-                )}
+                {calculerDuree(startPeriod, endPeriod ?? now)}
               </span>
               <span className="text-txt-muted shrink-0 text-sm">•</span>
               <span

@@ -11,48 +11,50 @@
     "editButton": "Edit",
     "sinceLabel": "since",
     "yearsCount": "{count, plural, one {# year} other {# years}}",
-    "monthsCount": "{count, plural, one {# month} other {# months}}"
+    "monthsCount": "{count, plural, one {# month} other {# months}}",
+    "locationSearching": "Searching...",
+    "locationNoResults": "No results found",
+    "removeAriaLabel": "Remove {label}",
+    "urlPlaceholder": "https://maium.app/...",
+    "socialPlaceholder": "https://www.instagram.com/..."
   },
   "home": {
-    "userData": "Your information",
-    "email": "Email",
     "name": "Full name",
     "pseudo": "Username",
-    "dob": "Date of birth",
-    "settingsButton": "Settings"
+    "dob": "Date of birth"
   },
   "settings": {
     "title": "Settings",
     "backButton": "Back",
-    "monCompte": "My account",
-    "mesInformations": "My information",
     "accountMenuLabel": "My account",
     "personalDataMenuLabel": "My personal data",
     "logoutButton": "Sign out",
     "deleteAccountButton": "Delete account",
-    "deleteAccountConfirm": "Are you sure? This action is irreversible.",
     "deleteAccountConfirmButton": "Yes, delete",
-    "deleteAccountCancelButton": "Cancel",
+    "deleteAccountSlideLabel": "Slide to delete",
     "phone": "Phone number",
     "nationality": "Nationality",
     "location": "Location",
-    "phonePlaceholder": "Phone number",
-    "nationalityPlaceholder": "France",
-    "locationPlaceholder": "Paris, France",
+    "locationCountryPlaceholder": "France",
     "saveButton": "Save",
     "deleteButton": "Delete",
     "professionalExperiencesLabel": "Professional experiences",
     "educationalExperiencesLabel": "Educational background",
-    "editName": "Edit name",
-    "editPseudo": "Edit username",
-    "editDob": "Edit date of birth",
-    "editPhone": "Edit phone number",
     "editNationality": "Edit nationality",
-    "editLocation": "Edit location",
-    "editProfessionalExperiences": "Professional experiences",
-    "editEducationalExperiences": "Educational background",
-    "noExperiences": "No experiences yet",
-    "saveError": "Failed to save. Please try again."
+    "saveError": "Failed to save. Please try again.",
+    "socialNetworks": "Social networks",
+    "hobbies": "Hobbies",
+    "personalExperiences": "Personal experiences",
+    "skills": "Skills",
+    "projects": "Projects",
+    "editPersonalExperiences": "Personal experiences",
+    "noHobbies": "No hobbies yet",
+    "urlInvalid": "Please enter a valid URL",
+    "hobbySubStep1Title": "What's the hobby?",
+    "hobbySubStep2Title": "Tell us more (optional)",
+    "hobbyTitleRequired": "Please enter a title",
+    "hobbyTitlePlaceholder": "Rock climbing",
+    "hobbyDescriptionPlaceholder": "Indoor bouldering and outdoor sport climbing, started 3 years ago."
   },
   "welcome": {
     "greeting": "Welcome, {name}!",
@@ -63,24 +65,16 @@
   },
   "auth": {
     "signup": {
-      "title": "Welcome",
-      "step1": {
-        "title": "Create an account",
-        "emailLabel": "Email address",
-        "emailPlaceholder": "Email address",
-        "passwordLabel": "Password",
-        "passwordPlaceholder": "Password"
-      },
       "step2": {
         "title": "What's your name?",
-        "firstNamePlaceholder": "First name",
-        "lastNamePlaceholder": "Last name",
+        "firstNamePlaceholder": "John",
+        "lastNamePlaceholder": "Doe",
         "firstNameRequired": "First name is required",
         "lastNameRequired": "Last name is required"
       },
       "step3": {
-        "title": "Choose your username",
-        "pseudoPlaceholder": "Username",
+        "title": "Pick your username",
+        "pseudoPlaceholder": "johndoe42",
         "pseudoMinLength": "Username must be at least 3 characters",
         "pseudoChecking": "Checking...",
         "pseudoAvailable": "Username available",
@@ -92,14 +86,11 @@
         "dobFuture": "Date of birth cannot be in the future"
       },
       "step5": {
-        "title": "Professional experience"
+        "title": "Your career"
       },
       "step6": {
-        "title": "Educational background"
+        "title": "Your education"
       },
-      "duplicateEmailError": "This email address is already in use.",
-      "duplicatePseudoError": "This username is already in use.",
-      "signupError": "An error occurred during signup. Please try again.",
       "oauth": {
         "googleButton": "Continue with Google",
         "appleButton": "Continue with Apple",
@@ -109,15 +100,28 @@
       }
     }
   },
+  "form": {
+    "fullNameTitle": "What's your name?",
+    "pseudoTitle": "Pick your username",
+    "dateTitle": "When's your birthday?",
+    "phoneNumberTitle": "How can we reach you?",
+    "locationTitle": "Where are you based?",
+    "socialNetworkTitle": "Your links",
+    "hobbiesTitle": "What you're into",
+    "keysTitle": "What you're good at",
+    "urlsTitle": "What you've built",
+    "experiencesProfessionalTitle": "Your career",
+    "experiencesEducationalTitle": "Your education"
+  },
   "experience": {
     "professional": {
       "addEntry": "Add a position",
       "removeEntry": "Remove",
-      "organizationPlaceholder": "Company",
-      "rolePlaceholder": "Role",
-      "descriptionPlaceholder": "Description",
-      "websitePlaceholder": "https://...",
-      "locationPlaceholder": "City, Country",
+      "organizationPlaceholder": "maium",
+      "rolePlaceholder": "Software Engineer",
+      "descriptionPlaceholder": "Led development of the core API, improving response time by 40%.",
+      "websitePlaceholder": "https://maium.app/...",
+      "locationPlaceholder": "San Francisco, USA",
       "organizationRequired": "Company is required",
       "roleRequired": "Role is required",
       "startPeriodRequired": "Start date is required (YYYY-MM)",
@@ -134,11 +138,11 @@
     "educational": {
       "addEntry": "Add a school",
       "removeEntry": "Remove",
-      "organizationPlaceholder": "School",
-      "rolePlaceholder": "Field of study",
-      "descriptionPlaceholder": "Description",
-      "websitePlaceholder": "https://...",
-      "locationPlaceholder": "City, Country",
+      "organizationPlaceholder": "MIT",
+      "rolePlaceholder": "Computer Science",
+      "descriptionPlaceholder": "Specialized in machine learning and distributed systems.",
+      "websitePlaceholder": "https://mit.edu",
+      "locationPlaceholder": "Cambridge, USA",
       "organizationRequired": "School is required",
       "roleRequired": "Field of study is required",
       "startPeriodRequired": "Start year is required (YYYY)",

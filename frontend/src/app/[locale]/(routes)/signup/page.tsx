@@ -31,14 +31,20 @@ export default async function SignupPage() {
       redirect({ href: ROUTES.HOME, locale });
     }
 
-    initialStep = profile?.dob ? 4 : profile?.pseudo ? 3 : 1;
+    initialStep = profile?.dob
+      ? 4
+      : profile?.pseudo
+        ? 3
+        : profile?.first_name && profile?.last_name
+          ? 2
+          : 1;
     initialUser = {
       supabaseId: user.id,
       email: user.email,
       firstName: profile?.first_name ?? user.user_metadata?.given_name ?? "",
       lastName: profile?.last_name ?? user.user_metadata?.family_name ?? "",
       pseudo: profile?.pseudo ?? undefined,
-      dob: profile?.dob ?? undefined,
+      dob: profile?.dob ? new Date(profile.dob).getTime() : undefined,
       professionalExperiences:
         (profile?.professional_experiences as unknown as Experience[] | null) ?? [],
       educationalExperiences:

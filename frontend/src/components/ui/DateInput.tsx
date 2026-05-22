@@ -1,12 +1,33 @@
 "use client";
 
 import React, { forwardRef, useCallback, useLayoutEffect, useRef, useState } from "react";
+import { cn } from "@/lib/utils";
 
 export type DateMode = "DD-MM-YYYY" | "MM-YYYY" | "YYYY";
 
+function timestampToISO(ts: number | null | undefined, mode: DateMode): string {
+  if (ts == null) return "";
+  const d = new Date(ts);
+  if (mode === "YYYY") return String(d.getUTCFullYear());
+  const mm = String(d.getUTCMonth() + 1).padStart(2, "0");
+  if (mode === "MM-YYYY") return `${d.getUTCFullYear()}-${mm}`;
+  const dd = String(d.getUTCDate()).padStart(2, "0");
+  return `${d.getUTCFullYear()}-${mm}-${dd}`;
+}
+
+function isoToTimestamp(iso: string): number | null {
+  if (!iso) return null;
+  const normalized =
+    iso.length === 4 ? `${iso}-01-01T00:00:00Z` :
+    iso.length === 7 ? `${iso}-01T00:00:00Z` :
+    `${iso}T00:00:00Z`;
+  const ts = new Date(normalized).getTime();
+  return isNaN(ts) ? null : ts;
+}
+
 interface DateInputProps {
-  value?: string; // ISO format: YYYY-MM-DD | YYYY-MM | YYYY depending on mode
-  onChange?: (value: string) => void;
+  value?: number | null;
+  onChange?: (value: number | null) => void;
   onBlur?: () => void;
   onEnter?: () => void;
   onComplete?: () => void;
@@ -83,7 +104,7 @@ const MODE_CONFIGS: Record<DateMode, ModeConfig> = {
 export const DateInput = forwardRef<HTMLInputElement, DateInputProps>(
   ({ value, onChange, onBlur, onEnter, onComplete, name, error, autoComplete, autoFocus, mode = "DD-MM-YYYY" }, forwardedRef) => {
     const config = MODE_CONFIGS[mode];
-    const [digits, setDigits] = useState(() => config.fromISO(value ?? ""));
+    const [digits, setDigits] = useState(() => config.fromISO(timestampToISO(value, mode)));
     const localRef = useRef<HTMLInputElement>(null);
 
     const getEl = () =>
@@ -100,12 +121,12 @@ export const DateInput = forwardRef<HTMLInputElement, DateInputProps>(
       if (/^\d$/.test(e.key) && digits.length < config.maxDigits) {
         const next = digits + e.key;
         setDigits(next);
-        onChange?.(config.toISO(next));
+        onChange?.(isoToTimestamp(config.toISO(next)));
         if (next.length === config.maxDigits) onComplete?.();
       } else if (e.key === "Backspace" && digits.length > 0) {
         const next = digits.slice(0, -1);
         setDigits(next);
-        onChange?.(config.toISO(next));
+        onChange?.(isoToTimestamp(config.toISO(next)));
       }
     };
 
@@ -113,7 +134,7 @@ export const DateInput = forwardRef<HTMLInputElement, DateInputProps>(
       const newDigits = e.target.value.replace(/\D/g, "").slice(0, config.maxDigits);
       if (newDigits !== digits) {
         setDigits(newDigits);
-        onChange?.(config.toISO(newDigits));
+        onChange?.(isoToTimestamp(config.toISO(newDigits)));
         if (newDigits.length === config.maxDigits) onComplete?.();
       }
     };
@@ -125,7 +146,7 @@ export const DateInput = forwardRef<HTMLInputElement, DateInputProps>(
         config.maxDigits,
       );
       setDigits(next);
-      onChange?.(config.toISO(next));
+      onChange?.(isoToTimestamp(config.toISO(next)));
       if (next.length === config.maxDigits) onComplete?.();
     };
 
@@ -160,9 +181,12 @@ export const DateInput = forwardRef<HTMLInputElement, DateInputProps>(
           onClick={resetCursor}
           onFocus={resetCursor}
           onBlur={onBlur}
-          className={`h-12 w-full transition-all ${
-            error ? "text-error bg-error/10" : "text-txt hover:bg-surface-100 focus:bg-surface-100"
-          } rounded-xl p-1 outline-none`}
+          className={cn(
+            "h-12 w-full rounded-xl p-1 outline-none transition-all",
+            error
+              ? "text-error bg-error/10"
+              : "text-txt hover:bg-surface-100 focus:bg-surface-100",
+          )}
         />
         {error && <span className="text-error pl-1 text-xs">{error}</span>}
       </div>

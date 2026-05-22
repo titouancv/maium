@@ -11,48 +11,50 @@
     "editButton": "Modifier",
     "sinceLabel": "depuis",
     "yearsCount": "{count, plural, one {# an} other {# ans}}",
-    "monthsCount": "{count, plural, one {# mois} other {# mois}}"
+    "monthsCount": "{count, plural, one {# mois} other {# mois}}",
+    "locationSearching": "Recherche...",
+    "locationNoResults": "Aucun résultat",
+    "removeAriaLabel": "Supprimer {label}",
+    "urlPlaceholder": "https://maium.app/...",
+    "socialPlaceholder": "https://www.instagram.com/..."
   },
   "home": {
-    "userData": "Vos informations",
-    "email": "Email",
     "name": "Nom complet",
     "pseudo": "Pseudo",
-    "dob": "Date de naissance",
-    "settingsButton": "Paramètres"
+    "dob": "Date de naissance"
   },
   "settings": {
     "title": "Paramètres",
     "backButton": "Retour",
-    "monCompte": "Mon compte",
-    "mesInformations": "Mes informations",
     "accountMenuLabel": "Mon compte",
     "personalDataMenuLabel": "Mes données personnelles",
     "logoutButton": "Se déconnecter",
     "deleteAccountButton": "Supprimer le compte",
-    "deleteAccountConfirm": "Êtes-vous sûr ? Cette action est irréversible.",
     "deleteAccountConfirmButton": "Oui, supprimer",
-    "deleteAccountCancelButton": "Annuler",
+    "deleteAccountSlideLabel": "Glisser pour supprimer",
     "phone": "Numéro de téléphone",
     "nationality": "Nationalité",
     "location": "Localisation",
-    "phonePlaceholder": "Numéro de téléphone",
-    "nationalityPlaceholder": "France",
-    "locationPlaceholder": "Paris, France",
+    "locationCountryPlaceholder": "France",
     "saveButton": "Enregistrer",
     "deleteButton": "Supprimer",
     "professionalExperiencesLabel": "Expériences professionnelles",
     "educationalExperiencesLabel": "Parcours éducatif",
-    "editName": "Modifier le nom",
-    "editPseudo": "Modifier le pseudo",
-    "editDob": "Modifier la date de naissance",
-    "editPhone": "Modifier le numéro de téléphone",
     "editNationality": "Modifier la nationalité",
-    "editLocation": "Modifier la localisation",
-    "editProfessionalExperiences": "Expériences professionnelles",
-    "editEducationalExperiences": "Parcours éducatif",
-    "noExperiences": "Aucune expérience pour l'instant",
-    "saveError": "Échec de l'enregistrement. Veuillez réessayer."
+    "saveError": "Échec de l'enregistrement. Veuillez réessayer.",
+    "socialNetworks": "Réseaux sociaux",
+    "hobbies": "Loisirs",
+    "personalExperiences": "Expériences personnelles",
+    "skills": "Compétences",
+    "projects": "Projets",
+    "editPersonalExperiences": "Expériences personnelles",
+    "noHobbies": "Aucun loisir pour l'instant",
+    "urlInvalid": "Veuillez entrer une URL valide",
+    "hobbySubStep1Title": "C'est quoi ce loisir ?",
+    "hobbySubStep2Title": "Un peu plus ? (optionnel)",
+    "hobbyTitleRequired": "Veuillez saisir un titre",
+    "hobbyTitlePlaceholder": "Escalade",
+    "hobbyDescriptionPlaceholder": "Bloc en salle et escalade sportive en extérieur, pratiqué depuis 3 ans."
   },
   "welcome": {
     "greeting": "Bienvenue, {name} !",
@@ -63,43 +65,32 @@
   },
   "auth": {
     "signup": {
-      "title": "Bienvenue",
-      "step1": {
-        "title": "Créer un compte",
-        "emailLabel": "Adresse email",
-        "emailPlaceholder": "Adresse email",
-        "passwordLabel": "Mot de passe",
-        "passwordPlaceholder": "Mot de passe"
-      },
       "step2": {
-        "title": "Quel est votre nom ?",
-        "firstNamePlaceholder": "Prénom",
-        "lastNamePlaceholder": "Nom",
+        "title": "Comment vous appelez-vous ?",
+        "firstNamePlaceholder": "Jean",
+        "lastNamePlaceholder": "Dupont",
         "firstNameRequired": "Le prénom est requis",
         "lastNameRequired": "Le nom est requis"
       },
       "step3": {
         "title": "Choisissez votre pseudo",
-        "pseudoPlaceholder": "Pseudo",
+        "pseudoPlaceholder": "jeandupont42",
         "pseudoMinLength": "Le pseudo doit contenir au moins 3 caractères",
         "pseudoChecking": "Vérification...",
         "pseudoAvailable": "Pseudo disponible",
         "pseudoTaken": "Ce pseudo est déjà utilisé"
       },
       "step4": {
-        "title": "Quelle est votre date de naissance ?",
+        "title": "Vous êtes né(e) quand ?",
         "dobInvalid": "Veuillez entrer une date valide",
         "dobFuture": "La date de naissance ne peut pas être dans le futur"
       },
       "step5": {
-        "title": "Expérience professionnelle"
+        "title": "Votre parcours"
       },
       "step6": {
-        "title": "Parcours éducatif"
+        "title": "Votre formation"
       },
-      "duplicateEmailError": "Cette adresse e-mail est déjà utilisée.",
-      "duplicatePseudoError": "Ce pseudo est déjà utilisé.",
-      "signupError": "Une erreur est survenue lors de l'inscription. Veuillez réessayer.",
       "oauth": {
         "googleButton": "Continuer avec Google",
         "appleButton": "Continuer avec Apple",
@@ -109,15 +100,28 @@
       }
     }
   },
+  "form": {
+    "fullNameTitle": "Comment vous appelez-vous ?",
+    "pseudoTitle": "Choisissez votre pseudo",
+    "dateTitle": "Vous êtes né(e) quand ?",
+    "phoneNumberTitle": "Comment vous joindre ?",
+    "locationTitle": "Où êtes-vous basé(e) ?",
+    "socialNetworkTitle": "Vos liens",
+    "hobbiesTitle": "Ce qui vous passionne",
+    "keysTitle": "Vos points forts",
+    "urlsTitle": "Vos réalisations",
+    "experiencesProfessionalTitle": "Votre parcours",
+    "experiencesEducationalTitle": "Votre formation"
+  },
   "experience": {
     "professional": {
       "addEntry": "Ajouter un poste",
       "removeEntry": "Supprimer",
-      "organizationPlaceholder": "Entreprise",
-      "rolePlaceholder": "Poste",
-      "descriptionPlaceholder": "Description",
-      "websitePlaceholder": "https://...",
-      "locationPlaceholder": "Ville, Pays",
+      "organizationPlaceholder": "maium",
+      "rolePlaceholder": "Ingénieur logiciel",
+      "descriptionPlaceholder": "Développement de l'API principale, réduction du temps de réponse de 40%.",
+      "websitePlaceholder": "https://maium.app/...",
+      "locationPlaceholder": "Paris, France",
       "organizationRequired": "L'entreprise est requise",
       "roleRequired": "Le poste est requis",
       "startPeriodRequired": "La date de début est requise (AAAA-MM)",
@@ -134,11 +138,11 @@
     "educational": {
       "addEntry": "Ajouter une école",
       "removeEntry": "Supprimer",
-      "organizationPlaceholder": "École",
-      "rolePlaceholder": "Domaine d'étude",
-      "descriptionPlaceholder": "Description",
-      "websitePlaceholder": "https://...",
-      "locationPlaceholder": "Ville, Pays",
+      "organizationPlaceholder": "École Polytechnique",
+      "rolePlaceholder": "Informatique",
+      "descriptionPlaceholder": "Spécialisation en machine learning et systèmes distribués.",
+      "websitePlaceholder": "https://polytechnique.edu",
+      "locationPlaceholder": "Palaiseau, France",
       "organizationRequired": "L'école est requise",
       "roleRequired": "Le domaine d'étude est requis",
       "startPeriodRequired": "L'année de début est requise (AAAA)",

@@ -13,12 +13,17 @@ export default async function SettingsPersonalDataPage() {
     const { data } = await supabase
       .from("users")
       .select(
-        "email, first_name, last_name, pseudo, dob, phone, nationality, location, professional_experiences, educational_experiences",
+        "email, first_name, last_name, pseudo, dob, phone, nationality, location, professional_experiences, educational_experiences, personal_experiences, social_networks, hobbies, skills, projects",
       )
       .eq("id", authUser.id)
       .single();
 
-    userData = data;
+    userData = data
+      ? {
+          ...data,
+          dob: data.dob ? new Date(data.dob + "T00:00:00Z").getTime() : null,
+        }
+      : null;
   }
 
   return (

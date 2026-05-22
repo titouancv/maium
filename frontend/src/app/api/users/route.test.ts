@@ -23,7 +23,7 @@ const validBody = {
   firstName: "John",
   lastName: "Doe",
   pseudo: "johndoe",
-  dob: "1990-01-01",
+  dob: new Date("1990-01-01T00:00:00Z").getTime(),
 };
 
 function makeRequest(body: unknown) {

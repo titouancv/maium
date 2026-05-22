@@ -32,13 +32,18 @@ export async function PATCH(request: NextRequest) {
       phone,
       nationality,
       location,
+      socialNetworks,
+      hobbies,
+      personalExperiences,
+      skills,
+      projects,
     } = parsed.data;
 
     const updates: Record<string, unknown> = {};
     if (firstName !== undefined) updates.first_name = firstName;
     if (lastName !== undefined) updates.last_name = lastName;
     if (pseudo !== undefined) updates.pseudo = pseudo;
-    if (dob !== undefined) updates.dob = dob;
+    if (dob !== undefined) updates.dob = new Date(dob).toISOString().slice(0, 10);
     if (onboardingCompleted !== undefined)
       updates.onboarding_completed = onboardingCompleted;
     if (professionalExperiences !== undefined)
@@ -48,6 +53,12 @@ export async function PATCH(request: NextRequest) {
     if (phone !== undefined) updates.phone = phone ?? null;
     if (nationality !== undefined) updates.nationality = nationality ?? null;
     if (location !== undefined) updates.location = location ?? null;
+    if (socialNetworks !== undefined) updates.social_networks = socialNetworks;
+    if (hobbies !== undefined) updates.hobbies = hobbies;
+    if (personalExperiences !== undefined)
+      updates.personal_experiences = personalExperiences;
+    if (skills !== undefined) updates.skills = skills;
+    if (projects !== undefined) updates.projects = projects;
 
     const { error: dbError } = await supabase
       .from("users")
