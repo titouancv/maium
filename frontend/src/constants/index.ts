@@ -15,6 +15,7 @@ export const API = {
   USERS: "/api/users",
   USERS_ME: "/api/users/me",
   USERS_PSEUDO_CHECK: "/api/users/pseudo",
+  USERS_SEARCH: "/api/users/search",
   AUTH_LOGOUT: "/api/auth/logout",
   URL_TITLE: "/api/url-title",
 } as const;

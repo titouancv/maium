@@ -1,7 +1,14 @@
 {
   "nav": {
     "home": "Home",
-    "settings": "Settings"
+    "settings": "Settings",
+    "searchLabel": "Search"
+  },
+  "search": {
+    "placeholder": "Search users...",
+    "cancelButton": "Cancel",
+    "searching": "Searching...",
+    "noResults": "No results found"
   },
   "common": {
     "loading": "Loading",

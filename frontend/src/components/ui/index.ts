@@ -14,4 +14,5 @@ export * from "./StepCounter";
 export * from "./Title";
 export * from "./MenuList";
 export * from "./NavigationBar";
+export * from "./SearchButton";
 export * from "./Section";

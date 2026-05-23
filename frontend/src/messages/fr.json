@@ -1,7 +1,14 @@
 {
   "nav": {
     "home": "Accueil",
-    "settings": "Paramètres"
+    "settings": "Paramètres",
+    "searchLabel": "Rechercher"
+  },
+  "search": {
+    "placeholder": "Rechercher des utilisateurs...",
+    "cancelButton": "Annuler",
+    "searching": "Recherche...",
+    "noResults": "Aucun résultat"
   },
   "common": {
     "loading": "Chargement",
