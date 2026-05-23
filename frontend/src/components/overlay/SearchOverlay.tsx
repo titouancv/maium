@@ -107,7 +107,7 @@ export function SearchOverlay({ onClose }: SearchOverlayProps) {
                       <li key={user.pseudo}>
                         <button
                           key={idx}
-                          className="text-txt hover:text-primary flex w-full cursor-pointer gap-2 rounded-sm px-4 py-3"
+                          className="text-txt hover:text-primary flex w-full cursor-pointer gap-2 rounded-sm py-3"
                           onClick={() => handleSelect(user.pseudo)}
                         >
                           <div className="min-w-0 text-left">
