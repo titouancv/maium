@@ -51,3 +51,17 @@ def profile_to_text(profile) -> str:
         parts.append(str(proj))
 
     return " ".join(parts).lower()
+
+
+def optimized_cv_to_text(optimized) -> str:
+    """Flatten an OptimizedCV into plain text for ATS scoring."""
+    parts: list[str] = [optimized.summary]
+
+    parts.extend(optimized.highlighted_skills)
+
+    for exp in optimized.optimized_experiences:
+        parts.append(exp.title)
+        parts.append(exp.company)
+        parts.extend(exp.bullet_points)
+
+    return " ".join(parts).lower()

@@ -7,6 +7,7 @@ from pydantic import BaseModel, Field
 
 class CVOptimizeRequest(BaseModel):
     job_url: str
+    user_id: str
 
 
 class OptimizedExperience(BaseModel):
@@ -20,13 +21,14 @@ class OptimizedCV(BaseModel):
     summary: str
     highlighted_skills: list[str]
     optimized_experiences: list[OptimizedExperience]
-    missing_keywords: list[str]
-    ats_score: int = Field(ge=0, le=100)
-
-
-class CVOptimizeResponse(BaseModel):
-    task_id: str
-    status: str = "pending"
+    # Keywords missing from the original profile vs the job offer
+    missing_keywords_before: list[str] = []
+    # Keywords still missing from the optimised CV (no matching background)
+    missing_keywords_after: list[str] = []
+    # ATS score of the original profile vs the job offer
+    ats_score_before: int = Field(default=0, ge=0, le=100)
+    # ATS score of the optimised CV vs the job offer
+    ats_score_after: int = Field(default=0, ge=0, le=100)
 
 
 class TaskStatusResponse(BaseModel):
@@ -60,6 +62,7 @@ class MatchScoreResult(BaseModel):
 
 class MatchScoreRequest(BaseModel):
     job_url: str
+    user_id: str
 
 
 class MatchScoreResponse(BaseModel):

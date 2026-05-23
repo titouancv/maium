@@ -45,7 +45,16 @@ async def fetch_user_profile(user_id: str, client: Client | None = None) -> User
     if not resp.data:
         raise ValueError(f"User {user_id} not found")
 
-    return UserProfile(**resp.data)
+    try:
+        return UserProfile(**resp.data)
+    except Exception as exc:
+        logger.error(
+            "UserProfile validation failed for user %s: %s | raw data: %s",
+            user_id,
+            exc,
+            resp.data,
+        )
+        raise ValueError(f"Invalid profile data for user {user_id}: {exc}") from exc
 
 
 async def save_optimized_cv(

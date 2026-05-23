@@ -72,10 +72,10 @@ def _get_cached_job(client, url_hash: str) -> dict | None:
             .select("parsed_json")
             .eq("url_hash", url_hash)
             .gt("expires_at", now)
-            .single()
+            .maybe_single()  # returns None data (no exception) when 0 rows
             .execute()
         )
-        if resp.data:
+        if resp and resp.data:
             return resp.data["parsed_json"]
     except Exception as exc:
         logger.warning("Cache read error: %s", exc)

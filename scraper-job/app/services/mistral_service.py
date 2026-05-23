@@ -56,7 +56,12 @@ class MistralService:
             resp.raise_for_status()
             data = resp.json()
 
-        content = data["choices"][0]["message"]["content"]
+        try:
+            content = data["choices"][0]["message"]["content"]
+        except (KeyError, IndexError, TypeError) as exc:
+            logger.error("Unexpected Mistral response structure: %s | raw: %s", exc, str(data)[:500])
+            raise ValueError("Unexpected response structure from Mistral") from exc
+
         try:
             return json.loads(content)
         except json.JSONDecodeError as exc:

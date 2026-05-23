@@ -14,7 +14,7 @@ import logging
 from app.schemas.cv import OptimizedCV
 from app.schemas.job import JobOffer
 from app.schemas.profile import UserProfile
-from app.services.ats_service import compute_ats_score, profile_to_text
+from app.services.ats_service import compute_ats_score, optimized_cv_to_text, profile_to_text
 from app.services.mistral_service import MistralService
 from app.services.scraper_service import scrape_job
 from app.services.supabase_service import fetch_user_profile, get_supabase_client, save_optimized_cv
@@ -41,26 +41,43 @@ async def run_cv_optimization(user_id: str, job_url: str) -> OptimizedCV:
     mistral = MistralService()
     optimized: OptimizedCV = await mistral.optimize_cv(profile, job)
 
-    # 4. Local ATS check (sanity check on the Mistral score)
-    local_score = compute_ats_score(
+    # 4. ATS scores — before (original profile) and after (optimised CV)
+    ats_before = compute_ats_score(
         profile_to_text(profile),
         job.description,
         job.skills,
     )
-    # Blend: 70% Mistral score (richer context) + 30% local score (verifiable)
-    blended_score = int(optimized.ats_score * 0.7 + local_score * 0.3)
-    optimized = optimized.model_copy(update={"ats_score": blended_score})
-
-    # 5. Persist
-    logger.info("[CV Optimizer] Saving optimized CV (ATS score: %d)", blended_score)
-    await save_optimized_cv(
-        client=client,
-        user_id=user_id,
-        job_url=job_url,
-        company=job.company,
-        job_title=job.title,
-        ats_score=blended_score,
-        generated_cv=optimized.model_dump(),
+    ats_after = compute_ats_score(
+        optimized_cv_to_text(optimized),
+        job.description,
+        job.skills,
     )
+    optimized = optimized.model_copy(update={
+        "ats_score_before": ats_before,
+        "ats_score_after": ats_after,
+    })
+
+    # 5. Persist (non-fatal — a Supabase issue must not discard a ready CV)
+    logger.info(
+        "[CV Optimizer] ATS before=%d → after=%d | saving CV",
+        ats_before,
+        ats_after,
+    )
+    try:
+        await save_optimized_cv(
+            client=client,
+            user_id=user_id,
+            job_url=job_url,
+            company=job.company,
+            job_title=job.title,
+            ats_score=ats_after,
+            generated_cv=optimized.model_dump(),
+        )
+    except Exception as exc:
+        logger.warning(
+            "[CV Optimizer] Could not persist CV for user %s (returning result anyway): %s",
+            user_id,
+            exc,
+        )
 
     return optimized
