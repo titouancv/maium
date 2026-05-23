@@ -35,7 +35,7 @@ export const SettingsPersonalDataContent = ({
   return (
     <PageLayout title={t("personalDataMenuLabel")} backLabel={t("backButton")}>
       {user && (
-        <div className="flex w-full flex-col gap-12 md:max-w-5xl">
+        <div className="flex w-full max-w-2xl flex-col gap-12">
           <MenuList
             items={[
               {

@@ -1,72 +1,32 @@
 "use client";
 
 import { useMemo } from "react";
-import { useWatch, type Control, type FieldArrayWithId } from "react-hook-form";
 import { ExperienceItem } from "./ExperienceItem";
-import type {
-  ExperienceFormData,
-  ExperienceFormItems,
-  ExperienceItemRecord,
-} from "@/types/experience";
+import type { Experience } from "@/types/experience";
 
 interface Props {
-  fields: FieldArrayWithId<ExperienceFormItems, "items">[];
-  control: Control<ExperienceFormItems>;
-  getDisplay: (
-    item: ExperienceItemRecord,
-  ) => Omit<ExperienceFormData, "editLabel" | "onEdit">;
-  onEdit: (index: number) => void;
+  experiences: Experience[];
+  onEdit?: (index: number) => void;
+  className?: string;
 }
 
-const ItemRow = ({
-  index,
-  control,
-  getDisplay,
-  onEdit,
-}: {
-  index: number;
-  control: Control<ExperienceFormItems>;
-  getDisplay: Props["getDisplay"];
-  onEdit: () => void;
-}) => {
-  const items = useWatch({ control, name: "items" });
-  const display = getDisplay(items?.[index] ?? {});
-  return <ExperienceItem {...display} onEdit={onEdit} />;
-};
-
-export const ExperienceList = ({
-  fields,
-  control,
-  getDisplay,
-  onEdit,
-}: Props) => {
-  const items = useWatch({ control, name: "items" });
-
-  const sortedIndices = useMemo(() => {
-    const allItems = items ?? [];
-    const withDisplay = allItems.slice(0, fields.length).map((item, index) => ({
-      index,
-      display: getDisplay((item as ExperienceItemRecord) ?? {}),
-    }));
-
-    const ongoing = withDisplay.filter((x) => !x.display.endPeriod);
-    const finished = withDisplay.filter((x) => !!x.display.endPeriod);
-
-    ongoing.sort((a, b) => b.display.startPeriod - a.display.startPeriod);
-    finished.sort((a, b) => b.display.startPeriod - a.display.startPeriod);
-
-    return [...ongoing, ...finished].map((x) => x.index);
-  }, [items, fields.length, getDisplay]);
+export const ExperienceList = ({ experiences, onEdit, className }: Props) => {
+  const sortedItems = useMemo(() => {
+    const indexed = experiences.map((exp, index) => ({ exp, index }));
+    const ongoing = indexed.filter((x) => !x.exp.endPeriod);
+    const finished = indexed.filter((x) => !!x.exp.endPeriod);
+    ongoing.sort((a, b) => b.exp.startPeriod - a.exp.startPeriod);
+    finished.sort((a, b) => b.exp.startPeriod - a.exp.startPeriod);
+    return [...ongoing, ...finished];
+  }, [experiences]);
 
   return (
-    <div className="flex flex-col gap-3">
-      {sortedIndices.map((originalIndex) => (
-        <ItemRow
-          key={fields[originalIndex]?.id}
-          index={originalIndex}
-          control={control}
-          getDisplay={getDisplay}
-          onEdit={() => onEdit(originalIndex)}
+    <div className={`flex flex-col gap-2 ${className}`}>
+      {sortedItems.map(({ exp, index }) => (
+        <ExperienceItem
+          key={index}
+          {...exp}
+          onEdit={onEdit ? () => onEdit(index) : undefined}
         />
       ))}
     </div>

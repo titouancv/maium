@@ -14,8 +14,8 @@ export const SettingsContent = () => {
   ];
 
   return (
-    <PageLayout title={t("title")}>
-      <div className="w-full md:max-w-5xl">
+    <PageLayout title={t("title")} backLabel={t("backButton")}>
+      <div className="w-full max-w-2xl">
         <MenuList items={menuItems} />
       </div>
     </PageLayout>

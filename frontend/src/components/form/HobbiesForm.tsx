@@ -12,7 +12,6 @@ interface HobbiesFormProps {
 }
 
 export const HobbiesForm = ({ defaultValue, onChange }: HobbiesFormProps) => {
-  const t = useTranslations("settings");
   const tCommon = useTranslations("common");
 
   const [items, setItems] = useState<HobbyData[]>(defaultValue ?? []);
@@ -54,11 +53,7 @@ export const HobbiesForm = ({ defaultValue, onChange }: HobbiesFormProps) => {
       ) : (
         <div className="flex h-full w-full flex-col justify-between gap-4">
           <div className="flex min-h-0 flex-1 flex-col overflow-y-auto">
-            <HobbyList
-              items={items}
-              onEdit={editor.openExisting}
-              emptyLabel={t("noHobbies")}
-            />
+            <HobbyList hobbies={items} onEdit={editor.openExisting} />
           </div>
           <Button
             type="button"

@@ -16,7 +16,9 @@
     "locationNoResults": "No results found",
     "removeAriaLabel": "Remove {label}",
     "urlPlaceholder": "https://maium.app/...",
-    "socialPlaceholder": "https://www.instagram.com/..."
+    "socialPlaceholder": "https://www.instagram.com/...",
+    "seeMoreButton": "See more",
+    "seeLessButton": "See less"
   },
   "home": {
     "name": "Full name",
@@ -36,6 +38,7 @@
     "nationality": "Nationality",
     "location": "Location",
     "locationCountryPlaceholder": "France",
+    "locationPlaceholder": "San Francisco, USA",
     "saveButton": "Save",
     "deleteButton": "Delete",
     "professionalExperiencesLabel": "Professional experiences",
@@ -112,6 +115,17 @@
     "urlsTitle": "What you've built",
     "experiencesProfessionalTitle": "Your career",
     "experiencesEducationalTitle": "Your education"
+  },
+  "profile": {
+    "settingsButton": "Settings",
+    "professionalExperiences": "Professional experiences",
+    "educationalExperiences": "Education",
+    "personalExperiences": "Personal experiences",
+    "projects": "Projects",
+    "hobbies": "Hobbies",
+    "skills": "Skills",
+    "socialNetworks": "Links",
+    "notFound": "Profile not found"
   },
   "experience": {
     "professional": {

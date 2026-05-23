@@ -31,7 +31,7 @@ export const SettingsAccountContent = () => {
 
   return (
     <PageLayout title={t("accountMenuLabel")} backLabel={t("backButton")}>
-      <div className="flex h-full w-full flex-col items-center justify-center gap-4 md:max-w-5xl">
+      <div className="flex h-full w-full max-w-2xl flex-col items-center justify-center gap-4">
         {!showDeleteConfirm ? (
           <>
             <Button

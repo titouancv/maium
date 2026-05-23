@@ -1,6 +1,6 @@
 "use client";
 
-import { useForm, useFieldArray } from "react-hook-form";
+import { useForm, useFieldArray, useWatch } from "react-hook-form";
 import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/Button";
 import { ExperienceSubForm, emptySubValues } from "./sub-form";
@@ -44,6 +44,17 @@ export const ExperiencesForm = ({
     control,
     name: "items",
   });
+
+  const watchedItems = useWatch({ control, name: "items" });
+  const experiences: Experience[] = (watchedItems ?? []).map((item) => ({
+    organization: item.organization ?? "",
+    role: item.role ?? "",
+    startPeriod: Number(item.startPeriod),
+    endPeriod: item.endPeriod ? Number(item.endPeriod) : undefined,
+    description: item.description || undefined,
+    website: item.website || undefined,
+    location: item.location || undefined,
+  }));
 
   const notifyChange = () => {
     const items = getValues("items");
@@ -116,20 +127,10 @@ export const ExperiencesForm = ({
           </Button>
         </div>
       ) : (
-        <div className="flex h-full w-full flex-col justify-between gap-4">
+        <div className="flex h-full w-full flex-col justify-between gap-4 pb-4">
           <div className="flex min-h-0 flex-1 flex-col overflow-y-auto">
             <ExperienceList
-              fields={fields}
-              control={control}
-              getDisplay={(item) => ({
-                organization: item.organization ?? "",
-                role: item.role ?? "",
-                startPeriod: Number(item.startPeriod),
-                endPeriod: item.endPeriod ? Number(item.endPeriod) : undefined,
-                description: item.description ?? "",
-                website: item.website ?? "",
-                location: item.location ?? "",
-              })}
+              experiences={experiences}
               onEdit={editor.openExisting}
             />
           </div>

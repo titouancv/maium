@@ -13,3 +13,5 @@ export * from "./SlideToEnter";
 export * from "./StepCounter";
 export * from "./Title";
 export * from "./MenuList";
+export * from "./NavigationBar";
+export * from "./Section";

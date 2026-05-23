@@ -4,7 +4,7 @@ import { useTranslations } from "next-intl";
 
 interface Props {
   hobby: HobbyData;
-  onClick: () => void;
+  onClick?: () => void;
 }
 
 export const HobbyItem = ({ hobby, onClick }: Props) => {
@@ -21,15 +21,17 @@ export const HobbyItem = ({ hobby, onClick }: Props) => {
             </p>
           )}
         </div>
-        <Button
-          type="button"
-          variant="outline"
-          size="sm"
-          className="shrink-0"
-          onClick={onClick}
-        >
-          {t("editButton")}
-        </Button>
+        {onClick && (
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            className="shrink-0"
+            onClick={onClick}
+          >
+            {t("editButton")}
+          </Button>
+        )}
       </div>
     </div>
   );

@@ -16,7 +16,9 @@
     "locationNoResults": "Aucun résultat",
     "removeAriaLabel": "Supprimer {label}",
     "urlPlaceholder": "https://maium.app/...",
-    "socialPlaceholder": "https://www.instagram.com/..."
+    "socialPlaceholder": "https://www.instagram.com/...",
+    "seeMoreButton": "Voir plus",
+    "seeLessButton": "Voir moins"
   },
   "home": {
     "name": "Nom complet",
@@ -36,6 +38,7 @@
     "nationality": "Nationalité",
     "location": "Localisation",
     "locationCountryPlaceholder": "France",
+    "locationPlaceholder": "Paris, France",
     "saveButton": "Enregistrer",
     "deleteButton": "Supprimer",
     "professionalExperiencesLabel": "Expériences professionnelles",
@@ -112,6 +115,17 @@
     "urlsTitle": "Vos réalisations",
     "experiencesProfessionalTitle": "Votre parcours",
     "experiencesEducationalTitle": "Votre formation"
+  },
+  "profile": {
+    "settingsButton": "Paramètres",
+    "professionalExperiences": "Expériences professionnelles",
+    "educationalExperiences": "Formation",
+    "personalExperiences": "Expériences personnelles",
+    "projects": "Projets",
+    "hobbies": "Loisirs",
+    "skills": "Compétences",
+    "socialNetworks": "Liens",
+    "notFound": "Profil introuvable"
   },
   "experience": {
     "professional": {

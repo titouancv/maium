@@ -82,7 +82,7 @@ export const FormLayout = ({
           <div
             className={cn(
               "fixed inset-x-0 px-4 transition-[bottom] duration-300",
-              "md:static md:inset-auto md:px-0 md:pb-[150px]",
+              "md:static md:inset-auto md:pb-[150px]",
               keyboardHeight > 0 ? "pb-4" : "pb-8",
             )}
             style={{
