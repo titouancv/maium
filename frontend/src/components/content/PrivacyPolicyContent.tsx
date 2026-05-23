@@ -2,6 +2,7 @@
 
 import { useTranslations } from "next-intl";
 import { PageLayout } from "@/components/layout";
+import { Section } from "@/components/ui/Section";
 
 export const PrivacyPolicyContent = () => {
   const t = useTranslations("privacyPolicy");
@@ -22,10 +23,9 @@ export const PrivacyPolicyContent = () => {
         <p className="text-sm opacity-50">{t("lastUpdated")}</p>
         <p className="leading-relaxed">{t("intro")}</p>
         {sections.map((section) => (
-          <div key={section.title} className="flex flex-col gap-2">
-            <h2 className="text-lg">{section.title}</h2>
+          <Section key={section.title} title={section.title}>
             <p className="leading-relaxed opacity-70">{section.body}</p>
-          </div>
+          </Section>
         ))}
       </div>
     </PageLayout>
