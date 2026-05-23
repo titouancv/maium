@@ -17,7 +17,7 @@ export function ChipList({
   className,
 }: ChipListProps) {
   return (
-    <div className={cn("flex flex-wrap gap-2", className)}>
+    <div className={cn("flex flex-wrap", onRemove && "gap-2", className)}>
       {items.map((item, index) => (
         <Chip
           key={`${item}-${index}`}
