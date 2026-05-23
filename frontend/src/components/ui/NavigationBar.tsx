@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useSyncExternalStore } from "react";
 import { createPortal } from "react-dom";
 import { useTranslations } from "next-intl";
 import { AnimatePresence } from "framer-motion";
@@ -14,6 +14,11 @@ export function NavigationBar() {
   const t = useTranslations("nav");
   const pseudo = useCurrentUserStore((s) => s.user?.pseudo);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const mounted = useSyncExternalStore(
+    () => () => {},
+    () => true,
+    () => false,
+  );
 
   const tabs = [
     { name: t("home"), href: ROUTES.HOME },
@@ -28,7 +33,7 @@ export function NavigationBar() {
         <Tabs tabs={tabs} />
         <SearchButton onClick={() => setIsSearchOpen(true)} />
       </div>
-      {createPortal(
+      {mounted && createPortal(
         <AnimatePresence>
           {isSearchOpen && (
             <SearchOverlay onClose={() => setIsSearchOpen(false)} />
