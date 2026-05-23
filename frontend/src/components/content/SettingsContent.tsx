@@ -11,6 +11,7 @@ export const SettingsContent = () => {
   const menuItems = [
     { label: t("personalDataMenuLabel"), href: ROUTES.SETTINGS_PERSONAL_DATA },
     { label: t("accountMenuLabel"), href: ROUTES.SETTINGS_ACCOUNT },
+    { label: t("privacyPolicyMenuLabel"), href: ROUTES.PRIVACY_POLICY },
   ];
 
   return (

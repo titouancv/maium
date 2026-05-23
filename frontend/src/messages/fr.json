@@ -37,6 +37,7 @@
     "backButton": "Retour",
     "accountMenuLabel": "Mon compte",
     "personalDataMenuLabel": "Mes données personnelles",
+    "privacyPolicyMenuLabel": "Politique de confidentialité",
     "logoutButton": "Se déconnecter",
     "deleteAccountButton": "Supprimer le compte",
     "deleteAccountConfirmButton": "Oui, supprimer",
@@ -177,5 +178,25 @@
       "subStep5Title": "Site web",
       "subStep6Title": "Localisation"
     }
+  },
+  "privacyPolicy": {
+    "title": "Politique de confidentialité",
+    "backButton": "Retour",
+    "lastUpdated": "Dernière mise à jour : 23 mai 2025",
+    "intro": "maium (\"nous\", \"notre\") s'engage à protéger votre vie privée. Cette politique explique quelles données nous collectons, pourquoi, et comment nous les utilisons.",
+    "section1Title": "1. Données collectées",
+    "section1Body": "Lors de la création de votre compte et de l'utilisation de maium, nous collectons : votre adresse e-mail, prénom et nom, nom d'utilisateur, date de naissance, numéro de téléphone (optionnel), nationalité, localisation, expériences professionnelles et éducatives, liens vers les réseaux sociaux, loisirs, compétences et projets. Nous collectons également des données d'authentification via Google et Apple OAuth.",
+    "section2Title": "2. Utilisation des données",
+    "section2Body": "Vos données servent à créer et afficher votre profil public, vous authentifier en toute sécurité, fournir les fonctionnalités de l'application (recherche, recommandations) et améliorer le service. Nous ne vendons pas vos données personnelles à des tiers.",
+    "section3Title": "3. Partage des données",
+    "section3Body": "Les informations de votre profil (nom, pseudo, expériences, loisirs, compétences, projets et liens) sont visibles par les autres utilisateurs de maium. Les données sensibles comme votre adresse e-mail, numéro de téléphone, date de naissance et nationalité ne sont jamais affichées publiquement.",
+    "section4Title": "4. Conservation des données",
+    "section4Body": "Vos données sont conservées tant que votre compte est actif. Lorsque vous supprimez votre compte, toutes vos données personnelles sont définitivement supprimées de nos systèmes dans un délai de 30 jours.",
+    "section5Title": "5. Vos droits",
+    "section5Body": "Vous avez le droit d'accéder, de corriger ou de supprimer vos données personnelles à tout moment depuis la page Paramètres. Pour toute autre demande, contactez-nous à titouancv@icloud.com.",
+    "section6Title": "6. Cookies",
+    "section6Body": "Nous utilisons uniquement des cookies strictement nécessaires pour l'authentification et la gestion de session. Aucun cookie publicitaire ou de suivi n'est utilisé.",
+    "section7Title": "7. Contact",
+    "section7Body": "Pour toute question concernant cette politique de confidentialité, contactez-nous à titouancv@icloud.com."
   }
 }
