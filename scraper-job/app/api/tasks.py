@@ -3,12 +3,18 @@ Task polling endpoints:
   GET /tasks/{task_id}         — Poll a CV optimization task
   GET /tasks/match/{task_id}  — Poll a CV–job match score task
 """
+
 import logging
 
 from celery.result import AsyncResult
 from fastapi import APIRouter
 
-from app.schemas.cv import MatchScoreResult, MatchTaskStatusResponse, OptimizedCV, TaskStatusResponse
+from app.schemas.cv import (
+    MatchScoreResult,
+    MatchTaskStatusResponse,
+    OptimizedCV,
+    TaskStatusResponse,
+)
 from app.workers.tasks import celery_app
 
 logger = logging.getLogger(__name__)
@@ -43,9 +49,13 @@ async def get_match_task_status(task_id: str):
     if celery_state == "SUCCESS":
         try:
             match_result = MatchScoreResult(**result.result)
-            return MatchTaskStatusResponse(task_id=task_id, status="completed", result=match_result)
+            return MatchTaskStatusResponse(
+                task_id=task_id, status="completed", result=match_result
+            )
         except Exception as exc:
-            logger.error("Failed to deserialise match result for task %s: %s", task_id, exc)
+            logger.error(
+                "Failed to deserialise match result for task %s: %s", task_id, exc
+            )
             return MatchTaskStatusResponse(
                 task_id=task_id,
                 status="failed",
@@ -54,9 +64,13 @@ async def get_match_task_status(task_id: str):
 
     if celery_state in ("FAILURE", "REVOKED"):
         error_msg = str(result.result) if result.result else "Unknown error"
-        return MatchTaskStatusResponse(task_id=task_id, status="failed", error=error_msg)
+        return MatchTaskStatusResponse(
+            task_id=task_id, status="failed", error=error_msg
+        )
 
-    return MatchTaskStatusResponse(task_id=task_id, status=_celery_state_to_status(celery_state))
+    return MatchTaskStatusResponse(
+        task_id=task_id, status=_celery_state_to_status(celery_state)
+    )
 
 
 @router.get("/{task_id}", response_model=TaskStatusResponse)
@@ -76,7 +90,9 @@ async def get_task_status(task_id: str):
     if celery_state == "SUCCESS":
         try:
             optimized = OptimizedCV(**result.result)
-            return TaskStatusResponse(task_id=task_id, status="completed", result=optimized)
+            return TaskStatusResponse(
+                task_id=task_id, status="completed", result=optimized
+            )
         except Exception as exc:
             logger.error("Failed to deserialise result for task %s: %s", task_id, exc)
             return TaskStatusResponse(
@@ -89,4 +105,6 @@ async def get_task_status(task_id: str):
         error_msg = str(result.result) if result.result else "Unknown error"
         return TaskStatusResponse(task_id=task_id, status="failed", error=error_msg)
 
-    return TaskStatusResponse(task_id=task_id, status=_celery_state_to_status(celery_state))
+    return TaskStatusResponse(
+        task_id=task_id, status=_celery_state_to_status(celery_state)
+    )

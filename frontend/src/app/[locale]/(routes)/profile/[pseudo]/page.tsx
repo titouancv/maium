@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { createClient } from "@/lib/supabase/server";
 import { ProfileContent } from "@/components/content/ProfileContent";
+import { mapUserFromDb, USER_PROFILE_SELECT, type DbUserRaw } from "@/lib/mappers/user";
 import type { PublicUserData } from "@/types";
 
 interface Props {
@@ -16,7 +17,7 @@ export default async function ProfilePage({ params }: Props) {
   const { data: profileUser } = await adminClient
     .from("users")
     .select(
-      "first_name, last_name, pseudo, dob, location, nationality, professional_experiences, educational_experiences, personal_experiences, social_networks, hobbies, skills, projects",
+      `first_name, last_name, pseudo, dob, location, nationality, ${USER_PROFILE_SELECT}`,
     )
     .eq("pseudo", pseudo)
     .single();
@@ -38,11 +39,21 @@ export default async function ProfilePage({ params }: Props) {
     isOwner = currentUser?.pseudo === pseudo;
   }
 
+  const full = mapUserFromDb(profileUser as unknown as DbUserRaw);
   const userData: PublicUserData = {
-    ...profileUser,
-    dob: profileUser.dob
-      ? new Date(profileUser.dob + "T00:00:00Z").getTime()
-      : null,
+    first_name: full.first_name,
+    last_name: full.last_name,
+    pseudo: full.pseudo,
+    dob: full.dob,
+    location: full.location,
+    nationality: full.nationality,
+    professional_experiences: full.professional_experiences,
+    educational_experiences: full.educational_experiences,
+    personal_experiences: full.personal_experiences,
+    social_networks: full.social_networks,
+    hobbies: full.hobbies,
+    skills: full.skills,
+    projects: full.projects,
   };
 
   return (

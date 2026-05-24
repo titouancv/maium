@@ -3,6 +3,7 @@ CV endpoints:
   POST /cv/optimize      — Synchronous pipeline: scrape job → user profile → Mistral → OptimizedCV JSON
   POST /cv/match-score   — Queue a CV–job compatibility analysis (Celery)
 """
+
 import logging
 
 from fastapi import APIRouter, HTTPException, status
@@ -46,7 +47,11 @@ async def optimize_cv(body: CVOptimizeRequest):
         )
 
 
-@router.post("/match-score", response_model=MatchScoreResponse, status_code=status.HTTP_202_ACCEPTED)
+@router.post(
+    "/match-score",
+    response_model=MatchScoreResponse,
+    status_code=status.HTTP_202_ACCEPTED,
+)
 async def match_score(body: MatchScoreRequest):
     """
     Queue a CV–job compatibility analysis as an async Celery task.

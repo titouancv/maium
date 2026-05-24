@@ -5,6 +5,7 @@ Scraping router:
 3. Dispatch to the appropriate scraper
 4. Cache the result
 """
+
 import hashlib
 import logging
 from datetime import datetime, timezone
@@ -47,12 +48,15 @@ async def scrape_job(url: str, supabase_client=None) -> JobOffer:
     job: JobOffer
     if provider == "greenhouse":
         from app.scrapers.greenhouse import GreenhouseScraper
+
         job = await GreenhouseScraper().scrape(url)
     elif provider == "lever":
         from app.scrapers.lever import LeverScraper
+
         job = await LeverScraper().scrape(url)
     else:
         from app.scrapers.generic import GenericScraper
+
         job = await GenericScraper().scrape(url)
 
     # --- Cache write ---
@@ -63,6 +67,7 @@ async def scrape_job(url: str, supabase_client=None) -> JobOffer:
 
 
 # ── Cache helpers ─────────────────────────────────────────────────────────────
+
 
 def _get_cached_job(client, url_hash: str) -> dict | None:
     try:
@@ -84,6 +89,7 @@ def _get_cached_job(client, url_hash: str) -> dict | None:
 
 def _cache_job(client, url_hash: str, url: str, job: JobOffer) -> None:
     from datetime import timedelta
+
     try:
         expires_at = (
             datetime.now(timezone.utc) + timedelta(seconds=settings.CACHE_TTL_SECONDS)

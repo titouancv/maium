@@ -2,6 +2,7 @@
 Mistral service for CV generation, optimization, and match scoring.
 Uses Mistral's JSON mode to guarantee a parseable output.
 """
+
 import json
 import logging
 from pathlib import Path
@@ -26,7 +27,6 @@ _MISTRAL_API_URL = "https://api.mistral.ai/v1/chat/completions"
 
 
 class MistralService:
-
     def __init__(self) -> None:
         self._headers = {
             "Authorization": f"Bearer {settings.MISTRAL_API_KEY}",
@@ -52,14 +52,20 @@ class MistralService:
         }
 
         async with httpx.AsyncClient(timeout=60) as client:
-            resp = await client.post(_MISTRAL_API_URL, headers=self._headers, json=payload)
+            resp = await client.post(
+                _MISTRAL_API_URL, headers=self._headers, json=payload
+            )
             resp.raise_for_status()
             data = resp.json()
 
         try:
             content = data["choices"][0]["message"]["content"]
         except (KeyError, IndexError, TypeError) as exc:
-            logger.error("Unexpected Mistral response structure: %s | raw: %s", exc, str(data)[:500])
+            logger.error(
+                "Unexpected Mistral response structure: %s | raw: %s",
+                exc,
+                str(data)[:500],
+            )
             raise ValueError("Unexpected response structure from Mistral") from exc
 
         try:
@@ -112,7 +118,9 @@ class MistralService:
             logger.error("OptimizedCV validation failed: %s | data: %s", exc, result)
             raise ValueError(f"Invalid Mistral response structure: {exc}") from exc
 
-    async def score_match(self, profile: UserProfile, job: JobOffer) -> MatchScoreResult:
+    async def score_match(
+        self, profile: UserProfile, job: JobOffer
+    ) -> MatchScoreResult:
         """
         Compute a detailed compatibility score between a candidate profile and a job offer.
         Returns a MatchScoreResult with an overall score, skill breakdown, strengths and gaps.
@@ -154,5 +162,7 @@ class MistralService:
         try:
             return MatchScoreResult(**result)
         except Exception as exc:
-            logger.error("MatchScoreResult validation failed: %s | data: %s", exc, result)
+            logger.error(
+                "MatchScoreResult validation failed: %s | data: %s", exc, result
+            )
             raise ValueError(f"Invalid Mistral response structure: {exc}") from exc
