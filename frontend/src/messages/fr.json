@@ -14,6 +14,7 @@
     "loading": "Chargement",
     "nextButton": "Suivant",
     "cancelButton": "Annuler",
+    "backButton": "Retour",
     "addButton": "Ajouter",
     "editButton": "Modifier",
     "sinceLabel": "depuis",
@@ -126,6 +127,10 @@
   },
   "profile": {
     "settingsButton": "Paramètres",
+    "followButton": "Suivre",
+    "unfollowButton": "Se désabonner",
+    "followers": "{count} abonnés",
+    "following": "{count} abonnements",
     "professionalExperiences": "Expériences professionnelles",
     "educationalExperiences": "Formation",
     "personalExperiences": "Expériences personnelles",
@@ -133,7 +138,11 @@
     "hobbies": "Loisirs",
     "skills": "Compétences",
     "socialNetworks": "Liens",
-    "notFound": "Profil introuvable"
+    "notFound": "Profil introuvable",
+    "followersTitle": "Abonnés",
+    "followingTitle": "Abonnements",
+    "noFollowers": "Aucun abonné pour l'instant",
+    "noFollowing": "Aucun abonnement pour l'instant"
   },
   "experience": {
     "professional": {

@@ -8,6 +8,8 @@ export const ROUTES = {
   SETTINGS_PERSONAL_DATA: "/settings/personal-data",
   AUTH_CALLBACK: "/auth/callback",
   PROFILE: (pseudo: string) => `/profile/${pseudo}`,
+  PROFILE_FOLLOWERS: (pseudo: string) => `/profile/${pseudo}/followers`,
+  PROFILE_FOLLOWING: (pseudo: string) => `/profile/${pseudo}/following`,
   PRIVACY_POLICY: "/privacy-policy",
 } as const;
 
@@ -17,6 +19,8 @@ export const API = {
   USERS_ME: "/api/users/me",
   USERS_PSEUDO_CHECK: "/api/users/pseudo",
   USERS_SEARCH: "/api/users/search",
+  USERS_FOLLOWERS: "/api/users/followers",
+  USERS_FOLLOWING: "/api/users/following",
   AUTH_LOGOUT: "/api/auth/logout",
   URL_TITLE: "/api/url-title",
 } as const;

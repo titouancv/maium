@@ -39,6 +39,33 @@ export default async function ProfilePage({ params }: Props) {
     isOwner = currentUser?.pseudo === pseudo;
   }
 
+  const { data: profileUserWithId } = await adminClient
+    .from("users")
+    .select("id")
+    .eq("pseudo", pseudo)
+    .single();
+
+  const [{ count: followersCount }, { count: followingCount }] = await Promise.all([
+    adminClient
+      .from("user_follows")
+      .select("*", { count: "exact", head: true })
+      .eq("followed_id", profileUserWithId!.id),
+    adminClient
+      .from("user_follows")
+      .select("*", { count: "exact", head: true })
+      .eq("follower_id", profileUserWithId!.id),
+  ]);
+
+  let isFollowing = false;
+  if (authUser && !isOwner) {
+    const { count } = await adminClient
+      .from("user_follows")
+      .select("*", { count: "exact", head: true })
+      .eq("follower_id", authUser.id)
+      .eq("followed_id", profileUserWithId!.id);
+    isFollowing = (count ?? 0) > 0;
+  }
+
   const full = mapUserFromDb(profileUser as unknown as DbUserRaw);
   const userData: PublicUserData = {
     first_name: full.first_name,
@@ -54,11 +81,13 @@ export default async function ProfilePage({ params }: Props) {
     hobbies: full.hobbies,
     skills: full.skills,
     projects: full.projects,
+    followers_count: followersCount ?? 0,
+    following_count: followingCount ?? 0,
   };
 
   return (
     <Suspense>
-      <ProfileContent user={userData} isOwner={isOwner} />
+      <ProfileContent user={userData} isOwner={isOwner} isFollowing={isFollowing} />
     </Suspense>
   );
 }

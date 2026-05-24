@@ -1,5 +1,6 @@
 "use client";
 
+import { useState, useTransition } from "react";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { ROUTES } from "@/constants";
@@ -12,10 +13,35 @@ import { HobbyList, SocialNetworkItem, UrlItem } from "../custom";
 interface ProfileContentProps {
   user: PublicUserData;
   isOwner: boolean;
+  isFollowing?: boolean;
 }
 
-export const ProfileContent = ({ user, isOwner }: ProfileContentProps) => {
+export const ProfileContent = ({
+  user,
+  isOwner,
+  isFollowing: initialIsFollowing = false,
+}: ProfileContentProps) => {
   const t = useTranslations("profile");
+  const [following, setFollowing] = useState(initialIsFollowing);
+  const [followerCount, setFollowerCount] = useState(user.followers_count);
+  const [isPending, startTransition] = useTransition();
+
+  const handleFollowToggle = () => {
+    const next = !following;
+    setFollowing(next);
+    setFollowerCount((c) => c + (next ? 1 : -1));
+    startTransition(async () => {
+      const res = await fetch("/api/users/follow", {
+        method: next ? "POST" : "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ pseudo: user.pseudo }),
+      });
+      if (!res.ok) {
+        setFollowing(!next);
+        setFollowerCount((c) => c + (next ? -1 : 1));
+      }
+    });
+  };
 
   const hasProfessional = (user.professional_experiences?.length ?? 0) > 0;
   const hasEducational = (user.educational_experiences?.length ?? 0) > 0;
@@ -34,8 +60,30 @@ export const ProfileContent = ({ user, isOwner }: ProfileContentProps) => {
             {user.location && (
               <p className="text-txt-muted text-sm">{user.location}</p>
             )}
+            <div className="flex gap-3 pt-1">
+              <Link href={ROUTES.PROFILE_FOLLOWERS(user.pseudo)}>
+                <Button
+                  variant="ghost"
+                  size="none"
+                  type="button"
+                  className="w-full"
+                >
+                  {t("followers", { count: followerCount })}
+                </Button>
+              </Link>
+              <Link href={ROUTES.PROFILE_FOLLOWING(user.pseudo)}>
+                <Button
+                  variant="ghost"
+                  size="none"
+                  type="button"
+                  className="w-full"
+                >
+                  {t("following", { count: user.following_count })}
+                </Button>
+              </Link>
+            </div>
           </div>
-          {isOwner && (
+          {isOwner ? (
             <Link href={ROUTES.SETTINGS}>
               <Button
                 variant="outline"
@@ -46,6 +94,17 @@ export const ProfileContent = ({ user, isOwner }: ProfileContentProps) => {
                 {t("settingsButton")}
               </Button>
             </Link>
+          ) : (
+            <Button
+              variant={following ? "outline" : "primary"}
+              size="sm"
+              type="button"
+              className="w-full"
+              onClick={handleFollowToggle}
+              disabled={isPending}
+            >
+              {following ? t("unfollowButton") : t("followButton")}
+            </Button>
           )}
         </aside>
 
