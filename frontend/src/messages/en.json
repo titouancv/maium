@@ -46,6 +46,8 @@
     "phone": "Phone number",
     "nationality": "Nationality",
     "location": "Location",
+    "bio": "Biography",
+    "bioPlaceholder": "Tell us about yourself...",
     "locationCountryPlaceholder": "France",
     "locationPlaceholder": "San Francisco, USA",
     "saveButton": "Save",

@@ -55,6 +55,11 @@ export const SettingsPersonalDataContent = ({
                 onClick: () => setEditingField("dob"),
               },
               {
+                label: t("bio"),
+                value: user.bio ?? undefined,
+                onClick: () => setEditingField("bio"),
+              },
+              {
                 label: t("phone"),
                 value: user.phone ?? undefined,
                 onClick: () => setEditingField("phone"),

@@ -46,6 +46,8 @@
     "phone": "Numéro de téléphone",
     "nationality": "Nationalité",
     "location": "Localisation",
+    "bio": "Biographie",
+    "bioPlaceholder": "Parlez-nous de vous...",
     "locationCountryPlaceholder": "France",
     "locationPlaceholder": "Paris, France",
     "saveButton": "Enregistrer",

@@ -17,7 +17,7 @@ export default async function ProfilePage({ params }: Props) {
   const { data: profileUser } = await adminClient
     .from("users")
     .select(
-      `first_name, last_name, pseudo, dob, location, nationality, ${USER_PROFILE_SELECT}`,
+      `first_name, last_name, pseudo, dob, location, nationality, bio, ${USER_PROFILE_SELECT}`,
     )
     .eq("pseudo", pseudo)
     .single();
@@ -74,6 +74,7 @@ export default async function ProfilePage({ params }: Props) {
     dob: full.dob,
     location: full.location,
     nationality: full.nationality,
+    bio: full.bio,
     professional_experiences: full.professional_experiences,
     educational_experiences: full.educational_experiences,
     personal_experiences: full.personal_experiences,

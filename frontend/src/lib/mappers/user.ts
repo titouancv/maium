@@ -28,6 +28,7 @@ export type DbUserRaw = {
   phone?: string | null;
   nationality?: string | null;
   location?: string | null;
+  bio?: string | null;
   user_experiences?: DbExperience[];
   user_skills?: DbSkill[];
   user_projects?: DbProject[];
@@ -64,6 +65,7 @@ export function mapUserFromDb(raw: DbUserRaw): UserData {
     phone: raw.phone,
     nationality: raw.nationality,
     location: raw.location,
+    bio: raw.bio,
     professional_experiences: exps.filter((e) => e.type === "professional").map(mapExperience),
     educational_experiences: exps.filter((e) => e.type === "educational").map(mapExperience),
     personal_experiences: exps.filter((e) => e.type === "personal").map(mapExperience),

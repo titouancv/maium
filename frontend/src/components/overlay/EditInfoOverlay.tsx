@@ -16,6 +16,7 @@ export type EditableField =
   | "phone"
   | "nationality"
   | "location"
+  | "bio"
   | "professionalExperiences"
   | "educationalExperiences"
   | "personalExperiences"
@@ -57,6 +58,7 @@ export const EditInfoOverlay = ({ field, user, onClose, onSaved }: Props) => {
   const [currentHobbies, setCurrentHobbies] = useState<HobbyData[]>(
     user.hobbies ?? [],
   );
+  const [currentBio, setCurrentBio] = useState<string>(user.bio ?? "");
 
   const save = async (payload: Record<string, unknown>) => {
     setIsSaving(true);
@@ -151,6 +153,17 @@ export const EditInfoOverlay = ({ field, user, onClose, onSaved }: Props) => {
           onSecondary: user.location
             ? () => save({ location: null })
             : undefined,
+        };
+      case "bio":
+        return {
+          ...base,
+          title: t("bio"),
+          type: "longText",
+          placeholder: t("bioPlaceholder"),
+          rows: 10,
+          onChange: (v) => setCurrentBio(v ?? ""),
+          onPrimary: () => save({ bio: currentBio || null }),
+          defaultValue: user.bio ?? "",
         };
       case "professionalExperiences":
         return {

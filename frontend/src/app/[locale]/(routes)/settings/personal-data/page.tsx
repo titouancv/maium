@@ -14,7 +14,7 @@ export default async function SettingsPersonalDataPage() {
     const { data } = await supabase
       .from("users")
       .select(
-        `email, first_name, last_name, pseudo, dob, phone, nationality, location, ${USER_PROFILE_SELECT}`,
+        `email, first_name, last_name, pseudo, dob, phone, nationality, location, bio, ${USER_PROFILE_SELECT}`,
       )
       .eq("id", authUser.id)
       .single();
