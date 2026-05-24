@@ -14,6 +14,7 @@
     "loading": "Loading",
     "nextButton": "Next",
     "cancelButton": "Cancel",
+    "backButton": "Back",
     "addButton": "Add",
     "editButton": "Edit",
     "sinceLabel": "since",
@@ -137,7 +138,11 @@
     "hobbies": "Hobbies",
     "skills": "Skills",
     "socialNetworks": "Links",
-    "notFound": "Profile not found"
+    "notFound": "Profile not found",
+    "followersTitle": "Followers",
+    "followingTitle": "Following",
+    "noFollowers": "No followers yet",
+    "noFollowing": "Not following anyone yet"
   },
   "experience": {
     "professional": {

@@ -16,7 +16,11 @@ interface ProfileContentProps {
   isFollowing?: boolean;
 }
 
-export const ProfileContent = ({ user, isOwner, isFollowing: initialIsFollowing = false }: ProfileContentProps) => {
+export const ProfileContent = ({
+  user,
+  isOwner,
+  isFollowing: initialIsFollowing = false,
+}: ProfileContentProps) => {
   const t = useTranslations("profile");
   const [following, setFollowing] = useState(initialIsFollowing);
   const [followerCount, setFollowerCount] = useState(user.followers_count);
@@ -57,12 +61,26 @@ export const ProfileContent = ({ user, isOwner, isFollowing: initialIsFollowing 
               <p className="text-txt-muted text-sm">{user.location}</p>
             )}
             <div className="flex gap-3 pt-1">
-              <span className="text-sm">
-                {t("followers", { count: followerCount })}
-              </span>
-              <span className="text-sm">
-                {t("following", { count: user.following_count })}
-              </span>
+              <Link href={ROUTES.PROFILE_FOLLOWERS(user.pseudo)}>
+                <Button
+                  variant="ghost"
+                  size="none"
+                  type="button"
+                  className="w-full"
+                >
+                  {t("followers", { count: followerCount })}
+                </Button>
+              </Link>
+              <Link href={ROUTES.PROFILE_FOLLOWING(user.pseudo)}>
+                <Button
+                  variant="ghost"
+                  size="none"
+                  type="button"
+                  className="w-full"
+                >
+                  {t("following", { count: user.following_count })}
+                </Button>
+              </Link>
             </div>
           </div>
           {isOwner ? (
