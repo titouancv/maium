@@ -9,6 +9,7 @@ import { routing } from "@/i18n/routing";
 import { Providers } from "@/components/Providers";
 import { UserHydration } from "@/components/UserHydration";
 import { createClient } from "@/lib/supabase/server";
+import { mapUserFromDb, USER_PROFILE_SELECT, type DbUserRaw } from "@/lib/mappers/user";
 import type { UserData } from "@/types";
 
 export const metadata: Metadata = {
@@ -27,16 +28,13 @@ async function fetchCurrentUser(): Promise<UserData | null> {
   const { data } = await supabase
     .from("users")
     .select(
-      "email, first_name, last_name, pseudo, dob, onboarding_completed, phone, nationality, location, professional_experiences, educational_experiences, social_networks, hobbies, personal_experiences, skills, projects",
+      `email, first_name, last_name, pseudo, dob, onboarding_completed, phone, nationality, location, ${USER_PROFILE_SELECT}`,
     )
     .eq("id", authUser.id)
     .single();
 
   if (!data) return null;
-  return {
-    ...data,
-    dob: data.dob ? new Date(data.dob + "T00:00:00Z").getTime() : null,
-  };
+  return mapUserFromDb(data as unknown as DbUserRaw);
 }
 
 export default async function RootLayout({

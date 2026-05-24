@@ -31,8 +31,11 @@ async def fetch_user_profile(user_id: str, client: Client | None = None) -> User
             client.table("users")
             .select(
                 "id, email, first_name, last_name, pseudo, location, phone, nationality,"
-                "professional_experiences, educational_experiences, personal_experiences,"
-                "skills, projects, social_networks, hobbies"
+                "user_experiences(type, organization, role, start_period, end_period, description, website, location, position),"
+                "user_skills(name, position),"
+                "user_projects(url, position),"
+                "user_social_networks(url, position),"
+                "user_hobbies(title, description, position)"
             )
             .eq("id", user_id)
             .single()

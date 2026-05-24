@@ -1,6 +1,7 @@
 import { Suspense } from "react";
 import { createClient } from "@/lib/supabase/server";
 import { SettingsPersonalDataContent } from "@/components/content/SettingsPersonalDataContent";
+import { mapUserFromDb, USER_PROFILE_SELECT, type DbUserRaw } from "@/lib/mappers/user";
 
 export default async function SettingsPersonalDataPage() {
   const supabase = await createClient();
@@ -13,17 +14,12 @@ export default async function SettingsPersonalDataPage() {
     const { data } = await supabase
       .from("users")
       .select(
-        "email, first_name, last_name, pseudo, dob, phone, nationality, location, professional_experiences, educational_experiences, personal_experiences, social_networks, hobbies, skills, projects",
+        `email, first_name, last_name, pseudo, dob, phone, nationality, location, ${USER_PROFILE_SELECT}`,
       )
       .eq("id", authUser.id)
       .single();
 
-    userData = data
-      ? {
-          ...data,
-          dob: data.dob ? new Date(data.dob + "T00:00:00Z").getTime() : null,
-        }
-      : null;
+    userData = data ? mapUserFromDb(data as unknown as DbUserRaw) : null;
   }
 
   return (
