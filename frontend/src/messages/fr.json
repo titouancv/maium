@@ -126,6 +126,10 @@
   },
   "profile": {
     "settingsButton": "Paramètres",
+    "followButton": "Suivre",
+    "unfollowButton": "Se désabonner",
+    "followers": "{count} abonnés",
+    "following": "{count} abonnements",
     "professionalExperiences": "Expériences professionnelles",
     "educationalExperiences": "Formation",
     "personalExperiences": "Expériences personnelles",

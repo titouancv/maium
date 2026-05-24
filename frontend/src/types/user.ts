@@ -26,4 +26,7 @@ export interface UserData {
   projects?: string[];
 }
 
-export type PublicUserData = Omit<UserData, "email" | "phone" | "onboarding_completed">;
+export type PublicUserData = Omit<UserData, "email" | "phone" | "onboarding_completed"> & {
+  followers_count: number;
+  following_count: number;
+};

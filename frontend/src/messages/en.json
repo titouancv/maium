@@ -126,6 +126,10 @@
   },
   "profile": {
     "settingsButton": "Settings",
+    "followButton": "Follow",
+    "unfollowButton": "Unfollow",
+    "followers": "{count} followers",
+    "following": "{count} following",
     "professionalExperiences": "Professional experiences",
     "educationalExperiences": "Education",
     "personalExperiences": "Personal experiences",
