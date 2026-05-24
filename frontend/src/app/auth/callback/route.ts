@@ -39,7 +39,7 @@ export async function GET(request: Request) {
           .eq("id", user.id)
           .single();
         if (profile?.onboarding_completed) {
-          return NextResponse.redirect(`${origin}${next}`);
+          return NextResponse.redirect(`${origin}${ROUTES.HOME}`);
         }
         return NextResponse.redirect(`${origin}${ROUTES.SIGNUP}`);
       }
