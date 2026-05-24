@@ -32,6 +32,7 @@ export async function PATCH(request: NextRequest) {
       phone,
       nationality,
       location,
+      bio,
       socialNetworks,
       hobbies,
       personalExperiences,
@@ -49,6 +50,7 @@ export async function PATCH(request: NextRequest) {
     if (phone !== undefined) coreUpdates.phone = phone ?? null;
     if (nationality !== undefined) coreUpdates.nationality = nationality ?? null;
     if (location !== undefined) coreUpdates.location = location ?? null;
+    if (bio !== undefined) coreUpdates.bio = bio ?? null;
 
     if (Object.keys(coreUpdates).length > 0) {
       const { error: dbError } = await supabase

@@ -109,6 +109,7 @@ export const ProfileContent = ({
         </aside>
 
         <main className="flex flex-1 flex-col gap-8 md:min-h-0 md:w-3/5 md:overflow-y-auto">
+          {user.bio && <p>{user.bio}</p>}
           {hasProfessional && (
             <Section title={t("professionalExperiences")}>
               <ExperienceList experiences={user.professional_experiences!} />

@@ -17,6 +17,7 @@ export interface UserData {
   phone?: string | null;
   nationality?: string | null;
   location?: string | null;
+  bio?: string | null;
   professional_experiences?: Experience[];
   educational_experiences?: Experience[];
   social_networks?: string[];

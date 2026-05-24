@@ -55,12 +55,10 @@ export function makeExperienceFormSchema(t: TranslateFn) {
       ]),
       location: z.string().max(100).or(z.literal("")),
     })
-    .refine(
-      (d) =>
-        !d.endPeriod ||
-        d.endPeriod >= d.startPeriod,
-      { message: t("endPeriodBeforeStart"), path: ["endPeriod"] },
-    );
+    .refine((d) => !d.endPeriod || d.endPeriod >= d.startPeriod, {
+      message: t("endPeriodBeforeStart"),
+      path: ["endPeriod"],
+    });
 }
 
 export const CreateUserSchema = z.object({
@@ -76,7 +74,7 @@ export type CreateUserInput = z.infer<typeof CreateUserSchema>;
 
 export const HobbySchema = z.object({
   title: z.string().min(1).max(100),
-  description: z.string().max(500),
+  description: z.string(),
 });
 
 export const UpdateUserSchema = z
@@ -91,6 +89,7 @@ export const UpdateUserSchema = z
     phone: z.string().nullable().optional(),
     nationality: z.string().nullable().optional(),
     location: z.string().nullable().optional(),
+    bio: z.string().nullable().optional(),
     socialNetworks: z.array(z.string().url()).optional(),
     hobbies: z.array(HobbySchema).optional(),
     personalExperiences: z.array(ExperienceSchema).optional(),
