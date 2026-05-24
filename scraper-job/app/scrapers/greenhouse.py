@@ -4,6 +4,7 @@ URL patterns:
     https://boards.greenhouse.io/<company>/jobs/<job_id>
     https://job-boards.greenhouse.io/<company>/jobs/<job_id>
 """
+
 import logging
 import re
 
@@ -16,9 +17,7 @@ from app.schemas.job import JobOffer
 logger = logging.getLogger(__name__)
 
 # Regex to extract company slug + job id from a Greenhouse URL
-_GH_RE = re.compile(
-    r"greenhouse\.io/([^/]+)/jobs/(\d+)", re.IGNORECASE
-)
+_GH_RE = re.compile(r"greenhouse\.io/([^/]+)/jobs/(\d+)", re.IGNORECASE)
 
 
 class GreenhouseScraper(BaseScraper):
@@ -28,7 +27,9 @@ class GreenhouseScraper(BaseScraper):
             raise ValueError(f"Could not extract company/job_id from: {url}")
 
         company_slug, job_id = m.group(1), m.group(2)
-        api_url = f"https://boards-api.greenhouse.io/v1/boards/{company_slug}/jobs/{job_id}"
+        api_url = (
+            f"https://boards-api.greenhouse.io/v1/boards/{company_slug}/jobs/{job_id}"
+        )
 
         logger.info("Greenhouse API: %s", api_url)
 
@@ -75,13 +76,54 @@ def _strip_html(html: str) -> str:
 def _extract_skills_from_text(text: str) -> list[str]:
     """Simple heuristic skill extraction (can be replaced by a Mistral call)."""
     common_skills = [
-        "Python", "JavaScript", "TypeScript", "React", "Next.js", "Vue", "Angular",
-        "Node.js", "FastAPI", "Django", "Flask", "SQL", "PostgreSQL", "MySQL",
-        "MongoDB", "Redis", "Docker", "Kubernetes", "AWS", "GCP", "Azure",
-        "GraphQL", "REST", "Git", "CI/CD", "Java", "Go", "Rust", "C++", "C#",
-        "Swift", "Kotlin", "PHP", "Ruby", "Rails", "Scala", "Spark", "Kafka",
-        "Terraform", "Ansible", "Linux", "Machine Learning", "Deep Learning",
-        "PyTorch", "TensorFlow", "LLM", "RAG", "Figma",
+        "Python",
+        "JavaScript",
+        "TypeScript",
+        "React",
+        "Next.js",
+        "Vue",
+        "Angular",
+        "Node.js",
+        "FastAPI",
+        "Django",
+        "Flask",
+        "SQL",
+        "PostgreSQL",
+        "MySQL",
+        "MongoDB",
+        "Redis",
+        "Docker",
+        "Kubernetes",
+        "AWS",
+        "GCP",
+        "Azure",
+        "GraphQL",
+        "REST",
+        "Git",
+        "CI/CD",
+        "Java",
+        "Go",
+        "Rust",
+        "C++",
+        "C#",
+        "Swift",
+        "Kotlin",
+        "PHP",
+        "Ruby",
+        "Rails",
+        "Scala",
+        "Spark",
+        "Kafka",
+        "Terraform",
+        "Ansible",
+        "Linux",
+        "Machine Learning",
+        "Deep Learning",
+        "PyTorch",
+        "TensorFlow",
+        "LLM",
+        "RAG",
+        "Figma",
     ]
     text_lower = text.lower()
     return [s for s in common_skills if s.lower() in text_lower]

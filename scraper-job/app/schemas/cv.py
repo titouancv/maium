@@ -5,6 +5,7 @@ from pydantic import BaseModel, Field
 # CV Optimization
 # ---------------------------------------------------------------------------
 
+
 class CVOptimizeRequest(BaseModel):
     job_url: str
     user_id: str
@@ -42,17 +43,24 @@ class TaskStatusResponse(BaseModel):
 # CV–Job Match Score
 # ---------------------------------------------------------------------------
 
+
 class SkillMatch(BaseModel):
     """Breakdown of skill compatibility between a profile and a job offer."""
-    matched: list[str] = []   # skills present in both profile and job
-    missing: list[str] = []   # required skills from job not found in profile
-    bonus: list[str] = []     # candidate skills that are a plus even if not required
+
+    matched: list[str] = []  # skills present in both profile and job
+    missing: list[str] = []  # required skills from job not found in profile
+    bonus: list[str] = []  # candidate skills that are a plus even if not required
 
 
 class MatchScoreResult(BaseModel):
     """Full match analysis returned by Mistral."""
-    match_score: int = Field(ge=0, le=100, description="Overall compatibility score (0–100)")
-    experience_match: int = Field(ge=0, le=100, description="Seniority/experience alignment score (0–100)")
+
+    match_score: int = Field(
+        ge=0, le=100, description="Overall compatibility score (0–100)"
+    )
+    experience_match: int = Field(
+        ge=0, le=100, description="Seniority/experience alignment score (0–100)"
+    )
     skills_match: SkillMatch
     strengths: list[str] = []
     gaps: list[str] = []

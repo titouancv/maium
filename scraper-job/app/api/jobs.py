@@ -1,6 +1,7 @@
 """
 POST /jobs/parse — Scrape a job offer and return structured data.
 """
+
 import logging
 
 from fastapi import APIRouter, HTTPException, status

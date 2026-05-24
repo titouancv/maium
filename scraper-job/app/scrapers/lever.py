@@ -4,20 +4,23 @@ URL patterns:
     https://jobs.lever.co/<company>/<job_id>
     https://jobs.lever.co/<company>/<job_id>/apply
 """
+
 import logging
 import re
 
 import httpx
 
 from app.scrapers.base import BaseScraper
-from app.scrapers.greenhouse import _extract_skills_from_text, _infer_seniority, _strip_html
+from app.scrapers.greenhouse import (
+    _extract_skills_from_text,
+    _infer_seniority,
+    _strip_html,
+)
 from app.schemas.job import JobOffer
 
 logger = logging.getLogger(__name__)
 
-_LEVER_RE = re.compile(
-    r"jobs\.lever\.co/([^/]+)/([a-f0-9\-]{36})", re.IGNORECASE
-)
+_LEVER_RE = re.compile(r"jobs\.lever\.co/([^/]+)/([a-f0-9\-]{36})", re.IGNORECASE)
 
 
 class LeverScraper(BaseScraper):

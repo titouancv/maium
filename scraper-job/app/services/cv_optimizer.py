@@ -9,15 +9,24 @@ Flow:
     5. save_optimized_cv → Supabase
     6. Return OptimizedCV
 """
+
 import logging
 
 from app.schemas.cv import OptimizedCV
 from app.schemas.job import JobOffer
 from app.schemas.profile import UserProfile
-from app.services.ats_service import compute_ats_score, optimized_cv_to_text, profile_to_text
+from app.services.ats_service import (
+    compute_ats_score,
+    optimized_cv_to_text,
+    profile_to_text,
+)
 from app.services.mistral_service import MistralService
 from app.services.scraper_service import scrape_job
-from app.services.supabase_service import fetch_user_profile, get_supabase_client, save_optimized_cv
+from app.services.supabase_service import (
+    fetch_user_profile,
+    get_supabase_client,
+    save_optimized_cv,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -52,10 +61,12 @@ async def run_cv_optimization(user_id: str, job_url: str) -> OptimizedCV:
         job.description,
         job.skills,
     )
-    optimized = optimized.model_copy(update={
-        "ats_score_before": ats_before,
-        "ats_score_after": ats_after,
-    })
+    optimized = optimized.model_copy(
+        update={
+            "ats_score_before": ats_before,
+            "ats_score_after": ats_after,
+        }
+    )
 
     # 5. Persist (non-fatal — a Supabase issue must not discard a ready CV)
     logger.info(

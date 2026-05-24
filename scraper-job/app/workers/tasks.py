@@ -7,6 +7,7 @@ Architecture:
 
 Both tasks are queued in Redis and polled by the frontend.
 """
+
 import asyncio
 
 from celery import Celery
@@ -26,10 +27,10 @@ celery_app.conf.update(
     task_serializer="json",
     result_serializer="json",
     accept_content=["json"],
-    result_expires=3600 * 24,   # Results expire after 24 h
+    result_expires=3600 * 24,  # Results expire after 24 h
     task_track_started=True,
     worker_prefetch_multiplier=1,  # Avoid overloading on long-running tasks
-    task_acks_late=True,           # Re-queue if the worker crashes mid-task
+    task_acks_late=True,  # Re-queue if the worker crashes mid-task
 )
 
 task_logger = get_task_logger(__name__)
@@ -38,6 +39,7 @@ task_logger = get_task_logger(__name__)
 # ---------------------------------------------------------------------------
 # CV Optimization task
 # ---------------------------------------------------------------------------
+
 
 @celery_app.task(
     bind=True,
@@ -66,12 +68,13 @@ def optimize_cv_task(self, user_id: str, job_url: str) -> dict:
 
     except Exception as exc:
         task_logger.error("optimize_cv_task failed: %s", exc, exc_info=True)
-        raise self.retry(exc=exc, countdown=2 ** self.request.retries * 5)
+        raise self.retry(exc=exc, countdown=2**self.request.retries * 5)
 
 
 async def _run_optimize(user_id: str, job_url: str) -> dict:
     """Async wrapper so Celery (sync) can call run_cv_optimization."""
     from app.services.cv_optimizer import run_cv_optimization
+
     optimized = await run_cv_optimization(user_id, job_url)
     return optimized.model_dump()
 
@@ -79,6 +82,7 @@ async def _run_optimize(user_id: str, job_url: str) -> dict:
 # ---------------------------------------------------------------------------
 # CV–Job Match Score task
 # ---------------------------------------------------------------------------
+
 
 @celery_app.task(
     bind=True,
@@ -107,7 +111,7 @@ def match_score_task(self, user_id: str, job_url: str) -> dict:
 
     except Exception as exc:
         task_logger.error("match_score_task failed: %s", exc, exc_info=True)
-        raise self.retry(exc=exc, countdown=2 ** self.request.retries * 5)
+        raise self.retry(exc=exc, countdown=2**self.request.retries * 5)
 
 
 async def _run_match_score(user_id: str, job_url: str) -> dict:

@@ -1,6 +1,7 @@
 """
 Supabase access service (backend side, service role key).
 """
+
 import logging
 import uuid
 

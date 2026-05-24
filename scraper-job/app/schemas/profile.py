@@ -102,7 +102,9 @@ class UserProfile(BaseModel):
 
     @property
     def social_networks(self) -> list[str]:
-        return [s.url for s in sorted(self.user_social_networks, key=lambda s: s.position)]
+        return [
+            s.url for s in sorted(self.user_social_networks, key=lambda s: s.position)
+        ]
 
     @property
     def hobbies(self) -> list[HobbyRecord]:

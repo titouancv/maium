@@ -2,10 +2,13 @@
 ATS Scoring Engine — V1: heuristic keyword/skill matching.
 Complements the score computed by Mistral with a local verification pass.
 """
+
 import re
 
 
-def compute_ats_score(profile_text: str, job_description: str, job_skills: list[str]) -> int:
+def compute_ats_score(
+    profile_text: str, job_description: str, job_skills: list[str]
+) -> int:
     """
     Compute an ATS score (0-100) by comparing:
     - Job skills found in the candidate's profile

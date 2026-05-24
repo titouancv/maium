@@ -2,6 +2,7 @@
 Generic scraper using Playwright + selectolax / BeautifulSoup.
 Used for all unrecognised job boards (LinkedIn, Welcome to the Jungle, etc.)
 """
+
 import logging
 import re
 
@@ -17,16 +18,24 @@ settings = get_settings()
 
 # CSS selectors tried in priority order
 _TITLE_SELECTORS = [
-    "h1.job-title", "h1[data-testid='jobTitle']", "h1", ".job-title",
+    "h1.job-title",
+    "h1[data-testid='jobTitle']",
+    "h1",
+    ".job-title",
     "[class*='title']",
 ]
 _COMPANY_SELECTORS = [
-    "[data-testid='companyName']", ".company-name", "[class*='company']",
+    "[data-testid='companyName']",
+    ".company-name",
+    "[class*='company']",
     "meta[property='og:site_name']",
 ]
 _DESCRIPTION_SELECTORS = [
-    "[data-testid='jobDescriptionText']", ".job-description",
-    "[class*='description']", "article", "main",
+    "[data-testid='jobDescriptionText']",
+    ".job-description",
+    "[class*='description']",
+    "article",
+    "main",
 ]
 
 # Detect prompt injection attempts in job descriptions
@@ -50,7 +59,9 @@ async def _get_html(url: str) -> str:
         )
         page = await context.new_page()
         try:
-            await page.goto(url, timeout=settings.SCRAPER_TIMEOUT_MS, wait_until="networkidle")
+            await page.goto(
+                url, timeout=settings.SCRAPER_TIMEOUT_MS, wait_until="networkidle"
+            )
             html = await page.content()
         finally:
             await browser.close()

@@ -1,6 +1,7 @@
 """
 Shared interface for all scrapers.
 """
+
 from abc import ABC, abstractmethod
 
 from app.schemas.job import JobOffer
