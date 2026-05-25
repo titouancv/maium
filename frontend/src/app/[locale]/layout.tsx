@@ -9,6 +9,7 @@ import { routing } from "@/i18n/routing";
 import { Providers } from "@/components/Providers";
 import { UserHydration } from "@/components/UserHydration";
 import { getCurrentUserProfile } from "@/lib/auth/getCurrentUser";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 export const metadata: Metadata = {
   title: "maium",
@@ -48,6 +49,7 @@ export default async function RootLayout({
             {children}
           </Providers>
         </NextIntlClientProvider>
+        <SpeedInsights />
       </body>
     </html>
   );
