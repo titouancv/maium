@@ -4,21 +4,18 @@ import { SignupWizard } from "@/components/content/SignupContent";
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "@/i18n/navigation";
 import { ROUTES } from "@/constants";
+import { getAuthUser } from "@/lib/auth/getCurrentUser";
 import type { UserState } from "@/stores/useUserStore";
 import type { Experience } from "@/types/experience";
 
 export default async function SignupPage() {
-  const locale = await getLocale();
-  const supabase = await createClient();
-
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const [locale, user] = await Promise.all([getLocale(), getAuthUser()]);
 
   let initialStep = 0;
   let initialUser: Partial<UserState> = {};
 
   if (user) {
+    const supabase = await createClient();
     const { data: profile } = await supabase
       .from("users")
       .select(
