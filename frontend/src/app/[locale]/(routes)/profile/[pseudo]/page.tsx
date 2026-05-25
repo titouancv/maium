@@ -1,9 +1,13 @@
 import { Suspense } from "react";
 import { notFound } from "next/navigation";
 import { createAdminClient } from "@/lib/supabase/admin";
-import { createClient } from "@/lib/supabase/server";
 import { ProfileContent } from "@/components/content/ProfileContent";
-import { mapUserFromDb, USER_PROFILE_SELECT, type DbUserRaw } from "@/lib/mappers/user";
+import {
+  mapUserFromDb,
+  USER_PROFILE_SELECT,
+  type DbUserRaw,
+} from "@/lib/mappers/user";
+import { getAuthUser, getCurrentUserProfile } from "@/lib/auth/getCurrentUser";
 import type { PublicUserData } from "@/types";
 
 interface Props {
@@ -12,61 +16,47 @@ interface Props {
 
 export default async function ProfilePage({ params }: Props) {
   const { pseudo } = await params;
-
   const adminClient = createAdminClient();
-  const { data: profileUser } = await adminClient
-    .from("users")
-    .select(
-      `first_name, last_name, pseudo, dob, location, nationality, bio, ${USER_PROFILE_SELECT}`,
-    )
-    .eq("pseudo", pseudo)
-    .single();
 
-  if (!profileUser) notFound();
-
-  const supabase = await createClient();
-  const {
-    data: { user: authUser },
-  } = await supabase.auth.getUser();
-
-  let isOwner = false;
-  if (authUser) {
-    const { data: currentUser } = await supabase
+  // Round-trip 1: profile lookup + current user (deduped with layout via cache)
+  const [profileResult, authUser, currentUser] = await Promise.all([
+    adminClient
       .from("users")
-      .select("pseudo")
-      .eq("id", authUser.id)
-      .single();
-    isOwner = currentUser?.pseudo === pseudo;
-  }
-
-  const { data: profileUserWithId } = await adminClient
-    .from("users")
-    .select("id")
-    .eq("pseudo", pseudo)
-    .single();
-
-  const [{ count: followersCount }, { count: followingCount }] = await Promise.all([
-    adminClient
-      .from("user_follows")
-      .select("*", { count: "exact", head: true })
-      .eq("followed_id", profileUserWithId!.id),
-    adminClient
-      .from("user_follows")
-      .select("*", { count: "exact", head: true })
-      .eq("follower_id", profileUserWithId!.id),
+      .select(
+        `id, first_name, last_name, pseudo, dob, location, nationality, bio, ${USER_PROFILE_SELECT}`,
+      )
+      .eq("pseudo", pseudo)
+      .single(),
+    getAuthUser(),
+    getCurrentUserProfile(),
   ]);
 
-  let isFollowing = false;
-  if (authUser && !isOwner) {
-    const { count } = await adminClient
-      .from("user_follows")
-      .select("*", { count: "exact", head: true })
-      .eq("follower_id", authUser.id)
-      .eq("followed_id", profileUserWithId!.id);
-    isFollowing = (count ?? 0) > 0;
-  }
+  const profileRaw = profileResult.data as (DbUserRaw & { id: string }) | null;
+  if (!profileRaw) notFound();
 
-  const full = mapUserFromDb(profileUser as unknown as DbUserRaw);
+  const isOwner = currentUser?.pseudo === pseudo;
+
+  // Round-trip 2: all follow counts in parallel
+  const [followersResult, followingResult, isFollowingResult] =
+    await Promise.all([
+      adminClient
+        .from("user_follows")
+        .select("*", { count: "exact", head: true })
+        .eq("followed_id", profileRaw.id),
+      adminClient
+        .from("user_follows")
+        .select("*", { count: "exact", head: true })
+        .eq("follower_id", profileRaw.id),
+      authUser && !isOwner
+        ? adminClient
+            .from("user_follows")
+            .select("*", { count: "exact", head: true })
+            .eq("follower_id", authUser.id)
+            .eq("followed_id", profileRaw.id)
+        : Promise.resolve({ count: 0 }),
+    ]);
+
+  const full = mapUserFromDb(profileRaw);
   const userData: PublicUserData = {
     first_name: full.first_name,
     last_name: full.last_name,
@@ -82,13 +72,20 @@ export default async function ProfilePage({ params }: Props) {
     hobbies: full.hobbies,
     skills: full.skills,
     projects: full.projects,
-    followers_count: followersCount ?? 0,
-    following_count: followingCount ?? 0,
+    followers_count: followersResult.count ?? 0,
+    following_count: followingResult.count ?? 0,
   };
+
+  const isFollowing =
+    !!authUser && !isOwner && (isFollowingResult.count ?? 0) > 0;
 
   return (
     <Suspense>
-      <ProfileContent user={userData} isOwner={isOwner} isFollowing={isFollowing} />
+      <ProfileContent
+        user={userData}
+        isOwner={isOwner}
+        isFollowing={isFollowing}
+      />
     </Suspense>
   );
 }

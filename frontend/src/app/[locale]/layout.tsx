@@ -8,34 +8,12 @@ import { Suspense } from "react";
 import { routing } from "@/i18n/routing";
 import { Providers } from "@/components/Providers";
 import { UserHydration } from "@/components/UserHydration";
-import { createClient } from "@/lib/supabase/server";
-import { mapUserFromDb, USER_PROFILE_SELECT, type DbUserRaw } from "@/lib/mappers/user";
-import type { UserData } from "@/types";
+import { getCurrentUserProfile } from "@/lib/auth/getCurrentUser";
 
 export const metadata: Metadata = {
   title: "maium",
   description: "maium social network",
 };
-
-async function fetchCurrentUser(): Promise<UserData | null> {
-  const supabase = await createClient();
-  const {
-    data: { user: authUser },
-  } = await supabase.auth.getUser();
-
-  if (!authUser) return null;
-
-  const { data } = await supabase
-    .from("users")
-    .select(
-      `email, first_name, last_name, pseudo, dob, onboarding_completed, phone, nationality, location, bio, ${USER_PROFILE_SELECT}`,
-    )
-    .eq("id", authUser.id)
-    .single();
-
-  if (!data) return null;
-  return mapUserFromDb(data as unknown as DbUserRaw);
-}
 
 export default async function RootLayout({
   children,
@@ -44,8 +22,10 @@ export default async function RootLayout({
   children: React.ReactNode;
   params: Promise<{ locale: string }>;
 }>) {
-  // Start user fetch eagerly — runs in parallel with the awaits below
-  const userPromise = fetchCurrentUser();
+  // Start user fetch eagerly — runs in parallel with the awaits below.
+  // Cached via React cache() so the page calling getCurrentUserProfile()
+  // reuses this same in-flight promise instead of refetching.
+  const userPromise = getCurrentUserProfile();
 
   const { locale } = await params;
   if (!routing.locales.includes(locale as (typeof routing.locales)[number])) {
