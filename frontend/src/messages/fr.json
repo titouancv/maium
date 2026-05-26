@@ -1,6 +1,6 @@
 {
   "nav": {
-    "home": "Accueil",
+    "home": "maium",
     "settings": "Paramètres",
     "searchLabel": "Rechercher"
   },
@@ -31,7 +31,12 @@
   "home": {
     "name": "Nom complet",
     "pseudo": "Pseudo",
-    "dob": "Date de naissance"
+    "dob": "Date de naissance",
+    "heroTitle": "Imaginez demain. Connectez-vous maintenant.",
+    "heroSubtitle": "maium façonne votre prochain horizon.",
+    "appDescription": "maium façonne votre prochain horizon et vous connecte avec des personnes qui partagent votre parcours.",
+    "dataUsagePrefix": "En vous connectant avec Google, nous accédons à votre nom et adresse e-mail pour créer votre compte. Vos données ne sont jamais vendues ni partagées avec des tiers. Consultez notre",
+    "privacyPolicyLink": "politique de confidentialité"
   },
   "settings": {
     "title": "Paramètres",
@@ -209,5 +214,9 @@
     "section6Body": "Nous utilisons uniquement des cookies strictement nécessaires pour l'authentification et la gestion de session. Aucun cookie publicitaire ou de suivi n'est utilisé.",
     "section7Title": "7. Contact",
     "section7Body": "Pour toute question concernant cette politique de confidentialité, contactez-nous à titouancv@icloud.com."
+  },
+  "notFound": {
+    "title": "introuvable",
+    "message": "Attends... tu t'es perdu !"
   }
 }

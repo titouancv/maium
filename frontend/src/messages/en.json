@@ -1,6 +1,6 @@
 {
   "nav": {
-    "home": "Home",
+    "home": "maium",
     "settings": "Settings",
     "searchLabel": "Search"
   },
@@ -31,7 +31,12 @@
   "home": {
     "name": "Full name",
     "pseudo": "Username",
-    "dob": "Date of birth"
+    "dob": "Date of birth",
+    "heroTitle": "Imagine tomorrow. Connect now.",
+    "heroSubtitle": "maium shapes your next horizon.",
+    "appDescription": "maium shapes your next horizon and connects you with people who share your journey.",
+    "dataUsagePrefix": "By signing in with Google, we access your name and email address to create your account. Your data is never sold or shared with third parties. Read our",
+    "privacyPolicyLink": "privacy policy"
   },
   "settings": {
     "title": "Settings",
@@ -209,5 +214,9 @@
     "section6Body": "We use strictly necessary cookies for authentication and session management. No advertising or tracking cookies are used.",
     "section7Title": "7. Contact",
     "section7Body": "For any questions about this privacy policy, please contact us at titouancv@icloud.com."
+  },
+  "notFound": {
+    "title": "not found",
+    "message": "Hold on... you are lost!"
   }
 }

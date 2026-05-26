@@ -2,7 +2,7 @@
 
 import { useState, useTransition } from "react";
 import { useTranslations } from "next-intl";
-import { Link } from "@/i18n/navigation";
+import { Link, useRouter } from "@/i18n/navigation";
 import { ROUTES } from "@/constants";
 import { Button, ChipList, Section } from "@/components/ui";
 import { ExperienceList } from "@/components/custom/experience";
@@ -14,19 +14,27 @@ interface ProfileContentProps {
   user: PublicUserData;
   isOwner: boolean;
   isFollowing?: boolean;
+  isAuthenticated?: boolean;
 }
 
 export const ProfileContent = ({
   user,
   isOwner,
   isFollowing: initialIsFollowing = false,
+  isAuthenticated = false,
 }: ProfileContentProps) => {
   const t = useTranslations("profile");
+  const tCommon = useTranslations("common");
+  const router = useRouter();
   const [following, setFollowing] = useState(initialIsFollowing);
   const [followerCount, setFollowerCount] = useState(user.followers_count);
   const [isPending, startTransition] = useTransition();
 
   const handleFollowToggle = () => {
+    if (!isAuthenticated) {
+      router.push(ROUTES.SIGNUP);
+      return;
+    }
     const next = !following;
     setFollowing(next);
     setFollowerCount((c) => c + (next ? 1 : -1));
@@ -52,7 +60,11 @@ export const ProfileContent = ({
   const hasSocialNetworks = (user.social_networks?.length ?? 0) > 0;
 
   return (
-    <PageLayout title={`${user.first_name} ${user.last_name}`} fullHeight>
+    <PageLayout
+      title={`${user.first_name} ${user.last_name}`}
+      fullHeight
+      backLabel={isOwner ? undefined : tCommon("backButton")}
+    >
       <div className="flex h-full w-full max-w-7xl flex-col gap-8 pt-0 md:flex-row">
         <aside className="flex flex-col gap-8 md:w-1/5">
           <div className="flex flex-col gap-1">

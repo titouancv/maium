@@ -85,6 +85,7 @@ export default async function ProfilePage({ params }: Props) {
         user={userData}
         isOwner={isOwner}
         isFollowing={isFollowing}
+        isAuthenticated={!!authUser}
       />
     </Suspense>
   );
