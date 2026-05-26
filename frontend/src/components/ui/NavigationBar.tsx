@@ -22,25 +22,24 @@ export function NavigationBar() {
 
   const tabs = [
     { name: t("home"), href: ROUTES.HOME },
-    pseudo
-      ? { name: `@${pseudo}`, href: ROUTES.PROFILE(pseudo) }
-      : { name: t("settings"), href: ROUTES.SETTINGS },
+    pseudo ? { name: `@${pseudo}`, href: ROUTES.PROFILE(pseudo) } : undefined,
   ];
 
   return (
     <>
       <div className="flex items-center gap-2">
-        <Tabs tabs={tabs} />
+        <Tabs tabs={tabs.filter((t) => t !== undefined)} />
         <SearchButton onClick={() => setIsSearchOpen(true)} />
       </div>
-      {mounted && createPortal(
-        <AnimatePresence>
-          {isSearchOpen && (
-            <SearchOverlay onClose={() => setIsSearchOpen(false)} />
-          )}
-        </AnimatePresence>,
-        document.body,
-      )}
+      {mounted &&
+        createPortal(
+          <AnimatePresence>
+            {isSearchOpen && (
+              <SearchOverlay onClose={() => setIsSearchOpen(false)} />
+            )}
+          </AnimatePresence>,
+          document.body,
+        )}
     </>
   );
 }

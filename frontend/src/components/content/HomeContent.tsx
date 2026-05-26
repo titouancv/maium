@@ -1,30 +1,27 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { API, ROUTES } from "@/constants";
-import { useRouter } from "@/i18n/navigation";
+import { Link } from "@/i18n/navigation";
 import { WelcomeOverlay } from "../overlay/WelcomeOverlay";
 import { cn } from "@/lib/utils";
 import { UserData } from "@/types";
 import { PageLayout } from "../layout";
+import { Title } from "../ui";
+import { GoogleSignInButton } from "../custom";
 
 interface HomeContentProps {
   user: UserData | null;
 }
 
 export const HomeContent = ({ user }: HomeContentProps) => {
-  const t = useTranslations("nav");
-  const router = useRouter();
+  const tNav = useTranslations("nav");
+  const t = useTranslations("home");
 
   const needsWelcome = user?.onboarding_completed === false;
   const [showOverlay, setShowOverlay] = useState(needsWelcome);
   const [overlayVisible, setOverlayVisible] = useState(needsWelcome);
-  useEffect(() => {
-    if (!user) {
-      router.replace(ROUTES.SIGNUP);
-    }
-  }, [user, router]);
 
   const handleWelcomeEnter = () => {
     fetch(API.USERS_ME, {
@@ -74,7 +71,27 @@ export const HomeContent = ({ user }: HomeContentProps) => {
   };
 
   return (
-    <PageLayout title={t("home")}>
+    <PageLayout title={tNav("home")}>
+      {!user && (
+        <div className="flex flex-1 flex-col items-center justify-center gap-8">
+          <div className="flex max-w-xl flex-col justify-start gap-8">
+            <Title label={t("heroTitle")} size="h1" />
+            <p>{t("appDescription")}</p>
+            <GoogleSignInButton />
+            <p className="text-txt-muted text-xs opacity-50">
+              {t("dataUsagePrefix")}{" "}
+              <Link
+                href={ROUTES.PRIVACY_POLICY}
+                className="underline underline-offset-2"
+              >
+                {t("privacyPolicyLink")}
+              </Link>
+              .
+            </p>
+          </div>
+        </div>
+      )}
+
       {showOverlay && user && (
         <div
           className={cn(
