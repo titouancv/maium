@@ -73,7 +73,18 @@
     "hobbySubStep2Title": "Tell us more (optional)",
     "hobbyTitleRequired": "Please enter a title",
     "hobbyTitlePlaceholder": "Rock climbing",
-    "hobbyDescriptionPlaceholder": "Indoor bouldering and outdoor sport climbing, started 3 years ago."
+    "hobbyDescriptionPlaceholder": "Indoor bouldering and outdoor sport climbing, started 3 years ago.",
+    "personalizationMenuLabel": "Personalization",
+    "personalizationTitle": "Personalization",
+    "themeTitle": "Appearance",
+    "themeLight": "Light",
+    "themeDark": "Dark",
+    "themeSystem": "System",
+    "themeDayCycle": "Day cycle",
+    "themeLightDescription": "Always light",
+    "themeDarkDescription": "Always dark",
+    "themeSystemDescription": "Follows your device",
+    "themeDayCycleDescription": "Light by day, dark at night"
   },
   "welcome": {
     "greeting": "Welcome, {name}!",

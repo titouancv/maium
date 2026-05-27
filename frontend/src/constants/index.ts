@@ -6,6 +6,7 @@ export const ROUTES = {
   SETTINGS: "/settings",
   SETTINGS_ACCOUNT: "/settings/account",
   SETTINGS_PERSONAL_DATA: "/settings/personal-data",
+  SETTINGS_PERSONALIZATION: "/settings/personalization",
   AUTH_CALLBACK: "/auth/callback",
   PROFILE: (pseudo: string) => `/profile/${pseudo}`,
   PROFILE_FOLLOWERS: (pseudo: string) => `/profile/${pseudo}/followers`,

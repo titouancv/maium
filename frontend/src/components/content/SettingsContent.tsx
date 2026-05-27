@@ -9,8 +9,12 @@ export const SettingsContent = () => {
   const t = useTranslations("settings");
 
   const menuItems = [
-    { label: t("personalDataMenuLabel"), href: ROUTES.SETTINGS_PERSONAL_DATA },
     { label: t("accountMenuLabel"), href: ROUTES.SETTINGS_ACCOUNT },
+    { label: t("personalDataMenuLabel"), href: ROUTES.SETTINGS_PERSONAL_DATA },
+    {
+      label: t("personalizationMenuLabel"),
+      href: ROUTES.SETTINGS_PERSONALIZATION,
+    },
     { label: t("privacyPolicyMenuLabel"), href: ROUTES.PRIVACY_POLICY },
   ];
 
