@@ -1,5 +1,5 @@
 """
-FastAPI application entry point.
+FastAPI application entry point — v2 async pipeline.
 """
 
 from contextlib import asynccontextmanager
@@ -7,7 +7,7 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.api import cv, jobs, tasks
+from app.api import jobs, resume
 from app.core.config import get_settings
 from app.core.logging import configure_logging
 
@@ -21,13 +21,12 @@ async def lifespan(app: FastAPI):
 
 
 app = FastAPI(
-    title="Maium — CV Optimizer API",
-    version="1.0.0",
-    description="Job scraping + Mistral AI powered CV optimization API",
+    title="Maium — Resume Optimizer API",
+    version="2.0.0",
+    description="Async job analysis + Mistral AI powered resume optimization",
     lifespan=lifespan,
 )
 
-# CORS
 app.add_middleware(
     CORSMiddleware,
     allow_origins=settings.ALLOWED_ORIGINS,
@@ -36,12 +35,10 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Routers
+app.include_router(resume.router)
 app.include_router(jobs.router)
-app.include_router(cv.router)
-app.include_router(tasks.router)
 
 
 @app.get("/health", tags=["health"])
 async def health_check():
-    return {"status": "ok", "service": "cv-optimizer"}
+    return {"status": "ok", "service": "resume-optimizer", "version": "2.0.0"}

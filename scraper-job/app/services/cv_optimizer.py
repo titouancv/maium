@@ -48,7 +48,7 @@ async def run_cv_optimization(user_id: str, job_url: str) -> OptimizedCV:
 
     # 3. Generate the optimized CV via Mistral
     mistral = MistralService()
-    optimized: OptimizedCV = await mistral.optimize_cv(profile, job)
+    optimized, _ = await mistral.optimize_cv(profile, job)
 
     # 4. ATS scores — before (original profile) and after (optimised CV)
     ats_before = compute_ats_score(
