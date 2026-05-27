@@ -73,7 +73,18 @@
     "hobbySubStep2Title": "Un peu plus ? (optionnel)",
     "hobbyTitleRequired": "Veuillez saisir un titre",
     "hobbyTitlePlaceholder": "Escalade",
-    "hobbyDescriptionPlaceholder": "Bloc en salle et escalade sportive en extérieur, pratiqué depuis 3 ans."
+    "hobbyDescriptionPlaceholder": "Bloc en salle et escalade sportive en extérieur, pratiqué depuis 3 ans.",
+    "personalizationMenuLabel": "Personnalisation",
+    "personalizationTitle": "Personnalisation",
+    "themeTitle": "Apparence",
+    "themeLight": "Clair",
+    "themeDark": "Sombre",
+    "themeSystem": "Système",
+    "themeDayCycle": "Cycle du jour",
+    "themeLightDescription": "Toujours clair",
+    "themeDarkDescription": "Toujours sombre",
+    "themeSystemDescription": "Suit votre appareil",
+    "themeDayCycleDescription": "Clair le jour, sombre la nuit"
   },
   "welcome": {
     "greeting": "Bienvenue, {name} !",

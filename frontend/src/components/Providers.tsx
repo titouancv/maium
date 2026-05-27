@@ -3,6 +3,7 @@
 import { useEffect } from "react";
 import { LoadingOverlay } from "@/components/overlay/LoadingOverlay";
 import { useLoadingStore } from "@/stores/useLoadingStore";
+import { ThemeApplier } from "@/components/ThemeApplier";
 
 export function Providers({ children }: { children: React.ReactNode }) {
   useEffect(() => {
@@ -12,6 +13,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
 
   return (
     <>
+      <ThemeApplier />
       {children}
       <LoadingOverlay />
     </>
