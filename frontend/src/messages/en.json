@@ -2,7 +2,8 @@
   "nav": {
     "home": "maium",
     "settings": "Settings",
-    "searchLabel": "Search"
+    "searchLabel": "Search",
+    "messages": "messages"
   },
   "search": {
     "placeholder": "Search users...",
@@ -225,6 +226,19 @@
     "section6Body": "We use strictly necessary cookies for authentication and session management. No advertising or tracking cookies are used.",
     "section7Title": "7. Contact",
     "section7Body": "For any questions about this privacy policy, please contact us at titouancv@icloud.com."
+  },
+  "messaging": {
+    "title": "Messages",
+    "newConversation": "New message",
+    "noConversations": "No conversations yet",
+    "noConversationsHint": "Start a conversation by tapping the button above",
+    "messageInputPlaceholder": "Write a message...",
+    "sendButton": "Send",
+    "backButton": "Back",
+    "directMessage": "Direct message",
+    "you": "You",
+    "typingIndicator": "typing...",
+    "emptyConversation": "No messages yet. Say hello!"
   },
   "notFound": {
     "title": "not found",

@@ -12,6 +12,8 @@ export const ROUTES = {
   PROFILE_FOLLOWERS: (pseudo: string) => `/profile/${pseudo}/followers`,
   PROFILE_FOLLOWING: (pseudo: string) => `/profile/${pseudo}/following`,
   PRIVACY_POLICY: "/privacy-policy",
+  MESSAGES: "/messages",
+  CONVERSATION: (id: string) => `/messages/${id}`,
 } as const;
 
 export const API = {
@@ -28,6 +30,9 @@ export const API = {
   RESUME_HISTORY: "/api/resume/history",
   RESUME_STATUS: (trackingId: string) => `/api/resume/status/${trackingId}`,
   RESUME_BY_ID: (resumeId: string) => `/api/resume/${resumeId}`,
+  MESSAGES_CONVERSATIONS: "/api/messages/conversations",
+  MESSAGES_CONVERSATION_MESSAGES: (id: string) =>
+    `/api/messages/conversations/${id}/messages`,
 } as const;
 
 export const EXTERNAL_API = {

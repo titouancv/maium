@@ -22,6 +22,7 @@ export function NavigationBar() {
 
   const tabs = [
     { name: t("home"), href: ROUTES.HOME },
+    { name: t("messages"), href: ROUTES.MESSAGES },
     pseudo ? { name: `@${pseudo}`, href: ROUTES.PROFILE(pseudo) } : undefined,
   ];
 
