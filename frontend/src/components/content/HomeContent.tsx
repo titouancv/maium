@@ -10,7 +10,7 @@ import { UserData } from "@/types";
 import { PageLayout } from "../layout";
 import { Title } from "../ui";
 import { GoogleSignInButton } from "../custom";
-import { ResumeApiTester } from "./ResumeApiTester";
+import { ResumeApiTester } from "../custom/ResumeApiTester";
 
 interface HomeContentProps {
   user: UserData | null;

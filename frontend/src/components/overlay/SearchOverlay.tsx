@@ -17,9 +17,10 @@ interface SearchUser {
 
 interface SearchOverlayProps {
   onClose: () => void;
+  onSelect?: (pseudo: string) => void;
 }
 
-export function SearchOverlay({ onClose }: SearchOverlayProps) {
+export function SearchOverlay({ onClose, onSelect }: SearchOverlayProps) {
   const t = useTranslations("search");
   const router = useRouter();
   const [query, setQuery] = useState("");
@@ -64,8 +65,12 @@ export function SearchOverlay({ onClose }: SearchOverlayProps) {
   }, [query]);
 
   const handleSelect = (pseudo: string) => {
-    router.push(ROUTES.PROFILE(pseudo));
-    onClose();
+    if (onSelect) {
+      onSelect(pseudo);
+    } else {
+      router.push(ROUTES.PROFILE(pseudo));
+      onClose();
+    }
   };
 
   const showNoResults =

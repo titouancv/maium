@@ -3,7 +3,7 @@
 import { useState, useTransition } from "react";
 import { useTranslations } from "next-intl";
 import { Link, useRouter } from "@/i18n/navigation";
-import { ROUTES } from "@/constants";
+import { API, ROUTES } from "@/constants";
 import { Button, ChipList, Section } from "@/components/ui";
 import { ExperienceList } from "@/components/custom/experience";
 import type { PublicUserData } from "@/types";
@@ -29,6 +29,25 @@ export const ProfileContent = ({
   const [following, setFollowing] = useState(initialIsFollowing);
   const [followerCount, setFollowerCount] = useState(user.followers_count);
   const [isPending, startTransition] = useTransition();
+  const [isMessagePending, startMessageTransition] = useTransition();
+
+  const handleMessage = () => {
+    if (!isAuthenticated) {
+      router.push(ROUTES.SIGNUP);
+      return;
+    }
+    startMessageTransition(async () => {
+      const res = await fetch(API.MESSAGES_CONVERSATIONS, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ targetPseudo: user.pseudo }),
+      });
+      if (res.ok) {
+        const { conversationId } = await res.json();
+        router.push(ROUTES.CONVERSATION(conversationId));
+      }
+    });
+  };
 
   const handleFollowToggle = () => {
     if (!isAuthenticated) {
@@ -107,16 +126,28 @@ export const ProfileContent = ({
               </Button>
             </Link>
           ) : (
-            <Button
-              variant={following ? "outline" : "primary"}
-              size="sm"
-              type="button"
-              className="w-full"
-              onClick={handleFollowToggle}
-              disabled={isPending}
-            >
-              {following ? t("unfollowButton") : t("followButton")}
-            </Button>
+            <div className="flex flex-col gap-2">
+              <Button
+                variant={following ? "outline" : "primary"}
+                size="sm"
+                type="button"
+                className="w-full"
+                onClick={handleFollowToggle}
+                disabled={isPending}
+              >
+                {following ? t("unfollowButton") : t("followButton")}
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                type="button"
+                className="w-full"
+                onClick={handleMessage}
+                disabled={isMessagePending}
+              >
+                {t("messageButton")}
+              </Button>
+            </div>
           )}
         </aside>
 
