@@ -26,11 +26,7 @@ export const API = {
   USERS_FOLLOWING: "/api/users/following",
   AUTH_LOGOUT: "/api/auth/logout",
   URL_TITLE: "/api/url-title",
-  RESUME_ANALYZE: "/api/resume/analyze",
-  RESUME_HISTORY: "/api/resume/history",
-  RESUME_STATUS: (trackingId: string) => `/api/resume/status/${trackingId}`,
-  RESUME_BY_ID: (resumeId: string) => `/api/resume/${resumeId}`,
-  MESSAGES_CONVERSATIONS: "/api/messages/conversations",
+MESSAGES_CONVERSATIONS: "/api/messages/conversations",
   MESSAGES_CONVERSATION_MESSAGES: (id: string) =>
     `/api/messages/conversations/${id}/messages`,
 } as const;

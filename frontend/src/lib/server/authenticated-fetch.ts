@@ -4,17 +4,6 @@ import { NextResponse } from "next/server";
 const DEFAULT_TIMEOUT_MS = 30_000;
 
 // ---------------------------------------------------------------------------
-// Backend route constants
-// ---------------------------------------------------------------------------
-
-export const BACKEND_ROUTES = {
-  RESUME_ANALYZE: "/resume/analyze",
-  RESUME_STATUS: (trackingId: string) => `/resume/status/${trackingId}`,
-  RESUME_BY_ID: (resumeId: string) => `/resume/${resumeId}`,
-  RESUME_HISTORY: "/resume/history",
-} as const;
-
-// ---------------------------------------------------------------------------
 // Types
 // ---------------------------------------------------------------------------
 

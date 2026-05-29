@@ -10,7 +10,6 @@ import { UserData } from "@/types";
 import { PageLayout } from "../layout";
 import { Title } from "../ui";
 import { GoogleSignInButton } from "@/components/ui";
-import { ResumeApiTester } from "./ResumeApiTester";
 
 interface HomeContentProps {
   user: UserData | null;
@@ -73,7 +72,7 @@ export const HomeContent = ({ user }: HomeContentProps) => {
 
   return (
     <PageLayout title={tNav("home")}>
-      {!user ? (
+      {!user && (
         <div className="flex flex-1 flex-col items-center justify-center gap-8">
           <div className="flex max-w-xl flex-col justify-start gap-8">
             <Title label={t("heroTitle")} size="h1" />
@@ -91,8 +90,6 @@ export const HomeContent = ({ user }: HomeContentProps) => {
             </p>
           </div>
         </div>
-      ) : (
-        <ResumeApiTester />
       )}
 
       {showOverlay && user && (
