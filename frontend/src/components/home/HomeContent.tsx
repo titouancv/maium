@@ -2,14 +2,12 @@
 
 import { useState } from "react";
 import { useTranslations } from "next-intl";
-import { API, ROUTES } from "@/constants";
-import { Link } from "@/i18n/navigation";
+import { API } from "@/constants";
 import { WelcomeOverlay } from "./collections/WelcomeOverlay";
+import { HeroSection } from "./collections/HeroSection";
 import { cn } from "@/lib/utils";
 import { UserData } from "@/types";
 import { PageLayout } from "../layout";
-import { Title } from "../ui";
-import { GoogleSignInButton } from "@/components/ui";
 
 interface HomeContentProps {
   user: UserData | null;
@@ -17,7 +15,6 @@ interface HomeContentProps {
 
 export const HomeContent = ({ user }: HomeContentProps) => {
   const tNav = useTranslations("nav");
-  const t = useTranslations("home");
 
   const needsWelcome = user?.onboarding_completed === false;
   const [showOverlay, setShowOverlay] = useState(needsWelcome);
@@ -72,25 +69,7 @@ export const HomeContent = ({ user }: HomeContentProps) => {
 
   return (
     <PageLayout title={tNav("home")}>
-      {!user && (
-        <div className="flex flex-1 flex-col items-center justify-center gap-8">
-          <div className="flex max-w-xl flex-col justify-start gap-8">
-            <Title label={t("heroTitle")} size="h1" />
-            <p>{t("appDescription")}</p>
-            <GoogleSignInButton />
-            <p className="text-txt-muted text-xs opacity-50">
-              {t("dataUsagePrefix")}{" "}
-              <Link
-                href={ROUTES.PRIVACY_POLICY}
-                className="underline underline-offset-2"
-              >
-                {t("privacyPolicyLink")}
-              </Link>
-              .
-            </p>
-          </div>
-        </div>
-      )}
+      {!user && <HeroSection />}
 
       {showOverlay && user && (
         <div
