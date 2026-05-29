@@ -1,6 +1,7 @@
 import { Link } from "@/i18n/navigation";
 import { ROUTES } from "@/constants";
 import type { Conversation, ConversationMember } from "@/types";
+import { UserCard } from "@/components/ui/UserCard";
 
 interface ConversationItemProps {
   conversation: Conversation;
@@ -18,16 +19,11 @@ function getDisplayName(
   return "Conversation";
 }
 
-function getSubtitle(
-  conversation: Conversation,
-  currentUserId: string,
-): string | null {
+function getSubtitle(conversation: Conversation): string | null {
   if (!conversation.last_message) return null;
-  const isMine = conversation.last_message.sender_id === currentUserId;
-  const prefix = isMine ? "Vous : " : "";
   const content = conversation.last_message.content;
   const truncated = content.length > 50 ? content.slice(0, 50) + "…" : content;
-  return prefix + truncated;
+  return truncated;
 }
 
 export function ConversationItem({
@@ -36,10 +32,22 @@ export function ConversationItem({
   active = false,
 }: ConversationItemProps) {
   const displayName = getDisplayName(conversation, currentUserId);
-  const subtitle = getSubtitle(conversation, currentUserId);
+  const subtitle = getSubtitle(conversation);
   const other = conversation.members.find(
     (m: ConversationMember) => m.id !== currentUserId,
   );
+
+  if (other) {
+    return (
+      <UserCard
+        pseudo={other.pseudo}
+        first_name={other.first_name}
+        last_name={other.last_name}
+        href={ROUTES.CONVERSATION(conversation.id)}
+        subtitle={subtitle ?? `@${other.pseudo}`}
+      />
+    );
+  }
 
   return (
     <Link
@@ -53,9 +61,6 @@ export function ConversationItem({
       </div>
       <div className="min-w-0 flex-1">
         <p className="text-txt truncate text-sm">{displayName}</p>
-        {other && (
-          <p className="text-txt-muted truncate text-xs">@{other.pseudo}</p>
-        )}
         {subtitle && (
           <p className="text-txt-muted truncate text-xs">{subtitle}</p>
         )}

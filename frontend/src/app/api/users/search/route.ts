@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { createClient } from "@/lib/supabase/server";
 
 export async function GET(request: NextRequest) {
   const q = request.nextUrl.searchParams.get("q")?.trim();
@@ -7,11 +8,16 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ users: [] });
   }
 
+  const authClient = await createClient();
+  const {
+    data: { user: currentUser },
+  } = await authClient.auth.getUser();
+
   const supabase = createAdminClient();
 
   const pattern = `%${q}%`;
 
-  const { data, error } = await supabase
+  let query = supabase
     .from("users")
     .select("pseudo, first_name, last_name, location")
     .or(
@@ -19,6 +25,12 @@ export async function GET(request: NextRequest) {
     )
     .eq("onboarding_completed", true)
     .limit(10);
+
+  if (currentUser) {
+    query = query.neq("id", currentUser.id);
+  }
+
+  const { data, error } = await query;
 
   if (error) {
     console.error("[GET /api/users/search]", error);

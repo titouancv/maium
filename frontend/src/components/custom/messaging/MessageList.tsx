@@ -6,6 +6,8 @@ import { createClient } from "@/lib/supabase/client";
 import { API } from "@/constants";
 import type { Message, OptimisticMessage } from "@/types";
 import { MessageBubble } from "./MessageBubble";
+import { TextArea } from "@/components/ui/TextArea";
+import { Button } from "@/components/ui/Button";
 
 interface MessageListProps {
   conversationId: string;
@@ -18,14 +20,42 @@ export function MessageList({
   conversationId,
   initialMessages,
   currentUserId,
-  isGroup,
 }: MessageListProps) {
   const t = useTranslations("messaging");
-  const [messages, setMessages] = useState<OptimisticMessage[]>(initialMessages);
+  const [messages, setMessages] =
+    useState<OptimisticMessage[]>(initialMessages);
   const [input, setInput] = useState("");
   const [sending, setSending] = useState(false);
   const bottomRef = useRef<HTMLDivElement>(null);
   const listRef = useRef<HTMLDivElement>(null);
+  const textAreaRef = useRef<HTMLTextAreaElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  // Keep input above the keyboard on mobile by tracking visual viewport height
+  useEffect(() => {
+    const viewport = window.visualViewport;
+    if (!viewport) return;
+
+    const updateHeight = () => {
+      if (!containerRef.current) return;
+      const keyboardOpen = viewport.height < window.innerHeight * 0.9;
+      if (keyboardOpen) {
+        containerRef.current.style.height = `${viewport.height}px`;
+        bottomRef.current?.scrollIntoView({ behavior: "instant" });
+      } else {
+        containerRef.current.style.height = "";
+      }
+    };
+
+    viewport.addEventListener("resize", updateHeight);
+    return () => viewport.removeEventListener("resize", updateHeight);
+  }, []);
+
+  useEffect(() => {
+    if (!input && textAreaRef.current) {
+      textAreaRef.current.style.height = "auto";
+    }
+  }, [input]);
 
   // Scroll to bottom on mount and new messages
   useEffect(() => {
@@ -84,11 +114,14 @@ export function MessageList({
     setSending(true);
 
     try {
-      const res = await fetch(API.MESSAGES_CONVERSATION_MESSAGES(conversationId), {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ content }),
-      });
+      const res = await fetch(
+        API.MESSAGES_CONVERSATION_MESSAGES(conversationId),
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ content }),
+        },
+      );
 
       if (!res.ok) throw new Error("Send failed");
 
@@ -115,26 +148,23 @@ export function MessageList({
   };
 
   return (
-    <div className="flex h-full flex-col">
+    <div
+      ref={containerRef}
+      className="flex h-full w-full flex-col overflow-hidden"
+    >
       {/* Message list */}
-      <div ref={listRef} className="flex-1 space-y-3 overflow-y-auto px-4 py-4">
+      <div ref={listRef} className="flex-1 space-y-3 overflow-y-auto py-4">
         {messages.length === 0 ? (
           <div className="flex h-full items-center justify-center">
             <p className="text-txt-muted text-sm">{t("emptyConversation")}</p>
           </div>
         ) : (
-          messages.map((msg, i) => {
-            const prev = messages[i - 1];
-            const showSender =
-              isGroup &&
-              msg.sender_id !== currentUserId &&
-              prev?.sender_id !== msg.sender_id;
+          messages.map((msg) => {
             return (
               <MessageBubble
                 key={msg.id}
                 message={msg}
                 isOwn={msg.sender_id === currentUserId}
-                showSender={showSender}
               />
             );
           })
@@ -143,38 +173,35 @@ export function MessageList({
       </div>
 
       {/* Input */}
-      <div className="shrink-0 border-t border-surface-200 px-4 py-3">
-        <div className="flex items-end gap-2">
-          <textarea
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            onKeyDown={handleKeyDown}
-            placeholder={t("messageInputPlaceholder")}
-            rows={1}
-            className="text-txt placeholder:text-txt-muted bg-surface-100 focus:bg-surface-200 flex-1 resize-none rounded-2xl px-4 py-3 text-sm outline-none transition-colors"
-            style={{ maxHeight: "120px", overflowY: "auto" }}
-            disabled={sending}
-          />
-          <button
+      <div className="shrink-0 pt-2 pb-8">
+        <div className="flex items-start gap-2">
+          <div className="min-w-0 flex-1">
+            <TextArea
+              ref={textAreaRef}
+              value={input}
+              onChange={(e) => {
+                setInput(e.target.value);
+                const el = e.target;
+                el.style.height = "auto";
+                el.style.height = `${el.scrollHeight}px`;
+              }}
+              onKeyDown={handleKeyDown}
+              placeholder={t("messageInputPlaceholder")}
+              disabled={sending}
+              row={1}
+              style={{ maxHeight: "120px", overflowY: "auto" }}
+              className="py-2"
+            />
+          </div>
+          <Button
             onClick={handleSend}
             disabled={!input.trim() || sending}
-            className="bg-primary text-on-primary disabled:opacity-40 flex h-10 w-10 shrink-0 cursor-pointer items-center justify-center rounded-full transition-opacity active:scale-95"
+            variant="primary"
+            size="sm"
             aria-label={t("sendButton")}
           >
-            <svg
-              width="18"
-              height="18"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2.5"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <path d="M22 2L11 13" />
-              <path d="M22 2L15 22 11 13 2 9l20-7z" />
-            </svg>
-          </button>
+            {t("sendButton")}
+          </Button>
         </div>
       </div>
     </div>

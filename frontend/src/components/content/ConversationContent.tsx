@@ -1,10 +1,8 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import { useRouter } from "@/i18n/navigation";
-import { ROUTES } from "@/constants";
-import { Button } from "@/components/ui";
-import { MessageList } from "@/components/messaging";
+import { PageLayout } from "../layout";
+import { MessageList } from "@/components/custom/messaging";
 import type { Conversation, Message } from "@/types";
 
 interface ConversationContentProps {
@@ -29,35 +27,16 @@ export function ConversationContent({
   currentUserId,
 }: ConversationContentProps) {
   const t = useTranslations("messaging");
-  const router = useRouter();
   const displayName = getDisplayName(conversation, currentUserId);
-  const other = conversation.members.find((m) => m.id !== currentUserId);
 
   return (
-    <div className="flex h-dvh flex-col md:h-screen">
-      {/* Header */}
-      <div className="shrink-0 px-4 pt-6 pb-3 md:pt-10">
-        <div className="flex items-center gap-3">
-          <Button
-            variant="ghost"
-            size="none"
-            type="button"
-            onClick={() => router.push(ROUTES.MESSAGES)}
-            className="shrink-0"
-          >
-            {t("backButton")}
-          </Button>
-          <div className="min-w-0 flex-1">
-            <p className="text-txt truncate text-base">{displayName}</p>
-            {other && (
-              <p className="text-txt-muted truncate text-xs">@{other.pseudo}</p>
-            )}
-          </div>
-        </div>
-      </div>
-
-      {/* Messages + Input */}
-      <div className="min-h-0 flex-1">
+    <PageLayout
+      title={displayName}
+      backLabel={t("backButton")}
+      fullHeight
+      showNavigationBar={false}
+    >
+      <div className="flex h-full w-full max-w-2xl flex-col">
         <MessageList
           conversationId={conversation.id}
           initialMessages={initialMessages}
@@ -65,6 +44,6 @@ export function ConversationContent({
           isGroup={conversation.is_group}
         />
       </div>
-    </div>
+    </PageLayout>
   );
 }

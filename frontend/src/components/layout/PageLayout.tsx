@@ -9,6 +9,7 @@ interface PageLayoutProps {
   onBack?: () => void;
   backLabel?: string;
   fullHeight?: boolean;
+  showNavigationBar?: boolean;
   children: React.ReactNode;
 }
 
@@ -17,6 +18,7 @@ export const PageLayout = ({
   onBack,
   backLabel,
   fullHeight = false,
+  showNavigationBar = true,
   children,
 }: PageLayoutProps) => {
   const router = useRouter();
@@ -54,10 +56,14 @@ export const PageLayout = ({
         </div>
       </div>
 
-      <div className="pointer-events-none absolute right-0 bottom-0 left-0 h-12 [mask-image:linear-gradient(to_top,black_20%,transparent)] backdrop-blur-sm" />
-      <div className="absolute bottom-8 left-1/2 -translate-x-1/2">
-        <NavigationBar />
-      </div>
+      {showNavigationBar && (
+        <>
+          <div className="pointer-events-none absolute right-0 bottom-0 left-0 h-12 [mask-image:linear-gradient(to_top,black_20%,transparent)] backdrop-blur-sm" />
+          <div className="absolute bottom-8 left-1/2 -translate-x-1/2">
+            <NavigationBar />
+          </div>
+        </>
+      )}
     </div>
   );
 };
