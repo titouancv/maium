@@ -95,15 +95,17 @@ export async function getConversationById(
 
   if (!data) return null;
 
-  const members = ((data.conversation_members as unknown as Array<{
+  const rawMembers = (data.conversation_members as unknown as Array<{
     user_id: string;
     users: { id: string; pseudo: string; first_name: string; last_name: string } | null;
-  }>) ?? [])
+  }>) ?? [];
+
+  const isMember = rawMembers.some((m) => m.user_id === user.id);
+  if (!isMember) return null;
+
+  const members = rawMembers
     .filter((m) => m.users !== null)
     .map((m) => m.users!);
-
-  const isMember = members.some((m) => m.id === user.id);
-  if (!isMember) return null;
 
   return {
     id: data.id,

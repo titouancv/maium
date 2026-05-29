@@ -112,8 +112,9 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    // Create new conversation
-    const { data: conversation, error: convError } = await supabase
+    // Create new conversation using admin client to bypass SELECT RLS
+    // (the SELECT policy requires membership, which doesn't exist yet at insert time)
+    const { data: conversation, error: convError } = await admin
       .from("conversations")
       .insert({ is_group: false })
       .select("id")
@@ -121,7 +122,7 @@ export async function POST(request: NextRequest) {
 
     if (convError || !conversation) throw convError;
 
-    const { error: membersError } = await supabase
+    const { error: membersError } = await admin
       .from("conversation_members")
       .insert([
         { conversation_id: conversation.id, user_id: user.id },
