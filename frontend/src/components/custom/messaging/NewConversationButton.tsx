@@ -38,16 +38,18 @@ export function NewConversationButton() {
 
   return (
     <>
-      <Button variant="primary" size="sm" onClick={() => setOpen(true)}>
+      <Button
+        variant="primary"
+        size="md"
+        onClick={() => setOpen(true)}
+        className="w-full"
+      >
         {t("newConversation")}
       </Button>
 
       <AnimatePresence>
         {open && (
-          <SearchOverlay
-            onClose={handleClose}
-            onSelect={handleSelect}
-          />
+          <SearchOverlay onClose={handleClose} onSelect={handleSelect} />
         )}
       </AnimatePresence>
     </>

@@ -148,6 +148,7 @@
     "settingsButton": "Paramètres",
     "followButton": "Suivre",
     "unfollowButton": "Se désabonner",
+    "messageButton": "Message",
     "followers": "{count} abonnés",
     "following": "{count} abonnements",
     "professionalExperiences": "Expériences professionnelles",

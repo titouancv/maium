@@ -148,6 +148,7 @@
     "settingsButton": "Settings",
     "followButton": "Follow",
     "unfollowButton": "Unfollow",
+    "messageButton": "Message",
     "followers": "{count} followers",
     "following": "{count} following",
     "professionalExperiences": "Professional experiences",

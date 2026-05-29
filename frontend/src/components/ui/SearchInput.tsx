@@ -33,7 +33,7 @@ export const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
           <div className="relative flex-1">
             <TextInput
               ref={ref}
-              className="bg-surface-200 inset-shadow-dark-900/40 dark:inset-shadow-dark-900 rounded-full pl-10 inset-shadow-sm"
+              className="bg-surface-200 inset-shadow-dark-900/40 dark:inset-shadow-dark-900 rounded-full pl-4 inset-shadow-sm"
               autoComplete="off"
               onChange={(e) => {
                 setOpen(true);
@@ -41,9 +41,6 @@ export const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
               }}
               {...props}
             />
-            <span className="text-txt-muted absolute top-0 left-3 flex h-12 items-center">
-              🔍
-            </span>
           </div>
         </div>
         {isOpen && (

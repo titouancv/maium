@@ -19,14 +19,14 @@ export function MessagingContent({
 
   return (
     <PageLayout title={t("title")}>
-      <div className="w-full max-w-2xl">
-        <div className="flex items-center justify-end pb-4">
-          <NewConversationButton />
-        </div>
+      <div className="flex h-full w-full max-w-2xl flex-col justify-between gap-4">
         <ConversationList
           conversations={conversations}
           currentUserId={currentUserId}
         />
+        <div className="flex w-full items-center justify-end">
+          <NewConversationButton />
+        </div>
       </div>
     </PageLayout>
   );
