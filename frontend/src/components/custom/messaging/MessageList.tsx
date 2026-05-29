@@ -37,7 +37,7 @@ function formatDateLabel(dateStr: string): string {
 
 function DateSeparator({ dateStr }: { dateStr: string }) {
   return (
-    <div className="flex items-center gap-3 py-2">
+    <div className="flex items-center gap-3 pt-6 pb-2">
       <div className="border-border h-px flex-1 border-t" />
       <p className="text-txt-muted text-xs">{formatDateLabel(dateStr)}</p>
       <div className="border-border h-px flex-1 border-t" />
@@ -61,7 +61,6 @@ export function MessageList({
   const [messages, setMessages] =
     useState<OptimisticMessage[]>(initialMessages);
   const [input, setInput] = useState("");
-  const [sending, setSending] = useState(false);
   const bottomRef = useRef<HTMLDivElement>(null);
   const listRef = useRef<HTMLDivElement>(null);
   const textAreaRef = useRef<HTMLTextAreaElement>(null);
@@ -85,6 +84,10 @@ export function MessageList({
 
     viewport.addEventListener("resize", updateHeight);
     return () => viewport.removeEventListener("resize", updateHeight);
+  }, []);
+
+  useEffect(() => {
+    textAreaRef.current?.focus();
   }, []);
 
   useEffect(() => {
@@ -130,7 +133,7 @@ export function MessageList({
 
   const handleSend = async () => {
     const content = input.trim();
-    if (!content || sending) return;
+    if (!content) return;
 
     const optimisticId = `optimistic-${Date.now()}`;
     const optimisticMsg: OptimisticMessage = {
@@ -147,7 +150,6 @@ export function MessageList({
 
     setMessages((prev) => [...prev, optimisticMsg]);
     setInput("");
-    setSending(true);
 
     try {
       const res = await fetch(
@@ -172,7 +174,7 @@ export function MessageList({
       setMessages((prev) => prev.filter((m) => m.id !== optimisticId));
       setInput(content);
     } finally {
-      setSending(false);
+      textAreaRef.current?.focus();
     }
   };
 
@@ -183,28 +185,47 @@ export function MessageList({
     }
   };
 
+  const groupFirsts: OptimisticMessage[] = [];
+  for (let i = 0; i < messages.length; i++) {
+    if (i === 0) {
+      groupFirsts.push(messages[i]);
+      continue;
+    }
+    const prev = messages[i - 1];
+    const prevFirst = groupFirsts[i - 1];
+    const grouped =
+      isSameDay(prev.created_at, messages[i].created_at) &&
+      prevFirst.sender_id === messages[i].sender_id &&
+      new Date(messages[i].created_at).getTime() -
+        new Date(prevFirst.created_at).getTime() <
+        5 * 60 * 1000;
+    groupFirsts.push(grouped ? prevFirst : messages[i]);
+  }
+
   return (
     <div
       ref={containerRef}
       className="flex h-full w-full flex-col overflow-hidden"
     >
       {/* Message list */}
-      <div ref={listRef} className="flex-1 space-y-3 overflow-y-auto py-4">
+      <div ref={listRef} className="flex-1 overflow-y-auto py-4">
         {messages.length === 0 ? (
           <div className="flex h-full items-center justify-center">
             <p className="text-txt-muted text-sm">{t("emptyConversation")}</p>
           </div>
         ) : (
           messages.map((msg, index) => {
+            const prev = index > 0 ? messages[index - 1] : null;
             const showSeparator =
-              index === 0 ||
-              !isSameDay(messages[index - 1].created_at, msg.created_at);
+              !prev || !isSameDay(prev.created_at, msg.created_at);
+            const isGrouped = groupFirsts[index] !== msg;
             return (
               <Fragment key={msg.id}>
                 {showSeparator && <DateSeparator dateStr={msg.created_at} />}
                 <MessageBubble
                   message={msg}
                   isOwn={msg.sender_id === currentUserId}
+                  showSender={!isGrouped}
                 />
               </Fragment>
             );
@@ -226,9 +247,9 @@ export function MessageList({
                 el.style.height = "auto";
                 el.style.height = `${el.scrollHeight}px`;
               }}
+              enterKeyHint="done"
               onKeyDown={handleKeyDown}
               placeholder={t("messageInputPlaceholder")}
-              disabled={sending}
               row={1}
               style={{ maxHeight: "120px", overflowY: "auto" }}
               className="py-2"
@@ -236,10 +257,11 @@ export function MessageList({
           </div>
           <Button
             onClick={handleSend}
-            disabled={!input.trim() || sending}
+            disabled={!input.trim()}
             variant="primary"
             size="sm"
             aria-label={t("sendButton")}
+            className="hidden md:inline-flex"
           >
             {t("sendButton")}
           </Button>

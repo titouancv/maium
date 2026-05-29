@@ -3,6 +3,7 @@ import type { OptimisticMessage } from "@/types";
 interface MessageBubbleProps {
   message: OptimisticMessage;
   isOwn: boolean;
+  showSender: boolean;
 }
 
 function formatTime(dateStr: string): string {
@@ -12,11 +13,17 @@ function formatTime(dateStr: string): string {
   });
 }
 
-export function MessageBubble({ message, isOwn }: MessageBubbleProps) {
+export function MessageBubble({
+  message,
+  isOwn,
+  showSender,
+}: MessageBubbleProps) {
   return (
-    <div className={`flex justify-start`}>
-      <div className={`flex max-w-[80%] flex-col items-start gap-1`}>
-        {message.sender && (
+    <div
+      className={`flex justify-start ${message.sender && showSender && "pt-4"}`}
+    >
+      <div className={`flex max-w-[95%] flex-col items-start gap-1`}>
+        {message.sender && showSender && (
           <div className="flex items-center gap-2">
             <p className={isOwn ? "text-primary" : "text-txt"}>
               {message.sender.first_name} {message.sender.last_name}
@@ -26,12 +33,12 @@ export function MessageBubble({ message, isOwn }: MessageBubbleProps) {
             </p>
           </div>
         )}
-        <div className="flex w-full gap-1">
+        <div className="flex w-full gap-2">
           <div
             className={`my-1 w-1 self-stretch rounded-full ${isOwn ? "bg-primary" : "bg-current"}`}
           ></div>
           <div
-            className={`min-w-0 flex-1 break-words leading-relaxed ${message.optimistic ? "opacity-70" : ""}`}
+            className={`min-w-0 flex-1 leading-relaxed break-words ${message.optimistic ? "opacity-70" : ""}`}
           >
             {message.content}
           </div>
