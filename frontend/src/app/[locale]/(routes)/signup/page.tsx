@@ -1,6 +1,6 @@
 import { Suspense } from "react";
 import { getLocale } from "next-intl/server";
-import { SignupWizard } from "@/components/content/SignupContent";
+import { SignupWizard } from "@/components/signup";
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "@/i18n/navigation";
 import { ROUTES } from "@/constants";

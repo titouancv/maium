@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import { createAdminClient } from "@/lib/supabase/admin";
-import { UserListContent } from "@/components/content";
+import { UserListContent } from "@/components/user-list";
 
 interface Props {
   params: Promise<{ pseudo: string }>;

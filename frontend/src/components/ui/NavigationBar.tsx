@@ -6,7 +6,7 @@ import { useTranslations } from "next-intl";
 import { AnimatePresence } from "framer-motion";
 import { ROUTES } from "@/constants";
 import { useCurrentUserStore } from "@/stores/useCurrentUserStore";
-import { SearchOverlay } from "@/components/overlay/SearchOverlay";
+import { SearchOverlay } from "./SearchOverlay";
 import { Tabs } from "./Tabs";
 import { SearchButton } from "./SearchButton";
 

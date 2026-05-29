@@ -10,7 +10,7 @@ import { Form } from "../form/Form";
 import type { FormProps } from "../form/Form";
 import { Title } from "../ui";
 import type { Experience } from "@/types/experience";
-import { GoogleSignInButton } from "../custom";
+import { GoogleSignInButton } from "@/components/ui";
 
 interface SignupWizardProps {
   initialStep?: number;

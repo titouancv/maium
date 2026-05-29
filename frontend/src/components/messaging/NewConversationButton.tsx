@@ -6,7 +6,7 @@ import { AnimatePresence } from "framer-motion";
 import { useRouter } from "@/i18n/navigation";
 import { ROUTES, API } from "@/constants";
 import { Button } from "@/components/ui/Button";
-import { SearchOverlay } from "@/components/overlay/SearchOverlay";
+import { SearchOverlay } from "@/components/ui";
 
 export function NewConversationButton() {
   const t = useTranslations("messaging");

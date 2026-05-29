@@ -1,7 +1,7 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import { UrlItem } from "../custom";
+import { UrlItem } from "@/components/ui";
 import { LinkListForm } from "./LinkListForm";
 
 interface UrlsFormProps {

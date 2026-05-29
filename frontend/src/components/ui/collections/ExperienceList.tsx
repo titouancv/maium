@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo } from "react";
-import { ExperienceItem } from "./ExperienceItem";
+import { ExperienceItem } from "../items/ExperienceItem";
 import type { Experience } from "@/types/experience";
 
 interface Props {

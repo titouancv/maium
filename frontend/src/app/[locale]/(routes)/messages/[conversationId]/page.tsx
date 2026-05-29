@@ -4,7 +4,7 @@ import { redirect } from "@/i18n/navigation";
 import { ROUTES } from "@/constants";
 import { getAuthUser } from "@/lib/auth/getCurrentUser";
 import { getConversationById, getMessages } from "@/lib/messaging/server";
-import { ConversationContent } from "@/components/content/ConversationContent";
+import { ConversationContent } from "@/components/messaging";
 
 interface ConversationPageProps {
   params: Promise<{ conversationId: string }>;

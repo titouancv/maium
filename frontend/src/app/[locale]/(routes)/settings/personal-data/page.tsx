@@ -1,5 +1,5 @@
 import { Suspense } from "react";
-import { SettingsPersonalDataContent } from "@/components/content/SettingsPersonalDataContent";
+import { SettingsPersonalDataContent } from "@/components/settings";
 import { getCurrentUserProfile } from "@/lib/auth/getCurrentUser";
 
 export default async function SettingsPersonalDataPage() {

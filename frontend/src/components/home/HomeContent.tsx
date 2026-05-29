@@ -4,13 +4,13 @@ import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { API, ROUTES } from "@/constants";
 import { Link } from "@/i18n/navigation";
-import { WelcomeOverlay } from "../overlay/WelcomeOverlay";
+import { WelcomeOverlay } from "./collections/WelcomeOverlay";
 import { cn } from "@/lib/utils";
 import { UserData } from "@/types";
 import { PageLayout } from "../layout";
 import { Title } from "../ui";
-import { GoogleSignInButton } from "../custom";
-import { ResumeApiTester } from "../custom/ResumeApiTester";
+import { GoogleSignInButton } from "@/components/ui";
+import { ResumeApiTester } from "./ResumeApiTester";
 
 interface HomeContentProps {
   user: UserData | null;

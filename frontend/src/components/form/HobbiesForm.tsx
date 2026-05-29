@@ -3,7 +3,9 @@
 import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/Button";
-import { HobbyData, HobbyList, HobbySubForm } from "../custom";
+import { HobbyList } from "@/components/ui";
+import { HobbySubForm } from "./sub-form/HobbySubForm";
+import type { HobbyData } from "@/types/user";
 import { useListEditor } from "@/hooks";
 
 interface HobbiesFormProps {

@@ -5,10 +5,10 @@ import { useTranslations } from "next-intl";
 import { Link, useRouter } from "@/i18n/navigation";
 import { API, ROUTES } from "@/constants";
 import { Button, ChipList, Section } from "@/components/ui";
-import { ExperienceList } from "@/components/custom/experience";
+import { ExperienceList } from "@/components/ui";
 import type { PublicUserData } from "@/types";
 import { PageLayout } from "../layout";
-import { HobbyList, SocialNetworkItem, UrlItem } from "../custom";
+import { HobbyList, SocialNetworkItem, UrlItem } from "@/components/ui";
 
 interface ProfileContentProps {
   user: PublicUserData;

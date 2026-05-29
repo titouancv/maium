@@ -3,7 +3,7 @@ import { getLocale } from "next-intl/server";
 import { ROUTES } from "@/constants";
 import { getAuthUser } from "@/lib/auth/getCurrentUser";
 import { getConversations } from "@/lib/messaging/server";
-import { MessagingContent } from "@/components/content/MessagingContent";
+import { MessagingContent } from "@/components/messaging";
 
 export default async function MessagesPage() {
   const [locale, authUser] = await Promise.all([getLocale(), getAuthUser()]);

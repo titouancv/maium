@@ -2,7 +2,7 @@
 
 import { useTranslations } from "next-intl";
 import { PageLayout } from "../layout";
-import { MessageList } from "@/components/custom/messaging";
+import { MessageList } from "./collections/MessageList";
 import type { Conversation, Message } from "@/types";
 
 interface ConversationContentProps {

@@ -8,7 +8,7 @@ import { MenuList } from "@/components/ui";
 import {
   EditInfoOverlay,
   type EditableField,
-} from "@/components/overlay/EditInfoOverlay";
+} from "./collections/EditInfoOverlay";
 import type { UserData } from "@/types";
 
 function formatTimestampDate(ts: number): string {

@@ -1,7 +1,7 @@
 import { Suspense } from "react";
 import { notFound } from "next/navigation";
 import { createAdminClient } from "@/lib/supabase/admin";
-import { ProfileContent } from "@/components/content/ProfileContent";
+import { ProfileContent } from "@/components/profile";
 import {
   mapUserFromDb,
   USER_PROFILE_SELECT,

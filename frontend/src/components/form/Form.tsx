@@ -17,7 +17,7 @@ import { HobbiesForm } from "./HobbiesForm";
 import { PseudoForm } from "./PseudoForm";
 import type { DateMode } from "@/components/ui/DateInput";
 import type { Experience } from "@/types/experience";
-import { HobbyData } from "../custom";
+import { HobbyData } from "@/types/user";
 import {
   EXPERIENCE_NAMESPACE,
   type ExperienceNamespace,

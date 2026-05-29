@@ -2,8 +2,8 @@
 
 import { useTranslations } from "next-intl";
 import { PageLayout } from "../layout";
-import { ConversationList } from "@/components/custom/messaging";
-import { NewConversationButton } from "@/components/custom/messaging/NewConversationButton";
+import { ConversationList } from "./collections/ConversationList";
+import { NewConversationButton } from "./NewConversationButton";
 import type { Conversation } from "@/types";
 
 interface MessagingContentProps {

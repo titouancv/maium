@@ -1,7 +1,7 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import { SocialNetworkItem } from "../custom";
+import { SocialNetworkItem } from "@/components/ui";
 import { LinkListForm } from "./LinkListForm";
 
 interface SocialNetworkFormProps {

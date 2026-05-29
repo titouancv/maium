@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui";
-import type { HobbyData } from "../../form/sub-form/HobbySubForm";
+import type { HobbyData } from "@/types/user";
 import { useTranslations } from "next-intl";
 
 interface Props {

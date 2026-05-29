@@ -1,7 +1,7 @@
 "use client";
 
-import type { HobbyData } from "../../form/sub-form/HobbySubForm";
-import { HobbyItem } from "./HobbyItem";
+import type { HobbyData } from "@/types/user";
+import { HobbyItem } from "../items/HobbyItem";
 
 interface Props {
   hobbies: HobbyData[];

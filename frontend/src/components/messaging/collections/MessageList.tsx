@@ -5,7 +5,7 @@ import { useTranslations } from "next-intl";
 import { createClient } from "@/lib/supabase/client";
 import { API } from "@/constants";
 import type { Message, OptimisticMessage } from "@/types";
-import { MessageBubble } from "./MessageBubble";
+import { MessageBubble } from "../items/MessageBubble";
 import { TextArea } from "@/components/ui/TextArea";
 import { Button } from "@/components/ui/Button";
 
