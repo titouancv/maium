@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { Fragment, useEffect, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
 import { createClient } from "@/lib/supabase/client";
 import { API } from "@/constants";
@@ -8,6 +8,42 @@ import type { Message, OptimisticMessage } from "@/types";
 import { MessageBubble } from "./MessageBubble";
 import { TextArea } from "@/components/ui/TextArea";
 import { Button } from "@/components/ui/Button";
+
+function isSameDay(a: string, b: string) {
+  const da = new Date(a);
+  const db = new Date(b);
+  return (
+    da.getFullYear() === db.getFullYear() &&
+    da.getMonth() === db.getMonth() &&
+    da.getDate() === db.getDate()
+  );
+}
+
+function formatDateLabel(dateStr: string): string {
+  const date = new Date(dateStr);
+  const now = new Date();
+  const yesterday = new Date(now);
+  yesterday.setDate(now.getDate() - 1);
+
+  if (isSameDay(dateStr, now.toISOString())) return "Aujourd'hui";
+  if (isSameDay(dateStr, yesterday.toISOString())) return "Hier";
+
+  return date.toLocaleDateString("fr-FR", {
+    day: "2-digit",
+    month: "long",
+    year: "numeric",
+  });
+}
+
+function DateSeparator({ dateStr }: { dateStr: string }) {
+  return (
+    <div className="flex items-center gap-3 py-2">
+      <div className="border-border h-px flex-1 border-t" />
+      <p className="text-txt-muted text-xs">{formatDateLabel(dateStr)}</p>
+      <div className="border-border h-px flex-1 border-t" />
+    </div>
+  );
+}
 
 interface MessageListProps {
   conversationId: string;
@@ -159,13 +195,18 @@ export function MessageList({
             <p className="text-txt-muted text-sm">{t("emptyConversation")}</p>
           </div>
         ) : (
-          messages.map((msg) => {
+          messages.map((msg, index) => {
+            const showSeparator =
+              index === 0 ||
+              !isSameDay(messages[index - 1].created_at, msg.created_at);
             return (
-              <MessageBubble
-                key={msg.id}
-                message={msg}
-                isOwn={msg.sender_id === currentUserId}
-              />
+              <Fragment key={msg.id}>
+                {showSeparator && <DateSeparator dateStr={msg.created_at} />}
+                <MessageBubble
+                  message={msg}
+                  isOwn={msg.sender_id === currentUserId}
+                />
+              </Fragment>
             );
           })
         )}

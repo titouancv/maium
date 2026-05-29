@@ -6,21 +6,7 @@ interface MessageBubbleProps {
 }
 
 function formatTime(dateStr: string): string {
-  const date = new Date(dateStr);
-  const now = new Date();
-  const isOlderThan24h = now.getTime() - date.getTime() > 24 * 60 * 60 * 1000;
-
-  if (isOlderThan24h) {
-    return date.toLocaleDateString("fr-FR", {
-      day: "2-digit",
-      month: "2-digit",
-      year: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
-    });
-  }
-
-  return date.toLocaleTimeString("fr-FR", {
+  return new Date(dateStr).toLocaleTimeString("fr-FR", {
     hour: "2-digit",
     minute: "2-digit",
   });
