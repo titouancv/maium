@@ -10,12 +10,10 @@ import type { Conversation } from "@/types";
 
 interface MessagingContentProps {
   conversationsPromise: Promise<Conversation[]>;
-  currentUserId: string;
 }
 
 export function MessagingContent({
   conversationsPromise,
-  currentUserId,
 }: MessagingContentProps) {
   const t = useTranslations("messaging");
 
@@ -23,10 +21,7 @@ export function MessagingContent({
     <PageLayout title={t("title")}>
       <div className="flex h-full w-full max-w-2xl flex-col justify-between gap-4">
         <Suspense fallback={<ConversationListSkeleton />}>
-          <ConversationsLoader
-            conversationsPromise={conversationsPromise}
-            currentUserId={currentUserId}
-          />
+          <ConversationsLoader conversationsPromise={conversationsPromise} />
         </Suspense>
         <div className="flex w-full items-center justify-end">
           <NewConversationButton />

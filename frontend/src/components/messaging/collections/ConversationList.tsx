@@ -1,21 +1,31 @@
 "use client";
 
+import { useEffect } from "react";
 import { useTranslations } from "next-intl";
 import type { Conversation } from "@/types";
+import { useCurrentUserStore } from "@/stores/useCurrentUserStore";
+import { useConversationPreviewStore } from "@/stores/useConversationPreviewStore";
 import { ConversationItem } from "../items/ConversationItem";
 
 interface ConversationListProps {
   conversations: Conversation[];
-  currentUserId: string;
   activeConversationId?: string;
 }
 
 export function ConversationList({
   conversations,
-  currentUserId,
   activeConversationId,
 }: ConversationListProps) {
   const t = useTranslations("messaging");
+  // Hydrated at the layout level, so it is already set on client navigations.
+  const currentUserId = useCurrentUserStore((s) => s.user?.id ?? "");
+  const setPreviews = useConversationPreviewStore((s) => s.setPreviews);
+
+  // Seed the previews so opening any conversation can paint its header
+  // instantly, before the conversation server round-trip resolves.
+  useEffect(() => {
+    setPreviews(conversations);
+  }, [conversations, setPreviews]);
 
   if (conversations.length === 0) {
     return (

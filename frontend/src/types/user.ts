@@ -15,6 +15,8 @@ export interface UserSummary {
 }
 
 export interface UserData {
+  /** Supabase auth id; populated for the current user / profile lookups. */
+  id?: string;
   email: string;
   first_name: string;
   last_name: string;

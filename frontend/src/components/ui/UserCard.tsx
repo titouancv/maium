@@ -1,5 +1,8 @@
+"use client";
+
 import { Link } from "@/i18n/navigation";
 import { ROUTES } from "@/constants";
+import { useProfilePreviewStore } from "@/stores/useProfilePreviewStore";
 
 interface UserCardProps {
   pseudo: string;
@@ -55,6 +58,12 @@ export function UserCard({
     <Link
       href={href ?? ROUTES.PROFILE(pseudo)}
       className={defaultClassName}
+      // Seed the profile name so the target page can paint its title instantly.
+      onClick={() =>
+        useProfilePreviewStore
+          .getState()
+          .setPreview({ pseudo, first_name, last_name })
+      }
     >
       {content}
     </Link>

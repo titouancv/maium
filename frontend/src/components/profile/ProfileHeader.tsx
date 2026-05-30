@@ -3,18 +3,26 @@ import { getTranslations } from "next-intl/server";
 import { Title, BackButton } from "@/components/ui";
 import { getProfileBundle } from "@/lib/users";
 
-/** Streamed header: the profile name + a back button for non-owners. */
-export async function ProfileHeader({ pseudo }: { pseudo: string }) {
+/** Streamed profile name (used when no preview was seeded on click). */
+export async function ProfileName({ pseudo }: { pseudo: string }) {
+  const bundle = await getProfileBundle(pseudo);
+  if (!bundle) notFound();
+
+  return (
+    <Title
+      label={`${bundle.user.first_name} ${bundle.user.last_name}`}
+      size="h1"
+    />
+  );
+}
+
+/** Streamed back button — shown for non-owners only (needs server auth). */
+export async function ProfileBackButton({ pseudo }: { pseudo: string }) {
   const [bundle, tCommon] = await Promise.all([
     getProfileBundle(pseudo),
     getTranslations("common"),
   ]);
-  if (!bundle) notFound();
+  if (!bundle || bundle.isOwner) return null;
 
-  return (
-    <>
-      <Title label={`${bundle.user.first_name} ${bundle.user.last_name}`} size="h1" />
-      {!bundle.isOwner && <BackButton label={tCommon("backButton")} />}
-    </>
-  );
+  return <BackButton label={tCommon("backButton")} />;
 }

@@ -1,7 +1,8 @@
 import { Suspense } from "react";
 import { PageLayout } from "@/components/layout";
 import { ProfileBody } from "@/components/profile/ProfileBody";
-import { ProfileHeader } from "@/components/profile/ProfileHeader";
+import { ProfileName, ProfileBackButton } from "@/components/profile/ProfileHeader";
+import { ProfileTitle } from "@/components/profile/ProfileTitle";
 import {
   ProfileHeaderSkeleton,
   ProfileBodySkeleton,
@@ -18,9 +19,19 @@ export default async function ProfilePage({ params }: Props) {
     <PageLayout
       fullHeight
       title={
-        <Suspense fallback={<ProfileHeaderSkeleton />}>
-          <ProfileHeader pseudo={pseudo} />
-        </Suspense>
+        <ProfileTitle
+          pseudo={pseudo}
+          streamedName={
+            <Suspense fallback={<ProfileHeaderSkeleton />}>
+              <ProfileName pseudo={pseudo} />
+            </Suspense>
+          }
+          backSlot={
+            <Suspense fallback={null}>
+              <ProfileBackButton pseudo={pseudo} />
+            </Suspense>
+          }
+        />
       }
     >
       <Suspense fallback={<ProfileBodySkeleton />}>

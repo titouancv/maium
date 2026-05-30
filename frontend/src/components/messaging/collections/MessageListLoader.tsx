@@ -1,30 +1,39 @@
 "use client";
 
 import { use } from "react";
+import { notFound } from "next/navigation";
 import type { Message } from "@/types";
+import type { ConversationPreview } from "@/stores/useConversationPreviewStore";
 import { MessageList } from "./MessageList";
 
 interface MessageListLoaderProps {
   conversationId: string;
+  conversationPromise: Promise<ConversationPreview | null>;
   messagesPromise: Promise<Message[]>;
   currentUserId: string;
-  isGroup: boolean;
 }
 
-/** Unwraps the streamed messages promise inside a Suspense boundary. */
+/**
+ * Unwraps the streamed conversation + messages inside a Suspense boundary.
+ * The conversation also carries the authoritative membership check: when the
+ * viewer is not a member (or it does not exist) it resolves to null → 404.
+ */
 export function MessageListLoader({
   conversationId,
+  conversationPromise,
   messagesPromise,
   currentUserId,
-  isGroup,
 }: MessageListLoaderProps) {
+  const conversation = use(conversationPromise);
+  if (!conversation) notFound();
+
   const initialMessages = use(messagesPromise);
   return (
     <MessageList
       conversationId={conversationId}
       initialMessages={initialMessages}
       currentUserId={currentUserId}
-      isGroup={isGroup}
+      isGroup={conversation.is_group}
     />
   );
 }

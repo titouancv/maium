@@ -19,6 +19,7 @@ export type DbSocialNetwork = { url: string; position: number };
 export type DbHobby = { title: string; description: string; position: number };
 
 export type DbUserRaw = {
+  id?: string | null;
   email?: string | null;
   first_name?: string | null;
   last_name?: string | null;
@@ -56,6 +57,7 @@ export function mapUserFromDb(raw: DbUserRaw): UserData {
   const exps = [...(raw.user_experiences ?? [])].sort(byPosition);
 
   return {
+    id: raw.id ?? undefined,
     email: raw.email ?? "",
     first_name: raw.first_name ?? "",
     last_name: raw.last_name ?? "",
