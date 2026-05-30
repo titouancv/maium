@@ -10,6 +10,7 @@ import { Providers } from "@/components/Providers";
 import { UserHydration } from "@/components/UserHydration";
 import { getCurrentUserProfile } from "@/lib/auth/getCurrentUser";
 import { SpeedInsights } from "@vercel/speed-insights/next";
+import { Analytics } from "@vercel/analytics/next";
 
 export const metadata: Metadata = {
   title: "maium",
@@ -50,6 +51,7 @@ export default async function RootLayout({
           </Providers>
         </NextIntlClientProvider>
         <SpeedInsights />
+        <Analytics />
       </body>
     </html>
   );
