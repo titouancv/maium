@@ -87,6 +87,7 @@ export async function getConversationById(
       `id, created_at, is_group, title,
        conversation_members (
          user_id,
+         last_read_at,
          users:user_id ( id, pseudo, first_name, last_name )
        )`,
     )
@@ -97,6 +98,7 @@ export async function getConversationById(
 
   const rawMembers = (data.conversation_members as unknown as Array<{
     user_id: string;
+    last_read_at: string | null;
     users: { id: string; pseudo: string; first_name: string; last_name: string } | null;
   }>) ?? [];
 
@@ -105,7 +107,7 @@ export async function getConversationById(
 
   const members = rawMembers
     .filter((m) => m.users !== null)
-    .map((m) => m.users!);
+    .map((m) => ({ ...m.users!, last_read_at: m.last_read_at }));
 
   return {
     id: data.id,

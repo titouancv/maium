@@ -231,7 +231,10 @@
     "backButton": "Retour",
     "today": "Aujourd'hui",
     "yesterday": "Hier",
-    "emptyConversation": "Aucun message. Dites bonjour !"
+    "emptyConversation": "Aucun message. Dites bonjour !",
+    "online": "En ligne",
+    "typing": "En train d'écrire…",
+    "seen": "Vu"
   },
   "notFound": {
     "title": "introuvable",

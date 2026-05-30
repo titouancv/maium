@@ -30,6 +30,8 @@ export const API = {
   MESSAGES_CONVERSATIONS: "/api/messages/conversations",
   MESSAGES_CONVERSATION_MESSAGES: (id: string) =>
     `/api/messages/conversations/${id}/messages`,
+  MESSAGES_CONVERSATION_READ: (id: string) =>
+    `/api/messages/conversations/${id}/read`,
 } as const;
 
 export const EXTERNAL_API = {
