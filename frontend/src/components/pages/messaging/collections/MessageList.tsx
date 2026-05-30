@@ -14,6 +14,7 @@ import { createClient } from "@/lib/supabase/client";
 import { API, MESSAGES_PAGE_SIZE } from "@/constants";
 import { formatLongDate, isSameDay } from "@/lib/date";
 import { usePresenceStore } from "@/stores/usePresenceStore";
+import { useCurrentUserStore } from "@/stores/useCurrentUserStore";
 import type { Message, OptimisticMessage } from "@/types";
 import { MessageBubble } from "../items/MessageBubble";
 import { TextArea } from "@/components/ui/TextArea";
@@ -57,6 +58,7 @@ export function MessageList({
   const [otherReadAt, setOtherReadAt] = useState<string | null>(
     otherLastReadAt,
   );
+  const currentUser = useCurrentUserStore((s) => s.user);
   const onlineUserIds = usePresenceStore((s) => s.onlineUserIds);
   const isOtherOnline = otherUserId ? onlineUserIds.has(otherUserId) : false;
 
@@ -304,7 +306,13 @@ export function MessageList({
       created_at: new Date().toISOString(),
       edited_at: null,
       deleted_at: null,
-      sender: null,
+      sender: currentUser
+        ? {
+            pseudo: currentUser.pseudo,
+            first_name: currentUser.first_name,
+            last_name: currentUser.last_name,
+          }
+        : null,
       optimistic: true,
     };
 
