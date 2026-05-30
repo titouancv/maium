@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
-import { LoadingOverlay } from "@/components/overlay/LoadingOverlay";
+import { LoadingOverlay } from "@/components/ui";
 import { useLoadingStore } from "@/stores/useLoadingStore";
 import { ThemeApplier } from "@/components/ThemeApplier";
 

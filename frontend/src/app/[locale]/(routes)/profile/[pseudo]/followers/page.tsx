@@ -1,7 +1,9 @@
-import { notFound } from "next/navigation";
+import { Suspense } from "react";
 import { getTranslations } from "next-intl/server";
-import { createAdminClient } from "@/lib/supabase/admin";
-import { UserListContent } from "@/components/content";
+import { getFollowers } from "@/lib/users";
+import { UserListContent } from "@/components/pages/user-list/UserListContent";
+import { UserListItems } from "@/components/pages/user-list/UserListItems";
+import { UserListSkeleton } from "@/components/pages/user-list/UserListSkeleton";
 
 interface Props {
   params: Promise<{ pseudo: string }>;
@@ -11,22 +13,17 @@ export default async function FollowersPage({ params }: Props) {
   const { pseudo } = await params;
   const t = await getTranslations("profile");
 
-  const admin = createAdminClient();
-  const { data: target } = await admin.from("users").select("id").eq("pseudo", pseudo).single();
-  if (!target) notFound();
-
-  const { data } = await admin
-    .from("user_follows")
-    .select("follower:follower_id(pseudo, first_name, last_name, location)")
-    .eq("followed_id", target.id);
-
-  const users = (data ?? []).map((row: any) => row.follower).filter(Boolean);
+  // Not awaited: streams into the list's Suspense boundary.
+  const usersPromise = getFollowers(pseudo);
 
   return (
-    <UserListContent
-      users={users}
-      title={t("followersTitle")}
-      emptyMessage={t("noFollowers")}
-    />
+    <UserListContent title={t("followersTitle")}>
+      <Suspense fallback={<UserListSkeleton />}>
+        <UserListItems
+          usersPromise={usersPromise}
+          emptyMessage={t("noFollowers")}
+        />
+      </Suspense>
+    </UserListContent>
   );
 }

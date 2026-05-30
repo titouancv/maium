@@ -1,9 +1,22 @@
 import { createServerClient } from "@supabase/ssr";
 import createIntlMiddleware from "next-intl/middleware";
-import { type NextRequest } from "next/server";
+import { NextResponse, type NextRequest } from "next/server";
 import { routing } from "./i18n/routing";
+import { ROUTES } from "./constants";
 
 const handleI18nRouting = createIntlMiddleware(routing);
+
+/** Path prefixes (locale-stripped) that require an authenticated user. */
+const PROTECTED_PREFIXES = [ROUTES.MESSAGES] as const;
+
+/** Strip an optional leading `/fr` locale segment (`en` is unprefixed). */
+function stripLocale(pathname: string): { locale: string; path: string } {
+  const [, first, ...rest] = pathname.split("/");
+  if (routing.locales.includes(first as (typeof routing.locales)[number])) {
+    return { locale: first, path: "/" + rest.join("/") };
+  }
+  return { locale: routing.defaultLocale, path: pathname };
+}
 
 export default async function proxy(request: NextRequest) {
   const response = handleI18nRouting(request);
@@ -26,9 +39,26 @@ export default async function proxy(request: NextRequest) {
   );
 
   // Refresh session — always use getUser(), never getSession(), for security.
-  // The result is unused; the call exists for the side-effect of writing
-  // refreshed cookies via setAll above.
-  await supabase.auth.getUser();
+  // Also reused below to gate protected routes, so each page can render
+  // immediately without re-awaiting an auth round-trip of its own.
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  const { locale, path } = stripLocale(request.nextUrl.pathname);
+  const isProtected = PROTECTED_PREFIXES.some(
+    (prefix) => path === prefix || path.startsWith(prefix + "/"),
+  );
+
+  if (!user && isProtected) {
+    const redirectUrl = request.nextUrl.clone();
+    redirectUrl.pathname =
+      locale === routing.defaultLocale
+        ? ROUTES.SIGNUP
+        : `/${locale}${ROUTES.SIGNUP}`;
+    redirectUrl.search = "";
+    return NextResponse.redirect(redirectUrl);
+  }
 
   return response;
 }

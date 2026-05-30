@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createAdminClient } from "@/lib/supabase/admin";
+import { getFollowers } from "@/lib/users";
 
 export async function GET(request: NextRequest) {
   try {
@@ -8,20 +8,11 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: "Missing pseudo" }, { status: 400 });
     }
 
-    const admin = createAdminClient();
-    const { data: target } = await admin.from("users").select("id").eq("pseudo", pseudo).single();
-    if (!target) {
+    const users = await getFollowers(pseudo);
+    if (users === null) {
       return NextResponse.json({ error: "User not found" }, { status: 404 });
     }
 
-    const { data, error } = await admin
-      .from("user_follows")
-      .select("follower:follower_id(pseudo, first_name, last_name, location)")
-      .eq("followed_id", target.id);
-
-    if (error) throw error;
-
-    const users = (data ?? []).map((row: any) => row.follower).filter(Boolean);
     return NextResponse.json({ users });
   } catch (error) {
     console.error("[GET /api/users/followers]", error);

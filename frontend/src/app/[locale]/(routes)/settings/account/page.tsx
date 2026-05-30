@@ -1,5 +1,5 @@
 import { Suspense } from "react";
-import { SettingsAccountContent } from "@/components/content/SettingsAccountContent";
+import { SettingsAccountContent } from "@/components/pages/settings";
 
 export default function SettingsAccountPage() {
   return (

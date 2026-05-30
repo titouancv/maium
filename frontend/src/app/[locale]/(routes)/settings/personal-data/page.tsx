@@ -1,13 +1,9 @@
-import { Suspense } from "react";
-import { SettingsPersonalDataContent } from "@/components/content/SettingsPersonalDataContent";
+import { SettingsPersonalDataContent } from "@/components/pages/settings";
 import { getCurrentUserProfile } from "@/lib/auth/getCurrentUser";
 
-export default async function SettingsPersonalDataPage() {
-  const userData = await getCurrentUserProfile();
+export default function SettingsPersonalDataPage() {
+  // Not awaited: streams into the menu's Suspense boundary.
+  const userPromise = getCurrentUserProfile();
 
-  return (
-    <Suspense>
-      <SettingsPersonalDataContent user={userData} />
-    </Suspense>
-  );
+  return <SettingsPersonalDataContent userPromise={userPromise} />;
 }

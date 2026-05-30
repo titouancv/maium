@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/Button";
 import { ExperienceSubForm, emptySubValues } from "./sub-form";
 import type { SubValues } from "./sub-form";
 import type { Experience, ExperienceFormItems } from "@/types/experience";
-import { ExperienceList } from "../custom";
+import { ExperienceList } from "@/components/ui";
 import type { ExperienceNamespace } from "@/constants";
 import { useListEditor } from "@/hooks";
 

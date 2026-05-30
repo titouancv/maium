@@ -1,37 +1,27 @@
-import { notFound } from "next/navigation";
-import { getLocale } from "next-intl/server";
-import { redirect } from "@/i18n/navigation";
-import { ROUTES } from "@/constants";
-import { getAuthUser } from "@/lib/auth/getCurrentUser";
 import { getConversationById, getMessages } from "@/lib/messaging/server";
-import { ConversationContent } from "@/components/content/ConversationContent";
+import { ConversationContent } from "@/components/pages/messaging";
 
 interface ConversationPageProps {
   params: Promise<{ conversationId: string }>;
 }
 
+// Auth is enforced in proxy.ts. Nothing is awaited beyond the route params:
+// the conversation (header + membership check) and the messages both stream
+// into their Suspense boundaries, and the header paints instantly from the
+// preview store seeded by the conversation list.
 export default async function ConversationPage({
   params,
 }: ConversationPageProps) {
   const { conversationId } = await params;
-  const [locale, authUser] = await Promise.all([getLocale(), getAuthUser()]);
 
-  if (!authUser) {
-    redirect({ href: ROUTES.SIGNUP, locale });
-  }
-
-  const [conversation, messages] = await Promise.all([
-    getConversationById(conversationId),
-    getMessages(conversationId),
-  ]);
-
-  if (!conversation) notFound();
+  const conversationPromise = getConversationById(conversationId);
+  const messagesPromise = getMessages(conversationId);
 
   return (
     <ConversationContent
-      conversation={conversation}
-      initialMessages={messages}
-      currentUserId={authUser!.id}
+      conversationId={conversationId}
+      conversationPromise={conversationPromise}
+      messagesPromise={messagesPromise}
     />
   );
 }

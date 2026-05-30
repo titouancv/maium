@@ -1,6 +1,6 @@
 import { Suspense } from "react";
 import { getLocale } from "next-intl/server";
-import { HomeContent } from "@/components/content/HomeContent";
+import { HomeContent } from "@/components/pages/home";
 import { redirect } from "@/i18n/navigation";
 import { ROUTES } from "@/constants";
 import { getCurrentUserProfile, getAuthUser } from "@/lib/auth/getCurrentUser";

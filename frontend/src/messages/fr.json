@@ -34,7 +34,6 @@
     "pseudo": "Pseudo",
     "dob": "Date de naissance",
     "heroTitle": "Imaginez demain. Connectez-vous maintenant.",
-    "heroSubtitle": "maium façonne votre prochain horizon.",
     "appDescription": "maium façonne votre prochain horizon et vous connecte avec des personnes qui partagent votre parcours.",
     "dataUsagePrefix": "En vous connectant avec Google, nous accédons à votre nom et adresse e-mail pour créer votre compte. Vos données ne sont jamais vendues ni partagées avec des tiers. Consultez notre",
     "privacyPolicyLink": "politique de confidentialité"
@@ -61,14 +60,12 @@
     "professionalExperiencesLabel": "Expériences professionnelles",
     "educationalExperiencesLabel": "Parcours éducatif",
     "editNationality": "Modifier la nationalité",
-    "saveError": "Échec de l'enregistrement. Veuillez réessayer.",
     "socialNetworks": "Réseaux sociaux",
     "hobbies": "Loisirs",
     "personalExperiences": "Expériences personnelles",
     "skills": "Compétences",
     "projects": "Projets",
     "editPersonalExperiences": "Expériences personnelles",
-    "noHobbies": "Aucun loisir pour l'instant",
     "urlInvalid": "Veuillez entrer une URL valide",
     "hobbySubStep1Title": "C'est quoi ce loisir ?",
     "hobbySubStep2Title": "Un peu plus ? (optionnel)",
@@ -124,8 +121,6 @@
       },
       "oauth": {
         "googleButton": "Continuer avec Google",
-        "appleButton": "Continuer avec Apple",
-        "orDivider": "ou",
         "errorGeneric": "Échec de l'authentification. Veuillez réessayer.",
         "errorEmailExists": "Un compte existe déjà avec cet e-mail. Essayez de vous connecter."
       }
@@ -166,7 +161,6 @@
   },
   "experience": {
     "professional": {
-      "addEntry": "Ajouter un poste",
       "removeEntry": "Supprimer",
       "organizationPlaceholder": "maium",
       "rolePlaceholder": "Ingénieur logiciel",
@@ -187,7 +181,6 @@
       "subStep6Title": "Localisation"
     },
     "educational": {
-      "addEntry": "Ajouter une école",
       "removeEntry": "Supprimer",
       "organizationPlaceholder": "École Polytechnique",
       "rolePlaceholder": "Informatique",
@@ -236,9 +229,8 @@
     "messageInputPlaceholder": "Écrire un message...",
     "sendButton": "Envoyer",
     "backButton": "Retour",
-    "directMessage": "Message direct",
-    "you": "Vous",
-    "typingIndicator": "en train d'écrire...",
+    "today": "Aujourd'hui",
+    "yesterday": "Hier",
     "emptyConversation": "Aucun message. Dites bonjour !"
   },
   "notFound": {

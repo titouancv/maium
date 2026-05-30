@@ -34,7 +34,6 @@
     "pseudo": "Username",
     "dob": "Date of birth",
     "heroTitle": "Imagine tomorrow. Connect now.",
-    "heroSubtitle": "maium shapes your next horizon.",
     "appDescription": "maium shapes your next horizon and connects you with people who share your journey.",
     "dataUsagePrefix": "By signing in with Google, we access your name and email address to create your account. Your data is never sold or shared with third parties. Read our",
     "privacyPolicyLink": "privacy policy"
@@ -61,14 +60,12 @@
     "professionalExperiencesLabel": "Professional experiences",
     "educationalExperiencesLabel": "Educational background",
     "editNationality": "Edit nationality",
-    "saveError": "Failed to save. Please try again.",
     "socialNetworks": "Social networks",
     "hobbies": "Hobbies",
     "personalExperiences": "Personal experiences",
     "skills": "Skills",
     "projects": "Projects",
     "editPersonalExperiences": "Personal experiences",
-    "noHobbies": "No hobbies yet",
     "urlInvalid": "Please enter a valid URL",
     "hobbySubStep1Title": "What's the hobby?",
     "hobbySubStep2Title": "Tell us more (optional)",
@@ -124,8 +121,6 @@
       },
       "oauth": {
         "googleButton": "Continue with Google",
-        "appleButton": "Continue with Apple",
-        "orDivider": "or",
         "errorGeneric": "Authentication failed. Please try again.",
         "errorEmailExists": "An account with this email already exists. Try signing in instead."
       }
@@ -166,7 +161,6 @@
   },
   "experience": {
     "professional": {
-      "addEntry": "Add a position",
       "removeEntry": "Remove",
       "organizationPlaceholder": "maium",
       "rolePlaceholder": "Software Engineer",
@@ -187,7 +181,6 @@
       "subStep6Title": "Location"
     },
     "educational": {
-      "addEntry": "Add a school",
       "removeEntry": "Remove",
       "organizationPlaceholder": "MIT",
       "rolePlaceholder": "Computer Science",
@@ -236,9 +229,8 @@
     "messageInputPlaceholder": "Write a message...",
     "sendButton": "Send",
     "backButton": "Back",
-    "directMessage": "Direct message",
-    "you": "You",
-    "typingIndicator": "typing...",
+    "today": "Today",
+    "yesterday": "Yesterday",
     "emptyConversation": "No messages yet. Say hello!"
   },
   "notFound": {
