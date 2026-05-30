@@ -114,6 +114,78 @@ RLS is enabled. Policies allow users to read/insert/update only their own row (`
 
 ---
 
+## Performance & Instant Navigation
+
+The goal is that navigating between pages feels **instantaneous**. Four patterns
+enforce this — apply them to every new page.
+
+### 1. Never block the page render on data or auth
+
+A page must return its JSX (layout + skeletons) **without awaiting data**. Only
+`await params` / `await searchParams` is allowed before `return`.
+
+- **Stream data, don't await it.** Start the fetch (no `await`), pass the
+  `Promise` down, and unwrap it with `use()` inside a `<Suspense>` boundary that
+  shows a skeleton. See [getConversations](src/lib/messaging/server.ts) →
+  [MessagingContent](src/components/messaging/MessagingContent.tsx).
+
+  ```tsx
+  // ✅ page renders immediately, data streams in
+  const dataPromise = getData();          // not awaited
+  return <Content dataPromise={dataPromise} />;
+  ```
+
+- **Gate auth in the middleware, not the page.** Protected routes are guarded in
+  [proxy.ts](src/proxy.ts) (it reuses the session-refresh `getUser()` call, so no
+  extra round-trip). Pages under a protected prefix can assume an authenticated
+  user and must **not** `await getAuthUser()` just to redirect. Add new protected
+  prefixes to `PROTECTED_PREFIXES` in `proxy.ts`.
+
+- **Read `currentUserId` from the store, not from a server await.** The current
+  user is hydrated into `useCurrentUserStore` at the layout
+  ([UserHydration](src/components/UserHydration.tsx)), so client components read
+  `useCurrentUserStore((s) => s.user?.id)` instead of receiving it as a prop
+  fetched on the server. `UserData.id` is populated for this purpose.
+
+### 2. Carry already-fetched data across pages (preview stores)
+
+When a list already holds the data the destination page needs, seed a lightweight
+Zustand "preview" store so the destination paints instantly while the
+authoritative server data streams in behind it.
+
+- [useConversationPreviewStore](src/stores/useConversationPreviewStore.ts) —
+  seeded by [ConversationList](src/components/messaging/collections/ConversationList.tsx);
+  consumed by [ConversationContent](src/components/messaging/ConversationContent.tsx)
+  to paint the header before the conversation round-trip resolves.
+- [useProfilePreviewStore](src/stores/useProfilePreviewStore.ts) — seeded on
+  [UserCard](src/components/ui/UserCard.tsx) click; consumed by
+  [ProfileTitle](src/components/profile/ProfileTitle.tsx).
+
+Rules for preview stores:
+- They are an **in-memory, render-fast cache only** — never a source of truth.
+  The streamed server data still runs and owns correctness, security
+  (membership / `notFound()`), and any field the seed lacks.
+- Store only the few fields needed to paint instantly (e.g. name, title).
+- Always render a streamed fallback for the no-seed case (hard load / deep link).
+
+### 3. Keep visited pages warm (Router Cache)
+
+`experimental.staleTimes` in [next.config.ts](next.config.ts) keeps dynamic pages
+in the client Router Cache (`dynamic: 30s`) so back/forward and re-navigations are
+served from cache instead of refetching. Don't lower these without reason.
+
+### 4. Prefetch + skeletons
+
+- Always link with `Link` from `@/i18n/navigation` (prefetch is on by default).
+- Every async boundary needs a matching skeleton (`*Skeleton.tsx`) so the shell
+  appears immediately. For dynamic routes, a route-level `loading.tsx` (reusing
+  those skeletons) lets the prefetch paint an instant shell on click.
+
+> When in doubt: **render the shell now, stream the data, seed from what you
+> already have, and let the server reconcile.**
+
+---
+
 ## Tech Stack
 
 - **Framework**: Next.js 16 (App Router)

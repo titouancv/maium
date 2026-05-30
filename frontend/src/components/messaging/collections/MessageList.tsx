@@ -53,7 +53,12 @@ export function MessageList({
   const textAreaRef = useRef<HTMLTextAreaElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
-  // Keep input above the keyboard on mobile by tracking visual viewport height
+  // Keep input above the keyboard on mobile by tracking visual viewport height.
+  // We must also pin the page scroll to the top: when the keyboard opens, iOS
+  // scrolls the layout viewport up by the keyboard height, which — on top of the
+  // shrunk container — pushes the input twice too high. Anchoring scroll to 0
+  // (and reacting to viewport scroll, not just resize) keeps it just above the
+  // keyboard.
   useEffect(() => {
     const viewport = window.visualViewport;
     if (!viewport) return;
@@ -62,6 +67,7 @@ export function MessageList({
       if (!containerRef.current) return;
       const keyboardOpen = viewport.height < window.innerHeight * 0.9;
       if (keyboardOpen) {
+        window.scrollTo(0, 0);
         containerRef.current.style.height = `${viewport.height}px`;
         bottomRef.current?.scrollIntoView({ behavior: "instant" });
       } else {
@@ -70,7 +76,11 @@ export function MessageList({
     };
 
     viewport.addEventListener("resize", updateHeight);
-    return () => viewport.removeEventListener("resize", updateHeight);
+    viewport.addEventListener("scroll", updateHeight);
+    return () => {
+      viewport.removeEventListener("resize", updateHeight);
+      viewport.removeEventListener("scroll", updateHeight);
+    };
   }, []);
 
   useEffect(() => {
