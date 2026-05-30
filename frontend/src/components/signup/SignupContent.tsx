@@ -12,17 +12,17 @@ import { Title } from "../ui";
 import type { Experience } from "@/types/experience";
 import { GoogleSignInButton } from "@/components/ui";
 
-interface SignupWizardProps {
+interface SignupContentProps {
   initialStep?: number;
   initialUser?: Partial<UserState>;
 }
 
 const TOTAL_STEPS = 5;
 
-export const SignupWizard = ({
+export const SignupContent = ({
   initialStep = 0,
   initialUser = {},
-}: SignupWizardProps) => {
+}: SignupContentProps) => {
   const searchParams = useSearchParams();
   const urlStep = searchParams.get("step");
   const [step, setStep] = useState(

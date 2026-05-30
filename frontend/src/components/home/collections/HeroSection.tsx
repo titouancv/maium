@@ -1,8 +1,7 @@
 import { useTranslations } from "next-intl";
 import { ROUTES } from "@/constants";
 import { Link } from "@/i18n/navigation";
-import { Title } from "../ui";
-import { GoogleSignInButton } from "@/components/ui";
+import { Title, GoogleSignInButton } from "@/components/ui";
 
 export const HeroSection = () => {
   const t = useTranslations("home");

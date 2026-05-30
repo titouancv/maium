@@ -58,7 +58,7 @@ export const ProfileContent = ({
     setFollowing(next);
     setFollowerCount((c) => c + (next ? 1 : -1));
     startTransition(async () => {
-      const res = await fetch("/api/users/follow", {
+      const res = await fetch(API.USERS_FOLLOW, {
         method: next ? "POST" : "DELETE",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ pseudo: user.pseudo }),

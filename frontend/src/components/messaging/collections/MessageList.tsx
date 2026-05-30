@@ -1,45 +1,20 @@
 "use client";
 
 import { Fragment, useEffect, useRef, useState } from "react";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { createClient } from "@/lib/supabase/client";
 import { API } from "@/constants";
+import { formatLongDate, isSameDay } from "@/lib/date";
 import type { Message, OptimisticMessage } from "@/types";
 import { MessageBubble } from "../items/MessageBubble";
 import { TextArea } from "@/components/ui/TextArea";
 import { Button } from "@/components/ui/Button";
 
-function isSameDay(a: string, b: string) {
-  const da = new Date(a);
-  const db = new Date(b);
-  return (
-    da.getFullYear() === db.getFullYear() &&
-    da.getMonth() === db.getMonth() &&
-    da.getDate() === db.getDate()
-  );
-}
-
-function formatDateLabel(dateStr: string): string {
-  const date = new Date(dateStr);
-  const now = new Date();
-  const yesterday = new Date(now);
-  yesterday.setDate(now.getDate() - 1);
-
-  if (isSameDay(dateStr, now.toISOString())) return "Aujourd'hui";
-  if (isSameDay(dateStr, yesterday.toISOString())) return "Hier";
-
-  return date.toLocaleDateString("fr-FR", {
-    day: "2-digit",
-    month: "long",
-    year: "numeric",
-  });
-}
-
-function DateSeparator({ dateStr }: { dateStr: string }) {
+function DateSeparator({ label }: { label: string }) {
   return (
     <div className="flex items-center gap-3 pt-6 pb-2">
       <div className="border-border h-px flex-1 border-t" />
-      <p className="text-txt-muted text-xs">{formatDateLabel(dateStr)}</p>
+      <p className="text-txt-muted text-xs">{label}</p>
       <div className="border-border h-px flex-1 border-t" />
     </div>
   );
@@ -58,8 +33,20 @@ export function MessageList({
   currentUserId,
 }: MessageListProps) {
   const t = useTranslations("messaging");
+  const locale = useLocale();
   const [messages, setMessages] =
     useState<OptimisticMessage[]>(initialMessages);
+
+  const formatDateLabel = (dateStr: string): string => {
+    const now = new Date();
+    const yesterday = new Date(now);
+    yesterday.setDate(now.getDate() - 1);
+
+    if (isSameDay(dateStr, now.toISOString())) return t("today");
+    if (isSameDay(dateStr, yesterday.toISOString())) return t("yesterday");
+
+    return formatLongDate(dateStr, locale);
+  };
   const [input, setInput] = useState("");
   const bottomRef = useRef<HTMLDivElement>(null);
   const listRef = useRef<HTMLDivElement>(null);
@@ -221,11 +208,14 @@ export function MessageList({
             const isGrouped = groupFirsts[index] !== msg;
             return (
               <Fragment key={msg.id}>
-                {showSeparator && <DateSeparator dateStr={msg.created_at} />}
+                {showSeparator && (
+                  <DateSeparator label={formatDateLabel(msg.created_at)} />
+                )}
                 <MessageBubble
                   message={msg}
                   isOwn={msg.sender_id === currentUserId}
                   showSender={!isGrouped}
+                  locale={locale}
                 />
               </Fragment>
             );

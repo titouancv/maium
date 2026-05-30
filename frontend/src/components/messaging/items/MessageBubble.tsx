@@ -1,22 +1,18 @@
 import type { OptimisticMessage } from "@/types";
+import { formatTime } from "@/lib/date";
 
 interface MessageBubbleProps {
   message: OptimisticMessage;
   isOwn: boolean;
   showSender: boolean;
-}
-
-function formatTime(dateStr: string): string {
-  return new Date(dateStr).toLocaleTimeString("fr-FR", {
-    hour: "2-digit",
-    minute: "2-digit",
-  });
+  locale: string;
 }
 
 export function MessageBubble({
   message,
   isOwn,
   showSender,
+  locale,
 }: MessageBubbleProps) {
   return (
     <div
@@ -29,7 +25,7 @@ export function MessageBubble({
               {message.sender.first_name} {message.sender.last_name}
             </p>
             <p className="text-txt-muted text-xs">
-              {formatTime(message.created_at)}
+              {formatTime(message.created_at, locale)}
             </p>
           </div>
         )}

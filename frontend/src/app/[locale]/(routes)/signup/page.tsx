@@ -1,6 +1,6 @@
 import { Suspense } from "react";
 import { getLocale } from "next-intl/server";
-import { SignupWizard } from "@/components/signup";
+import { SignupContent } from "@/components/signup";
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "@/i18n/navigation";
 import { ROUTES } from "@/constants";
@@ -51,7 +51,7 @@ export default async function SignupPage() {
 
   return (
     <Suspense>
-      <SignupWizard initialStep={initialStep} initialUser={initialUser} />
+      <SignupContent initialStep={initialStep} initialUser={initialUser} />
     </Suspense>
   );
 }

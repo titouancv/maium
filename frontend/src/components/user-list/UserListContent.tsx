@@ -3,16 +3,10 @@
 import { useTranslations } from "next-intl";
 import { PageLayout } from "@/components/layout";
 import { UserCard } from "@/components/ui";
-
-interface UserListUser {
-  pseudo: string;
-  first_name: string;
-  last_name: string;
-  location?: string | null;
-}
+import type { UserSummary } from "@/types";
 
 interface UserListContentProps {
-  users: UserListUser[];
+  users: UserSummary[];
   title: string;
   emptyMessage: string;
 }

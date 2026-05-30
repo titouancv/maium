@@ -7,6 +7,13 @@ export interface Hobby {
 
 export type HobbyData = Hobby;
 
+export interface UserSummary {
+  pseudo: string;
+  first_name: string;
+  last_name: string;
+  location?: string | null;
+}
+
 export interface UserData {
   email: string;
   first_name: string;

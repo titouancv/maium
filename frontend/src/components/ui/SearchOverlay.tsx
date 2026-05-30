@@ -7,13 +7,7 @@ import { useRouter } from "@/i18n/navigation";
 import { API, ROUTES } from "@/constants";
 import { SearchLayout } from "@/components/layout";
 import { SearchInput } from "@/components/ui";
-
-interface SearchUser {
-  pseudo: string;
-  first_name: string;
-  last_name: string;
-  location?: string | null;
-}
+import type { UserSummary } from "@/types";
 
 interface SearchOverlayProps {
   onClose: () => void;
@@ -24,7 +18,7 @@ export function SearchOverlay({ onClose, onSelect }: SearchOverlayProps) {
   const t = useTranslations("search");
   const router = useRouter();
   const [query, setQuery] = useState("");
-  const [results, setResults] = useState<SearchUser[]>([]);
+  const [results, setResults] = useState<UserSummary[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
