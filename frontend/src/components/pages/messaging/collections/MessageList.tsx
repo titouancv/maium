@@ -398,8 +398,8 @@ export function MessageList({
       className="flex h-full w-full flex-col overflow-hidden"
     >
       {/* Online / typing status */}
-      <div className="text-primary flex h-5 shrink-0 items-center gap-1.5 text-xs">
-        {statusLabel && <>{statusLabel}</>}
+      <div className="text-txt-muted flex h-5 w-full shrink-0 items-center justify-center py-2 text-sm">
+        <div>{statusLabel && <>{statusLabel}</>}</div>
       </div>
 
       {/* Message list */}
