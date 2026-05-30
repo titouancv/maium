@@ -1,10 +1,17 @@
 "use client";
 
-import { Fragment, useCallback, useEffect, useRef, useState } from "react";
+import {
+  Fragment,
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from "react";
 import { useLocale, useTranslations } from "next-intl";
 import type { RealtimeChannel } from "@supabase/supabase-js";
 import { createClient } from "@/lib/supabase/client";
-import { API } from "@/constants";
+import { API, MESSAGES_PAGE_SIZE } from "@/constants";
 import { formatLongDate, isSameDay } from "@/lib/date";
 import { usePresenceStore } from "@/stores/usePresenceStore";
 import type { Message, OptimisticMessage } from "@/types";
@@ -42,6 +49,10 @@ export function MessageList({
   const locale = useLocale();
   const [messages, setMessages] =
     useState<OptimisticMessage[]>(initialMessages);
+  const [hasMore, setHasMore] = useState(
+    initialMessages.length === MESSAGES_PAGE_SIZE,
+  );
+  const [loadingOlder, setLoadingOlder] = useState(false);
   const [typingUserId, setTypingUserId] = useState<string | null>(null);
   const [otherReadAt, setOtherReadAt] = useState<string | null>(
     otherLastReadAt,
@@ -67,6 +78,17 @@ export function MessageList({
   const channelRef = useRef<RealtimeChannel | null>(null);
   const typingTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const lastTypingSentRef = useRef(0);
+  // Guards against concurrent older-page fetches.
+  const loadingOlderRef = useRef(false);
+  // scrollHeight captured just before prepending an older page, so we can keep
+  // the viewport anchored on the same message after the DOM grows upward.
+  const prependPrevHeightRef = useRef<number | null>(null);
+  // Last appended (bottom) message id — used to auto-scroll only on new
+  // incoming/sent messages, never when older messages are prepended on top.
+  const lastBottomIdRef = useRef<string | undefined>(undefined);
+  // The first paint must jump straight to the bottom (no animation); later
+  // messages animate in smoothly.
+  const didInitialScrollRef = useRef(false);
 
   // Persist our read position and tell the other member instantly (broadcast).
   const markRead = useCallback(() => {
@@ -120,10 +142,70 @@ export function MessageList({
     }
   }, [input]);
 
-  // Scroll to bottom on mount and new messages
-  useEffect(() => {
-    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages.length]);
+  // Auto-scroll to the bottom only when a new message lands at the bottom
+  // (mount, sent, or received) — not when an older page is prepended on top.
+  // The first paint jumps instantly (before the browser paints, via layout
+  // effect) so the conversation opens pinned to the latest message; subsequent
+  // messages animate smoothly.
+  useLayoutEffect(() => {
+    const bottomId = messages[messages.length - 1]?.id;
+    if (!bottomId || bottomId === lastBottomIdRef.current) return;
+    lastBottomIdRef.current = bottomId;
+    bottomRef.current?.scrollIntoView({
+      behavior: didInitialScrollRef.current ? "smooth" : "instant",
+    });
+    didInitialScrollRef.current = true;
+  }, [messages]);
+
+  // After an older page is prepended, restore the scroll position so the
+  // viewport stays anchored on the message the user was looking at.
+  useLayoutEffect(() => {
+    const prevHeight = prependPrevHeightRef.current;
+    if (prevHeight == null || !listRef.current) return;
+    listRef.current.scrollTop = listRef.current.scrollHeight - prevHeight;
+    prependPrevHeightRef.current = null;
+  }, [messages]);
+
+  // Fetch the previous page of messages when the user scrolls near the top.
+  const loadOlder = useCallback(async () => {
+    if (loadingOlderRef.current || !hasMore) return;
+    const oldest = messages[0];
+    if (!oldest) return;
+
+    loadingOlderRef.current = true;
+    setLoadingOlder(true);
+    try {
+      const res = await fetch(
+        `${API.MESSAGES_CONVERSATION_MESSAGES(conversationId)}?before=${encodeURIComponent(
+          oldest.created_at,
+        )}`,
+      );
+      if (!res.ok) return;
+      const { messages: older, hasMore: more } = (await res.json()) as {
+        messages: Message[];
+        hasMore: boolean;
+      };
+      if (older.length > 0 && listRef.current) {
+        prependPrevHeightRef.current = listRef.current.scrollHeight;
+        setMessages((prev) => {
+          const known = new Set(prev.map((m) => m.id));
+          const fresh = older.filter((m) => !known.has(m.id));
+          return [...fresh, ...prev];
+        });
+      }
+      setHasMore(more);
+    } catch {
+      // Keep hasMore true so a later scroll can retry.
+    } finally {
+      loadingOlderRef.current = false;
+      setLoadingOlder(false);
+    }
+  }, [conversationId, hasMore, messages]);
+
+  const handleScroll = useCallback(() => {
+    const list = listRef.current;
+    if (list && list.scrollTop < 100) loadOlder();
+  }, [loadOlder]);
 
   // Realtime: new messages (postgres_changes) + typing & read (broadcast).
   useEffect(() => {
@@ -313,7 +395,16 @@ export function MessageList({
       </div>
 
       {/* Message list */}
-      <div ref={listRef} className="flex-1 overflow-y-auto py-4">
+      <div
+        ref={listRef}
+        onScroll={handleScroll}
+        className="flex-1 overflow-y-auto py-4"
+      >
+        {loadingOlder && (
+          <div className="flex justify-center py-2">
+            <div className="border-txt-muted h-5 w-5 animate-spin rounded-full border-2 border-t-transparent" />
+          </div>
+        )}
         {messages.length === 0 ? (
           <div className="flex h-full items-center justify-center">
             <p className="text-txt-muted text-sm">{t("emptyConversation")}</p>

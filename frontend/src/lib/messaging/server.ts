@@ -1,4 +1,5 @@
 import { createClient } from "@/lib/supabase/server";
+import { MESSAGES_PAGE_SIZE } from "@/constants";
 import type { Conversation, Message } from "@/types";
 
 export async function getConversations(): Promise<Conversation[]> {
@@ -119,17 +120,23 @@ export async function getConversationById(
   };
 }
 
+/**
+ * Fetches a page of messages, newest first internally but returned oldest →
+ * newest. Pass `before` (the `created_at` of the oldest message already loaded)
+ * to fetch the previous page for upward infinite scroll.
+ */
 export async function getMessages(
   conversationId: string,
-  limit = 30,
+  options: { limit?: number; before?: string } = {},
 ): Promise<Message[]> {
+  const { limit = MESSAGES_PAGE_SIZE, before } = options;
   const supabase = await createClient();
   const {
     data: { user },
   } = await supabase.auth.getUser();
   if (!user) return [];
 
-  const { data } = await supabase
+  let query = supabase
     .from("messages")
     .select(
       `id, conversation_id, sender_id, content, created_at, edited_at, deleted_at,
@@ -139,6 +146,10 @@ export async function getMessages(
     .is("deleted_at", null)
     .order("created_at", { ascending: false })
     .limit(limit);
+
+  if (before) query = query.lt("created_at", before);
+
+  const { data } = await query;
 
   if (!data) return [];
 

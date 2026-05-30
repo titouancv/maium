@@ -41,6 +41,9 @@ export const EXTERNAL_API = {
 
 export const SIGNUP_FORM_ID = "signup-step-form";
 
+// Number of messages fetched per page (initial load + each upward scroll).
+export const MESSAGES_PAGE_SIZE = 30;
+
 export const EXPERIENCE_NAMESPACE = {
   professional: "experience.professional",
   educational: "experience.educational",
