@@ -28,12 +28,15 @@ export function MessageListLoader({
   if (!conversation) notFound();
 
   const initialMessages = use(messagesPromise);
+  const other = conversation.members.find((m) => m.id !== currentUserId);
   return (
     <MessageList
       conversationId={conversationId}
       initialMessages={initialMessages}
       currentUserId={currentUserId}
       isGroup={conversation.is_group}
+      otherUserId={other?.id ?? null}
+      otherLastReadAt={other?.last_read_at ?? null}
     />
   );
 }

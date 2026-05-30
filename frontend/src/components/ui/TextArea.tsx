@@ -23,7 +23,7 @@ export const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(
             "h-full w-full resize-none p-2 transition-all placeholder:uppercase",
             infoType === "error"
               ? "text-error bg-error/10"
-              : "text-txt hover:bg-surface-100 focus:bg-surface-100",
+              : "text-txt hover:bg-surface-100 focus:bg-surface-100 [&:not(:placeholder-shown)]:bg-surface-100",
             "rounded-xl p-1 outline-none",
             className,
           )}

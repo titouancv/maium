@@ -30,6 +30,8 @@ export const API = {
   MESSAGES_CONVERSATIONS: "/api/messages/conversations",
   MESSAGES_CONVERSATION_MESSAGES: (id: string) =>
     `/api/messages/conversations/${id}/messages`,
+  MESSAGES_CONVERSATION_READ: (id: string) =>
+    `/api/messages/conversations/${id}/read`,
 } as const;
 
 export const EXTERNAL_API = {
@@ -38,6 +40,9 @@ export const EXTERNAL_API = {
 } as const;
 
 export const SIGNUP_FORM_ID = "signup-step-form";
+
+// Number of messages fetched per page (initial load + each upward scroll).
+export const MESSAGES_PAGE_SIZE = 30;
 
 export const EXPERIENCE_NAMESPACE = {
   professional: "experience.professional",

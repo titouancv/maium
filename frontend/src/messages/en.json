@@ -231,7 +231,10 @@
     "backButton": "Back",
     "today": "Today",
     "yesterday": "Yesterday",
-    "emptyConversation": "No messages yet. Say hello!"
+    "emptyConversation": "No messages yet. Say hello!",
+    "online": "Online",
+    "typing": "Typing…",
+    "seen": "Seen"
   },
   "notFound": {
     "title": "not found",

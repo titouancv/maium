@@ -36,7 +36,7 @@ export const PageLayout = ({
 
   return (
     <div className="relative flex h-dvh flex-col md:h-screen md:items-center">
-      <div className="flex h-full w-full flex-col gap-8 md:h-screen">
+      <div className="flex h-full w-full flex-col gap-6 md:h-screen md:gap-8">
         {/* Header */}
         <div className="flex shrink-0 justify-center px-4">
           <div className="flex w-full max-w-7xl shrink-0 items-center justify-between pt-6 md:pt-12">

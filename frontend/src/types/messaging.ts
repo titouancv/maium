@@ -3,6 +3,8 @@ export interface ConversationMember {
   pseudo: string;
   first_name: string;
   last_name: string;
+  /** When this member last read the conversation (read receipts). */
+  last_read_at?: string | null;
 }
 
 export interface Conversation {

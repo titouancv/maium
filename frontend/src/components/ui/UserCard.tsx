@@ -10,6 +10,7 @@ interface UserCardProps {
   last_name: string;
   location?: string | null;
   subtitle?: string | null;
+  subtitleClassName?: string;
   href?: string;
   className?: string;
   onClick?: () => void;
@@ -22,6 +23,7 @@ export function UserCard({
   last_name,
   location,
   subtitle,
+  subtitleClassName,
   href,
   className,
   onClick,
@@ -38,7 +40,11 @@ export function UserCard({
   const content = (
     <div className="min-w-0 flex-1 text-left">
       <p className="truncate">{displayName}</p>
-      <p className="text-txt-muted truncate text-xs">{secondLine}</p>
+      <p
+        className={`truncate text-xs ${subtitleClassName ?? "text-txt-muted"}`}
+      >
+        {secondLine}
+      </p>
     </div>
   );
 

@@ -1,4 +1,5 @@
 import { createClient } from "@/lib/supabase/server";
+import { MESSAGES_PAGE_SIZE } from "@/constants";
 import type { Conversation, Message } from "@/types";
 
 export async function getConversations(): Promise<Conversation[]> {
@@ -87,6 +88,7 @@ export async function getConversationById(
       `id, created_at, is_group, title,
        conversation_members (
          user_id,
+         last_read_at,
          users:user_id ( id, pseudo, first_name, last_name )
        )`,
     )
@@ -97,6 +99,7 @@ export async function getConversationById(
 
   const rawMembers = (data.conversation_members as unknown as Array<{
     user_id: string;
+    last_read_at: string | null;
     users: { id: string; pseudo: string; first_name: string; last_name: string } | null;
   }>) ?? [];
 
@@ -105,7 +108,7 @@ export async function getConversationById(
 
   const members = rawMembers
     .filter((m) => m.users !== null)
-    .map((m) => m.users!);
+    .map((m) => ({ ...m.users!, last_read_at: m.last_read_at }));
 
   return {
     id: data.id,
@@ -117,17 +120,23 @@ export async function getConversationById(
   };
 }
 
+/**
+ * Fetches a page of messages, newest first internally but returned oldest →
+ * newest. Pass `before` (the `created_at` of the oldest message already loaded)
+ * to fetch the previous page for upward infinite scroll.
+ */
 export async function getMessages(
   conversationId: string,
-  limit = 30,
+  options: { limit?: number; before?: string } = {},
 ): Promise<Message[]> {
+  const { limit = MESSAGES_PAGE_SIZE, before } = options;
   const supabase = await createClient();
   const {
     data: { user },
   } = await supabase.auth.getUser();
   if (!user) return [];
 
-  const { data } = await supabase
+  let query = supabase
     .from("messages")
     .select(
       `id, conversation_id, sender_id, content, created_at, edited_at, deleted_at,
@@ -137,6 +146,10 @@ export async function getMessages(
     .is("deleted_at", null)
     .order("created_at", { ascending: false })
     .limit(limit);
+
+  if (before) query = query.lt("created_at", before);
+
+  const { data } = await query;
 
   if (!data) return [];
 
