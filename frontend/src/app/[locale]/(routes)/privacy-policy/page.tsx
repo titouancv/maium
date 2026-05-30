@@ -1,5 +1,5 @@
 import { Suspense } from "react";
-import { PrivacyPolicyContent } from "@/components/privacy-policy";
+import { PrivacyPolicyContent } from "@/components/pages/privacy-policy";
 
 export default function PrivacyPolicyPage() {
   return (

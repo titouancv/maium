@@ -1,6 +1,6 @@
 import { Suspense } from "react";
 import { getLocale } from "next-intl/server";
-import { SignupContent } from "@/components/signup";
+import { SignupContent } from "@/components/pages/signup";
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "@/i18n/navigation";
 import { ROUTES } from "@/constants";
@@ -43,9 +43,11 @@ export default async function SignupPage() {
       pseudo: profile?.pseudo ?? undefined,
       dob: profile?.dob ? new Date(profile.dob).getTime() : undefined,
       professionalExperiences:
-        (profile?.professional_experiences as unknown as Experience[] | null) ?? [],
+        (profile?.professional_experiences as unknown as Experience[] | null) ??
+        [],
       educationalExperiences:
-        (profile?.educational_experiences as unknown as Experience[] | null) ?? [],
+        (profile?.educational_experiences as unknown as Experience[] | null) ??
+        [],
     };
   }
 

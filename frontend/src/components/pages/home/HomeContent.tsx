@@ -7,7 +7,7 @@ import { WelcomeOverlay } from "./collections/WelcomeOverlay";
 import { HeroSection } from "./collections/HeroSection";
 import { cn } from "@/lib/utils";
 import { UserData } from "@/types";
-import { PageLayout } from "../layout";
+import { PageLayout } from "../../layout";
 
 interface HomeContentProps {
   user: UserData | null;

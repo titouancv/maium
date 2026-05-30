@@ -1,5 +1,5 @@
 import { getConversations } from "@/lib/messaging/server";
-import { MessagingContent } from "@/components/messaging";
+import { MessagingContent } from "@/components/pages/messaging";
 
 // Auth is enforced in proxy.ts, so the page renders immediately and the
 // conversations stream into the list's Suspense boundary.

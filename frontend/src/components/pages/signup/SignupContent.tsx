@@ -6,9 +6,9 @@ import { useTranslations } from "next-intl";
 import { useRouter } from "@/i18n/navigation";
 import { useUserStore, type UserState } from "@/stores/useUserStore";
 import { ROUTES, API, SIGNUP_FORM_ID, EXPERIENCE_NAMESPACE } from "@/constants";
-import { Form } from "../form/Form";
-import type { FormProps } from "../form/Form";
-import { Title } from "../ui";
+import { Form } from "../../form/Form";
+import type { FormProps } from "../../form/Form";
+import { Title } from "../../ui";
 import type { Experience } from "@/types/experience";
 import { GoogleSignInButton } from "@/components/ui";
 

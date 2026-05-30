@@ -1,12 +1,15 @@
 import { Suspense } from "react";
 import { PageLayout } from "@/components/layout";
-import { ProfileBody } from "@/components/profile/ProfileBody";
-import { ProfileName, ProfileBackButton } from "@/components/profile/ProfileHeader";
-import { ProfileTitle } from "@/components/profile/ProfileTitle";
+import { ProfileBody } from "@/components/pages/profile/ProfileBody";
+import {
+  ProfileName,
+  ProfileBackButton,
+} from "@/components/pages/profile/ProfileHeader";
+import { ProfileTitle } from "@/components/pages/profile/ProfileTitle";
 import {
   ProfileHeaderSkeleton,
   ProfileBodySkeleton,
-} from "@/components/profile/ProfileSkeleton";
+} from "@/components/pages/profile/ProfileSkeleton";
 
 interface Props {
   params: Promise<{ pseudo: string }>;

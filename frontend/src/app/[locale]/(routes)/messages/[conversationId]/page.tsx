@@ -1,5 +1,5 @@
 import { getConversationById, getMessages } from "@/lib/messaging/server";
-import { ConversationContent } from "@/components/messaging";
+import { ConversationContent } from "@/components/pages/messaging";
 
 interface ConversationPageProps {
   params: Promise<{ conversationId: string }>;

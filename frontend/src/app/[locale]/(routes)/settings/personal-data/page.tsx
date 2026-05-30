@@ -1,4 +1,4 @@
-import { SettingsPersonalDataContent } from "@/components/settings";
+import { SettingsPersonalDataContent } from "@/components/pages/settings";
 import { getCurrentUserProfile } from "@/lib/auth/getCurrentUser";
 
 export default function SettingsPersonalDataPage() {

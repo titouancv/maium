@@ -2,7 +2,7 @@
 
 import { Suspense } from "react";
 import { useTranslations } from "next-intl";
-import { PageLayout } from "../layout";
+import { PageLayout } from "../../layout";
 import { ConversationsLoader } from "./collections/ConversationsLoader";
 import { ConversationListSkeleton } from "./MessagingSkeleton";
 import { NewConversationButton } from "./NewConversationButton";

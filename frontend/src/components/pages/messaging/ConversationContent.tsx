@@ -2,8 +2,8 @@
 
 import { Suspense, use } from "react";
 import { useTranslations } from "next-intl";
-import { PageLayout } from "../layout";
-import { Title, BackButton, Skeleton } from "../ui";
+import { PageLayout } from "../../layout";
+import { Title, BackButton, Skeleton } from "../../ui";
 import { MessageListLoader } from "./collections/MessageListLoader";
 import { MessagesSkeleton } from "./ConversationSkeleton";
 import { useCurrentUserStore } from "@/stores/useCurrentUserStore";
@@ -37,9 +37,7 @@ export function ConversationContent({
   const t = useTranslations("messaging");
   // Hydrated at the layout level, so already set on client navigations.
   const currentUserId = useCurrentUserStore((s) => s.user?.id ?? "");
-  const seeded = useConversationPreviewStore(
-    (s) => s.previews[conversationId],
-  );
+  const seeded = useConversationPreviewStore((s) => s.previews[conversationId]);
 
   // When the list seeded this conversation, the title is a plain string and
   // PageLayout renders the back button for us. Otherwise the title node owns
