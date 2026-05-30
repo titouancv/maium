@@ -26,6 +26,17 @@ function getSubtitle(conversation: Conversation): string | null {
   return truncated;
 }
 
+function hasUnreadMessage(
+  conversation: Conversation,
+  currentUserId: string,
+): boolean {
+  const lastMessage = conversation.last_message;
+  if (!lastMessage || lastMessage.sender_id === currentUserId) return false;
+  const me = conversation.members.find((m) => m.id === currentUserId);
+  if (!me?.last_read_at) return true;
+  return new Date(me.last_read_at) < new Date(lastMessage.created_at);
+}
+
 export function ConversationItem({
   conversation,
   currentUserId,
@@ -33,6 +44,7 @@ export function ConversationItem({
 }: ConversationItemProps) {
   const displayName = getDisplayName(conversation, currentUserId);
   const subtitle = getSubtitle(conversation);
+  const unread = hasUnreadMessage(conversation, currentUserId);
   const other = conversation.members.find(
     (m: ConversationMember) => m.id !== currentUserId,
   );
@@ -45,6 +57,7 @@ export function ConversationItem({
         last_name={other.last_name}
         href={ROUTES.CONVERSATION(conversation.id)}
         subtitle={subtitle ?? `@${other.pseudo}`}
+        subtitleClassName={unread ? "text-primary" : undefined}
       />
     );
   }
@@ -62,7 +75,11 @@ export function ConversationItem({
       <div className="min-w-0 flex-1">
         <p className="text-txt truncate text-sm">{displayName}</p>
         {subtitle && (
-          <p className="text-txt-muted truncate text-xs">{subtitle}</p>
+          <p
+            className={`truncate text-xs ${unread ? "text-primary" : "text-txt-muted"}`}
+          >
+            {subtitle}
+          </p>
         )}
       </div>
     </Link>
