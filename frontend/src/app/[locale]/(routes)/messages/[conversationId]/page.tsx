@@ -20,17 +20,17 @@ export default async function ConversationPage({
     redirect({ href: ROUTES.SIGNUP, locale });
   }
 
-  const [conversation, messages] = await Promise.all([
-    getConversationById(conversationId),
-    getMessages(conversationId),
-  ]);
-
+  // Lightweight: needed for the header title, membership check and notFound.
+  const conversation = await getConversationById(conversationId);
   if (!conversation) notFound();
+
+  // Not awaited: streams into the message thread's Suspense boundary.
+  const messagesPromise = getMessages(conversationId);
 
   return (
     <ConversationContent
       conversation={conversation}
-      initialMessages={messages}
+      messagesPromise={messagesPromise}
       currentUserId={authUser!.id}
     />
   );

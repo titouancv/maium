@@ -1,11 +1,17 @@
 "use client";
 
 import { useEffect } from "react";
-import { useRouter } from "@/i18n/navigation";
-import { Button, Title, NavigationBar } from "../ui";
+import { Title, NavigationBar, BackButton } from "../ui";
 
 interface PageLayoutProps {
-  title: string;
+  /**
+   * Header title. Pass a string for the default underlined `Title`, or a node
+   * to stream the header (e.g. a `<Suspense>` boundary) — when a node is
+   * provided it owns the full header row and `backLabel` is ignored.
+   */
+  title: React.ReactNode;
+  /** Tab title; falls back to `title` when it is a string. */
+  documentTitle?: string;
   onBack?: () => void;
   backLabel?: string;
   fullHeight?: boolean;
@@ -15,18 +21,18 @@ interface PageLayoutProps {
 
 export const PageLayout = ({
   title,
+  documentTitle,
   onBack,
   backLabel,
   fullHeight = false,
   showNavigationBar = true,
   children,
 }: PageLayoutProps) => {
-  const router = useRouter();
-  const handleBack = onBack ?? (() => router.back());
+  const tabTitle = documentTitle ?? (typeof title === "string" ? title : null);
 
   useEffect(() => {
-    document.title = title.toLowerCase() + " • maium";
-  }, [title]);
+    if (tabTitle) document.title = tabTitle.toLowerCase() + " • maium";
+  }, [tabTitle]);
 
   return (
     <div className="relative flex h-dvh flex-col md:h-screen md:items-center">
@@ -34,16 +40,13 @@ export const PageLayout = ({
         {/* Header */}
         <div className="flex shrink-0 justify-center px-4">
           <div className="flex w-full max-w-7xl shrink-0 items-center justify-between pt-6 md:pt-12">
-            <Title label={title} size="h1" />
-            {backLabel && (
-              <Button
-                variant="ghost"
-                type="button"
-                size="none"
-                onClick={handleBack}
-              >
-                {backLabel}
-              </Button>
+            {typeof title === "string" ? (
+              <>
+                <Title label={title} size="h1" />
+                {backLabel && <BackButton label={backLabel} onBack={onBack} />}
+              </>
+            ) : (
+              title
             )}
           </div>
         </div>

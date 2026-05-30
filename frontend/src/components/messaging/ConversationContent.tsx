@@ -1,13 +1,15 @@
 "use client";
 
+import { Suspense } from "react";
 import { useTranslations } from "next-intl";
 import { PageLayout } from "../layout";
-import { MessageList } from "./collections/MessageList";
+import { MessageListLoader } from "./collections/MessageListLoader";
+import { MessagesSkeleton } from "./ConversationSkeleton";
 import type { Conversation, Message } from "@/types";
 
 interface ConversationContentProps {
   conversation: Conversation;
-  initialMessages: Message[];
+  messagesPromise: Promise<Message[]>;
   currentUserId: string;
 }
 
@@ -23,7 +25,7 @@ function getDisplayName(
 
 export function ConversationContent({
   conversation,
-  initialMessages,
+  messagesPromise,
   currentUserId,
 }: ConversationContentProps) {
   const t = useTranslations("messaging");
@@ -37,12 +39,14 @@ export function ConversationContent({
       showNavigationBar={false}
     >
       <div className="flex h-full w-full max-w-2xl flex-col">
-        <MessageList
-          conversationId={conversation.id}
-          initialMessages={initialMessages}
-          currentUserId={currentUserId}
-          isGroup={conversation.is_group}
-        />
+        <Suspense fallback={<MessagesSkeleton />}>
+          <MessageListLoader
+            conversationId={conversation.id}
+            messagesPromise={messagesPromise}
+            currentUserId={currentUserId}
+            isGroup={conversation.is_group}
+          />
+        </Suspense>
       </div>
     </PageLayout>
   );

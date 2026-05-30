@@ -1,18 +1,20 @@
 "use client";
 
+import { Suspense } from "react";
 import { useTranslations } from "next-intl";
 import { PageLayout } from "../layout";
-import { ConversationList } from "./collections/ConversationList";
+import { ConversationsLoader } from "./collections/ConversationsLoader";
+import { ConversationListSkeleton } from "./MessagingSkeleton";
 import { NewConversationButton } from "./NewConversationButton";
 import type { Conversation } from "@/types";
 
 interface MessagingContentProps {
-  conversations: Conversation[];
+  conversationsPromise: Promise<Conversation[]>;
   currentUserId: string;
 }
 
 export function MessagingContent({
-  conversations,
+  conversationsPromise,
   currentUserId,
 }: MessagingContentProps) {
   const t = useTranslations("messaging");
@@ -20,10 +22,12 @@ export function MessagingContent({
   return (
     <PageLayout title={t("title")}>
       <div className="flex h-full w-full max-w-2xl flex-col justify-between gap-4">
-        <ConversationList
-          conversations={conversations}
-          currentUserId={currentUserId}
-        />
+        <Suspense fallback={<ConversationListSkeleton />}>
+          <ConversationsLoader
+            conversationsPromise={conversationsPromise}
+            currentUserId={currentUserId}
+          />
+        </Suspense>
         <div className="flex w-full items-center justify-end">
           <NewConversationButton />
         </div>

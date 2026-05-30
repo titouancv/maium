@@ -1,7 +1,9 @@
-import { notFound } from "next/navigation";
+import { Suspense } from "react";
 import { getTranslations } from "next-intl/server";
 import { getFollowers } from "@/lib/users";
-import { UserListContent } from "@/components/user-list";
+import { UserListContent } from "@/components/user-list/UserListContent";
+import { UserListItems } from "@/components/user-list/UserListItems";
+import { UserListSkeleton } from "@/components/user-list/UserListSkeleton";
 
 interface Props {
   params: Promise<{ pseudo: string }>;
@@ -11,14 +13,14 @@ export default async function FollowersPage({ params }: Props) {
   const { pseudo } = await params;
   const t = await getTranslations("profile");
 
-  const users = await getFollowers(pseudo);
-  if (users === null) notFound();
+  // Not awaited: streams into the list's Suspense boundary.
+  const usersPromise = getFollowers(pseudo);
 
   return (
-    <UserListContent
-      users={users}
-      title={t("followersTitle")}
-      emptyMessage={t("noFollowers")}
-    />
+    <UserListContent title={t("followersTitle")}>
+      <Suspense fallback={<UserListSkeleton />}>
+        <UserListItems usersPromise={usersPromise} emptyMessage={t("noFollowers")} />
+      </Suspense>
+    </UserListContent>
   );
 }

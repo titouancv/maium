@@ -12,7 +12,13 @@ export default async function MessagesPage() {
     redirect({ href: ROUTES.SIGNUP, locale });
   }
 
-  const conversations = await getConversations();
+  // Not awaited: streams into the conversation list's Suspense boundary.
+  const conversationsPromise = getConversations();
 
-  return <MessagingContent conversations={conversations} currentUserId={authUser!.id} />;
+  return (
+    <MessagingContent
+      conversationsPromise={conversationsPromise}
+      currentUserId={authUser!.id}
+    />
+  );
 }
