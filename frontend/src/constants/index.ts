@@ -14,6 +14,7 @@ export const ROUTES = {
   PRIVACY_POLICY: "/privacy-policy",
   MESSAGES: "/messages",
   CONVERSATION: (id: string) => `/messages/${id}`,
+  JOBS: "/jobs",
 } as const;
 
 export const API = {
@@ -32,6 +33,10 @@ export const API = {
     `/api/messages/conversations/${id}/messages`,
   MESSAGES_CONVERSATION_READ: (id: string) =>
     `/api/messages/conversations/${id}/read`,
+  ANALYZE_JOB: "/api/analyze-job",
+  ANALYSIS: (id: string) => `/api/analysis/${id}`,
+  HISTORY: "/api/history",
+  RESUME: (id: string) => `/api/resume/${id}`,
 } as const;
 
 export const EXTERNAL_API = {
@@ -40,6 +45,20 @@ export const EXTERNAL_API = {
 } as const;
 
 export const SIGNUP_FORM_ID = "signup-step-form";
+
+// --- Job-analysis pipeline -------------------------------------------------
+
+/** Max job analyses a user can launch per rolling hour (rate-limit). */
+export const ANALYSES_PER_HOUR = 10;
+
+/** Max characters of sanitized job HTML sent to Mistral (token guardrail). */
+export const JOB_TEXT_CHAR_LIMIT = 12000;
+
+/** Embedding dimension for `mistral-embed` (matches the `vector(1024)` column). */
+export const EMBEDDING_DIM = 1024;
+
+/** Prompt version stamped on stored analyses for auditability. */
+export const PROMPT_VERSION = "v1";
 
 // Number of messages fetched per page (initial load + each upward scroll).
 export const MESSAGES_PAGE_SIZE = 30;

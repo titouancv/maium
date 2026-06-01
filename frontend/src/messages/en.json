@@ -3,7 +3,28 @@
     "home": "maium",
     "settings": "Settings",
     "searchLabel": "Search",
-    "messages": "messages"
+    "messages": "messages",
+    "jobs": "jobs"
+  },
+  "jobs": {
+    "title": "Job Analysis",
+    "analyze": "Analyze",
+    "urlPlaceholder": "Paste a job posting URL",
+    "invalidUrl": "Enter a valid URL",
+    "submitError": "Could not start the analysis. Try again.",
+    "rateLimited": "You've reached the hourly analysis limit. Try again later.",
+    "queued": "Queued…",
+    "failed": "Analysis failed. Please try again.",
+    "matchScore": "Match",
+    "untitledJob": "Untitled job",
+    "historyTitle": "History",
+    "historyEmpty": "No analyses yet. Paste a job URL to get started.",
+    "step": {
+      "EXTRACTING_JOB": "Extracting the job posting…",
+      "MATCHING_PROFILE": "Matching your profile…",
+      "OPTIMIZING_RESUME": "Optimizing your resume…",
+      "GENERATING_EMBEDDINGS": "Finalizing…"
+    }
   },
   "search": {
     "placeholder": "Search users...",

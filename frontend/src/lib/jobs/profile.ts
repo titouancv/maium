@@ -1,0 +1,54 @@
+import { createAdminClient } from "@/lib/supabase/admin";
+import {
+  mapUserFromDb,
+  USER_PROFILE_SELECT,
+  type DbUserRaw,
+} from "@/lib/mappers/user";
+import type { CandidateProfile } from "@/types/job";
+
+/**
+ * Assembles the normalized candidate profile for a user, reusing the same
+ * relational select + mapper as the public profile page. Uses the admin client
+ * because the pipeline runs in a background task without the user's cookies.
+ */
+export async function getCandidateProfile(
+  userId: string,
+): Promise<CandidateProfile> {
+  const admin = createAdminClient();
+  const { data } = await admin
+    .from("users")
+    .select(`id, bio, ${USER_PROFILE_SELECT}`)
+    .eq("id", userId)
+    .single();
+
+  const user = mapUserFromDb((data ?? {}) as DbUserRaw);
+
+  return {
+    bio: user.bio ?? "",
+    experiences: (user.professional_experiences ?? []).map((e) => ({
+      organization: e.organization,
+      role: e.role,
+      description: e.description ?? "",
+    })),
+    education: (user.educational_experiences ?? []).map((e) => ({
+      organization: e.organization,
+      role: e.role,
+    })),
+    skills: user.skills ?? [],
+    projects: user.projects ?? [],
+  };
+}
+
+/** Flattens a candidate profile into a single string for embedding. */
+export function profileToText(profile: CandidateProfile): string {
+  const lines: string[] = [];
+  if (profile.bio) lines.push(profile.bio);
+  for (const e of profile.experiences) {
+    lines.push(`${e.role} @ ${e.organization}. ${e.description}`);
+  }
+  for (const e of profile.education) {
+    lines.push(`${e.role} @ ${e.organization}`);
+  }
+  if (profile.skills.length) lines.push(`Skills: ${profile.skills.join(", ")}`);
+  return lines.join("\n");
+}

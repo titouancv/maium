@@ -3,7 +3,28 @@
     "home": "maium",
     "settings": "Paramètres",
     "searchLabel": "Rechercher",
-    "messages": "messages"
+    "messages": "messages",
+    "jobs": "offres"
+  },
+  "jobs": {
+    "title": "Analyse d'offre",
+    "analyze": "Analyser",
+    "urlPlaceholder": "Collez l'URL d'une offre d'emploi",
+    "invalidUrl": "Entrez une URL valide",
+    "submitError": "Impossible de lancer l'analyse. Réessayez.",
+    "rateLimited": "Vous avez atteint la limite d'analyses par heure. Réessayez plus tard.",
+    "queued": "En file d'attente…",
+    "failed": "L'analyse a échoué. Veuillez réessayer.",
+    "matchScore": "Match",
+    "untitledJob": "Offre sans titre",
+    "historyTitle": "Historique",
+    "historyEmpty": "Aucune analyse pour l'instant. Collez une URL d'offre pour commencer.",
+    "step": {
+      "EXTRACTING_JOB": "Extraction de l'offre…",
+      "MATCHING_PROFILE": "Comparaison avec votre profil…",
+      "OPTIMIZING_RESUME": "Optimisation de votre CV…",
+      "GENERATING_EMBEDDINGS": "Finalisation…"
+    }
   },
   "search": {
     "placeholder": "Rechercher des utilisateurs...",
