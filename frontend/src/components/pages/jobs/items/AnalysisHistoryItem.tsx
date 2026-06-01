@@ -5,6 +5,7 @@ import type { AnalysisListItem } from "@/types/job";
 
 interface AnalysisHistoryItemProps {
   analysis: AnalysisListItem;
+  onClick: () => void;
 }
 
 function scoreColor(score: number): string {
@@ -13,11 +14,13 @@ function scoreColor(score: number): string {
   return "text-error";
 }
 
-export function AnalysisHistoryItem({ analysis }: AnalysisHistoryItemProps) {
+export function AnalysisHistoryItem({ analysis, onClick }: AnalysisHistoryItemProps) {
   const t = useTranslations("jobs");
 
   return (
-    <div className="bg-surface-50 border-brd-200 flex items-start justify-between gap-4 rounded-2xl border p-4">
+    <button
+      onClick={onClick}
+      className="bg-surface-50 border-brd-200 hover:bg-surface-100 flex w-full items-start justify-between gap-4 rounded-2xl border p-4 text-left transition-colors">
       <div className="flex min-w-0 flex-col gap-1">
         <p className="text-txt truncate font-medium">
           {analysis.job?.title || t("untitledJob")}
@@ -39,6 +42,6 @@ export function AnalysisHistoryItem({ analysis }: AnalysisHistoryItemProps) {
         </span>
         <span className="text-txt-muted text-xs">{t("matchScore")}</span>
       </div>
-    </div>
+    </button>
   );
 }

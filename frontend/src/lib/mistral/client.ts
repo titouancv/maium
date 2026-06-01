@@ -3,8 +3,8 @@ import { z } from "zod";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { EMBEDDING_DIM } from "@/constants";
 
-const CHAT_MODEL = process.env.MISTRAL_CHAT_MODEL ?? "mistral-large-latest";
-const EMBED_MODEL = process.env.MISTRAL_EMBED_MODEL ?? "mistral-embed";
+const CHAT_MODEL = process.env.MISTRAL_CHAT_MODEL || "mistral-small-latest";
+const EMBED_MODEL = process.env.MISTRAL_EMBED_MODEL || "mistral-embed";
 
 // Rough public pricing ($/1M tokens) used only for the cost_estimate audit
 // column — not billing-grade, just an order of magnitude for observability.
@@ -38,18 +38,16 @@ async function logUsage(params: {
     (params.inputTokens / 1_000_000) * COST_PER_1M.input +
     (params.outputTokens / 1_000_000) * COST_PER_1M.output;
   try {
-    await createAdminClient()
-      .from("llm_logs")
-      .insert({
-        user_id: params.userId,
-        operation: params.operation,
-        model: params.model,
-        input_tokens: params.inputTokens,
-        output_tokens: params.outputTokens,
-        latency_ms: params.latencyMs,
-        cost_estimate: cost,
-        status: params.status,
-      });
+    await createAdminClient().from("llm_logs").insert({
+      user_id: params.userId,
+      operation: params.operation,
+      model: params.model,
+      input_tokens: params.inputTokens,
+      output_tokens: params.outputTokens,
+      latency_ms: params.latencyMs,
+      cost_estimate: cost,
+      status: params.status,
+    });
   } catch {
     // Audit logging must never break the pipeline.
   }

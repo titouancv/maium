@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
 import { useRouter } from "@/i18n/navigation";
 import { createClient } from "@/lib/supabase/client";
@@ -90,8 +90,10 @@ export function AnalysisProgress({
     };
   }, [analysisJobId]);
 
+  const refreshedRef = useRef(false);
   useEffect(() => {
-    if (state.status === "completed") {
+    if (state.status === "completed" && !refreshedRef.current) {
+      refreshedRef.current = true;
       router.refresh();
       const timer = setTimeout(onDone, 1200);
       return () => clearTimeout(timer);

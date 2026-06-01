@@ -24,6 +24,14 @@
       "MATCHING_PROFILE": "Comparaison avec votre profil…",
       "OPTIMIZING_RESUME": "Optimisation de votre CV…",
       "GENERATING_EMBEDDINGS": "Finalisation…"
+    },
+    "detail": {
+      "close": "Fermer",
+      "confidence": "Confiance",
+      "strengths": "Points forts",
+      "weaknesses": "Points faibles",
+      "missingSkills": "Compétences manquantes",
+      "recommendations": "Recommandations"
     }
   },
   "search": {
