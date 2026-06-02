@@ -2,12 +2,14 @@
 
 import { useState } from "react";
 import { useTranslations } from "next-intl";
-import { API } from "@/constants";
+import { API, ROUTES } from "@/constants";
+import { Link } from "@/i18n/navigation";
 import { WelcomeOverlay } from "./collections/WelcomeOverlay";
 import { HeroSection } from "./collections/HeroSection";
 import { cn } from "@/lib/utils";
 import { UserData } from "@/types";
 import { PageLayout } from "../../layout";
+import { Button } from "@/components/ui";
 
 interface HomeContentProps {
   user: UserData | null;
@@ -15,6 +17,7 @@ interface HomeContentProps {
 
 export const HomeContent = ({ user }: HomeContentProps) => {
   const tNav = useTranslations("nav");
+  const t = useTranslations("home");
 
   const needsWelcome = user?.onboarding_completed === false;
   const [showOverlay, setShowOverlay] = useState(needsWelcome);
@@ -70,6 +73,13 @@ export const HomeContent = ({ user }: HomeContentProps) => {
   return (
     <PageLayout title={tNav("home")}>
       {!user && <HeroSection />}
+      {user && (
+        <div className="flex items-center justify-center py-12">
+          <Link href={ROUTES.JOBS}>
+            <Button variant="primary">{t("goToAnalysis")}</Button>
+          </Link>
+        </div>
+      )}
 
       {showOverlay && user && (
         <div

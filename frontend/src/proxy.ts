@@ -7,7 +7,7 @@ import { ROUTES } from "./constants";
 const handleI18nRouting = createIntlMiddleware(routing);
 
 /** Path prefixes (locale-stripped) that require an authenticated user. */
-const PROTECTED_PREFIXES = [ROUTES.MESSAGES] as const;
+const PROTECTED_PREFIXES = [ROUTES.MESSAGES, ROUTES.JOBS] as const;
 
 /** Strip an optional leading `/fr` locale segment (`en` is unprefixed). */
 function stripLocale(pathname: string): { locale: string; path: string } {

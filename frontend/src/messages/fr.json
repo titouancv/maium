@@ -3,7 +3,38 @@
     "home": "maium",
     "settings": "Paramètres",
     "searchLabel": "Rechercher",
-    "messages": "messages"
+    "messages": "messages",
+    "jobs": "offres"
+  },
+  "jobs": {
+    "title": "Analyse d'offre",
+    "analyze": "Analyser",
+    "urlPlaceholder": "Collez l'URL d'une offre d'emploi",
+    "invalidUrl": "Entrez une URL valide",
+    "submitError": "Impossible de lancer l'analyse. Réessayez.",
+    "rateLimited": "Vous avez atteint la limite d'analyses par heure. Réessayez plus tard.",
+    "queued": "En file d'attente…",
+    "failed": "L'analyse a échoué. Veuillez réessayer.",
+    "matchScore": "Score de correspondance",
+    "untitledJob": "Offre sans titre",
+    "historyTitle": "Historique",
+    "historyEmpty": "Aucune analyse pour l'instant. Collez une URL d'offre pour commencer.",
+    "step": {
+      "EXTRACTING_JOB": "Extraction de l'offre…",
+      "MATCHING_PROFILE": "Comparaison avec votre profil…",
+      "OPTIMIZING_RESUME": "Optimisation de votre CV…",
+      "GENERATING_EMBEDDINGS": "Finalisation…"
+    },
+    "detail": {
+      "close": "Fermer",
+      "confidence": "Confiance",
+      "lowConfidenceWarning": "⚠️ Le score de confiance est de {score}, les résultats peuvent être moins précis.",
+      "strengths": "Points forts",
+      "weaknesses": "Points faibles",
+      "missingSkills": "Compétences manquantes",
+      "recommendations": "Recommandations",
+      "viewJobPosting": "Voir l'offre d'emploi"
+    }
   },
   "search": {
     "placeholder": "Rechercher des utilisateurs...",
@@ -36,7 +67,8 @@
     "heroTitle": "Imaginez demain. Connectez-vous maintenant.",
     "appDescription": "maium façonne votre prochain horizon et vous connecte avec des personnes qui partagent votre parcours.",
     "dataUsagePrefix": "En vous connectant avec Google, nous accédons à votre nom et adresse e-mail pour créer votre compte. Vos données ne sont jamais vendues ni partagées avec des tiers. Consultez notre",
-    "privacyPolicyLink": "politique de confidentialité"
+    "privacyPolicyLink": "politique de confidentialité",
+    "goToAnalysis": "Analyser une offre d'emploi"
   },
   "settings": {
     "title": "Paramètres",
