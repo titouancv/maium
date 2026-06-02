@@ -49,7 +49,7 @@ export const SIGNUP_FORM_ID = "signup-step-form";
 // --- Job-analysis pipeline -------------------------------------------------
 
 /** Max job analyses a user can launch per rolling hour (rate-limit). */
-export const ANALYSES_PER_HOUR = 10;
+export const ANALYSES_PER_HOUR = 100;
 
 /** Max characters of sanitized job HTML sent to Mistral (token guardrail). */
 export const JOB_TEXT_CHAR_LIMIT = 12000;

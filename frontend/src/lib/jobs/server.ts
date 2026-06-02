@@ -19,7 +19,7 @@ export async function getAnalysisHistory(): Promise<AnalysisListItem[]> {
     .select(
       `id, job_id, matching_score, confidence_score, strengths, weaknesses,
        missing_skills, recommendations, summary, created_at,
-       job:job_id ( title, company, location )`,
+       job:job_id ( title, company, location, source_url )`,
     )
     .eq("user_id", user.id)
     .order("created_at", { ascending: false });

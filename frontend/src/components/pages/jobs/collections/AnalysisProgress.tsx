@@ -5,6 +5,7 @@ import { useTranslations } from "next-intl";
 import { useRouter } from "@/i18n/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { API } from "@/constants";
+import { ProgressBar } from "@/components/ui";
 import type { AnalysisStatus, AnalysisStep } from "@/types/job";
 
 interface AnalysisProgressProps {
@@ -18,6 +19,7 @@ interface ProgressState {
   progress: number;
   error: string | null;
 }
+
 
 /**
  * Follows a running analysis live. Seeds from a one-shot status fetch, then
@@ -37,6 +39,54 @@ export function AnalysisProgress({
     progress: 0,
     error: null,
   });
+
+  // Animated display value (float). Slowly creeps forward between real updates.
+  const [displayProgress, setDisplayProgress] = useState(0);
+  const stateRef = useRef(state);
+  useEffect(() => {
+    stateRef.current = state;
+  }, [state]);
+
+  // 60 fps animation via requestAnimationFrame.
+  //   • Behind real progress → proportional catch-up (τ ≈ 0.33s), min 5 %/s
+  //   • At or ahead → exponential deceleration toward progress+5, min 0.08 %/s
+  //   dt is capped at 100 ms to avoid a big jump when the tab regains focus.
+  useEffect(() => {
+    let rafId: number;
+    let lastTime: number | null = null;
+
+    const animate = (now: number) => {
+      if (lastTime === null) {
+        lastTime = now;
+        rafId = requestAnimationFrame(animate);
+        return;
+      }
+      const dt = Math.min((now - lastTime) / 1000, 0.1);
+      lastTime = now;
+
+      setDisplayProgress((prev) => {
+        const { progress, status } = stateRef.current;
+        if (status === "completed") return 100;
+        if (status === "failed") return prev;
+
+        const distance = progress - prev;
+        if (distance > 0.01) {
+          const rate = Math.max(distance * 3, 5);
+          return Math.min(prev + rate * dt, progress);
+        }
+
+        const cap = Math.min(progress + 5, 99);
+        const remaining = cap - prev;
+        if (remaining <= 0) return prev;
+        return prev + Math.max(remaining * 0.4, 0.08) * dt;
+      });
+
+      rafId = requestAnimationFrame(animate);
+    };
+
+    rafId = requestAnimationFrame(animate);
+    return () => cancelAnimationFrame(rafId);
+  }, []);
 
   useEffect(() => {
     let cancelled = false;
@@ -90,15 +140,20 @@ export function AnalysisProgress({
     };
   }, [analysisJobId]);
 
+  const onDoneRef = useRef(onDone);
+  useEffect(() => {
+    onDoneRef.current = onDone;
+  }, [onDone]);
+
   const refreshedRef = useRef(false);
   useEffect(() => {
     if (state.status === "completed" && !refreshedRef.current) {
       refreshedRef.current = true;
       router.refresh();
-      const timer = setTimeout(onDone, 1200);
+      const timer = setTimeout(() => onDoneRef.current(), 1200);
       return () => clearTimeout(timer);
     }
-  }, [state.status, router, onDone]);
+  }, [state.status, router]);
 
   if (state.status === "failed") {
     return (
@@ -109,19 +164,9 @@ export function AnalysisProgress({
   }
 
   return (
-    <div className="bg-surface-100 flex flex-col gap-2 rounded-xl p-4">
-      <div className="flex items-center justify-between">
-        <span className="text-txt text-sm">
-          {state.currentStep ? t(`step.${state.currentStep}`) : t("queued")}
-        </span>
-        <span className="text-txt-muted text-xs">{state.progress}%</span>
-      </div>
-      <div className="bg-surface-200 h-1.5 w-full overflow-hidden rounded-full">
-        <div
-          className="bg-primary h-full rounded-full transition-all duration-500"
-          style={{ width: `${state.progress}%` }}
-        />
-      </div>
-    </div>
+    <ProgressBar
+      value={displayProgress}
+      label={state.currentStep ? t(`step.${state.currentStep}`) : t("queued")}
+    />
   );
 }

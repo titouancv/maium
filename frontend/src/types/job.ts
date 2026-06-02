@@ -59,7 +59,7 @@ export interface AnalysisData {
 
 /** An analysis row joined with its job, for history listing. */
 export interface AnalysisListItem extends AnalysisData {
-  job: Pick<JobData, "title" | "company" | "location"> | null;
+  job: Pick<JobData, "title" | "company" | "location" | "source_url"> | null;
 }
 
 export interface OptimizedResume {

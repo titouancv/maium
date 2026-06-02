@@ -16,12 +16,12 @@ export function AnalysisHistoryList({ history }: AnalysisHistoryListProps) {
   const [selected, setSelected] = useState<AnalysisListItem | null>(null);
 
   return (
-    <>
-      <Section title={t("historyTitle")}>
+    <div className="h-full">
+      <Section title={t("historyTitle")} className="md:h-full">
         {history.length === 0 ? (
-          <p className="text-txt-muted text-sm">{t("historyEmpty")}</p>
+          <p className="text-txt-muted">{t("historyEmpty")}</p>
         ) : (
-          <div className="flex flex-col gap-3">
+          <div className="flex min-h-0 flex-col gap-3 md:overflow-y-auto">
             {history.map((analysis) => (
               <AnalysisHistoryItem
                 key={analysis.id}
@@ -29,6 +29,7 @@ export function AnalysisHistoryList({ history }: AnalysisHistoryListProps) {
                 onClick={() => setSelected(analysis)}
               />
             ))}
+            <div className="h-24 shrink-0 md:h-[250px]" />
           </div>
         )}
       </Section>
@@ -39,6 +40,6 @@ export function AnalysisHistoryList({ history }: AnalysisHistoryListProps) {
           onClose={() => setSelected(null)}
         />
       )}
-    </>
+    </div>
   );
 }

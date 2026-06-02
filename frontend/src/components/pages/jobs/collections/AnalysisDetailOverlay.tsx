@@ -2,7 +2,7 @@
 
 import { useTranslations } from "next-intl";
 import type { AnalysisListItem } from "@/types/job";
-import { ChipList, Section } from "@/components/ui";
+import { Button, ChipList, Section } from "@/components/ui";
 import { PageLayout } from "@/components/layout/PageLayout";
 
 interface Props {
@@ -34,7 +34,7 @@ export function AnalysisDetailOverlay({ analysis, onClose }: Props) {
                 <span className="text-primary text-4xl font-bold">
                   {analysis.matching_score}
                 </span>
-                <span className="text-txt-muted pb-0.5">{t("matchScore")}</span>
+                <span className="pb-0.5">{t("matchScore")}</span>
               </div>
               {analysis.confidence_score < 75 && (
                 <div className="bg-secondary-600 text-on-primary flex rounded-sm px-2 py-1 text-sm">
@@ -45,13 +45,26 @@ export function AnalysisDetailOverlay({ analysis, onClose }: Props) {
                   </span>
                 </div>
               )}
-              {analysis.job?.location && (
-                <p className="text-txt-muted truncate">
-                  {analysis.job?.location}
-                </p>
-              )}
-              {analysis.summary && (
-                <p className="text-txt leading-relaxed">{analysis.summary}</p>
+              <div className="flex flex-col gap-1">
+                {analysis.job?.location && (
+                  <p className="text-txt-muted truncate">
+                    {analysis.job?.location}
+                  </p>
+                )}
+                {analysis.summary && (
+                  <p className="text-txt leading-relaxed">{analysis.summary}</p>
+                )}
+              </div>
+              {analysis.job?.source_url && (
+                <a
+                  href={analysis.job.source_url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <Button variant="outline" className="w-full">
+                    {t("detail.viewJobPosting")}
+                  </Button>
+                </a>
               )}
             </div>
 

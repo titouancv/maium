@@ -20,6 +20,7 @@ export * from "./Section";
 export * from "./UserCard";
 export * from "./GoogleSignInButton";
 export * from "./LoadingOverlay";
+export * from "./ProgressBar";
 export * from "./SearchOverlay";
 export * from "./collections";
 export * from "./items";

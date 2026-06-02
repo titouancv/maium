@@ -11,9 +11,9 @@ import { AnalyzeJobSchema, type AnalyzeJobInput } from "@/lib/validators/job";
 // `export *` namespace-seal bug at build time (see also JobsSkeleton/loading).
 import { Button } from "@/components/ui/Button";
 import { TextInput } from "@/components/ui/TextInput";
-import { AnalysisProgress } from "./collections/AnalysisProgress";
+import { AnalysisProgress } from "./AnalysisProgress";
 
-export function AnalyzeJobForm() {
+export function AnalyzeJob() {
   const t = useTranslations("jobs");
   const [activeId, setActiveId] = useState<string | null>(null);
   const [submitError, setSubmitError] = useState<string | null>(null);
@@ -36,9 +36,7 @@ export function AnalyzeJobForm() {
       body: JSON.stringify(values),
     });
     if (!res.ok) {
-      setSubmitError(
-        res.status === 429 ? t("rateLimited") : t("submitError"),
-      );
+      setSubmitError(res.status === 429 ? t("rateLimited") : t("submitError"));
       return;
     }
     const data = (await res.json()) as { analysisId: string };
@@ -47,15 +45,18 @@ export function AnalyzeJobForm() {
   });
 
   return (
-    <div className="flex flex-col gap-4">
-      <form onSubmit={onSubmit} className="flex flex-col gap-3 sm:flex-row">
+    <div className="flex flex-col gap-2">
+      <form
+        onSubmit={onSubmit}
+        className="flex flex-col gap-3 md:flex-row md:items-start"
+      >
         <TextInput
           placeholder={t("urlPlaceholder")}
           infoType={errors.jobUrl || submitError ? "error" : undefined}
           infoLabel={errors.jobUrl ? t("invalidUrl") : (submitError ?? "")}
           {...register("jobUrl")}
         />
-        <Button type="submit" isLoading={isSubmitting} className="shrink-0">
+        <Button type="submit" isLoading={isSubmitting}>
           {t("analyze")}
         </Button>
       </form>

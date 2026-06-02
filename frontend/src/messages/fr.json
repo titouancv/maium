@@ -32,7 +32,8 @@
       "strengths": "Points forts",
       "weaknesses": "Points faibles",
       "missingSkills": "Compétences manquantes",
-      "recommendations": "Recommandations"
+      "recommendations": "Recommandations",
+      "viewJobPosting": "Voir l'offre d'emploi"
     }
   },
   "search": {
