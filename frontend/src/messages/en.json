@@ -15,7 +15,7 @@
     "rateLimited": "You've reached the hourly analysis limit. Try again later.",
     "queued": "Queued…",
     "failed": "Analysis failed. Please try again.",
-    "matchScore": "Match",
+    "matchScore": "Match score",
     "untitledJob": "Untitled job",
     "historyTitle": "History",
     "historyEmpty": "No analyses yet. Paste a job URL to get started.",
@@ -28,6 +28,7 @@
     "detail": {
       "close": "Close",
       "confidence": "Confidence",
+      "lowConfidenceWarning": "⚠️ The trust score is {score}, results may be less accurate.",
       "strengths": "Strengths",
       "weaknesses": "Weaknesses",
       "missingSkills": "Missing skills",
@@ -65,7 +66,8 @@
     "heroTitle": "Imagine tomorrow. Connect now.",
     "appDescription": "maium shapes your next horizon and connects you with people who share your journey.",
     "dataUsagePrefix": "By signing in with Google, we access your name and email address to create your account. Your data is never sold or shared with third parties. Read our",
-    "privacyPolicyLink": "privacy policy"
+    "privacyPolicyLink": "privacy policy",
+    "goToAnalysis": "Analyze a job posting"
   },
   "settings": {
     "title": "Settings",
