@@ -55,7 +55,7 @@ export function AnalysisDetailOverlay({ analysis, onClose }: Props) {
                   <p className="text-txt leading-relaxed">{analysis.summary}</p>
                 )}
               </div>
-              {analysis.job?.source_url && (
+              {analysis.job?.source_url?.startsWith("http") && (
                 <a
                   href={analysis.job.source_url}
                   target="_blank"
@@ -102,6 +102,9 @@ export function AnalysisDetailOverlay({ analysis, onClose }: Props) {
                   </div>
                 </Section>
               )}
+              <p className="text-txt-muted text-center text-xs">
+                {t("detail.aiDisclaimer")}
+              </p>
               <div className="h-24 shrink-0 md:h-32" />
             </div>
           </div>

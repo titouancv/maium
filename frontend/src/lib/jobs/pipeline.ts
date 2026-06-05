@@ -2,13 +2,9 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import { embed } from "@/lib/mistral";
 import { PROMPT_VERSION } from "@/constants";
 import type { AnalysisStep } from "@/types/job";
-import { extractJob } from "./extract";
+import { extractJob, extractJobFromText } from "./extract";
 import { getCandidateProfile, profileToText } from "./profile";
-import {
-  computeFinalScore,
-  cosineSimilarity,
-  getMatchingExplanation,
-} from "./matching";
+import { cosineSimilarity, getMatchingExplanation } from "./matching";
 import { optimizeResume } from "./optimizeResume";
 
 const CHAT_MODEL = process.env.MISTRAL_CHAT_MODEL ?? "mistral-large-latest";
@@ -43,7 +39,7 @@ export async function runAnalysisPipeline(analysisJobId: string): Promise<void> 
 
   const { data: jobRow } = await admin
     .from("analysis_jobs")
-    .select("id, user_id, source_url")
+    .select("id, user_id, source_url, job_text")
     .eq("id", analysisJobId)
     .single();
 
@@ -61,8 +57,12 @@ export async function runAnalysisPipeline(analysisJobId: string): Promise<void> 
       })
       .eq("id", analysisJobId);
 
-    // 1. Extract the job posting.
-    const job = await extractJob(jobRow.source_url as string, userId);
+    // 1. Extract the job posting (URL or pasted text).
+    const rawText = jobRow.job_text as string | null;
+    const sourceUrl = jobRow.source_url as string | null;
+    const job = rawText
+      ? await extractJobFromText(rawText, userId)
+      : await extractJob(sourceUrl!, userId);
     await admin
       .from("analysis_jobs")
       .update({ job_id: job.id })
@@ -87,18 +87,11 @@ export async function runAnalysisPipeline(analysisJobId: string): Promise<void> 
       parseEmbedding(jobEmbeddingRow?.embedding),
     );
 
-    const breakdown = computeFinalScore({
-      jobSkills: job.skills,
-      profile,
-      jobSeniority: job.seniority,
-      semanticSimilarity,
-    });
-
-    const explanation = await getMatchingExplanation({
+    const { breakdown, ...explanation } = await getMatchingExplanation({
       userId,
       job,
       profile,
-      breakdown,
+      semanticSimilarity,
     });
 
     const { data: analysis } = await admin
