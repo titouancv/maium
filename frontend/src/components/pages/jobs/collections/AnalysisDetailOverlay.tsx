@@ -102,6 +102,9 @@ export function AnalysisDetailOverlay({ analysis, onClose }: Props) {
                   </div>
                 </Section>
               )}
+              <p className="text-txt-muted text-center text-xs">
+                {t("detail.aiDisclaimer")}
+              </p>
               <div className="h-24 shrink-0 md:h-32" />
             </div>
           </div>

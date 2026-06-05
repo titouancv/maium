@@ -80,7 +80,11 @@ export function AnalyzeJob() {
         />
       </div>
       <form
-        onSubmit={urlForm.handleSubmit((v) => submit(v))}
+        onSubmit={
+          mode === "url"
+            ? urlForm.handleSubmit((v) => submit(v))
+            : textForm.handleSubmit((v) => submit(v))
+        }
         className="flex flex-1 flex-col justify-between gap-4"
       >
         <div className="flex flex-col justify-between gap-4">

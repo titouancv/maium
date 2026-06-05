@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
 import { useRouter } from "@/i18n/navigation";
 import { createClient } from "@/lib/supabase/client";
-import { API } from "@/constants";
+import { API, ROUTES } from "@/constants";
 import { ProgressBar } from "@/components/ui";
 import type { AnalysisStatus, AnalysisStep } from "@/types/job";
 
@@ -18,14 +18,14 @@ interface ProgressState {
   currentStep: AnalysisStep | null;
   progress: number;
   error: string | null;
+  analysisId: string | null;
 }
 
 
 /**
  * Follows a running analysis live. Seeds from a one-shot status fetch, then
- * subscribes to `analysis_jobs` UPDATE rows over Realtime (same pattern as the
- * messaging postgres_changes subscription). On completion it refreshes the
- * route so the history list re-streams with the new analysis.
+ * subscribes to `analysis_jobs` UPDATE rows over Realtime. On completion,
+ * redirects to the history page and auto-opens the finished analysis overlay.
  */
 export function AnalysisProgress({
   analysisJobId,
@@ -38,6 +38,7 @@ export function AnalysisProgress({
     currentStep: null,
     progress: 0,
     error: null,
+    analysisId: null,
   });
 
   // Animated display value (float). Slowly creeps forward between real updates.
@@ -101,6 +102,7 @@ export function AnalysisProgress({
             currentStep: data.currentStep,
             progress: data.progress,
             error: data.error,
+            analysisId: data.analysisId ?? null,
           });
         }
       })
@@ -123,12 +125,14 @@ export function AnalysisProgress({
             current_step: AnalysisStep | null;
             progress: number;
             error_message: string | null;
+            analysis_id: string | null;
           };
           setState({
             status: row.status,
             currentStep: row.current_step,
             progress: row.progress,
             error: row.error_message,
+            analysisId: row.analysis_id ?? null,
           });
         },
       )
@@ -145,15 +149,13 @@ export function AnalysisProgress({
     onDoneRef.current = onDone;
   }, [onDone]);
 
-  const refreshedRef = useRef(false);
+  const redirectedRef = useRef(false);
   useEffect(() => {
-    if (state.status === "completed" && !refreshedRef.current) {
-      refreshedRef.current = true;
-      router.refresh();
-      const timer = setTimeout(() => onDoneRef.current(), 1200);
-      return () => clearTimeout(timer);
+    if (state.status === "completed" && state.analysisId && !redirectedRef.current) {
+      redirectedRef.current = true;
+      router.push(`${ROUTES.JOBS_HISTORY}?analysis=${state.analysisId}`);
     }
-  }, [state.status, router]);
+  }, [state.status, state.analysisId, router]);
 
   if (state.status === "failed") {
     const errorMessage =

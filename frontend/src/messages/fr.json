@@ -41,7 +41,8 @@
       "weaknesses": "Points faibles",
       "missingSkills": "Compétences manquantes",
       "recommendations": "Recommandations",
-      "viewJobPosting": "Voir l'offre d'emploi"
+      "viewJobPosting": "Voir l'offre d'emploi",
+      "aiDisclaimer": "Cette analyse a été générée par IA et peut contenir des erreurs."
     }
   },
   "search": {
