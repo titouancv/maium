@@ -4,31 +4,44 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useTranslations } from "next-intl";
-import { API } from "@/constants";
-import { AnalyzeJobSchema, type AnalyzeJobInput } from "@/lib/validators/job";
+import { API, ROUTES } from "@/constants";
+import {
+  AnalyzeJobUrlSchema,
+  AnalyzeJobTextSchema,
+  type AnalyzeJobInput,
+} from "@/lib/validators/job";
 // Import UI primitives from their files, not the `@/components/ui` barrel:
 // pulling this new client tree through the barrel trips a Turbopack
 // `export *` namespace-seal bug at build time (see also JobsSkeleton/loading).
 import { Button } from "@/components/ui/Button";
 import { TextInput } from "@/components/ui/TextInput";
+import { TextArea } from "@/components/ui/TextArea";
+import { Tabs } from "@/components/ui/Tabs";
 import { AnalysisProgress } from "./AnalysisProgress";
+import { Link } from "@/i18n/navigation";
+
+type Mode = "url" | "text";
 
 export function AnalyzeJob() {
   const t = useTranslations("jobs");
+  const [mode, setMode] = useState<Mode>("url");
   const [activeId, setActiveId] = useState<string | null>(null);
   const [submitError, setSubmitError] = useState<string | null>(null);
 
-  const {
-    register,
-    handleSubmit,
-    reset,
-    formState: { errors, isSubmitting },
-  } = useForm<AnalyzeJobInput>({
-    resolver: zodResolver(AnalyzeJobSchema),
-    defaultValues: { jobUrl: "" },
+  const urlForm = useForm<Extract<AnalyzeJobInput, { mode: "url" }>>({
+    resolver: zodResolver(AnalyzeJobUrlSchema),
+    defaultValues: { mode: "url", jobUrl: "" },
   });
 
-  const onSubmit = handleSubmit(async (values) => {
+  const textForm = useForm<Extract<AnalyzeJobInput, { mode: "text" }>>({
+    resolver: zodResolver(AnalyzeJobTextSchema),
+    defaultValues: { mode: "text", jobText: "" },
+  });
+
+  const isSubmitting =
+    urlForm.formState.isSubmitting || textForm.formState.isSubmitting;
+
+  async function submit(values: AnalyzeJobInput) {
     setSubmitError(null);
     const res = await fetch(API.ANALYZE_JOB, {
       method: "POST",
@@ -41,32 +54,67 @@ export function AnalyzeJob() {
     }
     const data = (await res.json()) as { analysisId: string };
     setActiveId(data.analysisId);
-    reset();
-  });
+    urlForm.reset();
+    textForm.reset();
+  }
+
+  const urlErrors = urlForm.formState.errors;
+  const textErrors = textForm.formState.errors;
 
   return (
-    <div className="flex flex-col gap-2">
-      <form
-        onSubmit={onSubmit}
-        className="flex flex-col gap-3 md:flex-row md:items-start"
-      >
-        <TextInput
-          placeholder={t("urlPlaceholder")}
-          infoType={errors.jobUrl || submitError ? "error" : undefined}
-          infoLabel={errors.jobUrl ? t("invalidUrl") : (submitError ?? "")}
-          {...register("jobUrl")}
+    <div className="flex h-full flex-col gap-4">
+      <div className="flex w-full justify-between">
+        <Link href={ROUTES.JOBS_HISTORY}>
+          <Button variant="outline" size="none" className="px-4 py-2">
+            {t("viewHistory")}
+          </Button>
+        </Link>
+        <Tabs
+          tabs={[t("modeUrl"), t("modeText")]}
+          activeTab={mode === "url" ? 0 : 1}
+          onChange={(idx) => {
+            setMode(idx === 0 ? "url" : "text");
+            setSubmitError(null);
+          }}
+          layoutId="analyzeJobMode"
         />
+      </div>
+      <form
+        onSubmit={urlForm.handleSubmit((v) => submit(v))}
+        className="flex flex-1 flex-col justify-between gap-4"
+      >
+        <div className="flex flex-col justify-between gap-4">
+          {mode === "url" ? (
+            <TextInput
+              placeholder={t("urlPlaceholder")}
+              infoType={urlErrors.jobUrl || submitError ? "error" : undefined}
+              infoLabel={
+                urlErrors.jobUrl ? t("invalidUrl") : (submitError ?? "")
+              }
+              {...urlForm.register("jobUrl")}
+            />
+          ) : (
+            <TextArea
+              placeholder={t("textPlaceholder")}
+              row={6}
+              infoType={textErrors.jobText || submitError ? "error" : undefined}
+              infoLabel={
+                textErrors.jobText ? t("invalidText") : (submitError ?? "")
+              }
+              {...textForm.register("jobText")}
+            />
+          )}
+          {activeId && (
+            <AnalysisProgress
+              analysisJobId={activeId}
+              onDone={() => setActiveId(null)}
+            />
+          )}
+        </div>
         <Button type="submit" isLoading={isSubmitting}>
           {t("analyze")}
         </Button>
       </form>
-
-      {activeId && (
-        <AnalysisProgress
-          analysisJobId={activeId}
-          onDone={() => setActiveId(null)}
-        />
-      )}
     </div>
   );
 }

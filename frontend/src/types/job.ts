@@ -34,7 +34,7 @@ export interface AnalysisJob {
   id: string;
   user_id: string;
   job_id: string | null;
-  source_url: string;
+  source_url: string | null;
   status: AnalysisStatus;
   current_step: AnalysisStep | null;
   progress: number;

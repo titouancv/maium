@@ -156,9 +156,13 @@ export function AnalysisProgress({
   }, [state.status, router]);
 
   if (state.status === "failed") {
+    const errorMessage =
+      state.error === "INSUFFICIENT_JOB_DATA"
+        ? t("error.insufficientData")
+        : t("error.unknown");
     return (
       <div className="bg-error/10 text-error rounded-xl p-4 text-sm">
-        {t("failed")}
+        {errorMessage}
       </div>
     );
   }

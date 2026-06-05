@@ -67,29 +67,46 @@ describe("POST /api/analyze-job", () => {
 
   it("returns 401 when unauthenticated", async () => {
     mockAuth(null);
-    const res = await POST(makeRequest({ jobUrl: "https://example.com/job" }));
+    const res = await POST(makeRequest({ mode: "url", jobUrl: "https://example.com/job" }));
     expect(res.status).toBe(401);
   });
 
   it("returns 400 for an invalid URL", async () => {
     mockAuth("user-1");
-    const res = await POST(makeRequest({ jobUrl: "not-a-url" }));
+    const res = await POST(makeRequest({ mode: "url", jobUrl: "not-a-url" }));
+    expect(res.status).toBe(400);
+  });
+
+  it("returns 400 for text mode with too-short content", async () => {
+    mockAuth("user-1");
+    const res = await POST(makeRequest({ mode: "text", jobText: "too short" }));
     expect(res.status).toBe(400);
   });
 
   it("returns 429 when over the rate limit", async () => {
     mockAuth("user-1");
     mockRateLimit.mockResolvedValue(false);
-    const res = await POST(makeRequest({ jobUrl: "https://example.com/job" }));
+    const res = await POST(makeRequest({ mode: "url", jobUrl: "https://example.com/job" }));
     expect(res.status).toBe(429);
   });
 
-  it("returns 202 with the queued analysis id on success", async () => {
+  it("returns 202 with the queued analysis id on success (url mode)", async () => {
     mockAuth("user-1");
     mockAdminInsert({ data: { id: "analysis-1" }, error: null });
-    const res = await POST(makeRequest({ jobUrl: "https://example.com/job" }));
+    const res = await POST(makeRequest({ mode: "url", jobUrl: "https://example.com/job" }));
     expect(res.status).toBe(202);
     const json = await res.json();
     expect(json).toEqual({ analysisId: "analysis-1", status: "queued" });
+  });
+
+  it("returns 202 with the queued analysis id on success (text mode)", async () => {
+    mockAuth("user-1");
+    mockAdminInsert({ data: { id: "analysis-2" }, error: null });
+    const res = await POST(
+      makeRequest({ mode: "text", jobText: "A".repeat(50) }),
+    );
+    expect(res.status).toBe(202);
+    const json = await res.json();
+    expect(json).toEqual({ analysisId: "analysis-2", status: "queued" });
   });
 });

@@ -9,16 +9,24 @@
   "jobs": {
     "title": "Job Analysis",
     "analyze": "Analyze",
+    "modeUrl": "URL",
+    "modeText": "Paste text",
     "urlPlaceholder": "Paste a job posting URL",
+    "textPlaceholder": "Paste the job posting content here…",
     "invalidUrl": "Enter a valid URL",
+    "invalidText": "Paste at least 50 characters of job content",
     "submitError": "Could not start the analysis. Try again.",
     "rateLimited": "You've reached the hourly analysis limit. Try again later.",
     "queued": "Queued…",
-    "failed": "Analysis failed. Please try again.",
+    "error": {
+      "insufficientData": "Not enough information could be extracted. Make sure the content describes a real job posting.",
+      "unknown": "Analysis failed. Please try again."
+    },
     "matchScore": "Match score",
     "untitledJob": "Untitled job",
     "historyTitle": "History",
     "historyEmpty": "No analyses yet. Paste a job URL to get started.",
+    "viewHistory": "View history",
     "step": {
       "EXTRACTING_JOB": "Extracting the job posting…",
       "MATCHING_PROFILE": "Matching your profile…",

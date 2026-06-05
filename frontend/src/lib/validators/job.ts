@@ -1,9 +1,21 @@
 import { z } from "zod";
 
-/** Request body for POST /api/analyze-job. */
-export const AnalyzeJobSchema = z.object({
+/** Request body for POST /api/analyze-job — URL mode. */
+export const AnalyzeJobUrlSchema = z.object({
+  mode: z.literal("url"),
   jobUrl: z.url(),
 });
+
+/** Request body for POST /api/analyze-job — pasted text mode. */
+export const AnalyzeJobTextSchema = z.object({
+  mode: z.literal("text"),
+  jobText: z.string().min(50),
+});
+
+export const AnalyzeJobSchema = z.discriminatedUnion("mode", [
+  AnalyzeJobUrlSchema,
+  AnalyzeJobTextSchema,
+]);
 export type AnalyzeJobInput = z.infer<typeof AnalyzeJobSchema>;
 
 /** Shape Mistral must return when extracting a job posting from raw text. */
@@ -20,8 +32,14 @@ export const JobExtractionSchema = z.object({
 });
 export type JobExtraction = z.infer<typeof JobExtractionSchema>;
 
-/** Explanatory part of the match that Mistral provides (never the score). */
+/** Full match analysis that Mistral provides: dimension scores + explanation. */
 export const MatchingExplanationSchema = z.object({
+  scores: z.object({
+    hard_skills: z.number().min(0).max(1).default(0),
+    seniority: z.number().min(0).max(1).default(0),
+    semantic: z.number().min(0).max(1).default(0),
+    bonus: z.number().min(0).max(1).default(0),
+  }),
   strengths: z.array(z.string()).default([]),
   weaknesses: z.array(z.string()).default([]),
   missing_skills: z.array(z.string()).default([]),

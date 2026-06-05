@@ -15,6 +15,7 @@ export const ROUTES = {
   MESSAGES: "/messages",
   CONVERSATION: (id: string) => `/messages/${id}`,
   JOBS: "/jobs",
+  JOBS_HISTORY: "/jobs/history",
 } as const;
 
 export const API = {

@@ -21,7 +21,7 @@ export async function POST(req: NextRequest) {
 
   const parsed = AnalyzeJobSchema.safeParse(await req.json().catch(() => null));
   if (!parsed.success) {
-    return NextResponse.json({ error: "Invalid job URL" }, { status: 400 });
+    return NextResponse.json({ error: "Invalid input" }, { status: 400 });
   }
 
   if (!(await isUnderRateLimit(user.id))) {
@@ -29,14 +29,14 @@ export async function POST(req: NextRequest) {
   }
 
   const admin = createAdminClient();
+  const insertPayload =
+    parsed.data.mode === "url"
+      ? { user_id: user.id, source_url: parsed.data.jobUrl, status: "queued", progress: 0 }
+      : { user_id: user.id, job_text: parsed.data.jobText, status: "queued", progress: 0 };
+
   const { data: job, error } = await admin
     .from("analysis_jobs")
-    .insert({
-      user_id: user.id,
-      source_url: parsed.data.jobUrl,
-      status: "queued",
-      progress: 0,
-    })
+    .insert(insertPayload)
     .select("id")
     .single();
 

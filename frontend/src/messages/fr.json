@@ -9,16 +9,24 @@
   "jobs": {
     "title": "Analyse d'offre",
     "analyze": "Analyser",
+    "modeUrl": "URL",
+    "modeText": "Coller le texte",
     "urlPlaceholder": "Collez l'URL d'une offre d'emploi",
+    "textPlaceholder": "Collez ici le contenu de l'offre d'emploi…",
     "invalidUrl": "Entrez une URL valide",
+    "invalidText": "Collez au moins 50 caractères de contenu",
     "submitError": "Impossible de lancer l'analyse. Réessayez.",
     "rateLimited": "Vous avez atteint la limite d'analyses par heure. Réessayez plus tard.",
     "queued": "En file d'attente…",
-    "failed": "L'analyse a échoué. Veuillez réessayer.",
+    "error": {
+      "insufficientData": "Impossible d'extraire suffisamment d'informations. Vérifiez que le contenu décrit une vraie offre d'emploi.",
+      "unknown": "L'analyse a échoué. Veuillez réessayer."
+    },
     "matchScore": "Score de correspondance",
     "untitledJob": "Offre sans titre",
     "historyTitle": "Historique",
     "historyEmpty": "Aucune analyse pour l'instant. Collez une URL d'offre pour commencer.",
+    "viewHistory": "Voir l'historique",
     "step": {
       "EXTRACTING_JOB": "Extraction de l'offre…",
       "MATCHING_PROFILE": "Comparaison avec votre profil…",
