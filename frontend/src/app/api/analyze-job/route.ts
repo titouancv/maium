@@ -29,10 +29,13 @@ export async function POST(req: NextRequest) {
   }
 
   const admin = createAdminClient();
-  const insertPayload =
-    parsed.data.mode === "url"
-      ? { user_id: user.id, source_url: parsed.data.jobUrl, status: "queued", progress: 0 }
-      : { user_id: user.id, job_text: parsed.data.jobText, status: "queued", progress: 0 };
+  const insertPayload = {
+    user_id: user.id,
+    source_url: parsed.data.mode === "url" ? parsed.data.jobUrl : null,
+    job_text: parsed.data.mode === "text" ? parsed.data.jobText : null,
+    status: "queued",
+    progress: 0,
+  };
 
   const { data: job, error } = await admin
     .from("analysis_jobs")
