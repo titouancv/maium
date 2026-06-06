@@ -55,9 +55,24 @@ export const OptimizedResumeSchema = z.object({
   experiences: z
     .array(
       z.object({
+        // 0-based index into the candidate's experiences; dates/location are
+        // merged back from that source so the model never invents facts.
+        source_index: z.number().int().min(0).default(0),
         organization: z.string().default(""),
         role: z.string().default(""),
-        highlights: z.array(z.string()).default([]),
+        description: z.string().default(""),
+      }),
+    )
+    .default([]),
+  education: z
+    .array(
+      z.object({
+        // 0-based index into the candidate's education; dates/location are
+        // merged back from that source so the model never invents facts.
+        source_index: z.number().int().min(0).default(0),
+        organization: z.string().default(""),
+        role: z.string().default(""),
+        description: z.string().default(""),
       }),
     )
     .default([]),

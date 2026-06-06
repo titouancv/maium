@@ -38,7 +38,7 @@ export async function GET(
   const { id } = await params;
   const template = resolveTemplate(req.nextUrl.searchParams.get("template"));
 
-  const data = await buildResumePdfData(id);
+  const data = await buildResumePdfData(id, req.nextUrl.origin);
   if (!data) {
     return NextResponse.json({ error: "Not found" }, { status: 404 });
   }

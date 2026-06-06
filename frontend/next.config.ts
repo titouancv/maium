@@ -13,6 +13,12 @@ const nextConfig: NextConfig = {
       static: 180,
     },
   },
+  // The resume PDF route reads Cabinet Grotesk .ttf files from disk at render
+  // time (see src/lib/resume/fonts). Trace them into the serverless bundle so
+  // they exist in production.
+  outputFileTracingIncludes: {
+    "/api/resume/[id]/pdf": ["./src/lib/resume/fonts/*.ttf"],
+  },
   images: {
     remotePatterns: [
       {

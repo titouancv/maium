@@ -8,15 +8,35 @@ const SAMPLE: ResumePdfData = {
   headline: "Senior Financial Analyst",
   contact: { email: "jane@example.com", phone: "+33 6 00 00 00 00", location: "Paris" },
   summary: "Executive summary of the candidate.",
+  socialNetworks: [
+    { name: "LinkedIn", handle: "jane-doe", url: "https://linkedin.com/in/jane-doe" },
+    { name: "GitHub", handle: "janedoe", url: "https://github.com/janedoe" },
+  ],
+  pseudo: "jane",
+  profileUrl: "https://maium.app/profile/jane",
+  profileQrCode:
+    "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=",
   experiences: [
     {
       organization: "Goldman Sachs",
       role: "Analyst",
-      highlights: ["Built valuation models", "Led M&A diligence"],
+      startPeriod: Date.UTC(2019, 0, 1),
+      endPeriod: Date.UTC(2022, 0, 1),
+      location: "Paris",
+      description: "Built valuation models and led M&A diligence.",
     },
   ],
   skills: ["Financial Modeling", "Valuation", "Excel"],
-  education: [{ organization: "HEC Paris", role: "MSc Finance" }],
+  education: [
+    {
+      organization: "HEC Paris",
+      role: "MSc Finance",
+      startPeriod: Date.UTC(2017, 0, 1),
+      endPeriod: Date.UTC(2019, 0, 1),
+      location: "Paris",
+      description: "Specialized in corporate finance and valuation.",
+    },
+  ],
 };
 
 describe("renderResumePdf", () => {

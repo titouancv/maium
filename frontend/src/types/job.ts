@@ -94,7 +94,18 @@ export interface ResumeJson {
   experiences: Array<{
     organization: string;
     role: string;
-    highlights: string[];
+    startPeriod: number;
+    endPeriod?: number;
+    location?: string;
+    description: string;
+  }>;
+  education: Array<{
+    organization: string;
+    role: string;
+    startPeriod: number;
+    endPeriod?: number;
+    location?: string;
+    description: string;
   }>;
   skills: string[];
 }
@@ -105,9 +116,19 @@ export interface CandidateProfile {
   experiences: Array<{
     organization: string;
     role: string;
+    startPeriod: number;
+    endPeriod?: number;
+    location?: string;
     description: string;
   }>;
-  education: Array<{ organization: string; role: string }>;
+  education: Array<{
+    organization: string;
+    role: string;
+    startPeriod: number;
+    endPeriod?: number;
+    location?: string;
+    description: string;
+  }>;
   skills: string[];
   projects: string[];
 }

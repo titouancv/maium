@@ -28,11 +28,18 @@ export async function getCandidateProfile(
     experiences: (user.professional_experiences ?? []).map((e) => ({
       organization: e.organization,
       role: e.role,
+      startPeriod: e.startPeriod,
+      endPeriod: e.endPeriod,
+      location: e.location,
       description: e.description ?? "",
     })),
     education: (user.educational_experiences ?? []).map((e) => ({
       organization: e.organization,
       role: e.role,
+      startPeriod: e.startPeriod,
+      endPeriod: e.endPeriod,
+      location: e.location,
+      description: e.description ?? "",
     })),
     skills: user.skills ?? [],
     projects: user.projects ?? [],
