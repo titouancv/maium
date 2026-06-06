@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useLayoutEffect } from "react";
 import { useTranslations } from "next-intl";
 import { API, ROUTES } from "@/constants";
 import { Link } from "@/i18n/navigation";
@@ -10,6 +10,7 @@ import { cn } from "@/lib/utils";
 import { UserData } from "@/types";
 import { PageLayout } from "../../layout";
 import { Button } from "@/components/ui";
+import { useCurrentUserStore } from "@/stores/useCurrentUserStore";
 
 interface HomeContentProps {
   user: UserData | null;
@@ -22,6 +23,14 @@ export const HomeContent = ({ user }: HomeContentProps) => {
   const needsWelcome = user?.onboarding_completed === false;
   const [showOverlay, setShowOverlay] = useState(needsWelcome);
   const [overlayVisible, setOverlayVisible] = useState(needsWelcome);
+
+  // Keep the global user store in sync with the freshest server data. The
+  // layout's UserHydration only runs on a full load, so after a client-side
+  // navigation here (e.g. finishing signup) the store would otherwise stay
+  // stale and the nav tabs (pseudo) wouldn't appear until a hard refresh.
+  useLayoutEffect(() => {
+    useCurrentUserStore.getState().setUser(user);
+  }, [user]);
 
   const handleWelcomeEnter = () => {
     fetch(API.USERS_ME, {
