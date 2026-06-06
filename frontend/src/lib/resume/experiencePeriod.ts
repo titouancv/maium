@@ -15,8 +15,8 @@ export function formatDuration(startDate: number, endDate?: number): string {
   const diffMonths = totalMonthsEnd - totalMonthsStart;
   const years = Math.floor(diffMonths / 12);
   const months = (diffMonths % 12) + 1;
-  if (years > 0) return `${years} ${years > 1 ? "yrs" : "yr"}`;
-  return `${months} ${months > 1 ? "mos" : "mo"}`;
+  if (years > 0) return `${years} ${years > 1 ? "years" : "year"}`;
+  return `${months} ${months > 1 ? "months" : "month"}`;
 }
 
 /**
