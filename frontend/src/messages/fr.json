@@ -42,7 +42,15 @@
       "missingSkills": "Compétences manquantes",
       "recommendations": "Recommandations",
       "viewJobPosting": "Voir l'offre d'emploi",
-      "aiDisclaimer": "Cette analyse a été générée par IA et peut contenir des erreurs."
+      "aiDisclaimer": "Cette analyse a été générée par IA et peut contenir des erreurs.",
+      "downloadResume": "Télécharger mon CV optimisé",
+      "chooseTemplate": "Choisis un format",
+      "template": {
+        "finance": "Finance",
+        "modern": "Moderne"
+      },
+      "generating": "Génération de ton CV…",
+      "downloadError": "Impossible de générer le PDF. Réessaie."
     }
   },
   "search": {

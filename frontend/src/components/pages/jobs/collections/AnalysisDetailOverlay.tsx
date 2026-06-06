@@ -4,6 +4,7 @@ import { useTranslations } from "next-intl";
 import type { AnalysisListItem } from "@/types/job";
 import { Button, ChipList, Section } from "@/components/ui";
 import { PageLayout } from "@/components/layout/PageLayout";
+import { DownloadResumeButton } from "./DownloadResumeButton";
 
 interface Props {
   analysis: AnalysisListItem;
@@ -65,6 +66,9 @@ export function AnalysisDetailOverlay({ analysis, onClose }: Props) {
                     {t("detail.viewJobPosting")}
                   </Button>
                 </a>
+              )}
+              {analysis.resume_id && (
+                <DownloadResumeButton resumeId={analysis.resume_id} />
               )}
             </div>
 
