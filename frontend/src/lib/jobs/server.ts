@@ -19,26 +19,32 @@ export async function getAnalysisHistory(): Promise<AnalysisListItem[]> {
     .select(
       `id, job_id, matching_score, confidence_score, strengths, weaknesses,
        missing_skills, recommendations, summary, created_at,
-       job:job_id ( title, company, location, source_url )`,
+       job:job_id ( title, company, location, source_url ),
+       resume:optimized_resumes!analysis_id ( id, is_active, deleted_at )`,
     )
     .eq("user_id", user.id)
     .order("created_at", { ascending: false });
 
   if (!data) return [];
 
-  return data.map((a) => ({
-    id: a.id,
-    job_id: a.job_id,
-    matching_score: Number(a.matching_score),
-    confidence_score: Number(a.confidence_score),
-    strengths: (a.strengths as string[]) ?? [],
-    weaknesses: (a.weaknesses as string[]) ?? [],
-    missing_skills: (a.missing_skills as string[]) ?? [],
-    recommendations: (a.recommendations as string[]) ?? [],
-    summary: a.summary,
-    created_at: a.created_at,
-    job: (a.job as unknown) as AnalysisListItem["job"],
-  }));
+  return data.map((a) => {
+    const resumes = (a.resume as { id: string; is_active: boolean; deleted_at: string | null }[]) ?? [];
+    const activeResume = resumes.find((r) => r.is_active && !r.deleted_at);
+    return {
+      id: a.id,
+      job_id: a.job_id,
+      matching_score: Number(a.matching_score),
+      confidence_score: Number(a.confidence_score),
+      strengths: (a.strengths as string[]) ?? [],
+      weaknesses: (a.weaknesses as string[]) ?? [],
+      missing_skills: (a.missing_skills as string[]) ?? [],
+      recommendations: (a.recommendations as string[]) ?? [],
+      summary: a.summary,
+      created_at: a.created_at,
+      job: a.job as unknown as AnalysisListItem["job"],
+      resume_id: activeResume?.id ?? null,
+    };
+  });
 }
 
 /** Current state of an analysis job, for status polling / Realtime fallback. */

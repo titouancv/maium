@@ -38,6 +38,7 @@ export const API = {
   ANALYSIS: (id: string) => `/api/analysis/${id}`,
   HISTORY: "/api/history",
   RESUME: (id: string) => `/api/resume/${id}`,
+  RESUME_PDF: (id: string) => `/api/resume/${id}/pdf`,
 } as const;
 
 export const EXTERNAL_API = {

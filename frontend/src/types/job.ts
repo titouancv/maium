@@ -6,6 +6,10 @@ export const ANALYSIS_STATUSES = [
 ] as const;
 export type AnalysisStatus = (typeof ANALYSIS_STATUSES)[number];
 
+/** Available CV layouts the user can download. */
+export const RESUME_TEMPLATES = ["finance", "modern"] as const;
+export type ResumeTemplate = (typeof RESUME_TEMPLATES)[number];
+
 export const ANALYSIS_STEPS = [
   "EXTRACTING_JOB",
   "MATCHING_PROFILE",
@@ -60,6 +64,8 @@ export interface AnalysisData {
 /** An analysis row joined with its job, for history listing. */
 export interface AnalysisListItem extends AnalysisData {
   job: Pick<JobData, "title" | "company" | "location" | "source_url"> | null;
+  /** Id of the active optimized resume generated for this analysis, if any. */
+  resume_id: string | null;
 }
 
 export interface OptimizedResume {
@@ -83,12 +89,22 @@ export interface ResumeVersion {
 
 /** ATS-optimized resume content. Mistral may only rephrase/reorder facts. */
 export interface ResumeJson {
-  headline: string;
   summary: string;
   experiences: Array<{
     organization: string;
     role: string;
-    highlights: string[];
+    startPeriod: number;
+    endPeriod?: number;
+    location?: string;
+    description: string;
+  }>;
+  education: Array<{
+    organization: string;
+    role: string;
+    startPeriod: number;
+    endPeriod?: number;
+    location?: string;
+    description: string;
   }>;
   skills: string[];
 }
@@ -99,9 +115,19 @@ export interface CandidateProfile {
   experiences: Array<{
     organization: string;
     role: string;
+    startPeriod: number;
+    endPeriod?: number;
+    location?: string;
     description: string;
   }>;
-  education: Array<{ organization: string; role: string }>;
+  education: Array<{
+    organization: string;
+    role: string;
+    startPeriod: number;
+    endPeriod?: number;
+    location?: string;
+    description: string;
+  }>;
   skills: string[];
   projects: string[];
 }

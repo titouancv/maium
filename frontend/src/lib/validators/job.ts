@@ -32,6 +32,28 @@ export const JobExtractionSchema = z.object({
 });
 export type JobExtraction = z.infer<typeof JobExtractionSchema>;
 
+/** A single experience/education entry inside a stored `resume_json`. */
+const ResumeEntrySchema = z.object({
+  organization: z.string().default(""),
+  role: z.string().default(""),
+  startPeriod: z.number(),
+  endPeriod: z.number().optional(),
+  location: z.string().optional(),
+  description: z.string().default(""),
+});
+
+/**
+ * A user-edited `resume_json` posted to the PDF endpoint. Used only to render
+ * the PDF on the fly — never persisted to the database.
+ */
+export const ResumeJsonInputSchema = z.object({
+  summary: z.string().default(""),
+  experiences: z.array(ResumeEntrySchema).default([]),
+  education: z.array(ResumeEntrySchema).default([]),
+  skills: z.array(z.string()).default([]),
+});
+export type ResumeJsonInput = z.infer<typeof ResumeJsonInputSchema>;
+
 /** Full match analysis that Mistral provides: dimension scores + explanation. */
 export const MatchingExplanationSchema = z.object({
   scores: z.object({
@@ -50,14 +72,28 @@ export type MatchingExplanation = z.infer<typeof MatchingExplanationSchema>;
 
 /** Shape Mistral must return when optimizing a resume for a job. */
 export const OptimizedResumeSchema = z.object({
-  headline: z.string().default(""),
   summary: z.string().default(""),
   experiences: z
     .array(
       z.object({
+        // 0-based index into the candidate's experiences; dates/location are
+        // merged back from that source so the model never invents facts.
+        source_index: z.number().int().min(0).default(0),
         organization: z.string().default(""),
         role: z.string().default(""),
-        highlights: z.array(z.string()).default([]),
+        description: z.string().default(""),
+      }),
+    )
+    .default([]),
+  education: z
+    .array(
+      z.object({
+        // 0-based index into the candidate's education; dates/location are
+        // merged back from that source so the model never invents facts.
+        source_index: z.number().int().min(0).default(0),
+        organization: z.string().default(""),
+        role: z.string().default(""),
+        description: z.string().default(""),
       }),
     )
     .default([]),

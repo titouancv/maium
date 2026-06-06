@@ -42,7 +42,28 @@
       "missingSkills": "Compétences manquantes",
       "recommendations": "Recommandations",
       "viewJobPosting": "Voir l'offre d'emploi",
-      "aiDisclaimer": "Cette analyse a été générée par IA et peut contenir des erreurs."
+      "aiDisclaimer": "Cette analyse a été générée par IA et peut contenir des erreurs.",
+      "template": {
+        "finance": "Finance",
+        "modern": "Moderne"
+      },
+      "templateDescription": {
+        "finance": "Une mise en page sobre sur une colonne avec une typographie classique — idéale pour la finance, le conseil et les secteurs traditionnels.",
+        "modern": "Une mise en page épurée et actuelle avec des couleurs d'accent et des sections claires — parfaite pour la tech, le design et les métiers créatifs."
+      },
+      "generating": "Génération de ton CV…",
+      "downloadError": "Impossible de générer le PDF. Réessaie.",
+      "editAndDownload": "Télécharger mon CV amélioré",
+      "loadingResume": "Chargement de ton CV…",
+      "editSummary": "Résumé",
+      "summaryPlaceholder": "Un court résumé professionnel…",
+      "editExperiences": "Expériences professionnelles",
+      "editEducation": "Formation",
+      "editSkills": "Compétences",
+      "skillPlaceholder": "Ajouter une compétence",
+      "chooseTemplateTitle": "Choisis un format",
+      "chooseTemplateDescription": "Choisis le format le plus adapté au poste, puis génère ton PDF.",
+      "generateButton": "Générer mon CV"
     }
   },
   "search": {
