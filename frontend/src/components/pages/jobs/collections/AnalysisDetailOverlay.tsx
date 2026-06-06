@@ -56,6 +56,9 @@ export function AnalysisDetailOverlay({ analysis, onClose }: Props) {
                   <p className="text-txt leading-relaxed">{analysis.summary}</p>
                 )}
               </div>
+              {analysis.resume_id && (
+                <DownloadResumeButton resumeId={analysis.resume_id} />
+              )}
               {analysis.job?.source_url?.startsWith("http") && (
                 <a
                   href={analysis.job.source_url}
@@ -66,9 +69,6 @@ export function AnalysisDetailOverlay({ analysis, onClose }: Props) {
                     {t("detail.viewJobPosting")}
                   </Button>
                 </a>
-              )}
-              {analysis.resume_id && (
-                <DownloadResumeButton resumeId={analysis.resume_id} />
               )}
             </div>
 

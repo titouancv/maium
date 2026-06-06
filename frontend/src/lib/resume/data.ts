@@ -5,6 +5,7 @@ import { ROUTES } from "@/constants";
 import { parseSocialUrl } from "@/lib/socialNetwork";
 import { sortExperiences } from "./experiencePeriod";
 import type { ResumePdfData } from "./types";
+import type { ResumeJson } from "@/types/job";
 
 /**
  * Assembles the data a resume template needs: the optimized `resume_json`
@@ -12,15 +13,20 @@ import type { ResumePdfData } from "./types";
  * education) plus the owner's header fields read from the authenticated user's
  * own `public.users` row.
  * Returns `null` when the resume does not exist or isn't visible to the user.
+ *
+ * When `overrideJson` is provided (user-edited content from the resume editor),
+ * it replaces the stored `resume_json` for rendering only — nothing is
+ * persisted. `getResumeById` is still called to enforce ownership / existence.
  */
 export async function buildResumePdfData(
   resumeId: string,
   origin: string,
+  overrideJson?: ResumeJson,
 ): Promise<ResumePdfData | null> {
   const result = await getResumeById(resumeId);
   if (!result) return null;
 
-  const { resume_json } = result.resume;
+  const resume_json = overrideJson ?? result.resume.resume_json;
 
   const supabase = await createClient();
   const {

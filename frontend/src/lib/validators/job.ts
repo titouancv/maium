@@ -32,6 +32,28 @@ export const JobExtractionSchema = z.object({
 });
 export type JobExtraction = z.infer<typeof JobExtractionSchema>;
 
+/** A single experience/education entry inside a stored `resume_json`. */
+const ResumeEntrySchema = z.object({
+  organization: z.string().default(""),
+  role: z.string().default(""),
+  startPeriod: z.number(),
+  endPeriod: z.number().optional(),
+  location: z.string().optional(),
+  description: z.string().default(""),
+});
+
+/**
+ * A user-edited `resume_json` posted to the PDF endpoint. Used only to render
+ * the PDF on the fly — never persisted to the database.
+ */
+export const ResumeJsonInputSchema = z.object({
+  summary: z.string().default(""),
+  experiences: z.array(ResumeEntrySchema).default([]),
+  education: z.array(ResumeEntrySchema).default([]),
+  skills: z.array(z.string()).default([]),
+});
+export type ResumeJsonInput = z.infer<typeof ResumeJsonInputSchema>;
+
 /** Full match analysis that Mistral provides: dimension scores + explanation. */
 export const MatchingExplanationSchema = z.object({
   scores: z.object({
