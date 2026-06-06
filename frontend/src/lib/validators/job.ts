@@ -50,7 +50,6 @@ export type MatchingExplanation = z.infer<typeof MatchingExplanationSchema>;
 
 /** Shape Mistral must return when optimizing a resume for a job. */
 export const OptimizedResumeSchema = z.object({
-  headline: z.string().default(""),
   summary: z.string().default(""),
   experiences: z
     .array(

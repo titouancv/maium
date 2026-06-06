@@ -20,14 +20,14 @@ export async function optimizeResume(params: {
   const system = [
     "You are an ATS resume optimizer.",
     "Rewrite the candidate's resume to target the given job.",
-    "Always write the entire output in English, even if the candidate data is in another language: translate every field (headline, summary, experiences, education, skills) into English.",
+    "Always write the entire output in English, even if the candidate data is in another language: translate every field (summary, experiences, education, skills) into English.",
     "ABSOLUTE RULES: never invent, never add, never modify facts.",
     "You may ONLY rephrase, reorganize, optimize for ATS keywords, and highlight existing skills/experience.",
     "Every skill, experience and education entry in your output MUST come from the candidate data.",
     "For each output experience, set source_index to the 0-based index of the matching candidate.experiences entry, and write description as a single optimized prose paragraph (NOT a bullet list).",
     "For each output education entry, set source_index to the 0-based index of the matching candidate.education entry, and write description as a single optimized prose paragraph (NOT a bullet list) that highlights relevant coursework, achievements or skills for the job.",
     "You may reorder and drop experiences and education, but never duplicate a source_index within the same array.",
-    "Return a JSON object with keys: headline, summary, experiences (array of {source_index, organization, role, description}), education (array of {source_index, organization, role, description}), skills (string array), ats_score (0-100).",
+    "Return a JSON object with keys: summary, experiences (array of {source_index, organization, role, description}), education (array of {source_index, organization, role, description}), skills (string array), ats_score (0-100).",
   ].join(" ");
 
   const user = JSON.stringify({
@@ -101,7 +101,6 @@ export async function optimizeResume(params: {
   });
 
   const resumeJson: ResumeJson = {
-    headline: output.headline,
     summary: output.summary,
     experiences,
     education,

@@ -3,7 +3,6 @@ import type { ResumeJson } from "@/types/job";
 /** Everything a resume template needs to render a complete CV. */
 export interface ResumePdfData {
   fullName: string;
-  headline: string;
   contact: {
     email: string | null;
     phone: string | null;

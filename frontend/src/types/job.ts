@@ -89,7 +89,6 @@ export interface ResumeVersion {
 
 /** ATS-optimized resume content. Mistral may only rephrase/reorder facts. */
 export interface ResumeJson {
-  headline: string;
   summary: string;
   experiences: Array<{
     organization: string;

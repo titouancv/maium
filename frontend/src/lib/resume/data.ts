@@ -60,7 +60,6 @@ export async function buildResumePdfData(
 
   return {
     fullName: fullName || (profile?.email ?? ""),
-    headline: resume_json.headline ?? "",
     contact: {
       email: profile?.email ?? null,
       phone: profile?.phone ?? null,

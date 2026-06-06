@@ -32,8 +32,8 @@ const styles = StyleSheet.create({
   header: {
     backgroundColor: PRIMARY,
     color: ON_PRIMARY,
-    paddingVertical: 16,
-    paddingHorizontal: 10,
+    paddingVertical: 12,
+    paddingHorizontal: 12,
   },
   name: { fontSize: 22, fontWeight: 800 },
   nameBar: {
@@ -43,7 +43,6 @@ const styles = StyleSheet.create({
     marginTop: 12,
     backgroundColor: ON_PRIMARY,
   },
-  headline: { fontSize: 11, color: ON_PRIMARY },
   body: {
     flexDirection: "row",
     flex: 1,
@@ -125,9 +124,6 @@ export function ModernTemplate(data: ResumePdfData) {
             <Text style={styles.name}>{data.fullName}</Text>
             <View style={styles.nameBar} />
           </View>
-          {data.headline ? (
-            <Text style={styles.headline}>{data.headline}</Text>
-          ) : null}
         </View>
 
         <View style={styles.body}>
@@ -187,7 +183,9 @@ export function ModernTemplate(data: ResumePdfData) {
             {data.summary ? (
               <>
                 <SectionTitle label="Profile" />
-                <Text style={{ fontSize: 9 }}>{data.summary}</Text>
+                <Text style={{ fontSize: 9, marginBottom: 12 }}>
+                  {data.summary}
+                </Text>
               </>
             ) : null}
 
@@ -203,21 +201,21 @@ export function ModernTemplate(data: ResumePdfData) {
                           <Text style={styles.expOrg}>{exp.organization}</Text>
                           <Text style={styles.expRole}>{", " + exp.role}</Text>
                         </Text>
-                        {exp.location ? (
-                          <Text style={styles.expMeta}>{exp.location}</Text>
-                        ) : null}
                         <Text style={styles.expMeta}>
-                          {formatDuration(exp.startPeriod, exp.endPeriod)}
-                          {"  •  "}
-                          <Text
-                            style={
-                              exp.endPeriod
-                                ? styles.expMeta
-                                : styles.expPeriodOngoing
-                            }
-                          >
-                            {formatPeriod(exp.startPeriod, exp.endPeriod)}
-                          </Text>
+                          <>
+                            {exp.location ? exp.location + "  •  " : ""}
+                            {formatDuration(exp.startPeriod, exp.endPeriod)}
+                            {"  •  "}
+                            <Text
+                              style={
+                                exp.endPeriod
+                                  ? styles.expMeta
+                                  : styles.expPeriodOngoing
+                              }
+                            >
+                              {formatPeriod(exp.startPeriod, exp.endPeriod)}
+                            </Text>
+                          </>
                         </Text>
                       </View>
                     </View>
@@ -243,21 +241,21 @@ export function ModernTemplate(data: ResumePdfData) {
                           <Text style={styles.expOrg}>{edu.organization}</Text>
                           <Text style={styles.expRole}>{", " + edu.role}</Text>
                         </Text>
-                        {edu.location ? (
-                          <Text style={styles.expMeta}>{edu.location}</Text>
-                        ) : null}
                         <Text style={styles.expMeta}>
-                          {formatDuration(edu.startPeriod, edu.endPeriod)}
-                          {"  •  "}
-                          <Text
-                            style={
-                              edu.endPeriod
-                                ? styles.expMeta
-                                : styles.expPeriodOngoing
-                            }
-                          >
-                            {formatPeriod(edu.startPeriod, edu.endPeriod)}
-                          </Text>
+                          <>
+                            {edu.location ? edu.location + "  •  " : ""}
+                            {formatDuration(edu.startPeriod, edu.endPeriod)}
+                            {"  •  "}
+                            <Text
+                              style={
+                                edu.endPeriod
+                                  ? styles.expMeta
+                                  : styles.expPeriodOngoing
+                              }
+                            >
+                              {formatPeriod(edu.startPeriod, edu.endPeriod)}
+                            </Text>
+                          </>
                         </Text>
                       </View>
                     </View>

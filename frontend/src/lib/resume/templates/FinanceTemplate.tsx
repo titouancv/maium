@@ -36,13 +36,7 @@ const styles = StyleSheet.create({
 
     letterSpacing: 1.5,
   },
-  headline: {
-    fontSize: 11,
-    color: ACCENT,
-    marginTop: 15,
-    marginBottom: 6,
-  },
-  contact: { fontSize: 9, color: SECONDARY },
+  contact: { fontSize: 9, color: SECONDARY, marginTop: 15 },
   rule: {
     flex: 1,
     borderBottomWidth: 1,
@@ -115,9 +109,6 @@ export function FinanceTemplate(data: ResumePdfData) {
       <Page size="A4" style={styles.page}>
         <View>
           <Text style={styles.name}>{data.fullName}</Text>
-          {data.headline ? (
-            <Text style={styles.headline}>{data.headline}</Text>
-          ) : null}
           {contactLine ? (
             <Text style={styles.contact}>{contactLine}</Text>
           ) : null}

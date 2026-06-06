@@ -5,7 +5,6 @@ import type { ResumePdfData } from "../types";
 
 const SAMPLE: ResumePdfData = {
   fullName: "Jane Doe",
-  headline: "Senior Financial Analyst",
   contact: { email: "jane@example.com", phone: "+33 6 00 00 00 00", location: "Paris" },
   summary: "Executive summary of the candidate.",
   socialNetworks: [
