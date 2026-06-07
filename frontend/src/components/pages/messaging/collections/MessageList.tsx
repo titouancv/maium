@@ -16,7 +16,7 @@ import { formatLongDate, isSameDay } from "@/lib/date";
 import { usePresenceStore } from "@/stores/usePresenceStore";
 import { useCurrentUserStore } from "@/stores/useCurrentUserStore";
 import { useConversationReadStore } from "@/stores/useConversationReadStore";
-import type { Message, OptimisticMessage } from "@/types";
+import type { ConversationMember, Message, OptimisticMessage } from "@/types";
 import { MessageBubble } from "../items/MessageBubble";
 import { TextArea } from "@/components/ui/TextArea";
 import { Button } from "@/components/ui/Button";
@@ -37,6 +37,7 @@ interface MessageListProps {
   currentUserId: string;
   isGroup: boolean;
   otherUserId: string | null;
+  otherMember: ConversationMember | null;
   otherLastReadAt: string | null;
 }
 
@@ -45,6 +46,7 @@ export function MessageList({
   initialMessages,
   currentUserId,
   otherUserId,
+  otherMember,
   otherLastReadAt,
 }: MessageListProps) {
   const t = useTranslations("messaging");
@@ -269,7 +271,21 @@ export function MessageList({
           if (newMsg.sender_id === currentUserId) return;
           setMessages((prev) => {
             if (prev.some((m) => m.id === newMsg.id)) return prev;
-            return [...prev, { ...newMsg, sender: null }];
+            // The Realtime payload carries only the row columns, not the joined
+            // sender. Reuse the sender from an existing message by the same
+            // author (covers groups), falling back to the known other member —
+            // otherwise the name never renders on live-received messages.
+            const sender =
+              prev.find((m) => m.sender_id === newMsg.sender_id && m.sender)
+                ?.sender ??
+              (otherMember?.id === newMsg.sender_id
+                ? {
+                    pseudo: otherMember.pseudo,
+                    first_name: otherMember.first_name,
+                    last_name: otherMember.last_name,
+                  }
+                : null);
+            return [...prev, { ...newMsg, sender }];
           });
           if (document.visibilityState === "visible") markRead();
         },
@@ -308,7 +324,7 @@ export function MessageList({
       supabase.removeChannel(channel);
       channelRef.current = null;
     };
-  }, [conversationId, currentUserId, markRead]);
+  }, [conversationId, currentUserId, markRead, otherMember]);
 
   // Mark read again when the tab/window regains focus while open.
   useEffect(() => {
@@ -439,7 +455,7 @@ export function MessageList({
       className="flex h-full w-full flex-col overflow-hidden"
     >
       {/* Online / typing status */}
-      <div className="text-txt-muted flex h-5 w-full shrink-0 items-center justify-center py-2 text-sm">
+      <div className="text-txt-muted flex h-5 w-full shrink-0 items-center justify-center pt-2 pb-4 text-sm font-extrabold">
         <div>{statusLabel && <>{statusLabel}</>}</div>
       </div>
 
@@ -447,7 +463,7 @@ export function MessageList({
       <div
         ref={listRef}
         onScroll={handleScroll}
-        className="flex-1 overflow-y-auto py-4"
+        className="flex-1 overflow-y-auto pt-4 pb-12"
       >
         {loadingOlder && (
           <div className="flex justify-center py-2">
@@ -475,8 +491,8 @@ export function MessageList({
                   showSender={!isGrouped}
                   locale={locale}
                 />
-                {index === lastSeenIndex && (
-                  <p className="text-txt-muted pt-1 text-right text-xs">
+                {index === lastSeenIndex && index === messages.length - 1 && (
+                  <p className="text-txt-muted pt-1 text-left text-xs">
                     {t("seen")}
                   </p>
                 )}

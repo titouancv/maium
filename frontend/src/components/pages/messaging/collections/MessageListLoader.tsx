@@ -36,6 +36,7 @@ export function MessageListLoader({
       currentUserId={currentUserId}
       isGroup={conversation.is_group}
       otherUserId={other?.id ?? null}
+      otherMember={other ?? null}
       otherLastReadAt={other?.last_read_at ?? null}
     />
   );
