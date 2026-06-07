@@ -17,7 +17,7 @@ export const SuggestionsList = ({
   const suggestions = use(suggestionsPromise);
 
   return (
-    <div className="flex min-h-0 flex-1 flex-col gap-4">
+    <div className="flex min-h-0 flex-col gap-4">
       <Title label={t("suggestions.title")} size="h3" />
       {suggestions.length === 0 ? (
         <p className="text-txt-muted text-sm">{t("suggestions.empty")}</p>

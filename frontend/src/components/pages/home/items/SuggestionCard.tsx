@@ -19,13 +19,10 @@ export const SuggestionCard = ({ user }: SuggestionCardProps) => {
     initialFollowing: false,
   });
 
-  const displayName = `${user.first_name} ${user.last_name}`;
-
   return (
-    <div className="bg-surface-100 border-brd-200 flex h-full w-44 shrink-0 flex-col gap-3 rounded-2xl border p-4">
+    <div className="flex h-full w-44 shrink-0 flex-col gap-3">
       <Link
         href={ROUTES.PROFILE(user.pseudo)}
-        // Seed the profile name so the target page paints its title instantly.
         onClick={() =>
           useProfilePreviewStore.getState().setPreview({
             pseudo: user.pseudo,
@@ -35,10 +32,11 @@ export const SuggestionCard = ({ user }: SuggestionCardProps) => {
         }
         className="hover:text-primary min-w-0 flex-1"
       >
-        <p className="truncate font-medium">{displayName}</p>
-        <p className="text-txt-muted truncate text-xs">@{user.pseudo}</p>
-        <p className="text-txt-muted mt-2 text-xs">
-          {t("suggestions.followersCount", { count: user.followers_count })}
+        <p className="truncate text-sm leading-tight font-medium">
+          {user.first_name}
+        </p>
+        <p className="ml-2 truncate text-xl leading-tight font-extrabold">
+          {user.last_name}
         </p>
       </Link>
       <Button
