@@ -6,7 +6,6 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useTranslations } from "next-intl";
 import { TextInput } from "@/components/ui/TextInput";
-import { useUserStore } from "@/stores/useUserStore";
 import { SIGNUP_FORM_ID } from "@/constants";
 
 interface FullNameFormProps {
@@ -16,7 +15,6 @@ interface FullNameFormProps {
 
 export const FullNameForm = ({ onChange, defaultValue }: FullNameFormProps) => {
   const t = useTranslations("auth.signup.step2");
-  const { user } = useUserStore();
 
   const schema = z.object({
     firstName: z.string().min(1, t("firstNameRequired")),
@@ -33,8 +31,8 @@ export const FullNameForm = ({ onChange, defaultValue }: FullNameFormProps) => {
     resolver: zodResolver(schema),
     mode: "onChange",
     defaultValues: {
-      firstName: user?.firstName || defaultValue?.firstName || "",
-      lastName: user?.lastName || defaultValue?.lastName || "",
+      firstName: defaultValue?.firstName || "",
+      lastName: defaultValue?.lastName || "",
     },
   });
 

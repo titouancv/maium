@@ -6,7 +6,6 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useTranslations } from "next-intl";
 import { TextInput } from "@/components/ui/TextInput";
-import { useUserStore } from "@/stores/useUserStore";
 import { API, SIGNUP_FORM_ID, type InfoType } from "@/constants";
 
 type AvailabilityStatus = "idle" | "checking" | "available" | "taken";
@@ -18,7 +17,6 @@ interface PseudoFormProps {
 
 export const PseudoForm = ({ onChange, defaultValue }: PseudoFormProps) => {
   const t = useTranslations("auth.signup.step3");
-  const { user } = useUserStore();
   const schema = z.object({
     pseudo: z.string().min(3, t("pseudoMinLength")),
   });
@@ -35,7 +33,7 @@ export const PseudoForm = ({ onChange, defaultValue }: PseudoFormProps) => {
     resolver: zodResolver(schema),
     mode: "onChange",
     defaultValues: {
-      pseudo: user?.pseudo || defaultValue || "",
+      pseudo: defaultValue || "",
     },
   });
 
@@ -55,7 +53,7 @@ export const PseudoForm = ({ onChange, defaultValue }: PseudoFormProps) => {
       return () => clearTimeout(timer);
     }
 
-    if (pseudo === user?.pseudo || pseudo === defaultValue) {
+    if (pseudo === defaultValue) {
       const timer = setTimeout(() => {
         setAvailabilityStatus("available");
         clearErrors("pseudo");
@@ -83,7 +81,7 @@ export const PseudoForm = ({ onChange, defaultValue }: PseudoFormProps) => {
     }, 500);
 
     return () => clearTimeout(timer);
-  }, [pseudo, user?.pseudo, defaultValue, clearErrors, setError, t]);
+  }, [pseudo, defaultValue, clearErrors, setError, t]);
 
   const getInfoLabel = () => {
     if (touchedFields.pseudo && errors.pseudo?.message)

@@ -1,92 +1,91 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { useRouter } from "@/i18n/navigation";
-import { useUserStore, type UserState } from "@/stores/useUserStore";
 import { ROUTES, API, SIGNUP_FORM_ID, EXPERIENCE_NAMESPACE } from "@/constants";
 import { Form } from "../../form/Form";
 import type { FormProps } from "../../form/Form";
-import { Title } from "../../ui";
+import { Title, GoogleSignInButton } from "@/components/ui";
 import type { Experience } from "@/types/experience";
-import { GoogleSignInButton } from "@/components/ui";
+import { SIGNUP_TOTAL_STEPS, type SignupDraft } from "./steps";
 
 interface SignupContentProps {
   initialStep?: number;
-  initialUser?: Partial<UserState>;
+  initialDraft?: SignupDraft;
 }
 
-const TOTAL_STEPS = 5;
+const EMPTY_DRAFT: SignupDraft = {
+  professionalExperiences: [],
+  educationalExperiences: [],
+};
 
 export const SignupContent = ({
   initialStep = 0,
-  initialUser = {},
+  initialDraft = EMPTY_DRAFT,
 }: SignupContentProps) => {
   const searchParams = useSearchParams();
   const urlStep = searchParams.get("step");
   const [step, setStep] = useState(
     urlStep ? parseInt(urlStep, 10) : initialStep,
   );
+  const [draft, setDraft] = useState<SignupDraft>(initialDraft);
   const [isLoading, setIsLoading] = useState(false);
-  const [proExperiences, setProExperiences] = useState<Experience[]>(
-    () => initialUser.professionalExperiences ?? [],
-  );
-  const [eduExperiences, setEduExperiences] = useState<Experience[]>(
-    () => initialUser.educationalExperiences ?? [],
-  );
+  const [error, setError] = useState<string | null>(null);
   const router = useRouter();
   const tCommon = useTranslations("common");
-  const { setUser, user } = useUserStore();
+  const tSignup = useTranslations("auth.signup");
 
-  useEffect(() => {
-    if (!user && Object.keys(initialUser).length > 0) {
-      setUser(initialUser);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  const patchProfile = async (body: unknown) => {
+  // Persist a slice of the draft to the user row. Each wizard step saves
+  // incrementally so a refresh/resume never loses progress.
+  const patchProfile = async (body: Record<string, unknown>) => {
     setIsLoading(true);
-    const res = await fetch(API.USERS_ME, {
-      method: "PATCH",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(body),
-    });
-    setIsLoading(false);
-    return res;
-  };
-
-  const nextStep = async (data: Partial<UserState>) => {
-    const res = await patchProfile(data);
-    if (!res.ok) return;
-    setUser(data);
-    setStep(step + 1);
-  };
-
-  const finish = async (data: Partial<UserState>) => {
-    setUser(data);
-    const merged = { ...user, ...data };
-
-    const res = await patchProfile({
-      firstName: merged.firstName,
-      lastName: merged.lastName,
-      pseudo: merged.pseudo,
-      dob: merged.dob,
-      professionalExperiences: merged.professionalExperiences ?? [],
-      educationalExperiences: merged.educationalExperiences ?? [],
-    });
-
-    if (res.ok) {
-      router.push(ROUTES.HOME);
+    setError(null);
+    try {
+      const res = await fetch(API.USERS_ME, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
+      });
+      if (!res.ok) setError(tSignup("saveError"));
+      return res.ok;
+    } catch {
+      setError(tSignup("saveError"));
+      return false;
+    } finally {
+      setIsLoading(false);
     }
   };
+
+  const nextStep = async (data: Partial<SignupDraft>) => {
+    const ok = await patchProfile(data as Record<string, unknown>);
+    if (!ok) return;
+    setDraft((d) => ({ ...d, ...data }));
+    setStep((s) => s + 1);
+  };
+
+  // Last step: persist the final slice, mark onboarding complete, and hand off
+  // to the home page which shows the welcome celebration (?welcome=1).
+  const finish = async () => {
+    const ok = await patchProfile({
+      educationalExperiences: draft.educationalExperiences,
+      onboardingCompleted: true,
+    });
+    if (ok) router.push(`${ROUTES.HOME}?welcome=1`);
+  };
+
+  const setProExperiences = (exps: Experience[]) =>
+    setDraft((d) => ({ ...d, professionalExperiences: exps }));
+  const setEduExperiences = (exps: Experience[]) =>
+    setDraft((d) => ({ ...d, educationalExperiences: exps }));
 
   const base = {
     step,
-    totalSteps: TOTAL_STEPS,
+    totalSteps: SIGNUP_TOTAL_STEPS,
     primaryLabel: tCommon("nextButton"),
     primaryLoading: isLoading,
+    error: error ?? undefined,
   };
 
   const getFormProps = (): FormProps => {
@@ -97,8 +96,8 @@ export const SignupContent = ({
           type: "fullName",
           formId: SIGNUP_FORM_ID,
           defaultValue: {
-            firstName: initialUser.firstName,
-            lastName: initialUser.lastName,
+            firstName: draft.firstName,
+            lastName: draft.lastName,
           },
           onChange: nextStep,
         };
@@ -107,7 +106,7 @@ export const SignupContent = ({
           ...base,
           type: "pseudo",
           formId: SIGNUP_FORM_ID,
-          defaultValue: initialUser.pseudo,
+          defaultValue: draft.pseudo,
           onChange: nextStep,
         };
       case 3:
@@ -115,7 +114,7 @@ export const SignupContent = ({
           ...base,
           type: "date",
           formId: SIGNUP_FORM_ID,
-          defaultValue: initialUser.dob,
+          defaultValue: draft.dob ?? null,
           onChange: nextStep,
         };
       case 4:
@@ -123,33 +122,31 @@ export const SignupContent = ({
           ...base,
           type: "experiences",
           namespace: EXPERIENCE_NAMESPACE.professional,
-          defaultValue: proExperiences,
+          defaultValue: draft.professionalExperiences,
           onChange: setProExperiences,
           onPrimary: () =>
-            nextStep({ professionalExperiences: proExperiences }),
+            nextStep({ professionalExperiences: draft.professionalExperiences }),
         };
       default:
         return {
           ...base,
           type: "experiences",
           namespace: EXPERIENCE_NAMESPACE.educational,
-          defaultValue: eduExperiences,
+          defaultValue: draft.educationalExperiences,
           onChange: setEduExperiences,
-          onPrimary: () => finish({ educationalExperiences: eduExperiences }),
+          onPrimary: finish,
         };
     }
   };
 
-  return (
-    <>
-      {step === 0 ? (
-        <div className="flex min-h-screen flex-col items-center justify-center gap-8">
-          <Title label={"maium"} size="h1" />
-          <GoogleSignInButton />
-        </div>
-      ) : (
-        <Form {...getFormProps()} />
-      )}
-    </>
-  );
+  if (step === 0) {
+    return (
+      <div className="flex min-h-screen flex-col items-center justify-center gap-8">
+        <Title label="maium" size="h1" />
+        <GoogleSignInButton />
+      </div>
+    );
+  }
+
+  return <Form {...getFormProps()} />;
 };

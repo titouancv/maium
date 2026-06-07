@@ -20,7 +20,6 @@ export const ROUTES = {
 
 export const API = {
   HEALTH: "/api/health",
-  USERS: "/api/users",
   USERS_ME: "/api/users/me",
   USERS_PSEUDO_CHECK: "/api/users/pseudo",
   USERS_SEARCH: "/api/users/search",

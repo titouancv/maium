@@ -61,17 +61,6 @@ export function makeExperienceFormSchema(t: TranslateFn) {
     });
 }
 
-export const CreateUserSchema = z.object({
-  email: z.string().email(),
-  password: z.string().min(6),
-  firstName: z.string().min(1).max(50),
-  lastName: z.string().min(1).max(50),
-  pseudo: z.string().min(2).max(30),
-  dob: z.number().int(),
-});
-
-export type CreateUserInput = z.infer<typeof CreateUserSchema>;
-
 export const HobbySchema = z.object({
   title: z.string().min(1).max(100),
   description: z.string(),

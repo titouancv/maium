@@ -61,26 +61,29 @@ Three Supabase client factories — always pick the right one:
 
 ### Signup Flows
 
-There are two signup paths that share the same wizard UI:
+There is a single signup path: **Google OAuth**. (Email/password was removed —
+do not reintroduce a `POST /api/users` create endpoint.)
 
-**Email/password signup** (no existing Supabase user):
-- Step 0: OAuth entry point (Google) — email/password is handled via `POST /api/users`
-- Steps 1–5: Name → Pseudo → DoB → Professional experiences → Educational experiences
-- On finish: `POST /api/users` creates the auth user and inserts into `public.users` in one request
-
-**OAuth signup** (Google/Apple → Supabase triggers `handle_new_oauth_user()`):
+**OAuth signup** (Google → Supabase triggers `handle_new_oauth_user()`):
 - A DB trigger auto-creates a partial `public.users` row (id, email, first_name, last_name) on OAuth signup
-- The signup page detects an existing Supabase user, resumes the wizard from the right step (computed from what's already filled in `public.users`), and sets `initialUser.supabaseId`
-- Each wizard step calls `PATCH /api/users/me` instead of buffering locally
-- On finish: `PATCH /api/users/me` updates the profile and marks `onboarding_completed = true`
+- The signup page ([signup/page.tsx](src/app/[locale]/(routes)/signup/page.tsx)) loads the
+  current profile via `getCurrentUserProfile()` and resumes the wizard from the first
+  unfilled step (`getResumeStep` in [signup/steps.ts](src/components/pages/signup/steps.ts),
+  the single source of truth for step order). No authenticated user → step 0 (OAuth button).
+- The wizard ([SignupContent](src/components/pages/signup/SignupContent.tsx)) holds the draft
+  in a single local state and PATCHes `/api/users/me` after **each** step, so a refresh
+  never loses progress.
+- On finish: `PATCH /api/users/me` saves the last slice **and** sets
+  `onboarding_completed = true`, then navigates to `/?welcome=1`.
+  [HomeContent](src/components/pages/home/HomeContent.tsx) shows the welcome
+  celebration when that param is present (it no longer writes the flag itself).
 
-OAuth flow: Google/Apple → Supabase → `/auth/callback` → `exchangeCodeForSession` → `ROUTES.SIGNUP` (to complete the wizard).
+OAuth flow: Google → Supabase → `/auth/callback` → `exchangeCodeForSession` → `ROUTES.SIGNUP` (to complete the wizard).
 
 ### API Routes
 
 | Method | Path | Purpose |
 |--------|------|---------|
-| `POST` | `/api/users` | Create user (email/password signup) |
 | `PATCH` | `/api/users/me` | Update profile fields / mark onboarding complete |
 | `DELETE` | `/api/users/me` | Delete account (uses admin client) |
 | `GET` | `/api/users/pseudo` | Check pseudo availability |
@@ -110,10 +113,17 @@ last_name                text
 pseudo                   text     unique
 dob                      date
 onboarding_completed     boolean  not null default false
-professional_experiences jsonb    default '[]'
-educational_experiences  jsonb    default '[]'
+phone · nationality · location · bio   text  (nullable profile fields)
 created_at               timestamptz
 ```
+
+Experiences and the other repeatable profile data are **normalized into child
+tables** (not jsonb columns on `users`): `user_experiences`
+(`type` = professional | educational | personal), `user_skills`,
+`user_projects`, `user_social_networks`, `user_hobbies` — each with a `position`
+column for ordering. Read them through [getCurrentUserProfile](src/lib/auth/getCurrentUser.ts)
+/ [mapUserFromDb](src/lib/mappers/user.ts) (which embed the child tables via
+`USER_PROFILE_SELECT`), never by selecting columns off `users` directly.
 
 RLS is enabled. Policies allow users to read/insert/update only their own row (`auth.uid() = id`).
 

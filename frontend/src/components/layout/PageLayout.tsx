@@ -59,14 +59,14 @@ export const PageLayout = ({
         </div>
       </div>
 
-      {showNavigationBar && (
-        <>
-          <div className="pointer-events-none absolute right-0 bottom-0 left-0 h-12 [mask-image:linear-gradient(to_top,black_20%,transparent)] backdrop-blur-sm" />
+      <>
+        <div className="absolute right-0 bottom-0 left-0 h-12 [mask-image:linear-gradient(to_top,black_20%,transparent)] backdrop-blur-sm" />
+        {showNavigationBar && backLabel === undefined && (
           <div className="absolute bottom-8 left-1/2 -translate-x-1/2">
             <NavigationBar />
           </div>
-        </>
-      )}
+        )}
+      </>
     </div>
   );
 };

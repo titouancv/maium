@@ -1,8 +1,9 @@
 "use client";
 
 import { useState, useLayoutEffect } from "react";
+import { useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
-import { API, ROUTES } from "@/constants";
+import { ROUTES } from "@/constants";
 import { Link } from "@/i18n/navigation";
 import { WelcomeOverlay } from "./collections/WelcomeOverlay";
 import { HeroSection } from "./collections/HeroSection";
@@ -20,9 +21,12 @@ export const HomeContent = ({ user }: HomeContentProps) => {
   const tNav = useTranslations("nav");
   const t = useTranslations("home");
 
-  const needsWelcome = user?.onboarding_completed === false;
-  const [showOverlay, setShowOverlay] = useState(needsWelcome);
-  const [overlayVisible, setOverlayVisible] = useState(needsWelcome);
+  // The wizard hands off here with ?welcome=1 once onboarding is complete; that
+  // is the single trigger for the celebration (the flag is already persisted).
+  const searchParams = useSearchParams();
+  const showWelcome = !!user && searchParams.get("welcome") === "1";
+  const [showOverlay, setShowOverlay] = useState(showWelcome);
+  const [overlayVisible, setOverlayVisible] = useState(showWelcome);
 
   // Keep the global user store in sync with the freshest server data. The
   // layout's UserHydration only runs on a full load, so after a client-side
@@ -33,11 +37,8 @@ export const HomeContent = ({ user }: HomeContentProps) => {
   }, [user]);
 
   const handleWelcomeEnter = () => {
-    fetch(API.USERS_ME, {
-      method: "PATCH",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ onboardingCompleted: true }),
-    });
+    // Drop ?welcome=1 so a refresh doesn't replay the celebration.
+    window.history.replaceState(null, "", window.location.pathname);
     setOverlayVisible(false);
     import("canvas-confetti").then(({ default: confetti }) => {
       if (window.innerWidth >= 768) {

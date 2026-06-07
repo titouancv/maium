@@ -7,7 +7,6 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useTranslations } from "next-intl";
 import { DateInput } from "@/components/ui/DateInput";
-import { useUserStore } from "@/stores/useUserStore";
 import { SIGNUP_FORM_ID } from "@/constants";
 
 const isPastDate = (v: number | null): boolean => v === null || v < Date.now();
@@ -18,7 +17,6 @@ interface DateFormProps {
 
 export const DateForm = ({ onChange, defaultValue }: DateFormProps) => {
   const t = useTranslations("auth.signup.step4");
-  const { user } = useUserStore();
 
   const schema = useMemo(
     () =>
@@ -41,7 +39,7 @@ export const DateForm = ({ onChange, defaultValue }: DateFormProps) => {
     resolver: zodResolver(schema),
     mode: "onChange",
     defaultValues: {
-      dob: (user?.dob ?? defaultValue ?? null) as number | null,
+      dob: (defaultValue ?? null) as number | null,
     },
   });
 

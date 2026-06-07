@@ -34,6 +34,7 @@ export type FormBaseProps = {
   secondaryLabel?: string;
   primaryLabel?: string;
   primaryLoading?: boolean;
+  error?: string;
   isCancelable?: boolean;
   onCancel?: () => void;
   cancelLabel?: string;
@@ -263,6 +264,7 @@ export const Form = (props: FormProps) => {
     secondaryLabel: props.secondaryLabel,
     primaryLabel: props.primaryLabel,
     primaryLoading: props.primaryLoading,
+    error: props.error,
     isCancelable: props.isCancelable,
     onCancel: props.onCancel,
     cancelLabel: props.cancelLabel,

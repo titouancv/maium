@@ -155,6 +155,7 @@
   },
   "auth": {
     "signup": {
+      "saveError": "Une erreur est survenue. Veuillez réessayer.",
       "step2": {
         "title": "Comment vous appelez-vous ?",
         "firstNamePlaceholder": "Jean",

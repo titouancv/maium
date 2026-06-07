@@ -1,59 +1,44 @@
 import { Suspense } from "react";
 import { getLocale } from "next-intl/server";
 import { SignupContent } from "@/components/pages/signup";
-import { createClient } from "@/lib/supabase/server";
+import { getResumeStep, type SignupDraft } from "@/components/pages/signup/steps";
 import { redirect } from "@/i18n/navigation";
 import { ROUTES } from "@/constants";
-import { getAuthUser } from "@/lib/auth/getCurrentUser";
-import type { UserState } from "@/stores/useUserStore";
-import type { Experience } from "@/types/experience";
+import { getCurrentUserProfile } from "@/lib/auth/getCurrentUser";
 
 export default async function SignupPage() {
-  const [locale, user] = await Promise.all([getLocale(), getAuthUser()]);
+  const [locale, userData] = await Promise.all([
+    getLocale(),
+    getCurrentUserProfile(),
+  ]);
+
+  if (userData?.onboarding_completed) {
+    redirect({ href: ROUTES.HOME, locale });
+  }
 
   let initialStep = 0;
-  let initialUser: Partial<UserState> = {};
+  let initialDraft: SignupDraft = {
+    professionalExperiences: [],
+    educationalExperiences: [],
+  };
 
-  if (user) {
-    const supabase = await createClient();
-    const { data: profile } = await supabase
-      .from("users")
-      .select(
-        "pseudo, dob, first_name, last_name, onboarding_completed, professional_experiences, educational_experiences",
-      )
-      .eq("id", user.id)
-      .single();
-
-    if (profile?.onboarding_completed) {
-      redirect({ href: ROUTES.HOME, locale });
-    }
-
-    initialStep = profile?.dob
-      ? 4
-      : profile?.pseudo
-        ? 3
-        : profile?.first_name && profile?.last_name
-          ? 2
-          : 1;
-    initialUser = {
-      supabaseId: user.id,
-      email: user.email,
-      firstName: profile?.first_name ?? user.user_metadata?.given_name ?? "",
-      lastName: profile?.last_name ?? user.user_metadata?.family_name ?? "",
-      pseudo: profile?.pseudo ?? undefined,
-      dob: profile?.dob ? new Date(profile.dob).getTime() : undefined,
-      professionalExperiences:
-        (profile?.professional_experiences as unknown as Experience[] | null) ??
-        [],
-      educationalExperiences:
-        (profile?.educational_experiences as unknown as Experience[] | null) ??
-        [],
+  // No authenticated user → show the OAuth entry point (step 0). Otherwise the
+  // DB trigger has created a partial row; resume the wizard from the first gap.
+  if (userData) {
+    initialDraft = {
+      firstName: userData.first_name || undefined,
+      lastName: userData.last_name || undefined,
+      pseudo: userData.pseudo || undefined,
+      dob: userData.dob ?? undefined,
+      professionalExperiences: userData.professional_experiences ?? [],
+      educationalExperiences: userData.educational_experiences ?? [],
     };
+    initialStep = getResumeStep(initialDraft);
   }
 
   return (
     <Suspense>
-      <SignupContent initialStep={initialStep} initialUser={initialUser} />
+      <SignupContent initialStep={initialStep} initialDraft={initialDraft} />
     </Suspense>
   );
 }

@@ -155,6 +155,7 @@
   },
   "auth": {
     "signup": {
+      "saveError": "Something went wrong. Please try again.",
       "step2": {
         "title": "What's your name?",
         "firstNamePlaceholder": "John",
