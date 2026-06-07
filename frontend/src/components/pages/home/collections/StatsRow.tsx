@@ -19,33 +19,29 @@ export const StatsRow = ({ statsPromise, user }: StatsRowProps) => {
   const completion = getProfileCompletion(user);
 
   return (
-    <div className="-mx-1 flex gap-3 overflow-x-auto px-1 pb-1">
+    <div className="-mx-1 flex gap-6 overflow-x-auto px-1 pb-1">
       <StatCard
         value={stats.followersCount}
         label={t("stats.followers")}
         href={ROUTES.PROFILE_FOLLOWERS(user.pseudo)}
-      />
-      <StatCard
-        value={stats.followingCount}
-        label={t("stats.following")}
-        href={ROUTES.PROFILE_FOLLOWING(user.pseudo)}
+        trend={-10}
+        trendTitle={t("stats.trendTitle")}
       />
       <StatCard
         value={stats.unreadCount}
         label={t("stats.unread")}
         href={ROUTES.MESSAGES}
-        active={stats.unreadCount > 0}
       />
       <ActionCard
-        title={t("actions.analyzeTitle")}
-        subtitle={t("actions.analyzeSubtitle")}
+        actionLabel={t("actions.analyzeTitle")}
+        text={t("actions.analyzeSubtitle")}
         href={ROUTES.JOBS}
         primary
       />
       {!completion.isComplete && (
         <ActionCard
-          title={t("actions.completeProfileTitle")}
-          subtitle={t("actions.completeProfileSubtitle", {
+          actionLabel={t("actions.completeProfileTitle")}
+          text={t("actions.completeProfileSubtitle", {
             percent: completion.percent,
           })}
           href={ROUTES.SETTINGS}

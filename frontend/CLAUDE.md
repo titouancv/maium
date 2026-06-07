@@ -127,6 +127,23 @@ column for ordering. Read them through [getCurrentUserProfile](src/lib/auth/getC
 
 RLS is enabled. Policies allow users to read/insert/update only their own row (`auth.uid() = id`).
 
+#### Follows & follower trends
+
+Follow relationships live in `user_follows` (`follower_id`, `followed_id`,
+`created_at`; publicly readable). Because an unfollow **deletes** the row, that
+table can only ever tell you about gains — never losses.
+
+To compute a real **net** follower trend (gains minus losses) over a time
+window, every follow/unfollow is mirrored into an append-only log,
+`follower_events` (`user_id`, `actor_id`, `delta` = +1 | −1, `created_at`), by
+`AFTER INSERT/DELETE` triggers on `user_follows`. The table has RLS enabled
+with **no policies** (deny-all): it is written only by the `SECURITY DEFINER`
+trigger and read only via the service-role client / the
+`get_follower_net_change(p_user_id, p_since)` RPC. Read trends through
+[getHomeStats](src/lib/users/stats.ts) (`HomeStats.followersTrend`), which sums
+the window's deltas via that RPC — never query `user_follows.created_at` for a
+trend, as it misses unfollows.
+
 ---
 
 ## Performance & Instant Navigation

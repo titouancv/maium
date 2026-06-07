@@ -125,7 +125,8 @@
     "stats": {
       "followers": "Abonnés",
       "following": "Abonnements",
-      "unread": "Non lus"
+      "unread": "Messages non lus",
+      "trendTitle": "vs. 7 derniers jours"
     },
     "actions": {
       "analyzeTitle": "Analyser une offre",

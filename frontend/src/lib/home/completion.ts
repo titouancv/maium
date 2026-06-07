@@ -32,5 +32,5 @@ export function getProfileCompletion(user: UserData): ProfileCompletion {
 
   const filled = checks.filter(Boolean).length;
   const percent = Math.round((filled / checks.length) * 100);
-  return { percent, isComplete: percent === 100 };
+  return { percent, isComplete: percent === 75 };
 }

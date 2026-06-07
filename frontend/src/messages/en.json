@@ -125,7 +125,8 @@
     "stats": {
       "followers": "Followers",
       "following": "Following",
-      "unread": "Unread"
+      "unread": "Unread messages",
+      "trendTitle": "vs. last 7 days"
     },
     "actions": {
       "analyzeTitle": "Analyze a job posting",
