@@ -21,6 +21,7 @@ export const ProfileFollowActions = ({
   followInfo,
 }: ProfileFollowActionsProps) => {
   const t = useTranslations("profile");
+  const tHome = useTranslations("home");
   const router = useRouter();
   const [following, setFollowing] = useState(followInfo.isFollowing);
   const [followerCount, setFollowerCount] = useState(followInfo.followersCount);
@@ -81,11 +82,28 @@ export const ProfileFollowActions = ({
         </Link>
       </div>
       {isOwner ? (
-        <Link href={ROUTES.SETTINGS}>
-          <Button variant="outline" size="sm" type="button" className="w-full">
-            {t("settingsButton")}
-          </Button>
-        </Link>
+        <div className="flex flex-col gap-2">
+          <Link href={ROUTES.JOBS}>
+            <Button
+              variant="primary"
+              size="sm"
+              type="button"
+              className="w-full"
+            >
+              {tHome("goToAnalysis")}
+            </Button>
+          </Link>
+          <Link href={ROUTES.SETTINGS}>
+            <Button
+              variant="outline"
+              size="sm"
+              type="button"
+              className="w-full"
+            >
+              {t("settingsButton")}
+            </Button>
+          </Link>
+        </div>
       ) : (
         <div className="flex flex-col gap-2">
           <Button

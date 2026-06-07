@@ -49,7 +49,7 @@ export const ExperienceItem = ({
   }, [description]);
 
   return (
-    <>
+    <div>
       <div className="flex items-center gap-4">
         <div className="my-1 w-1 self-stretch rounded-full bg-current"></div>
         <div className="grid w-full grid-cols-[1fr_auto] items-center gap-3">
@@ -117,7 +117,7 @@ export const ExperienceItem = ({
         </div>
       </div>
       {onEdit === undefined && description && (
-        <div className="pl-5">
+        <div className="pt-2 pl-5">
           <p
             ref={descRef}
             className={`text-txt text-sm ${!expanded ? "line-clamp-5" : ""}`}
@@ -137,6 +137,6 @@ export const ExperienceItem = ({
           )}
         </div>
       )}
-    </>
+    </div>
   );
 };
