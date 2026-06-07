@@ -90,8 +90,13 @@ OAuth flow: Google/Apple → Supabase → `/auth/callback` → `exchangeCodeForS
 | `POST/DELETE` | `/api/users/follow` | Follow / unfollow a user |
 | `GET/POST` | `/api/messages/conversations` | List / create conversations |
 | `GET/POST` | `/api/messages/conversations/:id/messages` | Get / send messages in a conversation |
+| `PATCH` | `/api/messages/conversations/:id/read` | Mark a conversation as read |
 | `GET` | `/api/url-title` | Fetch the title of an external URL |
-| `POST` | `/api/jobs/parse` | Parse a job posting |
+| `POST` | `/api/analyze-job` | Run the job analysis pipeline |
+| `GET` | `/api/analysis/:id` | Get a single job analysis |
+| `GET` | `/api/history` | List the user's past job analyses |
+| `GET/DELETE` | `/api/resume/:id` | Get / delete an optimized resume |
+| `GET/POST` | `/api/resume/:id/pdf` | Render / generate the resume PDF |
 | `POST` | `/api/auth/logout` | Sign out |
 | `GET` | `/api/health` | Health check |
 
@@ -206,10 +211,11 @@ shared folders (`ui/`, `form/`, `layout/`) for everything reused across pages.
 
 ### Per-page folders
 
-Each route/page owns a folder named after the page. Inside it:
+Each route/page owns a folder named after the page, grouped under
+`src/components/pages/`. Inside it:
 
 ```
-<page>/
+pages/<page>/
 ├── <Page>Content.tsx       # entry component rendered by the route
 ├── index.ts                # barrel: re-exports the Content (and siblings)
 ├── collections/            # page-specific list/composite components (Lists, overlays)
@@ -218,13 +224,14 @@ Each route/page owns a folder named after the page. Inside it:
     └── <X>Item.tsx
 ```
 
-Current page folders: `home/`, `messaging/` (regroups the messages list **and**
-the conversation view), `profile/`, `user-list/`, `settings/`, `signup/`,
+Current page folders (under `pages/`): `home/`, `jobs/` (job analysis, history
+and resume editing), `messaging/` (regroups the messages list **and** the
+conversation view), `profile/`, `user-list/`, `settings/`, `signup/`,
 `privacy-policy/`.
 
 Rules:
 - A `XxxContent.tsx` is imported by its route via the folder barrel:
-  `import { ProfileContent } from "@/components/profile";`
+  `import { ProfileContent } from "@/components/pages/profile";`
 - A `List` used by only one page lives in that page's `collections/`.
 - An `Item` used by only one page lives in that page's `items/`.
 - Overlays specific to one page go in that page's `collections/`
@@ -240,8 +247,8 @@ Rules:
   (`LoadingOverlay`, `SearchOverlay`) live at `ui/` root. Import via `@/components/ui`.
 - **`form/`** — form components and `form/sub-form/` building blocks.
 - **`layout/`** — layout wrappers (`PageLayout`, `FormLayout`, `SearchLayout`).
-- Root-level infra (`Providers.tsx`, `ThemeApplier.tsx`, `UserHydration.tsx`)
-  stays at `src/components/` root.
+- Root-level infra (`Providers.tsx`, `ThemeApplier.tsx`, `UserHydration.tsx`,
+  `PresenceTracker.tsx`) stays at `src/components/` root.
 
 ### Deciding where a component goes
 
@@ -252,7 +259,7 @@ Rules:
 
 ### Imports
 
-- Prefer barrels: `@/components/ui`, `@/components/<page>`.
+- Prefer barrels: `@/components/ui`, `@/components/pages/<page>`.
 - Types like `HobbyData` come from `@/types/user`, not from component barrels.
 
 ---
@@ -267,11 +274,11 @@ frontend/src/
 │   ├── app/auth/callback/         # OAuth callback (non-locale fallback)
 │   └── api/                       # API route handlers
 ├── components/
-│   ├── <page>/                    # Per-page folders (see Components Architecture above)
+│   ├── pages/<page>/              # Per-page folders (see Components Architecture above)
 │   ├── ui/                        # Shared presentational components
 │   ├── form/                      # Form components and sub-form building blocks
 │   ├── layout/                    # Layout wrappers (PageLayout, FormLayout, SearchLayout)
-│   └── Providers.tsx / ThemeApplier.tsx / UserHydration.tsx
+│   └── Providers.tsx / ThemeApplier.tsx / UserHydration.tsx / PresenceTracker.tsx
 ├── constants/                     # ALL constants, paths, config — never inline
 │   └── index.ts                   # Re-exports ROUTES, API, EXTERNAL_API, UI constants
 ├── i18n/
@@ -280,7 +287,14 @@ frontend/src/
 │   └── request.ts                 # Server-side locale config
 ├── lib/
 │   ├── supabase/                  # client.ts, server.ts, admin.ts, index.ts
-│   └── validators/user.ts         # Zod schemas (CreateUserSchema, UpdateUserSchema)
+│   ├── auth/                      # getCurrentUser helper
+│   ├── date.ts                    # Shared date/time + experience-period helpers
+│   ├── jobs/                      # Job analysis pipeline (extract, matching, resume)
+│   ├── resume/                    # Resume data + PDF templates/services
+│   ├── mistral/                   # Mistral AI client
+│   ├── mappers/                   # DB row → domain type mappers
+│   ├── users/ · messaging/        # Server-side data access per domain
+│   └── validators/                # Zod schemas (user.ts, job.ts)
 ├── messages/
 │   ├── en.json                    # English translations
 │   └── fr.json                    # French translations (must stay in sync)
@@ -288,6 +302,8 @@ frontend/src/
 │   ├── useUserStore.ts            # Signup wizard state (UserState, Experience)
 │   ├── useLoadingStore.ts         # Loading overlay suppression flag
 │   ├── useCurrentUserStore.ts     # Authenticated user profile (populated after login)
+│   ├── usePresenceStore.ts        # Online-presence tracking
+│   ├── useConversationPreviewStore.ts / useProfilePreviewStore.ts  # Preview caches
 │   └── useThemeStore.ts           # Theme preference (light/dark)
 ├── proxy.ts                       # Middleware (i18n + session refresh)
 ├── hooks/                         # Custom React hooks

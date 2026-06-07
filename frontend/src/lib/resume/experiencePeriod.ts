@@ -1,20 +1,16 @@
-// Period/duration formatting mirroring the app's ExperienceItem component
-// (src/components/ui/items/ExperienceItem.tsx). The PDF templates are rendered
-// outside the next-intl context, so the English labels are inlined here to match
-// the templates' hardcoded English copy.
+// Period/duration label formatting for the PDF resume templates. The templates
+// render outside the next-intl context, so the English labels are inlined here.
+// The underlying date math is shared with the in-app ExperienceItem component
+// via experienceDurationParts / experiencePeriodYears in src/lib/date.ts.
+
+import { experienceDurationParts, experiencePeriodYears } from "@/lib/date";
 
 /**
- * Human duration between two epoch-ms dates, e.g. "2 yrs" or "5 mos".
+ * Human duration between two epoch-ms dates, e.g. "2 years" or "5 months".
  * Falls back to "now" for ongoing experiences (no end date).
  */
 export function formatDuration(startDate: number, endDate?: number): string {
-  const d1 = new Date(startDate);
-  const d2 = new Date(endDate ?? Date.now());
-  const totalMonthsStart = d1.getUTCFullYear() * 12 + d1.getUTCMonth();
-  const totalMonthsEnd = d2.getUTCFullYear() * 12 + d2.getUTCMonth();
-  const diffMonths = totalMonthsEnd - totalMonthsStart;
-  const years = Math.floor(diffMonths / 12);
-  const months = (diffMonths % 12) + 1;
+  const { years, months } = experienceDurationParts(startDate, endDate);
   if (years > 0) return `${years} ${years > 1 ? "years" : "year"}`;
   return `${months} ${months > 1 ? "months" : "month"}`;
 }
@@ -35,9 +31,8 @@ export function sortExperiences<
 
 /** Period label, e.g. "since 2021", "2022" or "2019/2022". */
 export function formatPeriod(startDate: number, endDate?: number): string {
-  const startYear = new Date(startDate).getUTCFullYear();
-  if (!endDate) return `since ${startYear}`;
-  const endYear = new Date(endDate).getUTCFullYear();
+  const { startYear, endYear } = experiencePeriodYears(startDate, endDate);
+  if (endYear === undefined) return `since ${startYear}`;
   if (startYear === endYear) return `${startYear}`;
   return `${startYear}/${endYear}`;
 }

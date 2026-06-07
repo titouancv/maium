@@ -29,6 +29,35 @@ export function formatLongDate(dateStr: string, locale: string): string {
   });
 }
 
+/**
+ * Whole years/months spanned between two epoch-ms dates, computed in UTC.
+ * Shared by the in-app experience UI and the PDF resume templates so the
+ * duration math (and its quirks) live in exactly one place.
+ */
+export function experienceDurationParts(
+  startDate: number,
+  endDate?: number,
+): { years: number; months: number } {
+  const d1 = new Date(startDate);
+  const d2 = new Date(endDate ?? Date.now());
+  const totalMonthsStart = d1.getUTCFullYear() * 12 + d1.getUTCMonth();
+  const totalMonthsEnd = d2.getUTCFullYear() * 12 + d2.getUTCMonth();
+  const diffMonths = totalMonthsEnd - totalMonthsStart;
+  const years = Math.floor(diffMonths / 12);
+  const months = (diffMonths % 12) + 1;
+  return { years, months };
+}
+
+/** Start (and optional end) UTC year for an experience period. */
+export function experiencePeriodYears(
+  startDate: number,
+  endDate?: number,
+): { startYear: number; endYear?: number } {
+  const startYear = new Date(startDate).getUTCFullYear();
+  if (!endDate) return { startYear };
+  return { startYear, endYear: new Date(endDate).getUTCFullYear() };
+}
+
 /** Whether two ISO date strings fall on the same calendar day (local time). */
 export function isSameDay(a: string, b: string): boolean {
   const da = new Date(a);
