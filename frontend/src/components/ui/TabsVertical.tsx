@@ -2,11 +2,7 @@
 
 import { motion } from "framer-motion";
 import { Link, usePathname } from "@/i18n/navigation";
-
-export interface TabItem {
-  name: string;
-  href?: string;
-}
+import type { TabItem } from "./Tabs";
 
 export interface TabsVerticalProps {
   tabs: (string | TabItem)[];

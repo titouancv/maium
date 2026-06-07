@@ -2,13 +2,12 @@
 
 import { use } from "react";
 import { notFound } from "next/navigation";
-import type { Message } from "@/types";
-import type { ConversationPreview } from "@/stores/useConversationPreviewStore";
+import type { Conversation, Message } from "@/types";
 import { MessageList } from "./MessageList";
 
 interface MessageListLoaderProps {
   conversationId: string;
-  conversationPromise: Promise<ConversationPreview | null>;
+  conversationPromise: Promise<Conversation | null>;
   messagesPromise: Promise<Message[]>;
   currentUserId: string;
 }
@@ -34,8 +33,8 @@ export function MessageListLoader({
       conversationId={conversationId}
       initialMessages={initialMessages}
       currentUserId={currentUserId}
-      isGroup={conversation.is_group}
       otherUserId={other?.id ?? null}
+      otherMember={other ?? null}
       otherLastReadAt={other?.last_read_at ?? null}
     />
   );

@@ -62,8 +62,25 @@ export const EMBEDDING_DIM = 1024;
 /** Prompt version stamped on stored analyses for auditability. */
 export const PROMPT_VERSION = "v1";
 
+// --- Messaging -------------------------------------------------------------
+
 // Number of messages fetched per page (initial load + each upward scroll).
 export const MESSAGES_PAGE_SIZE = 30;
+
+/** Max characters of a message shown as the conversation-list preview. */
+export const MESSAGE_PREVIEW_MAX_LENGTH = 50;
+
+/** Consecutive messages from the same sender within this window are grouped. */
+export const MESSAGE_GROUP_WINDOW_MS = 5 * 60 * 1000;
+
+/** Minimum gap between "typing" broadcasts while the user keeps typing. */
+export const TYPING_BROADCAST_THROTTLE_MS = 2000;
+
+/** How long a received "typing" indicator stays visible without a refresh. */
+export const TYPING_INDICATOR_TIMEOUT_MS = 3000;
+
+/** Debounce before refetching the list when a brand-new conversation appears. */
+export const CONVERSATIONS_REFETCH_DEBOUNCE_MS = 800;
 
 export const EXPERIENCE_NAMESPACE = {
   professional: "experience.professional",

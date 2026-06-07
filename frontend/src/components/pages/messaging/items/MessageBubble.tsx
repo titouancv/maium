@@ -18,9 +18,9 @@ export function MessageBubble({
     <div
       className={`flex justify-start ${message.sender && showSender && "pt-4"}`}
     >
-      <div className={`flex max-w-[95%] flex-col items-start gap-1`}>
+      <div className={`flex w-full flex-col items-start gap-1`}>
         {message.sender && showSender && (
-          <div className="flex items-center gap-2">
+          <div className="flex w-full items-center justify-between gap-2">
             <p className={isOwn ? "text-primary" : "text-txt"}>
               {message.sender.first_name} {message.sender.last_name}
             </p>

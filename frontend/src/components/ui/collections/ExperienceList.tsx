@@ -21,7 +21,7 @@ export const ExperienceList = ({ experiences, onEdit, className }: Props) => {
   }, [experiences]);
 
   return (
-    <div className={`flex flex-col gap-2 ${className}`}>
+    <div className={`flex flex-col gap-6 ${className}`}>
       {sortedItems.map(({ exp, index }) => (
         <ExperienceItem
           key={index}

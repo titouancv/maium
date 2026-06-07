@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/Button";
 import type { Experience } from "@/types/experience";
 import { useTranslations } from "next-intl";
 import { faviconUrl } from "@/lib/utils";
+import { experienceDurationParts, experiencePeriodYears } from "@/lib/date";
 
 export interface ExperienceProps extends Experience {
   onEdit?: () => void;
@@ -24,21 +25,14 @@ export const ExperienceItem = ({
   const t = useTranslations("common");
 
   const calculateDuration = (startDate: number, endDate: number): string => {
-    const d1 = new Date(startDate);
-    const d2 = new Date(endDate);
-    const totalMonthsStart = d1.getUTCFullYear() * 12 + d1.getUTCMonth();
-    const totalMonthsEnd = d2.getUTCFullYear() * 12 + d2.getUTCMonth();
-    const diffMonths = totalMonthsEnd - totalMonthsStart;
-    const years = Math.floor(diffMonths / 12);
-    const months = (diffMonths % 12) + 1;
+    const { years, months } = experienceDurationParts(startDate, endDate);
     if (years > 0) return t("yearsCount", { count: years });
     return t("monthsCount", { count: months });
   };
 
   const formatPeriod = (startDate: number, endDate?: number): string => {
-    const startYear = new Date(startDate).getUTCFullYear();
-    if (!endDate) return `${t("sinceLabel")} ${startYear}`;
-    const endYear = new Date(endDate).getUTCFullYear();
+    const { startYear, endYear } = experiencePeriodYears(startDate, endDate);
+    if (endYear === undefined) return `${t("sinceLabel")} ${startYear}`;
     if (startYear === endYear) return `${startYear}`;
     return `${startYear}/${endYear}`;
   };
@@ -55,7 +49,7 @@ export const ExperienceItem = ({
   }, [description]);
 
   return (
-    <>
+    <div>
       <div className="flex items-center gap-4">
         <div className="my-1 w-1 self-stretch rounded-full bg-current"></div>
         <div className="grid w-full grid-cols-[1fr_auto] items-center gap-3">
@@ -123,7 +117,7 @@ export const ExperienceItem = ({
         </div>
       </div>
       {onEdit === undefined && description && (
-        <div className="pl-5">
+        <div className="pt-2 pl-5">
           <p
             ref={descRef}
             className={`text-txt text-sm ${!expanded ? "line-clamp-5" : ""}`}
@@ -143,6 +137,6 @@ export const ExperienceItem = ({
           )}
         </div>
       )}
-    </>
+    </div>
   );
 };

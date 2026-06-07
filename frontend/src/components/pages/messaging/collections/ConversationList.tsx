@@ -4,7 +4,7 @@ import { useEffect } from "react";
 import { useTranslations } from "next-intl";
 import type { Conversation } from "@/types";
 import { useCurrentUserStore } from "@/stores/useCurrentUserStore";
-import { useConversationPreviewStore } from "@/stores/useConversationPreviewStore";
+import { useMessagingStore } from "@/stores/useMessagingStore";
 import { ConversationItem } from "../items/ConversationItem";
 
 interface ConversationListProps {
@@ -19,15 +19,23 @@ export function ConversationList({
   const t = useTranslations("messaging");
   // Hydrated at the layout level, so it is already set on client navigations.
   const currentUserId = useCurrentUserStore((s) => s.user?.id ?? "");
-  const setPreviews = useConversationPreviewStore((s) => s.setPreviews);
+  const hydrate = useMessagingStore((s) => s.hydrate);
+  const stored = useMessagingStore((s) => s.conversations);
 
-  // Seed the previews so opening any conversation can paint its header
-  // instantly, before the conversation server round-trip resolves.
+  // Reconcile the streamed (authoritative) server data into the shared store.
+  // The single Realtime subscription in the messaging layout keeps that store
+  // live across navigation, so this component needs neither its own
+  // subscription nor a router.refresh to stay current — it just renders the
+  // store and lets `hydrate` merge in fresh server data.
   useEffect(() => {
-    setPreviews(conversations);
-  }, [conversations, setPreviews]);
+    hydrate(conversations);
+  }, [conversations, hydrate]);
 
-  if (conversations.length === 0) {
+  // Use the store once hydrated; fall back to the freshly streamed prop on the
+  // first paint so the list never flashes empty.
+  const items = stored.length > 0 ? stored : conversations;
+
+  if (items.length === 0) {
     return (
       <div className="flex flex-col items-center gap-2 px-4 py-12">
         <p className="text-txt text-sm font-medium">{t("noConversations")}</p>
@@ -40,7 +48,7 @@ export function ConversationList({
 
   return (
     <div className="flex flex-col gap-2">
-      {conversations.map((c) => (
+      {items.map((c) => (
         <ConversationItem
           key={c.id}
           conversation={c}

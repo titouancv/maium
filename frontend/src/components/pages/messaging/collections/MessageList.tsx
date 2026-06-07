@@ -11,11 +11,18 @@ import {
 import { useLocale, useTranslations } from "next-intl";
 import type { RealtimeChannel } from "@supabase/supabase-js";
 import { createClient } from "@/lib/supabase/client";
-import { API, MESSAGES_PAGE_SIZE } from "@/constants";
+import {
+  API,
+  MESSAGES_PAGE_SIZE,
+  MESSAGE_GROUP_WINDOW_MS,
+  TYPING_BROADCAST_THROTTLE_MS,
+  TYPING_INDICATOR_TIMEOUT_MS,
+} from "@/constants";
 import { formatLongDate, isSameDay } from "@/lib/date";
 import { usePresenceStore } from "@/stores/usePresenceStore";
 import { useCurrentUserStore } from "@/stores/useCurrentUserStore";
-import type { Message, OptimisticMessage } from "@/types";
+import { useMessagingStore } from "@/stores/useMessagingStore";
+import type { ConversationMember, Message, OptimisticMessage } from "@/types";
 import { MessageBubble } from "../items/MessageBubble";
 import { TextArea } from "@/components/ui/TextArea";
 import { Button } from "@/components/ui/Button";
@@ -34,8 +41,8 @@ interface MessageListProps {
   conversationId: string;
   initialMessages: Message[];
   currentUserId: string;
-  isGroup: boolean;
   otherUserId: string | null;
+  otherMember: ConversationMember | null;
   otherLastReadAt: string | null;
 }
 
@@ -44,6 +51,7 @@ export function MessageList({
   initialMessages,
   currentUserId,
   otherUserId,
+  otherMember,
   otherLastReadAt,
 }: MessageListProps) {
   const t = useTranslations("messaging");
@@ -94,13 +102,18 @@ export function MessageList({
 
   // Persist our read position and tell the other member instantly (broadcast).
   const markRead = useCallback(() => {
+    const readAt = new Date().toISOString();
     fetch(API.MESSAGES_CONVERSATION_READ(conversationId), {
       method: "PATCH",
     }).catch(() => {});
+    // Mirror it into the shared store so the conversations list — a separate,
+    // Router-cached route — drops the unread marker as soon as we come back,
+    // without waiting on a server refresh.
+    useMessagingStore.getState().markRead(conversationId, readAt);
     channelRef.current?.send({
       type: "broadcast",
       event: "read",
-      payload: { userId: currentUserId, read_at: new Date().toISOString() },
+      payload: { userId: currentUserId, read_at: readAt },
     });
   }, [conversationId, currentUserId]);
 
@@ -209,6 +222,41 @@ export function MessageList({
     if (list && list.scrollTop < 100) loadOlder();
   }, [loadOlder]);
 
+  // The initial messages come from the streamed server data, which may be
+  // served from the Router Cache and miss messages that arrived (e.g. shown by
+  // the conversations list's Realtime) after this route was prefetched.
+  // Realtime only delivers messages from subscribe-time forward, so fetch the
+  // latest page once on mount and merge anything we don't already have.
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      try {
+        const res = await fetch(
+          API.MESSAGES_CONVERSATION_MESSAGES(conversationId),
+        );
+        if (!res.ok) return;
+        const { messages: latest } = (await res.json()) as {
+          messages: Message[];
+          hasMore: boolean;
+        };
+        if (cancelled || latest.length === 0) return;
+        setMessages((prev) => {
+          const known = new Set(prev.map((m) => m.id));
+          const missing = latest.filter((m) => !known.has(m.id));
+          if (missing.length === 0) return prev;
+          return [...prev, ...missing].sort((a, b) =>
+            a.created_at.localeCompare(b.created_at),
+          );
+        });
+      } catch {
+        // Best-effort reconcile; Realtime still covers messages from here on.
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [conversationId]);
+
   // Realtime: new messages (postgres_changes) + typing & read (broadcast).
   useEffect(() => {
     const supabase = createClient();
@@ -228,8 +276,25 @@ export function MessageList({
           if (newMsg.sender_id === currentUserId) return;
           setMessages((prev) => {
             if (prev.some((m) => m.id === newMsg.id)) return prev;
-            return [...prev, { ...newMsg, sender: null }];
+            // The Realtime payload carries only the row columns, not the joined
+            // sender. Reuse the sender from an existing message by the same
+            // author (covers groups), falling back to the known other member —
+            // otherwise the name never renders on live-received messages.
+            const sender =
+              prev.find((m) => m.sender_id === newMsg.sender_id && m.sender)
+                ?.sender ??
+              (otherMember?.id === newMsg.sender_id
+                ? {
+                    pseudo: otherMember.pseudo,
+                    first_name: otherMember.first_name,
+                    last_name: otherMember.last_name,
+                  }
+                : null);
+            return [...prev, { ...newMsg, sender }];
           });
+          // The list's preview/order/unread state is kept live by the
+          // layout-level Realtime subscription (MessagingRealtime), so here we
+          // only mark the open conversation read while it's visible.
           if (document.visibilityState === "visible") markRead();
         },
       )
@@ -242,7 +307,7 @@ export function MessageList({
           if (typingTimerRef.current) clearTimeout(typingTimerRef.current);
           typingTimerRef.current = setTimeout(
             () => setTypingUserId(null),
-            3000,
+            TYPING_INDICATOR_TIMEOUT_MS,
           );
         },
       )
@@ -267,7 +332,7 @@ export function MessageList({
       supabase.removeChannel(channel);
       channelRef.current = null;
     };
-  }, [conversationId, currentUserId, markRead]);
+  }, [conversationId, currentUserId, markRead, otherMember]);
 
   // Mark read again when the tab/window regains focus while open.
   useEffect(() => {
@@ -284,7 +349,7 @@ export function MessageList({
 
   const sendTyping = () => {
     const now = Date.now();
-    if (now - lastTypingSentRef.current < 2000) return;
+    if (now - lastTypingSentRef.current < TYPING_BROADCAST_THROTTLE_MS) return;
     lastTypingSentRef.current = now;
     channelRef.current?.send({
       type: "broadcast",
@@ -338,6 +403,14 @@ export function MessageList({
           m.id === optimisticId ? { ...message, optimistic: false } : m,
         ),
       );
+      // Bump the shared store so the list reflects this send instantly. The
+      // layout Realtime subscription would also catch it, but with round-trip
+      // latency; this keeps the list correct the moment we navigate back.
+      useMessagingStore.getState().applyMessage(conversationId, {
+        content: message.content,
+        created_at: message.created_at,
+        sender_id: message.sender_id,
+      });
     } catch {
       setMessages((prev) => prev.filter((m) => m.id !== optimisticId));
       setInput(content);
@@ -366,7 +439,7 @@ export function MessageList({
       prevFirst.sender_id === messages[i].sender_id &&
       new Date(messages[i].created_at).getTime() -
         new Date(prevFirst.created_at).getTime() <
-        5 * 60 * 1000;
+        MESSAGE_GROUP_WINDOW_MS;
     groupFirsts.push(grouped ? prevFirst : messages[i]);
   }
 
@@ -398,7 +471,7 @@ export function MessageList({
       className="flex h-full w-full flex-col overflow-hidden"
     >
       {/* Online / typing status */}
-      <div className="text-txt-muted flex h-5 w-full shrink-0 items-center justify-center py-2 text-sm">
+      <div className="text-txt-muted flex h-5 w-full shrink-0 items-center justify-center pt-2 pb-4 text-sm font-extrabold">
         <div>{statusLabel && <>{statusLabel}</>}</div>
       </div>
 
@@ -406,7 +479,7 @@ export function MessageList({
       <div
         ref={listRef}
         onScroll={handleScroll}
-        className="flex-1 overflow-y-auto py-4"
+        className="flex-1 overflow-y-auto pt-4 pb-12"
       >
         {loadingOlder && (
           <div className="flex justify-center py-2">
@@ -434,8 +507,8 @@ export function MessageList({
                   showSender={!isGrouped}
                   locale={locale}
                 />
-                {index === lastSeenIndex && (
-                  <p className="text-txt-muted pt-1 text-right text-xs">
+                {index === lastSeenIndex && index === messages.length - 1 && (
+                  <p className="text-txt-muted pt-1 text-left text-xs">
                     {t("seen")}
                   </p>
                 )}
