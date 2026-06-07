@@ -15,6 +15,7 @@ import { API, MESSAGES_PAGE_SIZE } from "@/constants";
 import { formatLongDate, isSameDay } from "@/lib/date";
 import { usePresenceStore } from "@/stores/usePresenceStore";
 import { useCurrentUserStore } from "@/stores/useCurrentUserStore";
+import { useConversationReadStore } from "@/stores/useConversationReadStore";
 import type { Message, OptimisticMessage } from "@/types";
 import { MessageBubble } from "../items/MessageBubble";
 import { TextArea } from "@/components/ui/TextArea";
@@ -94,13 +95,18 @@ export function MessageList({
 
   // Persist our read position and tell the other member instantly (broadcast).
   const markRead = useCallback(() => {
+    const readAt = new Date().toISOString();
     fetch(API.MESSAGES_CONVERSATION_READ(conversationId), {
       method: "PATCH",
     }).catch(() => {});
+    // Mirror it into the read store so the conversations list — a separate,
+    // Router-cached route — drops the unread marker as soon as we come back,
+    // without waiting on a server refresh.
+    useConversationReadStore.getState().markRead(conversationId, readAt);
     channelRef.current?.send({
       type: "broadcast",
       event: "read",
-      payload: { userId: currentUserId, read_at: new Date().toISOString() },
+      payload: { userId: currentUserId, read_at: readAt },
     });
   }, [conversationId, currentUserId]);
 
@@ -208,6 +214,41 @@ export function MessageList({
     const list = listRef.current;
     if (list && list.scrollTop < 100) loadOlder();
   }, [loadOlder]);
+
+  // The initial messages come from the streamed server data, which may be
+  // served from the Router Cache and miss messages that arrived (e.g. shown by
+  // the conversations list's Realtime) after this route was prefetched.
+  // Realtime only delivers messages from subscribe-time forward, so fetch the
+  // latest page once on mount and merge anything we don't already have.
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      try {
+        const res = await fetch(
+          API.MESSAGES_CONVERSATION_MESSAGES(conversationId),
+        );
+        if (!res.ok) return;
+        const { messages: latest } = (await res.json()) as {
+          messages: Message[];
+          hasMore: boolean;
+        };
+        if (cancelled || latest.length === 0) return;
+        setMessages((prev) => {
+          const known = new Set(prev.map((m) => m.id));
+          const missing = latest.filter((m) => !known.has(m.id));
+          if (missing.length === 0) return prev;
+          return [...prev, ...missing].sort((a, b) =>
+            a.created_at.localeCompare(b.created_at),
+          );
+        });
+      } catch {
+        // Best-effort reconcile; Realtime still covers messages from here on.
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [conversationId]);
 
   // Realtime: new messages (postgres_changes) + typing & read (broadcast).
   useEffect(() => {

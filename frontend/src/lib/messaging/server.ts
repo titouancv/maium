@@ -24,6 +24,7 @@ export async function getConversations(): Promise<Conversation[]> {
       `id, created_at, is_group, title,
        conversation_members (
          user_id,
+         last_read_at,
          users:user_id ( id, pseudo, first_name, last_name )
        )`,
     )
@@ -54,23 +55,34 @@ export async function getConversations(): Promise<Conversation[]> {
     }
   }
 
-  return conversations.map((c) => {
-    const members = ((c.conversation_members as unknown as Array<{
-      user_id: string;
-      users: { id: string; pseudo: string; first_name: string; last_name: string } | null;
-    }>) ?? [])
-      .filter((m) => m.users !== null)
-      .map((m) => m.users!);
+  return conversations
+    // Hide conversations that have no message yet.
+    .filter((c) => lastMessageByConversation.has(c.id))
+    .map((c) => {
+      const members = ((c.conversation_members as unknown as Array<{
+        user_id: string;
+        last_read_at: string | null;
+        users: { id: string; pseudo: string; first_name: string; last_name: string } | null;
+      }>) ?? [])
+        .filter((m) => m.users !== null)
+        .map((m) => ({ ...m.users!, last_read_at: m.last_read_at }));
 
-    return {
-      id: c.id,
-      created_at: c.created_at,
-      is_group: c.is_group,
-      title: c.title,
-      members,
-      last_message: lastMessageByConversation.get(c.id) ?? null,
-    };
-  });
+      return {
+        id: c.id,
+        created_at: c.created_at,
+        is_group: c.is_group,
+        title: c.title,
+        members,
+        last_message: lastMessageByConversation.get(c.id) ?? null,
+      };
+    })
+    // Most recently active conversations first: order by last message date,
+    // falling back to the conversation creation date when there is no message.
+    .sort((a, b) => {
+      const aDate = a.last_message?.created_at ?? a.created_at;
+      const bDate = b.last_message?.created_at ?? b.created_at;
+      return bDate.localeCompare(aDate);
+    });
 }
 
 export async function getConversationById(

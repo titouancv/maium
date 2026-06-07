@@ -294,6 +294,8 @@
     "today": "Today",
     "yesterday": "Yesterday",
     "emptyConversation": "No messages yet. Say hello!",
+    "noMessagesYet": "No messages yet",
+    "unknownUser": "Unknown user",
     "online": "Online",
     "typing": "Typing…",
     "seen": "Seen"

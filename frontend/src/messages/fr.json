@@ -294,6 +294,8 @@
     "today": "Aujourd'hui",
     "yesterday": "Hier",
     "emptyConversation": "Aucun message. Dites bonjour !",
+    "noMessagesYet": "Aucun message",
+    "unknownUser": "Utilisateur inconnu",
     "online": "En ligne",
     "typing": "En train d'écrire…",
     "seen": "Vu"
