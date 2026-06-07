@@ -1,6 +1,80 @@
 import { createClient } from "@/lib/supabase/server";
 import { MESSAGES_PAGE_SIZE } from "@/constants";
-import type { Conversation, Message } from "@/types";
+import type { Conversation, ConversationMember, Message } from "@/types";
+
+// --- Raw row shapes -------------------------------------------------------
+// Without generated Supabase types, nested selects are typed loosely, so we
+// describe the rows we ask for and cast once at the query boundary instead of
+// sprinkling `as unknown as` across the mapping code.
+
+interface MemberUserRow {
+  id: string;
+  pseudo: string;
+  first_name: string;
+  last_name: string;
+}
+
+interface ConversationMemberRow {
+  user_id: string;
+  last_read_at: string | null;
+  users: MemberUserRow | null;
+}
+
+interface ConversationRow {
+  id: string;
+  created_at: string;
+  is_group: boolean;
+  title: string | null;
+  last_message_at: string | null;
+  last_message_content: string | null;
+  last_message_sender_id: string | null;
+  conversation_members: ConversationMemberRow[];
+}
+
+interface MessageRow {
+  id: string;
+  conversation_id: string;
+  sender_id: string;
+  content: string;
+  created_at: string;
+  edited_at: string | null;
+  deleted_at: string | null;
+  sender: { pseudo: string; first_name: string; last_name: string } | null;
+}
+
+const CONVERSATION_SELECT = `id, created_at, is_group, title,
+   last_message_at, last_message_content, last_message_sender_id,
+   conversation_members (
+     user_id,
+     last_read_at,
+     users:user_id ( id, pseudo, first_name, last_name )
+   )`;
+
+function mapMembers(rows: ConversationMemberRow[]): ConversationMember[] {
+  return rows
+    .filter((m) => m.users !== null)
+    .map((m) => ({ ...(m.users as MemberUserRow), last_read_at: m.last_read_at }));
+}
+
+function buildLastMessage(row: ConversationRow): Conversation["last_message"] {
+  if (!row.last_message_at) return null;
+  return {
+    content: row.last_message_content ?? "",
+    created_at: row.last_message_at,
+    sender_id: row.last_message_sender_id ?? "",
+  };
+}
+
+function mapConversation(row: ConversationRow): Conversation {
+  return {
+    id: row.id,
+    created_at: row.created_at,
+    is_group: row.is_group,
+    title: row.title,
+    members: mapMembers(row.conversation_members ?? []),
+    last_message: buildLastMessage(row),
+  };
+}
 
 export async function getConversations(): Promise<Conversation[]> {
   const supabase = await createClient();
@@ -18,71 +92,19 @@ export async function getConversations(): Promise<Conversation[]> {
 
   const conversationIds = memberships.map((m) => m.conversation_id);
 
-  const { data: conversations } = await supabase
+  // Single indexed query: the newest message lives on the conversation row
+  // (maintained by a trigger), so there's no need to scan every message.
+  // `last_message_at is null` filters out conversations with no message yet,
+  // and the order gives most-recently-active first.
+  const { data } = await supabase
     .from("conversations")
-    .select(
-      `id, created_at, is_group, title,
-       conversation_members (
-         user_id,
-         last_read_at,
-         users:user_id ( id, pseudo, first_name, last_name )
-       )`,
-    )
+    .select(CONVERSATION_SELECT)
     .in("id", conversationIds)
-    .order("created_at", { ascending: false });
+    .not("last_message_at", "is", null)
+    .order("last_message_at", { ascending: false });
 
-  if (!conversations) return [];
-
-  const { data: lastMessages } = await supabase
-    .from("messages")
-    .select("conversation_id, content, created_at, sender_id")
-    .in("conversation_id", conversationIds)
-    .order("created_at", { ascending: false });
-
-  const lastMessageByConversation = new Map<
-    string,
-    { content: string; created_at: string; sender_id: string }
-  >();
-  if (lastMessages) {
-    for (const msg of lastMessages) {
-      if (!lastMessageByConversation.has(msg.conversation_id)) {
-        lastMessageByConversation.set(msg.conversation_id, {
-          content: msg.content,
-          created_at: msg.created_at,
-          sender_id: msg.sender_id,
-        });
-      }
-    }
-  }
-
-  return conversations
-    // Hide conversations that have no message yet.
-    .filter((c) => lastMessageByConversation.has(c.id))
-    .map((c) => {
-      const members = ((c.conversation_members as unknown as Array<{
-        user_id: string;
-        last_read_at: string | null;
-        users: { id: string; pseudo: string; first_name: string; last_name: string } | null;
-      }>) ?? [])
-        .filter((m) => m.users !== null)
-        .map((m) => ({ ...m.users!, last_read_at: m.last_read_at }));
-
-      return {
-        id: c.id,
-        created_at: c.created_at,
-        is_group: c.is_group,
-        title: c.title,
-        members,
-        last_message: lastMessageByConversation.get(c.id) ?? null,
-      };
-    })
-    // Most recently active conversations first: order by last message date,
-    // falling back to the conversation creation date when there is no message.
-    .sort((a, b) => {
-      const aDate = a.last_message?.created_at ?? a.created_at;
-      const bDate = b.last_message?.created_at ?? b.created_at;
-      return bDate.localeCompare(aDate);
-    });
+  const rows = (data ?? []) as unknown as ConversationRow[];
+  return rows.map(mapConversation);
 }
 
 export async function getConversationById(
@@ -96,46 +118,26 @@ export async function getConversationById(
 
   const { data } = await supabase
     .from("conversations")
-    .select(
-      `id, created_at, is_group, title,
-       conversation_members (
-         user_id,
-         last_read_at,
-         users:user_id ( id, pseudo, first_name, last_name )
-       )`,
-    )
+    .select(CONVERSATION_SELECT)
     .eq("id", conversationId)
     .single();
 
   if (!data) return null;
+  const row = data as unknown as ConversationRow;
 
-  const rawMembers = (data.conversation_members as unknown as Array<{
-    user_id: string;
-    last_read_at: string | null;
-    users: { id: string; pseudo: string; first_name: string; last_name: string } | null;
-  }>) ?? [];
-
-  const isMember = rawMembers.some((m) => m.user_id === user.id);
+  const isMember = (row.conversation_members ?? []).some(
+    (m) => m.user_id === user.id,
+  );
   if (!isMember) return null;
 
-  const members = rawMembers
-    .filter((m) => m.users !== null)
-    .map((m) => ({ ...m.users!, last_read_at: m.last_read_at }));
-
-  return {
-    id: data.id,
-    created_at: data.created_at,
-    is_group: data.is_group,
-    title: data.title,
-    members,
-    last_message: null,
-  };
+  return mapConversation(row);
 }
 
 /**
  * Fetches a page of messages, newest first internally but returned oldest →
  * newest. Pass `before` (the `created_at` of the oldest message already loaded)
- * to fetch the previous page for upward infinite scroll.
+ * to fetch the previous page for upward infinite scroll. The `id` tiebreak
+ * keeps ordering deterministic when two messages share a `created_at`.
  */
 export async function getMessages(
   conversationId: string,
@@ -157,15 +159,15 @@ export async function getMessages(
     .eq("conversation_id", conversationId)
     .is("deleted_at", null)
     .order("created_at", { ascending: false })
+    .order("id", { ascending: false })
     .limit(limit);
 
   if (before) query = query.lt("created_at", before);
 
   const { data } = await query;
 
-  if (!data) return [];
-
-  return data
+  const rows = (data ?? []) as unknown as MessageRow[];
+  return rows
     .map((m) => ({
       id: m.id,
       conversation_id: m.conversation_id,
@@ -174,7 +176,7 @@ export async function getMessages(
       created_at: m.created_at,
       edited_at: m.edited_at,
       deleted_at: m.deleted_at,
-      sender: (m.sender as unknown) as { pseudo: string; first_name: string; last_name: string } | null,
+      sender: m.sender,
     }))
     .reverse();
 }

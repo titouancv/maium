@@ -158,10 +158,16 @@ When a list already holds the data the destination page needs, seed a lightweigh
 Zustand "preview" store so the destination paints instantly while the
 authoritative server data streams in behind it.
 
-- [useConversationPreviewStore](src/stores/useConversationPreviewStore.ts) —
-  seeded by [ConversationList](src/components/messaging/collections/ConversationList.tsx);
-  consumed by [ConversationContent](src/components/messaging/ConversationContent.tsx)
-  to paint the header before the conversation round-trip resolves.
+- [useMessagingStore](src/stores/useMessagingStore.ts) — the single client
+  source of truth for the messaging area. Seeded (hydrated) by
+  [ConversationList](src/components/pages/messaging/collections/ConversationList.tsx)
+  from the streamed server data and kept live by a single Realtime subscription
+  in the messaging layout ([MessagingRealtime](src/components/pages/messaging/MessagingRealtime.tsx));
+  consumed by [ConversationContent](src/components/pages/messaging/ConversationContent.tsx)
+  to paint the header before the conversation round-trip resolves, and by
+  [ConversationItem](src/components/pages/messaging/items/ConversationItem.tsx)
+  for live preview/order/unread state. It folds together what used to be three
+  separate stores (preview, last-message and read mirrors).
 - [useProfilePreviewStore](src/stores/useProfilePreviewStore.ts) — seeded on
   [UserCard](src/components/ui/UserCard.tsx) click; consumed by
   [ProfileTitle](src/components/profile/ProfileTitle.tsx).
@@ -303,7 +309,8 @@ frontend/src/
 │   ├── useLoadingStore.ts         # Loading overlay suppression flag
 │   ├── useCurrentUserStore.ts     # Authenticated user profile (populated after login)
 │   ├── usePresenceStore.ts        # Online-presence tracking
-│   ├── useConversationPreviewStore.ts / useProfilePreviewStore.ts  # Preview caches
+│   ├── useMessagingStore.ts       # Messaging client source of truth (conversations + read state)
+│   ├── useProfilePreviewStore.ts  # Profile preview cache
 │   └── useThemeStore.ts           # Theme preference (light/dark)
 ├── proxy.ts                       # Middleware (i18n + session refresh)
 ├── hooks/                         # Custom React hooks

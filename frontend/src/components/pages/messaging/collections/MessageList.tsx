@@ -11,12 +11,17 @@ import {
 import { useLocale, useTranslations } from "next-intl";
 import type { RealtimeChannel } from "@supabase/supabase-js";
 import { createClient } from "@/lib/supabase/client";
-import { API, MESSAGES_PAGE_SIZE } from "@/constants";
+import {
+  API,
+  MESSAGES_PAGE_SIZE,
+  MESSAGE_GROUP_WINDOW_MS,
+  TYPING_BROADCAST_THROTTLE_MS,
+  TYPING_INDICATOR_TIMEOUT_MS,
+} from "@/constants";
 import { formatLongDate, isSameDay } from "@/lib/date";
 import { usePresenceStore } from "@/stores/usePresenceStore";
 import { useCurrentUserStore } from "@/stores/useCurrentUserStore";
-import { useConversationReadStore } from "@/stores/useConversationReadStore";
-import { useConversationLastMessageStore } from "@/stores/useConversationLastMessageStore";
+import { useMessagingStore } from "@/stores/useMessagingStore";
 import type { ConversationMember, Message, OptimisticMessage } from "@/types";
 import { MessageBubble } from "../items/MessageBubble";
 import { TextArea } from "@/components/ui/TextArea";
@@ -36,7 +41,6 @@ interface MessageListProps {
   conversationId: string;
   initialMessages: Message[];
   currentUserId: string;
-  isGroup: boolean;
   otherUserId: string | null;
   otherMember: ConversationMember | null;
   otherLastReadAt: string | null;
@@ -102,10 +106,10 @@ export function MessageList({
     fetch(API.MESSAGES_CONVERSATION_READ(conversationId), {
       method: "PATCH",
     }).catch(() => {});
-    // Mirror it into the read store so the conversations list — a separate,
+    // Mirror it into the shared store so the conversations list — a separate,
     // Router-cached route — drops the unread marker as soon as we come back,
     // without waiting on a server refresh.
-    useConversationReadStore.getState().markRead(conversationId, readAt);
+    useMessagingStore.getState().markRead(conversationId, readAt);
     channelRef.current?.send({
       type: "broadcast",
       event: "read",
@@ -288,17 +292,9 @@ export function MessageList({
                 : null);
             return [...prev, { ...newMsg, sender }];
           });
-          // Mirror into the list store so the conversations list — a separate,
-          // unmounted route while we're here — shows the right preview/order
-          // the moment we navigate back, without a server round-trip.
-          useConversationLastMessageStore.getState().setLastMessage(
-            conversationId,
-            {
-              content: newMsg.content,
-              created_at: newMsg.created_at,
-              sender_id: newMsg.sender_id,
-            },
-          );
+          // The list's preview/order/unread state is kept live by the
+          // layout-level Realtime subscription (MessagingRealtime), so here we
+          // only mark the open conversation read while it's visible.
           if (document.visibilityState === "visible") markRead();
         },
       )
@@ -311,7 +307,7 @@ export function MessageList({
           if (typingTimerRef.current) clearTimeout(typingTimerRef.current);
           typingTimerRef.current = setTimeout(
             () => setTypingUserId(null),
-            3000,
+            TYPING_INDICATOR_TIMEOUT_MS,
           );
         },
       )
@@ -353,7 +349,7 @@ export function MessageList({
 
   const sendTyping = () => {
     const now = Date.now();
-    if (now - lastTypingSentRef.current < 2000) return;
+    if (now - lastTypingSentRef.current < TYPING_BROADCAST_THROTTLE_MS) return;
     lastTypingSentRef.current = now;
     channelRef.current?.send({
       type: "broadcast",
@@ -407,9 +403,10 @@ export function MessageList({
           m.id === optimisticId ? { ...message, optimistic: false } : m,
         ),
       );
-      // Keep the conversations list (a separate, currently-unmounted route) in
-      // sync so it shows this message and re-sorts when we navigate back.
-      useConversationLastMessageStore.getState().setLastMessage(conversationId, {
+      // Bump the shared store so the list reflects this send instantly. The
+      // layout Realtime subscription would also catch it, but with round-trip
+      // latency; this keeps the list correct the moment we navigate back.
+      useMessagingStore.getState().applyMessage(conversationId, {
         content: message.content,
         created_at: message.created_at,
         sender_id: message.sender_id,
@@ -442,7 +439,7 @@ export function MessageList({
       prevFirst.sender_id === messages[i].sender_id &&
       new Date(messages[i].created_at).getTime() -
         new Date(prevFirst.created_at).getTime() <
-        5 * 60 * 1000;
+        MESSAGE_GROUP_WINDOW_MS;
     groupFirsts.push(grouped ? prevFirst : messages[i]);
   }
 

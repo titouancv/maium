@@ -1,7 +1,7 @@
 import { useTranslations } from "next-intl";
-import { ROUTES } from "@/constants";
+import { MESSAGE_PREVIEW_MAX_LENGTH, ROUTES } from "@/constants";
 import type { Conversation, ConversationMember } from "@/types";
-import { useConversationReadStore } from "@/stores/useConversationReadStore";
+import { useMessagingStore } from "@/stores/useMessagingStore";
 import { UserCard } from "@/components/ui/UserCard";
 
 interface ConversationItemProps {
@@ -13,8 +13,9 @@ interface ConversationItemProps {
 function getSubtitle(conversation: Conversation): string | null {
   if (!conversation.last_message) return null;
   const content = conversation.last_message.content;
-  const truncated = content.length > 50 ? content.slice(0, 50) + "…" : content;
-  return truncated;
+  return content.length > MESSAGE_PREVIEW_MAX_LENGTH
+    ? content.slice(0, MESSAGE_PREVIEW_MAX_LENGTH) + "…"
+    : content;
 }
 
 function hasUnreadMessage(
@@ -41,9 +42,7 @@ export function ConversationItem({
   currentUserId,
 }: ConversationItemProps) {
   const t = useTranslations("messaging");
-  const localReadAt = useConversationReadStore(
-    (s) => s.readAt[conversation.id],
-  );
+  const localReadAt = useMessagingStore((s) => s.readAt[conversation.id]);
   const subtitle = getSubtitle(conversation);
   const unread = hasUnreadMessage(conversation, currentUserId, localReadAt);
   const other = conversation.members.find(

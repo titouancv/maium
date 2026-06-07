@@ -7,17 +7,19 @@ import { Title, BackButton, Skeleton } from "../../ui";
 import { MessageListLoader } from "./collections/MessageListLoader";
 import { MessagesSkeleton } from "./ConversationSkeleton";
 import { useCurrentUserStore } from "@/stores/useCurrentUserStore";
-import {
-  useConversationPreviewStore,
-  type ConversationPreview,
-} from "@/stores/useConversationPreviewStore";
-import type { Message } from "@/types";
+import { useMessagingStore } from "@/stores/useMessagingStore";
+import type { Conversation, Message } from "@/types";
 
 interface ConversationContentProps {
   conversationId: string;
-  conversationPromise: Promise<ConversationPreview | null>;
+  conversationPromise: Promise<Conversation | null>;
   messagesPromise: Promise<Message[]>;
 }
+
+type ConversationPreview = Pick<
+  Conversation,
+  "is_group" | "title" | "members"
+>;
 
 function getDisplayName(
   conversation: ConversationPreview,
@@ -37,7 +39,11 @@ export function ConversationContent({
   const t = useTranslations("messaging");
   // Hydrated at the layout level, so already set on client navigations.
   const currentUserId = useCurrentUserStore((s) => s.user?.id ?? "");
-  const seeded = useConversationPreviewStore((s) => s.previews[conversationId]);
+  // Seeded by the conversations list (via the shared store) so the header can
+  // paint instantly; falls back to the streamed title on a hard load/deep link.
+  const seeded = useMessagingStore((s) =>
+    s.conversations.find((c) => c.id === conversationId),
+  );
 
   // When the list seeded this conversation, the title is a plain string and
   // PageLayout renders the back button for us. Otherwise the title node owns
@@ -82,7 +88,7 @@ function StreamedTitle({
   conversationPromise,
   currentUserId,
 }: {
-  conversationPromise: Promise<ConversationPreview | null>;
+  conversationPromise: Promise<Conversation | null>;
   currentUserId: string;
 }) {
   const conversation = use(conversationPromise);
