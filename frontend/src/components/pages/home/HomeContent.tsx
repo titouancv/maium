@@ -1,25 +1,35 @@
 "use client";
 
-import { useState, useLayoutEffect } from "react";
+import { Suspense, useState, useLayoutEffect } from "react";
 import { useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
-import { ROUTES } from "@/constants";
-import { Link } from "@/i18n/navigation";
-import { WelcomeOverlay } from "./collections/WelcomeOverlay";
-import { HeroSection } from "../../ui/collections/HeroSection";
 import { cn } from "@/lib/utils";
-import { UserData } from "@/types";
-import { PageLayout } from "../../layout";
-import { Button } from "@/components/ui";
+import { UserData, SuggestedUser } from "@/types";
+import type { HomeStats } from "@/lib/users";
 import { useCurrentUserStore } from "@/stores/useCurrentUserStore";
+import { PageLayout } from "../../layout";
+import { HeroSection } from "../../ui/collections/HeroSection";
+import { WelcomeOverlay } from "./collections/WelcomeOverlay";
+import { GreetingSection } from "./GreetingSection";
+import {
+  StatsRow,
+  StatsRowSkeleton,
+  SuggestionsList,
+  SuggestionsListSkeleton,
+} from "./collections";
 
 interface HomeContentProps {
   user: UserData | null;
+  statsPromise?: Promise<HomeStats>;
+  suggestionsPromise?: Promise<SuggestedUser[]>;
 }
 
-export const HomeContent = ({ user }: HomeContentProps) => {
+export const HomeContent = ({
+  user,
+  statsPromise,
+  suggestionsPromise,
+}: HomeContentProps) => {
   const tNav = useTranslations("nav");
-  const t = useTranslations("home");
 
   // The wizard hands off here with ?welcome=1 once onboarding is complete; that
   // is the single trigger for the celebration (the flag is already persisted).
@@ -81,13 +91,28 @@ export const HomeContent = ({ user }: HomeContentProps) => {
   };
 
   return (
-    <PageLayout title={tNav("home")}>
+    <PageLayout title={tNav("home")} fullHeight>
       {!user && <HeroSection />}
+
       {user && (
-        <div className="flex items-center justify-center py-12">
-          <Link href={ROUTES.JOBS}>
-            <Button variant="primary">{t("goToAnalysis")}</Button>
-          </Link>
+        <div className="flex h-full w-full max-w-7xl flex-col gap-6 pb-28 md:gap-8 md:pb-32">
+          <GreetingSection firstName={user.first_name} />
+
+          {statsPromise && (
+            <div className="shrink-0">
+              <Suspense fallback={<StatsRowSkeleton />}>
+                <StatsRow statsPromise={statsPromise} user={user} />
+              </Suspense>
+            </div>
+          )}
+
+          {suggestionsPromise && (
+            <div className="flex min-h-0 flex-1 flex-col">
+              <Suspense fallback={<SuggestionsListSkeleton />}>
+                <SuggestionsList suggestionsPromise={suggestionsPromise} />
+              </Suspense>
+            </div>
+          )}
         </div>
       )}
 

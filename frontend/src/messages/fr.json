@@ -100,7 +100,46 @@
     "feature3": "Vos données ne quittent pas l'Europe : sécurité, conformité et souveraineté garanties.",
     "dataUsagePrefix": "En vous connectant avec Google, nous accédons à votre nom et adresse e-mail pour créer votre compte. Vos données ne sont jamais vendues ni partagées avec des tiers. Consultez notre",
     "privacyPolicyLink": "politique de confidentialité",
-    "goToAnalysis": "Analyser une offre d'emploi"
+    "goToAnalysis": "Analyser une offre d'emploi",
+    "greeting": {
+      "morning": "Bonjour, {name}",
+      "afternoon": "Bon après-midi, {name}",
+      "evening": "Bonsoir, {name}",
+      "night": "Encore debout, {name} ?"
+    },
+    "events": {
+      "newYear": "Bonne année ! 🎉",
+      "valentines": "Joyeuse Saint-Valentin ❤️",
+      "womensDay": "Journée internationale des droits des femmes ✊",
+      "earthDay": "Bonne Journée de la Terre 🌍",
+      "labourDay": "Bonne fête du Travail",
+      "musicDay": "C'est la Fête de la Musique 🎶",
+      "bastilleDay": "Bonne fête nationale 🇫🇷",
+      "halloween": "Joyeux Halloween 🎃",
+      "christmas": "Joyeux Noël 🎄",
+      "newYearsEve": "Bonne Saint-Sylvestre ! 🥂",
+      "winterOlympics": "Les Jeux olympiques d'hiver commencent aujourd'hui ⛷️",
+      "worldCupOpening": "La Coupe du monde commence aujourd'hui ⚽",
+      "worldCupFinal": "C'est la finale de la Coupe du monde aujourd'hui ⚽"
+    },
+    "stats": {
+      "followers": "Abonnés",
+      "following": "Abonnements",
+      "unread": "Non lus"
+    },
+    "actions": {
+      "analyzeTitle": "Analyser une offre",
+      "analyzeSubtitle": "Optimisez votre CV avec l'IA",
+      "completeProfileTitle": "Compléter mon profil",
+      "completeProfileSubtitle": "{percent}% complété"
+    },
+    "suggestions": {
+      "title": "Personnes à suivre",
+      "empty": "Aucune suggestion pour le moment — revenez plus tard.",
+      "follow": "Suivre",
+      "following": "Suivi",
+      "followersCount": "{count, plural, =0 {Aucun abonné} one {# abonné} other {# abonnés}}"
+    }
   },
   "settings": {
     "title": "Paramètres",
