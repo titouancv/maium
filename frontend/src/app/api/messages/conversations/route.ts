@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { getConversations } from "@/lib/messaging/server";
 
 export async function GET() {
   try {
@@ -14,32 +15,10 @@ export async function GET() {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const { data: memberships } = await supabase
-      .from("conversation_members")
-      .select("conversation_id")
-      .eq("user_id", user.id);
-
-    if (!memberships?.length) {
-      return NextResponse.json({ conversations: [] });
-    }
-
-    const conversationIds = memberships.map((m) => m.conversation_id);
-
-    const { data: conversations, error } = await supabase
-      .from("conversations")
-      .select(
-        `id, created_at, is_group, title,
-         conversation_members (
-           user_id,
-           users:user_id ( id, pseudo, first_name, last_name )
-         )`,
-      )
-      .in("id", conversationIds)
-      .order("created_at", { ascending: false });
-
-    if (error) throw error;
-
-    return NextResponse.json({ conversations: conversations ?? [] });
+    // Single source of truth: same shape (members, last_message, sorting,
+    // empty-conversation filtering) as the server-rendered list.
+    const conversations = await getConversations();
+    return NextResponse.json({ conversations });
   } catch (error) {
     console.error("[GET /api/messages/conversations]", error);
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });
