@@ -6,7 +6,7 @@ import { useTranslations } from "next-intl";
 import { ROUTES } from "@/constants";
 import { Link } from "@/i18n/navigation";
 import { WelcomeOverlay } from "./collections/WelcomeOverlay";
-import { HeroSection } from "./collections/HeroSection";
+import { HeroSection } from "../../ui/collections/HeroSection";
 import { cn } from "@/lib/utils";
 import { UserData } from "@/types";
 import { PageLayout } from "../../layout";

@@ -13,7 +13,7 @@ export function SearchButton({ onClick }: SearchButtonProps) {
     <button
       onClick={onClick}
       aria-label={t("searchLabel")}
-      className="bg-inverse-50 text-txt-inverse flex h-9 w-9 shrink-0 items-center justify-center rounded-full transition-opacity hover:opacity-80 active:scale-95"
+      className="bg-inverse-50 text-txt-inverse hover:text-primary flex h-9 w-9 shrink-0 items-center justify-center rounded-full transition-opacity hover:cursor-pointer active:scale-95"
     >
       <svg
         width="16"

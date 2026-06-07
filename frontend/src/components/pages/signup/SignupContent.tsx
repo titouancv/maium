@@ -7,9 +7,10 @@ import { useRouter } from "@/i18n/navigation";
 import { ROUTES, API, SIGNUP_FORM_ID, EXPERIENCE_NAMESPACE } from "@/constants";
 import { Form } from "../../form/Form";
 import type { FormProps } from "../../form/Form";
-import { Title, GoogleSignInButton } from "@/components/ui";
 import type { Experience } from "@/types/experience";
 import { SIGNUP_TOTAL_STEPS, type SignupDraft } from "./steps";
+import { HeroSection } from "../home/collections";
+import { PageLayout } from "@/components/layout/PageLayout";
 
 interface SignupContentProps {
   initialStep?: number;
@@ -35,6 +36,7 @@ export const SignupContent = ({
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
   const tCommon = useTranslations("common");
+  const tNav = useTranslations("nav");
   const tSignup = useTranslations("auth.signup");
 
   // Persist a slice of the draft to the user row. Each wizard step saves
@@ -125,7 +127,9 @@ export const SignupContent = ({
           defaultValue: draft.professionalExperiences,
           onChange: setProExperiences,
           onPrimary: () =>
-            nextStep({ professionalExperiences: draft.professionalExperiences }),
+            nextStep({
+              professionalExperiences: draft.professionalExperiences,
+            }),
         };
       default:
         return {
@@ -141,10 +145,9 @@ export const SignupContent = ({
 
   if (step === 0) {
     return (
-      <div className="flex min-h-screen flex-col items-center justify-center gap-8">
-        <Title label="maium" size="h1" />
-        <GoogleSignInButton />
-      </div>
+      <PageLayout title={tNav("home")} backLabel={tCommon("backButton")}>
+        <HeroSection />
+      </PageLayout>
     );
   }
 

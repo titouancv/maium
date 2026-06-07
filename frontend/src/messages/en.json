@@ -95,7 +95,9 @@
     "pseudo": "Username",
     "dob": "Date of birth",
     "heroTitle": "Imagine tomorrow. Connect now.",
-    "appDescription": "maium shapes your next horizon and connects you with people who share your journey.",
+    "feature1": "Meet the talents who matter for your projects.",
+    "feature2": "Take your job search up a gear with our AI.",
+    "feature3": "Your data never leaves Europe: security, compliance and sovereignty guaranteed.",
     "dataUsagePrefix": "By signing in with Google, we access your name and email address to create your account. Your data is never sold or shared with third parties. Read our",
     "privacyPolicyLink": "privacy policy",
     "goToAnalysis": "Analyze a job posting"
