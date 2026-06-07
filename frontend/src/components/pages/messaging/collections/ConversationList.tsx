@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
 import type { RealtimeChannel } from "@supabase/supabase-js";
 import { useRouter } from "@/i18n/navigation";
@@ -8,6 +8,7 @@ import { createClient } from "@/lib/supabase/client";
 import type { Conversation, Message } from "@/types";
 import { useCurrentUserStore } from "@/stores/useCurrentUserStore";
 import { useConversationPreviewStore } from "@/stores/useConversationPreviewStore";
+import { useConversationLastMessageStore } from "@/stores/useConversationLastMessageStore";
 import { ConversationItem } from "../items/ConversationItem";
 
 interface ConversationListProps {
@@ -40,6 +41,30 @@ export function ConversationList({
   useEffect(() => {
     setPreviews(items);
   }, [items, setPreviews]);
+
+  // Messages sent/received while this route was unmounted (i.e. inside a
+  // conversation) are mirrored here by MessageList. Fold them into the items so
+  // the preview text and ordering are correct the instant we navigate back,
+  // before the debounced server refresh below reconciles the cached RSC.
+  const lastMessages = useConversationLastMessageStore((s) => s.lastMessages);
+  const displayed = useMemo(() => {
+    const merged = items.map((c) => {
+      const override = lastMessages[c.id];
+      if (
+        override &&
+        (!c.last_message || override.created_at > c.last_message.created_at)
+      ) {
+        return { ...c, last_message: override };
+      }
+      return c;
+    });
+    // Most recently active first (mirrors getConversations()).
+    return merged.sort((a, b) => {
+      const aDate = a.last_message?.created_at ?? a.created_at;
+      const bDate = b.last_message?.created_at ?? b.created_at;
+      return bDate.localeCompare(aDate);
+    });
+  }, [items, lastMessages]);
 
   // Keep the data the Realtime handler reads current without forcing the
   // subscription to tear down on every message update.
@@ -137,7 +162,7 @@ export function ConversationList({
     };
   }, []);
 
-  if (items.length === 0) {
+  if (displayed.length === 0) {
     return (
       <div className="flex flex-col items-center gap-2 px-4 py-12">
         <p className="text-txt text-sm font-medium">{t("noConversations")}</p>
@@ -150,7 +175,7 @@ export function ConversationList({
 
   return (
     <div className="flex flex-col gap-2">
-      {items.map((c) => (
+      {displayed.map((c) => (
         <ConversationItem
           key={c.id}
           conversation={c}

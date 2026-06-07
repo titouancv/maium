@@ -16,6 +16,7 @@ import { formatLongDate, isSameDay } from "@/lib/date";
 import { usePresenceStore } from "@/stores/usePresenceStore";
 import { useCurrentUserStore } from "@/stores/useCurrentUserStore";
 import { useConversationReadStore } from "@/stores/useConversationReadStore";
+import { useConversationLastMessageStore } from "@/stores/useConversationLastMessageStore";
 import type { ConversationMember, Message, OptimisticMessage } from "@/types";
 import { MessageBubble } from "../items/MessageBubble";
 import { TextArea } from "@/components/ui/TextArea";
@@ -287,6 +288,17 @@ export function MessageList({
                 : null);
             return [...prev, { ...newMsg, sender }];
           });
+          // Mirror into the list store so the conversations list — a separate,
+          // unmounted route while we're here — shows the right preview/order
+          // the moment we navigate back, without a server round-trip.
+          useConversationLastMessageStore.getState().setLastMessage(
+            conversationId,
+            {
+              content: newMsg.content,
+              created_at: newMsg.created_at,
+              sender_id: newMsg.sender_id,
+            },
+          );
           if (document.visibilityState === "visible") markRead();
         },
       )
@@ -395,6 +407,13 @@ export function MessageList({
           m.id === optimisticId ? { ...message, optimistic: false } : m,
         ),
       );
+      // Keep the conversations list (a separate, currently-unmounted route) in
+      // sync so it shows this message and re-sorts when we navigate back.
+      useConversationLastMessageStore.getState().setLastMessage(conversationId, {
+        content: message.content,
+        created_at: message.created_at,
+        sender_id: message.sender_id,
+      });
     } catch {
       setMessages((prev) => prev.filter((m) => m.id !== optimisticId));
       setInput(content);
