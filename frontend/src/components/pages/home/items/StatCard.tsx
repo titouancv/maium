@@ -25,22 +25,29 @@ export const StatCard = ({
         href && "hover:text-primary",
       )}
     >
-      <div className="flex items-baseline gap-2">
-        <p className="text-4xl leading-none font-extrabold">{value}</p>
-        {typeof trend === "number" && (
-          <span
-            title={trendTitle}
-            className={cn(
-              "inline-flex items-center gap-0.5 text-sm font-semibold",
-              trend < 0 && "text-error",
-              trend >= 0 && "text-txt-muted",
+      <div className="flex items-center gap-2">
+        <div className="my-1 w-1 self-stretch rounded-full bg-current"></div>
+        <div className="flex flex-col items-start justify-end">
+          <div className="flex items-baseline gap-2">
+            <p className="text-4xl leading-none font-extrabold">{value}</p>
+            {typeof trend === "number" && (
+              <span
+                title={trendTitle}
+                className={cn(
+                  "inline-flex items-center gap-0.5 text-sm font-semibold",
+                  trend < 0 && "text-error",
+                  trend >= 0 && "text-txt-muted",
+                )}
+              >
+                {trend !== 0 && (
+                  <>{trend > 0 ? `+${trend} 📈` : `${trend} 📉`}</>
+                )}
+              </span>
             )}
-          >
-            {trend !== 0 && <>{trend > 0 ? `+${trend} 📈` : `${trend} 📉`}</>}
-          </span>
-        )}
+          </div>
+          <p className="truncate">{label}</p>
+        </div>
       </div>
-      <p className="truncate">{label}</p>
     </div>
   );
 

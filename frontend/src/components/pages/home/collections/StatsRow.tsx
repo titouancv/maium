@@ -20,6 +20,21 @@ export const StatsRow = ({ statsPromise, user }: StatsRowProps) => {
 
   return (
     <div className="-mx-1 flex gap-6 overflow-x-auto px-1 pb-1">
+      <ActionCard
+        actionLabel={t("actions.analyzeTitle")}
+        text={t("actions.analyzeSubtitle")}
+        href={ROUTES.JOBS}
+        primary
+      />
+      {!completion.isComplete && (
+        <ActionCard
+          actionLabel={t("actions.completeProfileTitle")}
+          text={t("actions.completeProfileSubtitle", {
+            percent: completion.percent,
+          })}
+          href={ROUTES.SETTINGS}
+        />
+      )}
       <StatCard
         value={stats.followersCount}
         label={t("stats.followers")}
@@ -37,21 +52,6 @@ export const StatsRow = ({ statsPromise, user }: StatsRowProps) => {
         label={t("stats.unread")}
         href={ROUTES.MESSAGES}
       />
-      <ActionCard
-        actionLabel={t("actions.analyzeTitle")}
-        text={t("actions.analyzeSubtitle")}
-        href={ROUTES.JOBS}
-        primary
-      />
-      {!completion.isComplete && (
-        <ActionCard
-          actionLabel={t("actions.completeProfileTitle")}
-          text={t("actions.completeProfileSubtitle", {
-            percent: completion.percent,
-          })}
-          href={ROUTES.SETTINGS}
-        />
-      )}
     </div>
   );
 };
