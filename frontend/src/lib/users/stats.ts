@@ -13,6 +13,12 @@ export interface HomeStats {
    * no net change at all over the window.
    */
   followersTrend: number | null;
+  /**
+   * Number of distinct people who viewed the profile over the last 7 days
+   * (a viewer who returned on several days counts once), from the
+   * `profile_views` log via the `get_profile_views_count` RPC.
+   */
+  profileViewsCount: number;
 }
 
 const TREND_WINDOW_DAYS = 7;
@@ -22,6 +28,7 @@ const EMPTY_STATS: HomeStats = {
   followingCount: 0,
   unreadCount: 0,
   followersTrend: null,
+  profileViewsCount: 0,
 };
 
 /**
@@ -38,21 +45,26 @@ export async function getHomeStats(): Promise<HomeStats> {
   ).toISOString();
 
   const admin = createAdminClient();
-  const [followers, following, netChange, unreadCount] = await Promise.all([
-    admin
-      .from("user_follows")
-      .select("*", { count: "exact", head: true })
-      .eq("followed_id", authUser.id),
-    admin
-      .from("user_follows")
-      .select("*", { count: "exact", head: true })
-      .eq("follower_id", authUser.id),
-    admin.rpc("get_follower_net_change", {
-      p_user_id: authUser.id,
-      p_since: windowStart,
-    }),
-    getUnreadConversationsCount(),
-  ]);
+  const [followers, following, netChange, profileViews, unreadCount] =
+    await Promise.all([
+      admin
+        .from("user_follows")
+        .select("*", { count: "exact", head: true })
+        .eq("followed_id", authUser.id),
+      admin
+        .from("user_follows")
+        .select("*", { count: "exact", head: true })
+        .eq("follower_id", authUser.id),
+      admin.rpc("get_follower_net_change", {
+        p_user_id: authUser.id,
+        p_since: windowStart,
+      }),
+      admin.rpc("get_profile_views_count", {
+        p_user_id: authUser.id,
+        p_since: windowStart,
+      }),
+      getUnreadConversationsCount(),
+    ]);
 
   // Absolute net follows minus unfollows over the window (e.g. +1 / -2);
   // hidden (null) when there was no net movement.
@@ -65,5 +77,6 @@ export async function getHomeStats(): Promise<HomeStats> {
     followingCount: following.count ?? 0,
     unreadCount,
     followersTrend,
+    profileViewsCount: (profileViews.data as number | null) ?? 0,
   };
 }

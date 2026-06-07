@@ -126,6 +126,7 @@
       "followers": "Followers",
       "following": "Following",
       "unread": "Unread messages",
+      "profileViews": "Profile views (7d)",
       "trendTitle": "vs. last 7 days"
     },
     "actions": {

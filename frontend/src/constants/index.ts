@@ -24,6 +24,7 @@ export const API = {
   USERS_PSEUDO_CHECK: "/api/users/pseudo",
   USERS_SEARCH: "/api/users/search",
   USERS_FOLLOW: "/api/users/follow",
+  USERS_VIEW: "/api/users/view",
   USERS_FOLLOWERS: "/api/users/followers",
   USERS_FOLLOWING: "/api/users/following",
   AUTH_LOGOUT: "/api/auth/logout",
