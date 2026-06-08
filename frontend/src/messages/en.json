@@ -126,14 +126,19 @@
       "followers": "Followers",
       "following": "Following",
       "unread": "Unread messages",
-      "profileViews": "Profile views (7d)",
+      "profileViews": "Profile views",
       "trendTitle": "vs. last 7 days"
     },
     "actions": {
       "analyzeTitle": "Analyze a job posting",
       "analyzeSubtitle": "Tailor your resume with AI",
+      "analyzeDescription": "Match each application to the offer and boost your chances of landing an interview.",
       "completeProfileTitle": "Complete your profile",
-      "completeProfileSubtitle": "{percent}% done"
+      "completeProfileSubtitle": "{percent}% done",
+      "completeProfileDescription": "A complete profile gets you noticed and improves your job offer analyses.",
+      "downloadCvTitle": "Download my CV",
+      "downloadCvSubtitle": "Export your profile to PDF",
+      "downloadCvDescription": "Generate a polished resume from your profile information in one click."
     },
     "suggestions": {
       "title": "People to connect with",

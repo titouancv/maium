@@ -6,7 +6,7 @@ import { ROUTES } from "@/constants";
 import { getProfileCompletion } from "@/lib/home";
 import type { HomeStats } from "@/lib/users";
 import type { UserData } from "@/types";
-import { StatCard, ActionCard } from "../items";
+import { StatCard, ActionCard, DownloadCvCard } from "../items";
 
 interface StatsRowProps {
   statsPromise: Promise<HomeStats>;
@@ -20,21 +20,25 @@ export const StatsRow = ({ statsPromise, user }: StatsRowProps) => {
 
   return (
     <div className="-mx-1 flex gap-6 overflow-x-auto px-1 pb-1">
-      <ActionCard
-        actionLabel={t("actions.analyzeTitle")}
-        text={t("actions.analyzeSubtitle")}
-        href={ROUTES.JOBS}
-        primary
-      />
       {!completion.isComplete && (
         <ActionCard
           actionLabel={t("actions.completeProfileTitle")}
           text={t("actions.completeProfileSubtitle", {
             percent: completion.percent,
           })}
+          description={t("actions.completeProfileDescription")}
           href={ROUTES.SETTINGS}
+          primary
         />
       )}
+      <ActionCard
+        actionLabel={t("actions.analyzeTitle")}
+        text={t("actions.analyzeSubtitle")}
+        description={t("actions.analyzeDescription")}
+        href={ROUTES.JOBS}
+        primary
+      />
+      <DownloadCvCard user={user} />
       <StatCard
         value={stats.followersCount}
         label={t("stats.followers")}

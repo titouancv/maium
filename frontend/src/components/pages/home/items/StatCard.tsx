@@ -21,7 +21,7 @@ export const StatCard = ({
   const content = (
     <div
       className={cn(
-        "flex h-full min-w-44 flex-col items-start justify-end transition-colors",
+        "flex h-full min-w-44 flex-col items-start justify-start transition-colors",
         href && "hover:text-primary",
       )}
     >
@@ -34,14 +34,12 @@ export const StatCard = ({
               <span
                 title={trendTitle}
                 className={cn(
-                  "inline-flex items-center gap-0.5 text-sm font-semibold",
-                  trend < 0 && "text-error",
-                  trend >= 0 && "text-txt-muted",
+                  "inline-flex items-center gap-0.5 text-sm font-extrabold",
+                  trend <= 0 && "text-txt-muted",
+                  trend > 0 && "text-primary",
                 )}
               >
-                {trend !== 0 && (
-                  <>{trend > 0 ? `+${trend} 📈` : `${trend} 📉`}</>
-                )}
+                {trend !== 0 && <>{trend > 0 ? `+${trend}` : `${trend}`}</>}
               </span>
             )}
           </div>

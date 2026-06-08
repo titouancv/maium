@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import {
-  buildResumePdfData,
+  buildProfileResumePdfData,
   renderResumePdf,
   resolveTemplate,
   pdfResponse,
@@ -11,10 +11,11 @@ import { ResumeJsonInputSchema } from "@/lib/validators/job";
 // react-pdf renders in Node (not Edge); pin the runtime explicitly.
 export const runtime = "nodejs";
 
-export async function GET(
-  req: NextRequest,
-  { params }: { params: Promise<{ id: string }> },
-) {
+/**
+ * Renders a CV PDF built purely from the authenticated user's profile — no job
+ * analysis required. The template can be picked via `?template=`.
+ */
+export async function GET(req: NextRequest) {
   const supabase = await createClient();
   const {
     data: { user },
@@ -23,10 +24,9 @@ export async function GET(
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const { id } = await params;
   const template = resolveTemplate(req.nextUrl.searchParams.get("template"));
 
-  const data = await buildResumePdfData(id, req.nextUrl.origin);
+  const data = await buildProfileResumePdfData(req.nextUrl.origin);
   if (!data) {
     return NextResponse.json({ error: "Not found" }, { status: 404 });
   }
@@ -36,13 +36,12 @@ export async function GET(
 }
 
 /**
- * Renders the PDF from a user-edited `resume_json` carried in the body. The
- * edits are used for this render only — nothing is written to the database.
+ * Renders the profile CV from a user-edited `resume_json` carried in the body
+ * (the resume editor's draft). The header (name, contact, social links) is
+ * still taken from the profile; the edits are used for this render only and are
+ * never persisted.
  */
-export async function POST(
-  req: NextRequest,
-  { params }: { params: Promise<{ id: string }> },
-) {
+export async function POST(req: NextRequest) {
   const supabase = await createClient();
   const {
     data: { user },
@@ -61,8 +60,7 @@ export async function POST(
   }
   const template = resolveTemplate(body?.template ?? null);
 
-  const { id } = await params;
-  const data = await buildResumePdfData(id, req.nextUrl.origin, parsed.data);
+  const data = await buildProfileResumePdfData(req.nextUrl.origin, parsed.data);
   if (!data) {
     return NextResponse.json({ error: "Not found" }, { status: 404 });
   }

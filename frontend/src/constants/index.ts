@@ -39,6 +39,7 @@ export const API = {
   HISTORY: "/api/history",
   RESUME: (id: string) => `/api/resume/${id}`,
   RESUME_PDF: (id: string) => `/api/resume/${id}/pdf`,
+  RESUME_PROFILE_PDF: "/api/resume/profile/pdf",
 } as const;
 
 export const EXTERNAL_API = {

@@ -126,14 +126,19 @@
       "followers": "Abonnés",
       "following": "Abonnements",
       "unread": "Messages non lus",
-      "profileViews": "Vues du profil (7 j)",
+      "profileViews": "Vues du profil",
       "trendTitle": "vs. 7 derniers jours"
     },
     "actions": {
       "analyzeTitle": "Analyser une offre",
       "analyzeSubtitle": "Optimisez votre CV avec l'IA",
+      "analyzeDescription": "Adaptez chaque candidature à l'offre et augmentez vos chances de décrocher un entretien.",
       "completeProfileTitle": "Compléter mon profil",
-      "completeProfileSubtitle": "{percent}% complété"
+      "completeProfileSubtitle": "{percent}% complété",
+      "completeProfileDescription": "Un profil complet vous rend visible et améliore vos analyses d'offres d'emploi.",
+      "downloadCvTitle": "Télécharger mon CV",
+      "downloadCvSubtitle": "Exportez votre profil en PDF",
+      "downloadCvDescription": "Générez un CV soigné à partir des informations de votre profil en un clic."
     },
     "suggestions": {
       "title": "Personnes à suivre",
