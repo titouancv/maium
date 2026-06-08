@@ -120,7 +120,7 @@ export const ExperienceItem = ({
         <div className="pt-2 pl-5">
           <p
             ref={descRef}
-            className={`text-txt text-sm ${!expanded ? "line-clamp-5" : ""}`}
+            className={`text-txt text-sm whitespace-pre-line ${!expanded ? "line-clamp-5" : ""}`}
           >
             {description}
           </p>
