@@ -70,7 +70,7 @@ export const ProfileFollowActions = ({
         </Link>
       </div>
       {isOwner ? (
-        <div className="flex flex-col gap-2">
+        <div className="flex flex-col gap-4">
           <Link href={ROUTES.JOBS}>
             <Button
               variant="primary"
@@ -93,7 +93,7 @@ export const ProfileFollowActions = ({
           </Link>
         </div>
       ) : (
-        <div className="flex flex-col gap-2">
+        <div className="flex flex-col gap-4">
           <Button
             variant={following ? "outline" : "primary"}
             size="sm"
