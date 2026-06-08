@@ -10,7 +10,7 @@ import { useCurrentUserStore } from "@/stores/useCurrentUserStore";
 import { PageLayout } from "../../layout";
 import { HeroSection } from "../../ui/collections/HeroSection";
 import { WelcomeOverlay } from "./collections/WelcomeOverlay";
-import { GreetingSection } from "./GreetingSection";
+import { GreetingSection } from "./items/GreetingSection";
 import {
   StatsRow,
   StatsRowSkeleton,
@@ -91,11 +91,11 @@ export const HomeContent = ({
   };
 
   return (
-    <PageLayout title={tNav("home")} fullHeight>
+    <PageLayout title={tNav("home")}>
       {!user && <HeroSection />}
 
       {user && (
-        <div className="flex h-full w-full max-w-7xl flex-col gap-6 pb-28 md:gap-8 md:pb-32">
+        <div className="flex h-full w-full max-w-7xl flex-col gap-12">
           <GreetingSection firstName={user.first_name} />
 
           {statsPromise && (

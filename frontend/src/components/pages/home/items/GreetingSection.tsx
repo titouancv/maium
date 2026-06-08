@@ -9,7 +9,9 @@ interface GreetingSectionProps {
 }
 
 /** Maps a 24h hour to a greeting period key. */
-function periodKey(hour: number): "night" | "morning" | "afternoon" | "evening" {
+function periodKey(
+  hour: number,
+): "night" | "morning" | "afternoon" | "evening" {
   if (hour < 6) return "night";
   if (hour < 12) return "morning";
   if (hour < 18) return "afternoon";
@@ -34,7 +36,7 @@ export const GreetingSection = ({ firstName }: GreetingSectionProps) => {
 
   return (
     <div className="flex shrink-0 flex-col gap-1">
-      <h1 className="text-2xl font-extrabold sm:text-3xl">
+      <h1 className="text-3xl font-extrabold">
         {period ? (
           t(`greeting.${period}`, { name: firstName })
         ) : (
