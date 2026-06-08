@@ -72,22 +72,12 @@ export const ProfileFollowActions = ({
       {isOwner ? (
         <div className="flex flex-col gap-4">
           <Link href={ROUTES.JOBS}>
-            <Button
-              variant="primary"
-              size="sm"
-              type="button"
-              className="w-full"
-            >
+            <Button variant="primary" type="button" className="w-full">
               {tHome("goToAnalysis")}
             </Button>
           </Link>
           <Link href={ROUTES.SETTINGS}>
-            <Button
-              variant="outline"
-              size="sm"
-              type="button"
-              className="w-full"
-            >
+            <Button variant="outline" type="button" className="w-full">
               {t("settingsButton")}
             </Button>
           </Link>
@@ -96,7 +86,6 @@ export const ProfileFollowActions = ({
         <div className="flex flex-col gap-4">
           <Button
             variant={following ? "outline" : "primary"}
-            size="sm"
             type="button"
             className="w-full"
             onClick={handleFollowToggle}
@@ -106,7 +95,6 @@ export const ProfileFollowActions = ({
           </Button>
           <Button
             variant="outline"
-            size="sm"
             type="button"
             className="w-full"
             onClick={handleMessage}
