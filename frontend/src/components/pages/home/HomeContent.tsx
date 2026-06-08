@@ -1,28 +1,42 @@
 "use client";
 
-import { useState, useLayoutEffect } from "react";
+import { Suspense, useState, useLayoutEffect } from "react";
+import { useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
-import { API, ROUTES } from "@/constants";
-import { Link } from "@/i18n/navigation";
-import { WelcomeOverlay } from "./collections/WelcomeOverlay";
-import { HeroSection } from "./collections/HeroSection";
 import { cn } from "@/lib/utils";
-import { UserData } from "@/types";
-import { PageLayout } from "../../layout";
-import { Button } from "@/components/ui";
+import { UserData, SuggestedUser } from "@/types";
+import type { HomeStats } from "@/lib/users";
 import { useCurrentUserStore } from "@/stores/useCurrentUserStore";
+import { PageLayout } from "../../layout";
+import { HeroSection } from "../../ui/collections/HeroSection";
+import { WelcomeOverlay } from "./collections/WelcomeOverlay";
+import { GreetingSection } from "./items/GreetingSection";
+import {
+  StatsRow,
+  StatsRowSkeleton,
+  SuggestionsList,
+  SuggestionsListSkeleton,
+} from "./collections";
 
 interface HomeContentProps {
   user: UserData | null;
+  statsPromise?: Promise<HomeStats>;
+  suggestionsPromise?: Promise<SuggestedUser[]>;
 }
 
-export const HomeContent = ({ user }: HomeContentProps) => {
+export const HomeContent = ({
+  user,
+  statsPromise,
+  suggestionsPromise,
+}: HomeContentProps) => {
   const tNav = useTranslations("nav");
-  const t = useTranslations("home");
 
-  const needsWelcome = user?.onboarding_completed === false;
-  const [showOverlay, setShowOverlay] = useState(needsWelcome);
-  const [overlayVisible, setOverlayVisible] = useState(needsWelcome);
+  // The wizard hands off here with ?welcome=1 once onboarding is complete; that
+  // is the single trigger for the celebration (the flag is already persisted).
+  const searchParams = useSearchParams();
+  const showWelcome = !!user && searchParams.get("welcome") === "1";
+  const [showOverlay, setShowOverlay] = useState(showWelcome);
+  const [overlayVisible, setOverlayVisible] = useState(showWelcome);
 
   // Keep the global user store in sync with the freshest server data. The
   // layout's UserHydration only runs on a full load, so after a client-side
@@ -33,11 +47,8 @@ export const HomeContent = ({ user }: HomeContentProps) => {
   }, [user]);
 
   const handleWelcomeEnter = () => {
-    fetch(API.USERS_ME, {
-      method: "PATCH",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ onboardingCompleted: true }),
-    });
+    // Drop ?welcome=1 so a refresh doesn't replay the celebration.
+    window.history.replaceState(null, "", window.location.pathname);
     setOverlayVisible(false);
     import("canvas-confetti").then(({ default: confetti }) => {
       if (window.innerWidth >= 768) {
@@ -82,11 +93,26 @@ export const HomeContent = ({ user }: HomeContentProps) => {
   return (
     <PageLayout title={tNav("home")}>
       {!user && <HeroSection />}
+
       {user && (
-        <div className="flex items-center justify-center py-12">
-          <Link href={ROUTES.JOBS}>
-            <Button variant="primary">{t("goToAnalysis")}</Button>
-          </Link>
+        <div className="flex h-full w-full max-w-7xl flex-col gap-12">
+          <GreetingSection firstName={user.first_name} />
+
+          {statsPromise && (
+            <div className="shrink-0">
+              <Suspense fallback={<StatsRowSkeleton />}>
+                <StatsRow statsPromise={statsPromise} user={user} />
+              </Suspense>
+            </div>
+          )}
+
+          {suggestionsPromise && (
+            <div className="flex min-h-0 flex-1 flex-col">
+              <Suspense fallback={<SuggestionsListSkeleton />}>
+                <SuggestionsList suggestionsPromise={suggestionsPromise} />
+              </Suspense>
+            </div>
+          )}
         </div>
       )}
 

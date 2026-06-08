@@ -95,10 +95,58 @@
     "pseudo": "Username",
     "dob": "Date of birth",
     "heroTitle": "Imagine tomorrow. Connect now.",
-    "appDescription": "maium shapes your next horizon and connects you with people who share your journey.",
+    "feature1": "Meet the talents who matter for your projects.",
+    "feature2": "Take your job search up a gear with our AI.",
+    "feature3": "Your data never leaves Europe: security, compliance and sovereignty guaranteed.",
     "dataUsagePrefix": "By signing in with Google, we access your name and email address to create your account. Your data is never sold or shared with third parties. Read our",
     "privacyPolicyLink": "privacy policy",
-    "goToAnalysis": "Analyze a job posting"
+    "goToAnalysis": "Analyze a job posting",
+    "greeting": {
+      "morning": "Good morning, {name}",
+      "afternoon": "Good afternoon, {name}",
+      "evening": "Good evening, {name}",
+      "night": "Still up, {name}?"
+    },
+    "events": {
+      "newYear": "Happy New Year! 🎉",
+      "valentines": "Happy Valentine's Day ❤️",
+      "womensDay": "International Women's Day ✊",
+      "earthDay": "Happy Earth Day 🌍",
+      "labourDay": "Happy Labour Day",
+      "musicDay": "It's the Fête de la Musique 🎶",
+      "bastilleDay": "Happy Bastille Day 🇫🇷",
+      "halloween": "Happy Halloween 🎃",
+      "christmas": "Merry Christmas 🎄",
+      "newYearsEve": "Happy New Year's Eve! 🥂",
+      "winterOlympics": "The Winter Olympics kick off today ⛷️",
+      "worldCupOpening": "The World Cup kicks off today ⚽",
+      "worldCupFinal": "It's the World Cup final today ⚽"
+    },
+    "stats": {
+      "followers": "Followers",
+      "following": "Following",
+      "unread": "Unread messages",
+      "profileViews": "Profile views",
+      "trendTitle": "vs. last 7 days"
+    },
+    "actions": {
+      "analyzeTitle": "Analyze a job posting",
+      "analyzeSubtitle": "Tailor your resume with AI",
+      "analyzeDescription": "Match each application to the offer and boost your chances of landing an interview.",
+      "completeProfileTitle": "Complete your profile",
+      "completeProfileSubtitle": "{percent}% done",
+      "completeProfileDescription": "A complete profile gets you noticed and improves your job offer analyses.",
+      "downloadCvTitle": "Download my CV",
+      "downloadCvSubtitle": "Export your profile to PDF",
+      "downloadCvDescription": "Generate a polished resume from your profile information in one click."
+    },
+    "suggestions": {
+      "title": "People to connect with",
+      "empty": "No suggestions for now — check back later.",
+      "follow": "Follow",
+      "following": "Following",
+      "followersCount": "{count, plural, =0 {No followers} one {# follower} other {# followers}}"
+    }
   },
   "settings": {
     "title": "Settings",
@@ -155,6 +203,7 @@
   },
   "auth": {
     "signup": {
+      "saveError": "Something went wrong. Please try again.",
       "step2": {
         "title": "What's your name?",
         "firstNamePlaceholder": "John",

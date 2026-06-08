@@ -95,10 +95,58 @@
     "pseudo": "Pseudo",
     "dob": "Date de naissance",
     "heroTitle": "Imaginez demain. Connectez-vous maintenant.",
-    "appDescription": "maium façonne votre prochain horizon et vous connecte avec des personnes qui partagent votre parcours.",
+    "feature1": "Rencontrez les talents qui comptent pour vos projets.",
+    "feature2": "Passez à la vitesse supérieure dans votre recherche d'emploi grâce à notre IA.",
+    "feature3": "Vos données ne quittent pas l'Europe : sécurité, conformité et souveraineté garanties.",
     "dataUsagePrefix": "En vous connectant avec Google, nous accédons à votre nom et adresse e-mail pour créer votre compte. Vos données ne sont jamais vendues ni partagées avec des tiers. Consultez notre",
     "privacyPolicyLink": "politique de confidentialité",
-    "goToAnalysis": "Analyser une offre d'emploi"
+    "goToAnalysis": "Analyser une offre d'emploi",
+    "greeting": {
+      "morning": "Bonjour, {name}",
+      "afternoon": "Bon après-midi, {name}",
+      "evening": "Bonsoir, {name}",
+      "night": "Encore debout, {name} ?"
+    },
+    "events": {
+      "newYear": "Bonne année ! 🎉",
+      "valentines": "Joyeuse Saint-Valentin ❤️",
+      "womensDay": "Journée internationale des droits des femmes ✊",
+      "earthDay": "Bonne Journée de la Terre 🌍",
+      "labourDay": "Bonne fête du Travail",
+      "musicDay": "C'est la Fête de la Musique 🎶",
+      "bastilleDay": "Bonne fête nationale 🇫🇷",
+      "halloween": "Joyeux Halloween 🎃",
+      "christmas": "Joyeux Noël 🎄",
+      "newYearsEve": "Bonne Saint-Sylvestre ! 🥂",
+      "winterOlympics": "Les Jeux olympiques d'hiver commencent aujourd'hui ⛷️",
+      "worldCupOpening": "La Coupe du monde commence aujourd'hui ⚽",
+      "worldCupFinal": "C'est la finale de la Coupe du monde aujourd'hui ⚽"
+    },
+    "stats": {
+      "followers": "Abonnés",
+      "following": "Abonnements",
+      "unread": "Messages non lus",
+      "profileViews": "Vues du profil",
+      "trendTitle": "vs. 7 derniers jours"
+    },
+    "actions": {
+      "analyzeTitle": "Analyser une offre",
+      "analyzeSubtitle": "Optimisez votre CV avec l'IA",
+      "analyzeDescription": "Adaptez chaque candidature à l'offre et augmentez vos chances de décrocher un entretien.",
+      "completeProfileTitle": "Compléter mon profil",
+      "completeProfileSubtitle": "{percent}% complété",
+      "completeProfileDescription": "Un profil complet vous rend visible et améliore vos analyses d'offres d'emploi.",
+      "downloadCvTitle": "Télécharger mon CV",
+      "downloadCvSubtitle": "Exportez votre profil en PDF",
+      "downloadCvDescription": "Générez un CV soigné à partir des informations de votre profil en un clic."
+    },
+    "suggestions": {
+      "title": "Personnes à suivre",
+      "empty": "Aucune suggestion pour le moment — revenez plus tard.",
+      "follow": "Suivre",
+      "following": "Suivi",
+      "followersCount": "{count, plural, =0 {Aucun abonné} one {# abonné} other {# abonnés}}"
+    }
   },
   "settings": {
     "title": "Paramètres",
@@ -155,6 +203,7 @@
   },
   "auth": {
     "signup": {
+      "saveError": "Une erreur est survenue. Veuillez réessayer.",
       "step2": {
         "title": "Comment vous appelez-vous ?",
         "firstNamePlaceholder": "Jean",

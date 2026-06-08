@@ -1,0 +1,63 @@
+import type { Experience } from "@/types/experience";
+
+/**
+ * The in-progress signup profile. There is a single signup path (Google OAuth):
+ * a DB trigger creates a partial `public.users` row, and the wizard fills the
+ * remaining fields step by step (each step PATCHes `/api/users/me`).
+ */
+export interface SignupDraft {
+  firstName?: string;
+  lastName?: string;
+  pseudo?: string;
+  dob?: number;
+  professionalExperiences: Experience[];
+  educationalExperiences: Experience[];
+}
+
+export type SignupStepKey =
+  | "fullName"
+  | "pseudo"
+  | "date"
+  | "professional"
+  | "educational";
+
+interface SignupStep {
+  key: SignupStepKey;
+  /** Required steps gate onboarding; optional steps (experiences) never block. */
+  required: boolean;
+  isFilled: (draft: SignupDraft) => boolean;
+}
+
+/**
+ * Single source of truth for the wizard's order. Wizard steps are 1-based; step
+ * 0 is the OAuth entry point and is not part of this list.
+ */
+export const SIGNUP_STEPS: SignupStep[] = [
+  {
+    key: "fullName",
+    required: true,
+    isFilled: (d) => !!(d.firstName && d.lastName),
+  },
+  { key: "pseudo", required: true, isFilled: (d) => !!d.pseudo },
+  { key: "date", required: true, isFilled: (d) => d.dob != null },
+  { key: "professional", required: false, isFilled: () => true },
+  { key: "educational", required: false, isFilled: () => true },
+];
+
+export const SIGNUP_TOTAL_STEPS = SIGNUP_STEPS.length;
+
+/**
+ * Wizard step (1-based) at which to resume an authenticated user: the first
+ * required field still missing, or the first experiences step once all required
+ * fields are filled.
+ */
+export function getResumeStep(draft: SignupDraft): number {
+  const firstIncompleteRequired = SIGNUP_STEPS.findIndex(
+    (s) => s.required && !s.isFilled(draft),
+  );
+  const index =
+    firstIncompleteRequired === -1
+      ? SIGNUP_STEPS.findIndex((s) => !s.required)
+      : firstIncompleteRequired;
+  return index + 1;
+}

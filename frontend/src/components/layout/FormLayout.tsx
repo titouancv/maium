@@ -23,6 +23,7 @@ export const FormLayout = ({
   secondaryLabel,
   primaryLabel,
   primaryLoading,
+  error,
   children,
 }: FormLayoutProps) => {
   useEffect(() => {
@@ -57,6 +58,7 @@ export const FormLayout = ({
         {/* Buttons — inline on mobile and desktop */}
         {primaryLabel && (formId || onPrimary) && (
           <div className="shrink-0 px-4 pb-8 md:pb-[150px]">
+            {error && <p className="text-error mb-2 text-sm">{error}</p>}
             <div className="flex gap-2">
               {onSecondary && (
                 <Button

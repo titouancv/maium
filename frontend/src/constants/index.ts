@@ -20,11 +20,11 @@ export const ROUTES = {
 
 export const API = {
   HEALTH: "/api/health",
-  USERS: "/api/users",
   USERS_ME: "/api/users/me",
   USERS_PSEUDO_CHECK: "/api/users/pseudo",
   USERS_SEARCH: "/api/users/search",
   USERS_FOLLOW: "/api/users/follow",
+  USERS_VIEW: "/api/users/view",
   USERS_FOLLOWERS: "/api/users/followers",
   USERS_FOLLOWING: "/api/users/following",
   AUTH_LOGOUT: "/api/auth/logout",
@@ -39,6 +39,7 @@ export const API = {
   HISTORY: "/api/history",
   RESUME: (id: string) => `/api/resume/${id}`,
   RESUME_PDF: (id: string) => `/api/resume/${id}/pdf`,
+  RESUME_PROFILE_PDF: "/api/resume/profile/pdf",
 } as const;
 
 export const EXTERNAL_API = {
@@ -81,6 +82,15 @@ export const TYPING_INDICATOR_TIMEOUT_MS = 3000;
 
 /** Debounce before refetching the list when a brand-new conversation appears. */
 export const CONVERSATIONS_REFETCH_DEBOUNCE_MS = 800;
+
+// --- Profile photos --------------------------------------------------------
+
+/** Number of bundled default profile photos in `/public/assets`. */
+export const DEFAULT_PROFILE_PHOTO_COUNT = 10;
+
+/** Path to a bundled default profile photo (1-based index). */
+export const DEFAULT_PROFILE_PHOTO = (index: number) =>
+  `/assets/defaultProfilePhoto${index}.png`;
 
 export const EXPERIENCE_NAMESPACE = {
   professional: "experience.professional",

@@ -14,6 +14,11 @@ export interface UserSummary {
   location?: string | null;
 }
 
+/** A user surfaced as a connection suggestion, with their follower count. */
+export interface SuggestedUser extends UserSummary {
+  followers_count: number;
+}
+
 export interface UserData {
   /** Supabase auth id; populated for the current user / profile lookups. */
   id?: string;

@@ -1,7 +1,7 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import { ChipList, Section } from "@/components/ui";
+import { ChipList, ProfilePhoto, Section } from "@/components/ui";
 import { ExperienceList } from "@/components/ui";
 import type { UserData } from "@/types";
 import { HobbyList, SocialNetworkItem, UrlItem } from "@/components/ui";
@@ -27,6 +27,7 @@ export const ProfileContent = ({ user, followSlot }: ProfileContentProps) => {
     <div className="flex h-full w-full max-w-7xl flex-col gap-8 pt-0 md:flex-row">
       <aside className="flex flex-col gap-8 md:w-1/5">
         <div className="flex flex-col gap-4">
+          <ProfilePhoto pseudo={user.pseudo} />
           <div className="flex flex-col gap-1">
             <p className="text-base">@{user.pseudo}</p>
             {user.location && (
