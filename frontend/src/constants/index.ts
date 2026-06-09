@@ -34,6 +34,7 @@ export const API = {
     `/api/messages/conversations/${id}/messages`,
   MESSAGES_CONVERSATION_READ: (id: string) =>
     `/api/messages/conversations/${id}/read`,
+  HOME_STATS: "/api/home/stats",
   ANALYZE_JOB: "/api/analyze-job",
   ANALYSIS: (id: string) => `/api/analysis/${id}`,
   HISTORY: "/api/history",
@@ -82,6 +83,9 @@ export const TYPING_INDICATOR_TIMEOUT_MS = 3000;
 
 /** Debounce before refetching the list when a brand-new conversation appears. */
 export const CONVERSATIONS_REFETCH_DEBOUNCE_MS = 800;
+
+/** Debounce before refetching home stats after a Realtime "refresh" ping. */
+export const HOME_STATS_REFETCH_DEBOUNCE_MS = 800;
 
 // --- Profile photos --------------------------------------------------------
 

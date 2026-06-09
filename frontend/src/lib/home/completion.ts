@@ -14,10 +14,13 @@ function hasText(value?: string | null): boolean {
   return typeof value === "string" && value.trim().length > 0;
 }
 
+/** A profile is considered "complete enough" at this fill ratio (not 100%). */
+const COMPLETE_THRESHOLD_PERCENT = 75;
+
 /**
  * How complete the user's profile is, based on the optional fields that enrich
  * a public profile. Drives the "complete your profile" home action, which is
- * hidden once `isComplete` is true.
+ * hidden once `isComplete` is true (≥ 75% of tracked fields filled).
  */
 export function getProfileCompletion(user: UserData): ProfileCompletion {
   const checks: boolean[] = [
@@ -32,5 +35,5 @@ export function getProfileCompletion(user: UserData): ProfileCompletion {
 
   const filled = checks.filter(Boolean).length;
   const percent = Math.round((filled / checks.length) * 100);
-  return { percent, isComplete: percent === 75 };
+  return { percent, isComplete: percent >= COMPLETE_THRESHOLD_PERCENT };
 }

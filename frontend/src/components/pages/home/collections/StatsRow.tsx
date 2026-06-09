@@ -6,6 +6,7 @@ import { ROUTES } from "@/constants";
 import { getProfileCompletion } from "@/lib/home";
 import type { HomeStats } from "@/lib/users";
 import type { UserData } from "@/types";
+import { useHomeStats } from "@/hooks/useHomeStats";
 import { StatCard, ActionCard, DownloadCvCard } from "../items";
 
 interface StatsRowProps {
@@ -15,7 +16,8 @@ interface StatsRowProps {
 
 export const StatsRow = ({ statsPromise, user }: StatsRowProps) => {
   const t = useTranslations("home");
-  const stats = use(statsPromise);
+  // Seed from the streamed server stats and keep them live (Realtime refresh).
+  const stats = useHomeStats(use(statsPromise), user.id);
   const completion = getProfileCompletion(user);
 
   return (
@@ -47,14 +49,15 @@ export const StatsRow = ({ statsPromise, user }: StatsRowProps) => {
         trendTitle={t("stats.trendTitle")}
       />
       <StatCard
-        value={stats.profileViewsCount}
-        label={t("stats.profileViews")}
-        href={ROUTES.PROFILE(user.pseudo)}
-      />
-      <StatCard
         value={stats.unreadCount}
         label={t("stats.unread")}
         href={ROUTES.MESSAGES}
+        isValueHighlighted={stats.unreadCount > 0}
+      />
+      <StatCard
+        value={stats.profileViewsCount}
+        label={t("stats.profileViews")}
+        href={ROUTES.PROFILE(user.pseudo)}
       />
     </div>
   );
