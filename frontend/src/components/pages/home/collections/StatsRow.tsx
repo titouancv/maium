@@ -21,7 +21,7 @@ export const StatsRow = ({ statsPromise, user }: StatsRowProps) => {
   const completion = getProfileCompletion(user);
 
   return (
-    <div className="-mx-1 flex gap-6 overflow-x-auto px-1 pb-1">
+    <div className="flex gap-6 overflow-x-auto">
       {!completion.isComplete && (
         <ActionCard
           actionLabel={t("actions.completeProfileTitle")}

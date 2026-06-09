@@ -20,6 +20,7 @@ import {
   SuggestionsListSkeleton,
   WelcomeCelebration,
 } from "./collections";
+import { Title } from "@/components/ui";
 
 interface HomeContentProps {
   user: UserData | null;
@@ -33,6 +34,7 @@ export const HomeContent = ({
   suggestionsPromise,
 }: HomeContentProps) => {
   const tNav = useTranslations("nav");
+  const t = useTranslations("home");
 
   return (
     <PageLayout title={tNav("home")}>
@@ -42,7 +44,7 @@ export const HomeContent = ({
 
       {user && (
         <>
-          <div className="flex h-full w-full max-w-7xl flex-col gap-12">
+          <div className="flex w-full max-w-7xl flex-col gap-12">
             <GreetingSection firstName={user.first_name} />
 
             {statsPromise && (
@@ -54,7 +56,8 @@ export const HomeContent = ({
             )}
 
             {suggestionsPromise && (
-              <div className="flex min-h-0 flex-1 flex-col">
+              <div className="flex flex-col">
+                <Title label={t("suggestions.title")} size="h2" />
                 <Suspense fallback={<SuggestionsListSkeleton />}>
                   <SuggestionsList suggestionsPromise={suggestionsPromise} />
                 </Suspense>
