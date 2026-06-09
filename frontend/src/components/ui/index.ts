@@ -22,6 +22,7 @@ export * from "./GoogleSignInButton";
 export * from "./LoadingOverlay";
 export * from "./ProfilePhoto";
 export * from "./ProgressBar";
+export * from "./NumberRoller";
 export * from "./SearchOverlay";
 export * from "./collections";
 export * from "./items";

@@ -49,14 +49,15 @@ export const StatsRow = ({ statsPromise, user }: StatsRowProps) => {
         trendTitle={t("stats.trendTitle")}
       />
       <StatCard
-        value={stats.profileViewsCount}
-        label={t("stats.profileViews")}
-        href={ROUTES.PROFILE(user.pseudo)}
-      />
-      <StatCard
         value={stats.unreadCount}
         label={t("stats.unread")}
         href={ROUTES.MESSAGES}
+        isValueHighlighted={stats.unreadCount > 0}
+      />
+      <StatCard
+        value={stats.profileViewsCount}
+        label={t("stats.profileViews")}
+        href={ROUTES.PROFILE(user.pseudo)}
       />
     </div>
   );
