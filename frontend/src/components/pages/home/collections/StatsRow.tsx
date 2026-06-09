@@ -1,12 +1,12 @@
 "use client";
 
-import { use, useLayoutEffect } from "react";
+import { use } from "react";
 import { useTranslations } from "next-intl";
 import { ROUTES } from "@/constants";
 import { getProfileCompletion } from "@/lib/home";
 import type { HomeStats } from "@/lib/users";
 import type { UserData } from "@/types";
-import { useHomeStatsStore } from "@/stores/useHomeStatsStore";
+import { useHomeStats } from "@/hooks/useHomeStats";
 import { StatCard, ActionCard, DownloadCvCard } from "../items";
 
 interface StatsRowProps {
@@ -16,16 +16,9 @@ interface StatsRowProps {
 
 export const StatsRow = ({ statsPromise, user }: StatsRowProps) => {
   const t = useTranslations("home");
-  const streamed = use(statsPromise);
+  // Seed from the streamed server stats and keep them live (Realtime refresh).
+  const stats = useHomeStats(use(statsPromise), user.id);
   const completion = getProfileCompletion(user);
-
-  // Seed the live store with the freshly streamed server stats, then read from
-  // it so the Realtime refreshes from [HomeStatsRealtime] update the cards in
-  // place. Falls back to the streamed value until the first seed.
-  useLayoutEffect(() => {
-    useHomeStatsStore.getState().setStats(streamed);
-  }, [streamed]);
-  const stats = useHomeStatsStore((s) => s.stats) ?? streamed;
 
   return (
     <div className="-mx-1 flex gap-6 overflow-x-auto px-1 pb-1">

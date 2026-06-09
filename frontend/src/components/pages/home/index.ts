@@ -1,2 +1,2 @@
 export * from "./HomeContent";
-export * from "./HomeStatsRealtime";
+export * from "./CurrentUserSync";

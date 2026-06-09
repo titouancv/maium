@@ -1,26 +1,24 @@
 import { Suspense } from "react";
 import { getLocale } from "next-intl/server";
 import { HomeContent } from "@/components/pages/home";
+import { hasCompletedOnboarding } from "@/components/pages/signup/steps";
 import { redirect } from "@/i18n/navigation";
 import { ROUTES } from "@/constants";
-import { getCurrentUserProfile, getAuthUser } from "@/lib/auth/getCurrentUser";
+import { getCurrentUserProfile } from "@/lib/auth/getCurrentUser";
 import { getHomeStats, getSuggestedUsers } from "@/lib/users";
 
 export default async function HomePage() {
-  const [locale, authUser, userData] = await Promise.all([
+  // `getCurrentUserProfile` resolves to null when signed out, so it doubles as
+  // the auth check — no separate `getAuthUser` round-trip needed.
+  const [locale, userData] = await Promise.all([
     getLocale(),
-    getAuthUser(),
     getCurrentUserProfile(),
   ]);
 
   if (
-    authUser &&
     userData &&
     !userData.onboarding_completed &&
-    (!userData.first_name ||
-      !userData.last_name ||
-      !userData.pseudo ||
-      !userData.dob)
+    !hasCompletedOnboarding(userData)
   ) {
     redirect({ href: ROUTES.SIGNUP, locale });
   }

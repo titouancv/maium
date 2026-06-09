@@ -50,4 +50,34 @@ describe("getProfileCompletion", () => {
     expect(result.percent).toBe(29);
     expect(result.isComplete).toBe(false);
   });
+
+  it("treats a profile at or above the 75% threshold as complete", () => {
+    // 6 of 7 tracked fields filled → ~86% ≥ 75% → complete.
+    const almostFull: UserData = {
+      ...baseUser,
+      bio: "Pioneer of computing",
+      location: "London",
+      professional_experiences: [{} as never],
+      educational_experiences: [{} as never],
+      skills: ["math"],
+      hobbies: [{ title: "h", description: "d" }],
+    };
+    const result = getProfileCompletion(almostFull);
+    expect(result.percent).toBe(86);
+    expect(result.isComplete).toBe(true);
+  });
+
+  it("stays incomplete just below the 75% threshold", () => {
+    // 5 of 7 tracked fields filled → ~71% < 75% → not complete.
+    const result = getProfileCompletion({
+      ...baseUser,
+      bio: "Pioneer of computing",
+      location: "London",
+      professional_experiences: [{} as never],
+      educational_experiences: [{} as never],
+      skills: ["math"],
+    });
+    expect(result.percent).toBe(71);
+    expect(result.isComplete).toBe(false);
+  });
 });

@@ -1,4 +1,5 @@
 import type { Experience } from "@/types/experience";
+import type { UserData } from "@/types";
 
 /**
  * The in-progress signup profile. There is a single signup path (Google OAuth):
@@ -60,4 +61,21 @@ export function getResumeStep(draft: SignupDraft): number {
       ? SIGNUP_STEPS.findIndex((s) => !s.required)
       : firstIncompleteRequired;
   return index + 1;
+}
+
+/**
+ * Whether a persisted user has filled every onboarding-required field, derived
+ * from the same {@link SIGNUP_STEPS} `required` definitions the wizard enforces.
+ * Used by the home page to send a still-incomplete user back to the wizard.
+ */
+export function hasCompletedOnboarding(user: UserData): boolean {
+  const draft: SignupDraft = {
+    firstName: user.first_name,
+    lastName: user.last_name,
+    pseudo: user.pseudo,
+    dob: user.dob ?? undefined,
+    professionalExperiences: [],
+    educationalExperiences: [],
+  };
+  return SIGNUP_STEPS.every((s) => !s.required || s.isFilled(draft));
 }
