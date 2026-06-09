@@ -10,6 +10,7 @@ import { useCurrentUserStore } from "@/stores/useCurrentUserStore";
 import { PageLayout } from "../../layout";
 import { HeroSection } from "../../ui/collections/HeroSection";
 import { WelcomeOverlay } from "./collections/WelcomeOverlay";
+import { HomeStatsRealtime } from "./HomeStatsRealtime";
 import { GreetingSection } from "./items/GreetingSection";
 import {
   StatsRow,
@@ -100,6 +101,7 @@ export const HomeContent = ({
 
           {statsPromise && (
             <div className="shrink-0">
+              {user.id && <HomeStatsRealtime userId={user.id} />}
               <Suspense fallback={<StatsRowSkeleton />}>
                 <StatsRow statsPromise={statsPromise} user={user} />
               </Suspense>
