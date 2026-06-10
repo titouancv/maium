@@ -11,7 +11,7 @@ import { useNotificationStore } from "@/stores/useNotificationStore";
 
 /** Payload broadcast by the `broadcast_user_notifications` DB triggers. */
 type NotifyPayload =
-  | { kind: "follow"; actor_name: string | null }
+  | { kind: "follow"; actor_name: string | null; actor_pseudo: string | null }
   | { kind: "message"; actor_name: string | null; conversation_id: string };
 
 /** Extract the active conversation id from `/messages/<id>`, if any. */
@@ -61,6 +61,7 @@ export function NotificationsRealtime() {
             ? t("newFollower", { name: payload.actor_name })
             : t("newFollowerGeneric"),
           "success",
+          payload.actor_pseudo ? ROUTES.PROFILE(payload.actor_pseudo) : undefined,
         );
         return;
       }
@@ -73,6 +74,7 @@ export function NotificationsRealtime() {
           ? t("newMessage", { name: payload.actor_name })
           : t("newMessageGeneric"),
         "info",
+        ROUTES.CONVERSATION(payload.conversation_id),
       );
     };
 

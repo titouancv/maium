@@ -3,6 +3,7 @@
 import { Fragment, useEffect } from "react";
 import { useTranslations } from "next-intl";
 import { AnimatePresence, motion } from "framer-motion";
+import { Link } from "@/i18n/navigation";
 import { useNotificationStore } from "@/stores/useNotificationStore";
 
 /** How long a notification stays before it auto-dismisses. */
@@ -14,6 +15,9 @@ const MARQUEE_COPIES = 4;
  * notification from {@link useNotificationStore}; trigger one from anywhere via
  * `useNotificationStore.getState().notify("…", "success")`.
  */
+const marqueeClasses =
+  "min-w-0 flex-1 overflow-hidden font-extrabold uppercase";
+
 export function NotificationBanner() {
   const t = useTranslations("common");
   const notification = useNotificationStore((s) => s.notification);
@@ -38,23 +42,20 @@ export function NotificationBanner() {
           role="status"
           aria-live="polite"
         >
-          <div className="bg-primary text-on-primary flex w-full items-center gap-3 py-6 pr-4 md:py-2">
-            <div className="min-w-0 flex-1 overflow-hidden font-extrabold uppercase">
-              <motion.div
-                className="flex w-max"
-                animate={{ x: ["0%", "-25%"] }}
-                transition={{ duration: 20, ease: "linear", repeat: Infinity }}
+          <div className="bg-primary text-on-primary flex w-full items-center gap-3 pt-10 pr-4 pb-2 md:pt-2">
+            {notification.href ? (
+              <Link
+                href={notification.href}
+                onClick={dismiss}
+                className={marqueeClasses}
               >
-                {Array.from({ length: MARQUEE_COPIES }).map((_, i) => (
-                  <Fragment key={i}>
-                    <span className="pr-8 whitespace-nowrap">
-                      {notification.message}
-                    </span>
-                    <span className="pr-8">•</span>
-                  </Fragment>
-                ))}
-              </motion.div>
-            </div>
+                <Marquee message={notification.message} />
+              </Link>
+            ) : (
+              <div className={marqueeClasses}>
+                <Marquee message={notification.message} />
+              </div>
+            )}
             <button
               type="button"
               onClick={dismiss}
@@ -79,5 +80,22 @@ export function NotificationBanner() {
         </motion.div>
       )}
     </AnimatePresence>
+  );
+}
+
+function Marquee({ message }: { message: string }) {
+  return (
+    <motion.div
+      className="flex w-max"
+      animate={{ x: ["0%", "-25%"] }}
+      transition={{ duration: 20, ease: "linear", repeat: Infinity }}
+    >
+      {Array.from({ length: MARQUEE_COPIES }).map((_, i) => (
+        <Fragment key={i}>
+          <span className="pr-4 whitespace-nowrap md:pr-8">{message}</span>
+          <span className="pr-4 md:pr-8">•</span>
+        </Fragment>
+      ))}
+    </motion.div>
   );
 }
