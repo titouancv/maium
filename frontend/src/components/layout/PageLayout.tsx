@@ -55,7 +55,7 @@ export const PageLayout = ({
 
         <div className="flex min-h-0 w-full flex-1 flex-col items-center overflow-y-auto px-4">
           {children}
-          {!fullHeight && <div className="h-32 shrink-0" />}
+          {!fullHeight && <div className="h-24 shrink-0 md:h-32" />}
         </div>
       </div>
 

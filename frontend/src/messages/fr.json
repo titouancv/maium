@@ -88,7 +88,8 @@
     "urlPlaceholder": "https://maium.app/...",
     "socialPlaceholder": "https://www.instagram.com/...",
     "seeMoreButton": "Voir plus",
-    "seeLessButton": "Voir moins"
+    "seeLessButton": "Voir moins",
+    "dismissNotification": "Fermer la notification"
   },
   "home": {
     "name": "Nom complet",
@@ -352,5 +353,11 @@
   "notFound": {
     "title": "introuvable",
     "message": "Attends... tu t'es perdu !"
+  },
+  "notifications": {
+    "newFollower": "{name} vous suit",
+    "newFollowerGeneric": "Nouveau follower",
+    "newMessage": "Nouveau message de {name}",
+    "newMessageGeneric": "Nouveau message"
   }
 }
