@@ -4,18 +4,11 @@ import { useEffect, useRef } from "react";
 import type { RealtimeChannel } from "@supabase/supabase-js";
 import { createClient } from "@/lib/supabase/client";
 import { usePathname } from "@/i18n/navigation";
-import { API, CONVERSATIONS_REFETCH_DEBOUNCE_MS, ROUTES } from "@/constants";
+import { API, CONVERSATIONS_REFETCH_DEBOUNCE_MS } from "@/constants";
 import { useCurrentUserStore } from "@/stores/useCurrentUserStore";
 import { useMessagingStore } from "@/stores/useMessagingStore";
+import { activeConversationIdFrom } from "@/lib/messaging/conversationPath";
 import type { Conversation, Message } from "@/types";
-
-/** Extract the active conversation id from `/messages/<id>`, if any. */
-function activeConversationIdFrom(pathname: string): string | undefined {
-  const prefix = `${ROUTES.MESSAGES}/`;
-  if (!pathname.startsWith(prefix)) return undefined;
-  const rest = pathname.slice(prefix.length);
-  return rest.length > 0 ? rest : undefined;
-}
 
 /**
  * A single Realtime subscription for the whole messaging area, mounted in the
