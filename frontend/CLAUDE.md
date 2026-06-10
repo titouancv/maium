@@ -231,7 +231,7 @@ served from cache instead of refetching. Don't lower these without reason.
 - **Styles**: Tailwind CSS v4
 - **i18n**: next-intl (locales: `en`, `fr`; prefix: `as-needed` — English URLs have no `/en/` prefix)
 - **State**: Zustand
-- **Fetching**: TanStack Query or native Server Components
+- **Fetching**: native Server Components (stream promises, unwrap with `use()`)
 - **Forms**: React Hook Form + Zod
 - **Tests**: Vitest + Testing Library (jsdom)
 
@@ -415,7 +415,7 @@ Every visible string uses `t()`. Both `en.json` and `fr.json` must be updated in
 - Mobile-first: base classes for mobile, breakpoints (`sm:`, `md:`, `lg:`) for larger screens.
 - Use semantic color tokens (`bg-surface-50`, `text-txt`, `text-txt-muted`, `border-brd-200`) — never default Tailwind colors like `bg-white`.
 - Conditional classes: `cn()` from `@/lib/utils` (clsx + tailwind-merge).
-- Complex variants: `cva()` (class-variance-authority).
+- Variant styles: keyed `Record` maps of class strings (see `UI_VARIANTS` in [constants/ui.ts](src/constants/ui.ts)).
 
 ---
 

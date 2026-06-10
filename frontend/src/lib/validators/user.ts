@@ -13,7 +13,7 @@ const optionalPeriod = z
   .nullable()
   .transform((v) => v ?? undefined);
 
-export const ExperienceSchema = z
+const ExperienceSchema = z
   .object({
     organization: z.string().min(1).max(120),
     role: z.string().min(1).max(120),
@@ -30,38 +30,7 @@ export const ExperienceSchema = z
 
 export type ExperienceInput = z.infer<typeof ExperienceSchema>;
 
-type TranslateFn = (key: string) => string;
-
-export function makeExperienceFormSchema(t: TranslateFn) {
-  return z
-    .object({
-      organization: z.string().min(1, t("organizationRequired")).max(120),
-      role: z.string().min(1, t("roleRequired")).max(120),
-      startPeriod: z
-        .number()
-        .nullable()
-        .refine((v) => v !== null, { message: t("startPeriodRequired") })
-        .transform((v) => v as number),
-      endPeriod: z
-        .number()
-        .int()
-        .optional()
-        .nullable()
-        .transform((v) => v ?? undefined),
-      description: z.string().or(z.literal("")),
-      website: z.union([
-        z.url({ message: t("websiteInvalid") }),
-        z.literal(""),
-      ]),
-      location: z.string().max(100).or(z.literal("")),
-    })
-    .refine((d) => !d.endPeriod || d.endPeriod >= d.startPeriod, {
-      message: t("endPeriodBeforeStart"),
-      path: ["endPeriod"],
-    });
-}
-
-export const HobbySchema = z.object({
+const HobbySchema = z.object({
   title: z.string().min(1).max(100),
   description: z.string(),
 });

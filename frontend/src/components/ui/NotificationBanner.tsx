@@ -13,7 +13,7 @@ const MARQUEE_COPIES = 4;
 /**
  * Global alert band shown at the top of {@link PageLayout}. Reads the current
  * notification from {@link useNotificationStore}; trigger one from anywhere via
- * `useNotificationStore.getState().notify("…", "success")`.
+ * `useNotificationStore.getState().notify("…")`.
  */
 const marqueeClasses =
   "min-w-0 flex-1 overflow-hidden font-extrabold uppercase";

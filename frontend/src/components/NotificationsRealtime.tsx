@@ -8,19 +8,12 @@ import { usePathname } from "@/i18n/navigation";
 import { ROUTES } from "@/constants";
 import { useCurrentUserStore } from "@/stores/useCurrentUserStore";
 import { useNotificationStore } from "@/stores/useNotificationStore";
+import { activeConversationIdFrom } from "@/lib/messaging/conversationPath";
 
 /** Payload broadcast by the `broadcast_user_notifications` DB triggers. */
 type NotifyPayload =
   | { kind: "follow"; actor_name: string | null; actor_pseudo: string | null }
   | { kind: "message"; actor_name: string | null; conversation_id: string };
-
-/** Extract the active conversation id from `/messages/<id>`, if any. */
-function activeConversationIdFrom(pathname: string): string | undefined {
-  const prefix = `${ROUTES.MESSAGES}/`;
-  if (!pathname.startsWith(prefix)) return undefined;
-  const rest = pathname.slice(prefix.length);
-  return rest.length > 0 ? rest : undefined;
-}
 
 /**
  * Global toast notifications. Mounted once at the layout level (next to
@@ -60,7 +53,6 @@ export function NotificationsRealtime() {
           payload.actor_name
             ? t("newFollower", { name: payload.actor_name })
             : t("newFollowerGeneric"),
-          "success",
           payload.actor_pseudo ? ROUTES.PROFILE(payload.actor_pseudo) : undefined,
         );
         return;
@@ -73,7 +65,6 @@ export function NotificationsRealtime() {
         payload.actor_name
           ? t("newMessage", { name: payload.actor_name })
           : t("newMessageGeneric"),
-        "info",
         ROUTES.CONVERSATION(payload.conversation_id),
       );
     };

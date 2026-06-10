@@ -6,7 +6,7 @@ import type { ResumeJson } from "@/types/job";
 // resume editor can seed its draft client-side without pulling server code.
 
 /** Maps a profile experience to the resume entry shape (description required). */
-export function toResumeEntry(e: Experience): ResumeJson["experiences"][number] {
+function toResumeEntry(e: Experience): ResumeJson["experiences"][number] {
   return {
     organization: e.organization,
     role: e.role,
