@@ -2,45 +2,51 @@
 
 import { useTranslations } from "next-intl";
 import { ProfilePhoto } from "@/components/ui";
-import { cn } from "@/lib/utils";
 import type { StoryGroup } from "@/types/story";
+import { AddStoryBubble } from "./AddStoryBubble";
 
 interface StoryBubbleProps {
   group: StoryGroup;
   onOpen: () => void;
+  onAddStory?: () => void;
+  isEmptyOwner?: boolean;
 }
 
-/**
- * One author's story bubble in the home stories row. A `primary` ring (and a
- * hidden bottom gradient) signals unseen stories; once everything is seen, the
- * avatar shows with no special border.
- */
-export function StoryBubble({ group, onOpen }: StoryBubbleProps) {
+export function StoryBubble({
+  group,
+  onOpen,
+  onAddStory,
+  isEmptyOwner,
+}: StoryBubbleProps) {
   const t = useTranslations("stories");
   const { author, hasUnseen } = group;
 
   return (
-    <button
-      onClick={onOpen}
-      aria-label={t("openStories", { name: author.first_name })}
-      className="group flex w-16 shrink-0 cursor-pointer flex-col items-center gap-1"
-    >
-      <span
-        className={cn(
-          "block rounded-md p-[2px]",
-          hasUnseen ? "ring-primary ring-2" : "ring-brd-200 ring-1",
-        )}
+    <div className="flex flex-col gap-4">
+      <button
+        onClick={isEmptyOwner ? onAddStory : onOpen}
+        aria-label={
+          isEmptyOwner
+            ? t("addStory")
+            : t("openStories", { name: author.first_name })
+        }
+        className="hover:text-primary relative flex w-44 min-w-0 shrink-0 cursor-pointer flex-col gap-2"
       >
         <ProfilePhoto
           pseudo={author.pseudo}
-          hideGradient={hasUnseen}
-          sizes="56px"
-          className="group-active:scale-95 w-[52px] rounded transition-transform"
+          isFramed={hasUnseen}
+          className={isEmptyOwner ? "opacity-50" : undefined}
         />
-      </span>
-      <span className="text-txt-muted w-full truncate text-center text-xs">
-        {author.first_name}
-      </span>
-    </button>
+
+        {/* Author name, sitting on the photo's bottom surface fade */}
+        <div className="flex flex-col text-left">
+          <p className="truncate leading-none">{author.first_name}</p>
+          <p className="-mt-0.5 ml-2 truncate text-xl leading-none font-extrabold">
+            {author.last_name}
+          </p>
+        </div>
+      </button>
+      {onAddStory && !isEmptyOwner && <AddStoryBubble onClick={onAddStory} />}
+    </div>
   );
 }

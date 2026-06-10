@@ -150,6 +150,7 @@
     }
   },
   "stories": {
+    "title": "Stories",
     "addStory": "Ajouter",
     "openStories": "Voir les stories de {name}",
     "createTitle": "Nouvelle story",

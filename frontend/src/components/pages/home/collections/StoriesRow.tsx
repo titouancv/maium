@@ -4,8 +4,8 @@ import { use, useEffect, useState } from "react";
 import dynamic from "next/dynamic";
 import { AnimatePresence } from "framer-motion";
 import { useStoriesStore } from "@/stores/useStoriesStore";
+import { useCurrentUserStore } from "@/stores/useCurrentUserStore";
 import type { StoryGroup } from "@/types/story";
-import { AddStoryBubble } from "../items/AddStoryBubble";
 import { StoryBubble } from "../items/StoryBubble";
 
 // The reader (pulls in react-markdown) and the creation form are only needed on
@@ -33,6 +33,7 @@ export function StoriesRow({ storiesPromise }: StoriesRowProps) {
   const serverGroups = use(storiesPromise);
   const hydrate = useStoriesStore((s) => s.hydrate);
   const stored = useStoriesStore((s) => s.groups);
+  const currentUser = useCurrentUserStore((s) => s.user);
 
   // Reconcile the streamed (authoritative) feed into the shared store.
   useEffect(() => {
@@ -55,14 +56,46 @@ export function StoriesRow({ storiesPromise }: StoriesRowProps) {
     });
   };
 
+  // The viewer's own group (always sorted first by the server). The "+ add
+  // story" card is rendered next to it, inside that StoryBubble.
+  const ownGroupIndex = groups.findIndex(
+    (g) => g.stories[0]?.authorId === currentUser?.id,
+  );
+
+  // Owner with no story yet: there's no server group to attach to, so render a
+  // dimmed placeholder of their own card whose click opens the creation overlay.
+  const ownerPlaceholder: StoryGroup | null =
+    ownGroupIndex === -1 && currentUser
+      ? {
+          author: {
+            pseudo: currentUser.pseudo,
+            first_name: currentUser.first_name,
+            last_name: currentUser.last_name,
+            location: currentUser.location,
+          },
+          stories: [],
+          hasUnseen: false,
+        }
+      : null;
+
   return (
-    <div className="-mx-4 flex gap-3 overflow-x-auto px-4 pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-      <AddStoryBubble onClick={() => setIsCreating(true)} />
+    <div className="flex items-start gap-3 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+      {ownerPlaceholder && (
+        <StoryBubble
+          group={ownerPlaceholder}
+          onOpen={() => setIsCreating(true)}
+          onAddStory={() => setIsCreating(true)}
+          isEmptyOwner
+        />
+      )}
       {groups.map((group, i) => (
         <StoryBubble
           key={group.author.pseudo}
           group={group}
           onOpen={() => openReader(i)}
+          onAddStory={
+            i === ownGroupIndex ? () => setIsCreating(true) : undefined
+          }
         />
       ))}
 

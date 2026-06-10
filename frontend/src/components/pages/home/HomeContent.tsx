@@ -40,6 +40,7 @@ export const HomeContent = ({
 }: HomeContentProps) => {
   const tNav = useTranslations("nav");
   const t = useTranslations("home");
+  const tStories = useTranslations("stories");
 
   return (
     <PageLayout title={tNav("home")}>
@@ -53,7 +54,8 @@ export const HomeContent = ({
             <GreetingSection firstName={user.first_name} />
 
             {storiesPromise && (
-              <div className="shrink-0">
+              <div className="flex flex-col">
+                <Title label={tStories("title")} size="h2" />
                 <Suspense fallback={<StoriesRowSkeleton />}>
                   <StoriesRow storiesPromise={storiesPromise} />
                 </Suspense>
