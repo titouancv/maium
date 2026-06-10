@@ -149,6 +149,22 @@
       "followersCount": "{count, plural, =0 {Aucun abonné} one {# abonné} other {# abonnés}}"
     }
   },
+  "stories": {
+    "addStory": "Ajouter",
+    "openStories": "Voir les stories de {name}",
+    "createTitle": "Nouvelle story",
+    "createPlaceholder": "Écrivez votre story… Le Markdown est autorisé (gras, listes, liens).",
+    "publish": "Publier",
+    "close": "Fermer",
+    "previous": "Story précédente",
+    "next": "Story suivante",
+    "like": "J'aime",
+    "repost": "Republier",
+    "message": "Envoyer un message",
+    "repostFrom": "Republié depuis @{pseudo}",
+    "empty": "Aucune story pour le moment",
+    "error": "Une erreur est survenue. Veuillez réessayer."
+  },
   "settings": {
     "title": "Paramètres",
     "backButton": "Retour",

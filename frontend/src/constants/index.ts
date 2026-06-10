@@ -41,6 +41,10 @@ export const API = {
   RESUME: (id: string) => `/api/resume/${id}`,
   RESUME_PDF: (id: string) => `/api/resume/${id}/pdf`,
   RESUME_PROFILE_PDF: "/api/resume/profile/pdf",
+  STORIES: "/api/stories",
+  STORY_VIEW: (id: string) => `/api/stories/${id}/view`,
+  STORY_LIKE: (id: string) => `/api/stories/${id}/like`,
+  STORY_REPOST: (id: string) => `/api/stories/${id}/repost`,
 } as const;
 
 export const EXTERNAL_API = {

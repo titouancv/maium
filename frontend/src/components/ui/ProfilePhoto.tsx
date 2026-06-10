@@ -14,6 +14,8 @@ interface ProfilePhotoProps {
   sizes?: string;
   /** Override container sizing/shape (merged after the defaults). */
   className?: string;
+  /** Hide the bottom fade gradient (e.g. unseen story bubbles). */
+  hideGradient?: boolean;
 }
 
 /**
@@ -25,6 +27,7 @@ export const ProfilePhoto = ({
   src,
   sizes = "(max-width: 768px) 96px, 20vw",
   className,
+  hideGradient = false,
 }: ProfilePhotoProps) => {
   const defaultIndex = (pseudo.length % DEFAULT_PROFILE_PHOTO_COUNT) + 1;
   const photo = src ?? DEFAULT_PROFILE_PHOTO(defaultIndex);
@@ -43,7 +46,9 @@ export const ProfilePhoto = ({
         sizes={sizes}
         className="object-cover"
       />
-      <div className="from-surface-50 absolute inset-x-0 bottom-0 h-[25%] bg-gradient-to-t to-transparent" />
+      {!hideGradient && (
+        <div className="from-surface-50 absolute inset-x-0 bottom-0 h-[25%] bg-gradient-to-t to-transparent" />
+      )}
     </div>
   );
 };

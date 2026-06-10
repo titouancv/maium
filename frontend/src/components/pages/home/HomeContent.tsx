@@ -9,6 +9,7 @@ import { Suspense } from "react";
 import { useTranslations } from "next-intl";
 import { UserData, SuggestedUser } from "@/types";
 import type { HomeStats } from "@/lib/users";
+import type { StoryGroup } from "@/types/story";
 import { PageLayout } from "../../layout";
 import { HeroSection } from "../../ui/collections/HeroSection";
 import { CurrentUserSync } from "./CurrentUserSync";
@@ -16,6 +17,8 @@ import { GreetingSection } from "./items/GreetingSection";
 import {
   StatsRow,
   StatsRowSkeleton,
+  StoriesRow,
+  StoriesRowSkeleton,
   SuggestionsList,
   SuggestionsListSkeleton,
   WelcomeCelebration,
@@ -26,12 +29,14 @@ interface HomeContentProps {
   user: UserData | null;
   statsPromise?: Promise<HomeStats>;
   suggestionsPromise?: Promise<SuggestedUser[]>;
+  storiesPromise?: Promise<StoryGroup[]>;
 }
 
 export const HomeContent = ({
   user,
   statsPromise,
   suggestionsPromise,
+  storiesPromise,
 }: HomeContentProps) => {
   const tNav = useTranslations("nav");
   const t = useTranslations("home");
@@ -46,6 +51,14 @@ export const HomeContent = ({
         <>
           <div className="flex w-full max-w-7xl flex-col gap-12">
             <GreetingSection firstName={user.first_name} />
+
+            {storiesPromise && (
+              <div className="shrink-0">
+                <Suspense fallback={<StoriesRowSkeleton />}>
+                  <StoriesRow storiesPromise={storiesPromise} />
+                </Suspense>
+              </div>
+            )}
 
             {statsPromise && (
               <div className="shrink-0">
