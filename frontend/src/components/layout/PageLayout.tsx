@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
-import { Title, NavigationBar, BackButton } from "../ui";
+import { Title, NavigationBar, BackButton, NotificationBanner } from "../ui";
 
 interface PageLayoutProps {
   /**
@@ -37,6 +37,9 @@ export const PageLayout = ({
   return (
     <div className="relative flex h-dvh flex-col md:h-screen md:items-center">
       <div className="flex h-full w-full flex-col gap-6 md:h-screen md:gap-8">
+        {/* Notification band */}
+        <NotificationBanner />
+
         {/* Header */}
         <div className="flex shrink-0 justify-center px-4">
           <div className="flex w-full max-w-7xl shrink-0 items-center justify-between pt-6 md:pt-12">
@@ -55,7 +58,7 @@ export const PageLayout = ({
 
         <div className="flex min-h-0 w-full flex-1 flex-col items-center overflow-y-auto px-4">
           {children}
-          {!fullHeight && <div className="h-32 shrink-0" />}
+          {!fullHeight && <div className="h-24 shrink-0 md:h-32" />}
         </div>
       </div>
 
