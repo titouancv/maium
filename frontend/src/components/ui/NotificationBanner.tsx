@@ -38,7 +38,7 @@ export function NotificationBanner() {
           animate={{ height: "auto", opacity: 1 }}
           exit={{ height: 0, opacity: 0 }}
           transition={{ duration: 0.25, ease: "easeOut" }}
-          className="absolute top-0 right-0 left-0 shrink-0 overflow-hidden"
+          className="fixed top-0 right-0 left-0 z-50 shrink-0 overflow-hidden"
           role="status"
           aria-live="polite"
         >

@@ -10,6 +10,7 @@ import { Providers } from "@/components/Providers";
 import { UserHydration } from "@/components/UserHydration";
 import { PresenceTracker } from "@/components/PresenceTracker";
 import { NotificationsRealtime } from "@/components/NotificationsRealtime";
+import { NotificationBanner } from "@/components/ui";
 import { getCurrentUserProfile } from "@/lib/auth/getCurrentUser";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Analytics } from "@vercel/analytics/next";
@@ -51,6 +52,7 @@ export default async function RootLayout({
             </Suspense>
             <PresenceTracker />
             <NotificationsRealtime />
+            <NotificationBanner />
             {children}
           </Providers>
         </NextIntlClientProvider>
