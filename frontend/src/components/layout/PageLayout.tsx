@@ -37,20 +37,24 @@ export const PageLayout = ({
   return (
     <div className="relative flex h-dvh flex-col md:h-screen md:items-center">
       <div className="flex h-full w-full flex-col gap-6 md:h-screen md:gap-8">
-        {/* Notification band */}
-        <NotificationBanner />
+        <div className="relative flex w-full flex-col">
+          {/* Notification band */}
+          <NotificationBanner />
 
-        {/* Header */}
-        <div className="flex shrink-0 justify-center px-4">
-          <div className="flex w-full max-w-7xl shrink-0 items-center justify-between pt-6 md:pt-12">
-            {typeof title === "string" ? (
-              <>
-                <Title label={title} size="h1" />
-                {backLabel && <BackButton label={backLabel} onBack={onBack} />}
-              </>
-            ) : (
-              title
-            )}
+          {/* Header */}
+          <div className="flex shrink-0 justify-center px-4">
+            <div className="flex w-full max-w-7xl shrink-0 items-center justify-between pt-6 md:pt-12">
+              {typeof title === "string" ? (
+                <>
+                  <Title label={title} size="h1" />
+                  {backLabel && (
+                    <BackButton label={backLabel} onBack={onBack} />
+                  )}
+                </>
+              ) : (
+                title
+              )}
+            </div>
           </div>
         </div>
 
