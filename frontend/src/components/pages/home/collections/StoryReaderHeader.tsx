@@ -36,12 +36,7 @@ export function StoryReaderHeader({
               transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
               className="block"
             >
-              <ProfilePhoto
-                pseudo={author.pseudo}
-                hideGradient
-                sizes="32px"
-                className="w-8 rounded"
-              />
+              <ProfilePhoto pseudo={author.pseudo} className="w-8 rounded" />
             </motion.span>
           </AnimatePresence>
         </span>
@@ -61,7 +56,7 @@ export function StoryReaderHeader({
       <button
         onClick={onClose}
         aria-label={t("close")}
-        className="text-txt hover:text-primary active:scale-95 flex h-9 w-9 shrink-0 cursor-pointer items-center justify-center"
+        className="text-txt hover:text-primary flex h-9 w-9 shrink-0 cursor-pointer items-center justify-center active:scale-95"
       >
         <svg
           width="22"

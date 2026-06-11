@@ -46,7 +46,7 @@ export function StoryBubble({
           </p>
         </div>
       </button>
-      {onAddStory && !isEmptyOwner && <AddStoryBubble onClick={onAddStory} />}
+      {onAddStory && <AddStoryBubble onClick={onAddStory} />}
     </div>
   );
 }

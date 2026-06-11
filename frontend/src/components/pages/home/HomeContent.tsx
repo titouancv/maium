@@ -54,7 +54,7 @@ export const HomeContent = ({
             <GreetingSection firstName={user.first_name} />
 
             {storiesPromise && (
-              <div className="flex flex-col">
+              <div className="flex flex-col gap-2">
                 <Title label={tStories("title")} size="h2" />
                 <Suspense fallback={<StoriesRowSkeleton />}>
                   <StoriesRow storiesPromise={storiesPromise} />
@@ -71,7 +71,7 @@ export const HomeContent = ({
             )}
 
             {suggestionsPromise && (
-              <div className="flex flex-col">
+              <div className="flex flex-col gap-2">
                 <Title label={t("suggestions.title")} size="h2" />
                 <Suspense fallback={<SuggestionsListSkeleton />}>
                   <SuggestionsList suggestionsPromise={suggestionsPromise} />

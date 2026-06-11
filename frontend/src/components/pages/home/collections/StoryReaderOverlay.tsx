@@ -33,7 +33,10 @@ interface Cursor {
  * store re-order — e.g. when the viewer reposts from here and their own group
  * jumps to the front — never makes the reader jump to the wrong story.
  */
-export function StoryReaderOverlay({ start, onClose }: StoryReaderOverlayProps) {
+export function StoryReaderOverlay({
+  start,
+  onClose,
+}: StoryReaderOverlayProps) {
   const t = useTranslations("stories");
   const groups = useStoriesStore((s) => s.groups);
   const markSeen = useStoriesStore((s) => s.markSeen);
@@ -65,7 +68,10 @@ export function StoryReaderOverlay({ start, onClose }: StoryReaderOverlayProps) 
   const goNext = useCallback(() => {
     if (!group || storyIndex < 0) return;
     if (storyIndex < group.stories.length - 1) {
-      setCursor({ pseudo: cursor.pseudo, storyId: group.stories[storyIndex + 1].id });
+      setCursor({
+        pseudo: cursor.pseudo,
+        storyId: group.stories[storyIndex + 1].id,
+      });
     } else if (groupIndex < groups.length - 1) {
       const next = groups[groupIndex + 1];
       setCursor({ pseudo: next.author.pseudo, storyId: next.stories[0].id });
@@ -77,7 +83,10 @@ export function StoryReaderOverlay({ start, onClose }: StoryReaderOverlayProps) 
   const goPrev = useCallback(() => {
     if (!group || storyIndex < 0) return;
     if (storyIndex > 0) {
-      setCursor({ pseudo: cursor.pseudo, storyId: group.stories[storyIndex - 1].id });
+      setCursor({
+        pseudo: cursor.pseudo,
+        storyId: group.stories[storyIndex - 1].id,
+      });
     } else if (groupIndex > 0) {
       const prev = groups[groupIndex - 1];
       setCursor({
@@ -120,7 +129,7 @@ export function StoryReaderOverlay({ start, onClose }: StoryReaderOverlayProps) 
     >
       <div className="relative mx-auto flex h-dvh w-full max-w-md flex-col">
         {/* Top: progress + header */}
-        <div className="z-20 flex shrink-0 flex-col gap-3 px-4 pt-4">
+        <div className="z-20 flex shrink-0 flex-col gap-3 px-4">
           <StoryProgressBar total={group.stories.length} current={storyIndex} />
           <StoryReaderHeader
             author={group.author}
