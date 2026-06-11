@@ -6,7 +6,7 @@ import { Title, Markdown } from "@/components/ui";
 import { Button } from "@/components/ui/Button";
 import type { StoryBlock, StoryBlockType } from "@/types/story";
 import { StoryBlockRow } from "../items/StoryBlockRow";
-import { PlusIcon, EyeIcon, EditIcon } from "../storyBlockIcons";
+import { PlusIcon } from "../storyBlockIcons";
 import { StoryBlockTypeSheet } from "./StoryBlockTypeSheet";
 
 interface StoryBlockEditorProps {
@@ -75,7 +75,9 @@ export function StoryBlockEditor({
   const t = useTranslations("stories");
   const tCommon = useTranslations("common");
 
-  const [blocks, setBlocks] = useState<StoryBlock[]>(() => [newBlock("text")]);
+  const [blocks, setBlocks] = useState<StoryBlock[]>(() => [
+    newBlock("heading"),
+  ]);
   // null target → the menu adds a new block; an id → it edits that block's type.
   const [menuTarget, setMenuTarget] = useState<string | null | undefined>(
     undefined,
@@ -119,7 +121,7 @@ export function StoryBlockEditor({
     <div className="flex h-dvh flex-col md:h-screen md:items-center md:justify-center">
       <div className="flex h-full w-full flex-col md:h-screen md:max-w-xl">
         {/* Header */}
-        <div className="flex shrink-0 items-center justify-between px-4 pt-6 md:pt-12">
+        <div className="flex shrink-0 items-center justify-between px-4 pt-6 pb-6 md:pt-12">
           <Title label={t("createTitle")} size="h1" />
           <Button variant="ghost" type="button" size="none" onClick={onCancel}>
             {tCommon("cancelButton")}
@@ -127,7 +129,7 @@ export function StoryBlockEditor({
         </div>
 
         {/* Blocks (edit) / rendered story (preview) */}
-        <div className="flex min-h-0 flex-1 flex-col gap-1 overflow-y-auto px-4 pt-10 pb-4">
+        <div className="flex min-h-0 flex-1 flex-col gap-1 overflow-y-auto px-4 pb-64">
           {isPreview ? (
             <Markdown>{markdown}</Markdown>
           ) : (
@@ -141,23 +143,33 @@ export function StoryBlockEditor({
               />
             ))
           )}
+          {!isPreview && (
+            <Button
+              variant="outline"
+              type="button"
+              size="lg"
+              onClick={() => setMenuTarget(null)}
+            >
+              <span className="flex items-center gap-1.5">
+                <PlusIcon />
+                {t("addBlock")}
+              </span>
+            </Button>
+          )}
         </div>
 
         {/* Footer */}
-        <div className="shrink-0 px-4 pb-6 md:pb-12">
+        <div className="shrink-0 px-4 py-6 md:pb-12">
           {error && <p className="text-error mb-2 text-sm">{error}</p>}
           <div className="flex gap-2">
-            {!isPreview && (
+            {isPreview && (
               <Button
                 variant="outline"
                 type="button"
                 size="lg"
-                onClick={() => setMenuTarget(null)}
+                onClick={() => setIsPreview(false)}
               >
-                <span className="flex items-center gap-1.5">
-                  <PlusIcon />
-                  {t("addBlock")}
-                </span>
+                {tCommon("backButton")}
               </Button>
             )}
             <Button
@@ -165,22 +177,10 @@ export function StoryBlockEditor({
               size="lg"
               className="flex-1"
               isLoading={isPublishing}
-              onClick={handlePublish}
+              onClick={isPreview ? handlePublish : () => setIsPreview(true)}
               disabled={!hasContent}
             >
-              {t("publish")}
-            </Button>
-            <Button
-              variant="outline"
-              type="button"
-              size="lg"
-              onClick={() => setIsPreview((p) => !p)}
-              disabled={!isPreview && !hasContent}
-            >
-              <span className="flex items-center gap-1.5">
-                {isPreview ? <EditIcon /> : <EyeIcon />}
-                {isPreview ? t("edit") : t("preview")}
-              </span>
+              {isPreview ? t("publish") : tCommon("nextButton")}
             </Button>
           </div>
         </div>

@@ -1,11 +1,18 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import { motion, AnimatePresence } from "framer-motion";
 import type { StoryBlockType } from "@/types/story";
-import { BlockIcon, CloseIcon } from "../storyBlockIcons";
+import { FormLayout } from "@/components/layout/FormLayout";
+import { TabsVertical } from "@/components/ui/TabsVertical";
+import { useState } from "react";
+import { Button } from "@/components/ui";
 
-const BLOCK_TYPES: StoryBlockType[] = ["heading", "text", "highlight", "bullet"];
+const BLOCK_TYPES: StoryBlockType[] = [
+  "heading",
+  "text",
+  "highlight",
+  "bullet",
+];
 
 const LABEL_KEY: Record<StoryBlockType, string> = {
   heading: "blockHeading",
@@ -41,67 +48,43 @@ export function StoryBlockTypeSheet({
   onClose,
 }: StoryBlockTypeSheetProps) {
   const t = useTranslations("stories");
+  const tCommon = useTranslations("common");
+  const [tabIndex, setTabIndex] = useState(0);
 
   return (
-    <AnimatePresence>
+    <>
       {open && (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: 0.15 }}
-          className="fixed inset-0 z-[70] flex items-end justify-center bg-black/30 md:items-center"
-          onClick={onClose}
-        >
-          <motion.div
-            initial={{ y: 24, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            exit={{ y: 24, opacity: 0 }}
-            transition={{ duration: 0.18, ease: "easeOut" }}
-            className="bg-surface-50 border-brd-200 w-full max-w-xl rounded-t-3xl border-t p-4 md:rounded-3xl md:border"
-            onClick={(e) => e.stopPropagation()}
+        <div className="bg-surface-50 fixed inset-0 z-50">
+          <FormLayout
+            title={t("blockMenuTitle")}
+            isCancelable
+            onCancel={onClose}
+            step={1}
+            totalSteps={1}
+            cancelLabel={tCommon("backButton")}
+            primaryLabel={t("addBlock")}
+            onPrimary={() => onSelect(BLOCK_TYPES[tabIndex])}
           >
-            <p className="text-txt-muted mb-3 px-2 text-xs font-medium uppercase">
-              {t("blockMenuTitle")}
-            </p>
-            <div className="flex flex-col gap-1">
-              {BLOCK_TYPES.map((type) => (
-                <button
-                  key={type}
-                  type="button"
-                  onClick={() => onSelect(type)}
-                  className="hover:bg-surface-100 flex cursor-pointer items-center gap-3 rounded-2xl p-3 text-left transition-colors"
-                >
-                  <span className="bg-surface-200 text-txt flex h-9 w-9 shrink-0 items-center justify-center rounded-xl">
-                    <BlockIcon type={type} />
-                  </span>
-                  <span className="min-w-0">
-                    <span className="text-txt block text-sm font-medium">
-                      {t(LABEL_KEY[type])}
-                    </span>
-                    <span className="text-txt-muted block truncate text-xs">
-                      {t(DESC_KEY[type])}
-                    </span>
-                  </span>
-                </button>
-              ))}
+            <div className="flex h-full flex-col justify-between gap-6">
+              <div className="flex flex-col gap-6">
+                <TabsVertical
+                  tabs={BLOCK_TYPES.map((type) => t(LABEL_KEY[type]))}
+                  activeTab={tabIndex}
+                  onChange={setTabIndex}
+                />
+                <p className="text-txt-muted text-sm">
+                  {t(DESC_KEY[BLOCK_TYPES[tabIndex]])}
+                </p>
+              </div>
+              {showRemove && (
+                <Button variant="outline" onClick={onRemove}>
+                  {t("removeBlock")}
+                </Button>
+              )}
             </div>
-
-            {showRemove && (
-              <button
-                type="button"
-                onClick={onRemove}
-                className="text-error hover:bg-error/10 mt-1 flex w-full cursor-pointer items-center gap-3 rounded-2xl p-3 text-left text-sm font-medium transition-colors"
-              >
-                <span className="flex h-9 w-9 shrink-0 items-center justify-center">
-                  <CloseIcon />
-                </span>
-                {t("removeBlock")}
-              </button>
-            )}
-          </motion.div>
-        </motion.div>
+          </FormLayout>
+        </div>
       )}
-    </AnimatePresence>
+    </>
   );
 }

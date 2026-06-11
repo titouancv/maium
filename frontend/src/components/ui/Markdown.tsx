@@ -5,9 +5,30 @@ import { cn } from "@/lib/utils";
 // Map markdown nodes onto the app's semantic theme tokens (never default
 // Tailwind colors), so story content respects light/dark themes.
 const COMPONENTS: Components = {
-  h1: (props) => <h2 className="text-txt mt-5 mb-2 text-xl font-semibold" {...props} />,
-  h2: (props) => <h3 className="text-txt mt-5 mb-2 text-lg font-semibold" {...props} />,
-  h3: (props) => <h4 className="text-txt mt-4 mb-2 text-base font-semibold" {...props} />,
+  h1: (props) => (
+    <div className="flex flex-col gap-1 pb-2">
+      <div className="flex justify-start">
+        <h2 className="text-txt mt-5 mb-2 text-2xl font-extrabold" {...props} />
+      </div>
+      <div className="h-1 w-22 rounded-full bg-current"></div>
+    </div>
+  ),
+  h2: (props) => (
+    <div className="flex flex-col gap-1 pb-2">
+      <div className="flex justify-start">
+        <h3 className="text-txt mt-5 mb-2 text-xl font-extrabold" {...props} />
+      </div>
+      <div className="h-1 w-22 rounded-full bg-current"></div>
+    </div>
+  ),
+  h3: (props) => (
+    <div className="flex flex-col gap-1 pb-2">
+      <div className="flex justify-start">
+        <h4 className="text-txt mt-4 mb-2 text-lg font-extrabold" {...props} />
+      </div>
+      <div className="h-1 w-22 rounded-full bg-current"></div>
+    </div>
+  ),
   p: (props) => <p className="text-txt my-3 leading-relaxed" {...props} />,
   a: (props) => (
     <a
@@ -17,16 +38,20 @@ const COMPONENTS: Components = {
       {...props}
     />
   ),
-  strong: (props) => <strong className="text-txt font-semibold" {...props} />,
+  strong: (props) => <strong className="text-txt font-extrabold" {...props} />,
   em: (props) => <em className="italic" {...props} />,
-  ul: (props) => <ul className="text-txt my-3 list-disc space-y-1 pl-5" {...props} />,
-  ol: (props) => <ol className="text-txt my-3 list-decimal space-y-1 pl-5" {...props} />,
+  ul: (props) => (
+    <ul className="text-txt my-3 list-disc space-y-1 pl-5" {...props} />
+  ),
+  ol: (props) => (
+    <ol className="text-txt my-3 list-decimal space-y-1 pl-5" {...props} />
+  ),
   li: (props) => <li className="leading-relaxed" {...props} />,
   blockquote: (props) => (
-    <blockquote
-      className="border-brd-200 text-txt-muted my-3 border-l-2 pl-3 italic"
-      {...props}
-    />
+    <div className="flex items-center gap-4">
+      <div className="bg-primary my-1 w-1 self-stretch rounded-full"></div>
+      <blockquote className="italic" {...props} />
+    </div>
   ),
   code: (props) => (
     <code

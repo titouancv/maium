@@ -2,7 +2,6 @@
 
 import { useEffect, useRef } from "react";
 import { useTranslations } from "next-intl";
-import { cn } from "@/lib/utils";
 import type { StoryBlock, StoryBlockType } from "@/types/story";
 import { BlockIcon } from "../storyBlockIcons";
 import { Button, TextArea } from "@/components/ui";
@@ -55,16 +54,17 @@ export function StoryBlockRow({
         aria-label={t("changeBlockType")}
         variant="outline"
         size="none"
-        className="mt-1.5 h-7 w-7 shrink-0 transition-colors duration-200 md:opacity-0 md:group-hover:opacity-100"
+        className="mt-1.5 h-7 w-7 shrink-0"
       >
         <BlockIcon type={block.type} />
       </Button>
 
-      <div className={cn("min-w-0 flex-1", block.type === "bullet" && "pl-1")}>
+      <div className="min-w-0 flex-1">
         <TextArea
           ref={ref}
           rows={1}
           value={block.text}
+          enterKeyHint="done"
           placeholder={t(PLACEHOLDER_KEY[block.type])}
           onChange={(e) => {
             const value = singleLine
