@@ -15,24 +15,25 @@ export const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(
     ref,
   ) => {
     return (
-      <div className="flex h-full w-full flex-col gap-1.5">
-        <textarea
-          ref={ref}
-          rows={row}
+      <>
+        <div
           className={cn(
-            "h-full w-full resize-none p-2 transition-all placeholder:uppercase",
-            infoType === "error"
-              ? "text-error bg-error/10"
-              : "text-txt hover:bg-surface-100 focus:bg-surface-100 [&:not(:placeholder-shown)]:bg-surface-100",
-            "rounded-xl p-1 outline-none",
+            "bg-surface-100 inset-shadow-dark-900/40 dark:inset-shadow-dark-900 flex h-full w-full flex-col gap-1.5 rounded-xl p-2 inset-shadow-sm outline-none",
+            infoType === "error" ? "text-error bg-error/10" : "text-txt",
             className,
           )}
-          {...props}
-        />
+        >
+          <textarea
+            ref={ref}
+            rows={row}
+            className="h-full w-full resize-none transition-all outline-none placeholder:uppercase"
+            {...props}
+          />
+        </div>
         <span className={cn(INFO_COLORS[infoType], "pl-1 text-xs")}>
           {infoLabel || " "}
         </span>
-      </div>
+      </>
     );
   },
 );

@@ -18,6 +18,16 @@ export interface StoryData {
   likedByMe: boolean;
 }
 
+/** The four Notion-like block kinds, each serialized to a markdown primitive. */
+export type StoryBlockType = "heading" | "text" | "highlight" | "bullet";
+
+/** A single draft block while composing a story in the block editor. */
+export interface StoryBlock {
+  id: string;
+  type: StoryBlockType;
+  text: string;
+}
+
 /** One author's stories, grouped for the home stories row and the reader. */
 export interface StoryGroup {
   author: UserSummary;

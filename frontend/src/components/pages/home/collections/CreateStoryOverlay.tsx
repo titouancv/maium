@@ -4,30 +4,28 @@ import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { motion } from "framer-motion";
 import { API } from "@/constants";
-import { Form } from "@/components/form";
 import { useStoriesStore } from "@/stores/useStoriesStore";
 import { useCurrentUserStore } from "@/stores/useCurrentUserStore";
+import { StoryBlockEditor } from "./StoryBlockEditor";
 
 interface CreateStoryOverlayProps {
   onClose: () => void;
 }
 
 /**
- * Full-screen story creation overlay: a `FormLayout` with a single markdown
- * TextArea. On publish, the story is created and added to the row immediately,
- * then the overlay closes.
+ * Full-screen story creation overlay: a Notion-like block editor
+ * (`StoryBlockEditor`) that serializes its blocks to markdown. On publish, the
+ * story is created and added to the row immediately, then the overlay closes.
  */
 export function CreateStoryOverlay({ onClose }: CreateStoryOverlayProps) {
   const t = useTranslations("stories");
-  const tCommon = useTranslations("common");
   const addStory = useStoriesStore((s) => s.addStory);
   const currentUser = useCurrentUserStore((s) => s.user);
 
-  const [content, setContent] = useState("");
   const [isPublishing, setIsPublishing] = useState(false);
   const [error, setError] = useState<string | undefined>();
 
-  const publish = async () => {
+  const publish = async (content: string) => {
     const trimmed = content.trim();
     if (!trimmed || !currentUser || isPublishing) return;
     setIsPublishing(true);
@@ -64,21 +62,10 @@ export function CreateStoryOverlay({ onClose }: CreateStoryOverlayProps) {
       transition={{ duration: 0.15 }}
       className="bg-surface-50 fixed inset-0 z-[60]"
     >
-      <Form
-        type="longText"
-        title={t("createTitle")}
-        step={1}
-        totalSteps={1}
-        isCancelable
+      <StoryBlockEditor
         onCancel={onClose}
-        cancelLabel={tCommon("cancelButton")}
-        placeholder={t("createPlaceholder")}
-        rows={12}
-        defaultValue=""
-        onChange={(value) => setContent(value ?? "")}
-        onPrimary={publish}
-        primaryLabel={t("publish")}
-        primaryLoading={isPublishing}
+        onPublish={publish}
+        isPublishing={isPublishing}
         error={error}
       />
     </motion.div>
