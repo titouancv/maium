@@ -102,6 +102,9 @@ export const DEFAULT_PROFILE_PHOTO_COUNT = 10;
 export const DEFAULT_PROFILE_PHOTO = (index: number) =>
   `/assets/defaultProfilePhoto${index}.png`;
 
+/** Decorative frame overlaid on a framed profile photo. */
+export const DEFAULT_FRAME = "/assets/defaultFrame.png";
+
 export const EXPERIENCE_NAMESPACE = {
   professional: "experience.professional",
   educational: "experience.educational",

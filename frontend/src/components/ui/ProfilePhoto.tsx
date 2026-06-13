@@ -1,5 +1,6 @@
 import Image from "next/image";
 import {
+  DEFAULT_FRAME,
   DEFAULT_PROFILE_PHOTO,
   DEFAULT_PROFILE_PHOTO_COUNT,
 } from "@/constants";
@@ -13,6 +14,7 @@ interface ProfilePhotoProps {
   className?: string;
 
   isFramed?: boolean;
+  isFrameMuted?: boolean;
 }
 
 /**
@@ -26,6 +28,7 @@ export const ProfilePhoto = ({
   sizes = "(max-width: 768px) 96px, 20vw",
   className,
   isFramed = false,
+  isFrameMuted = false,
 }: ProfilePhotoProps) => {
   const defaultIndex = (pseudo.length % DEFAULT_PROFILE_PHOTO_COUNT) + 1;
   const photo = src ?? DEFAULT_PROFILE_PHOTO(defaultIndex);
@@ -34,7 +37,6 @@ export const ProfilePhoto = ({
     <div
       className={cn(
         "bg-surface-50 relative aspect-[5/7] w-full overflow-hidden rounded-sm",
-        isFramed && "border-primary border-4",
         className,
       )}
     >
@@ -43,12 +45,26 @@ export const ProfilePhoto = ({
         alt={`@${pseudo}`}
         fill
         sizes={sizes}
-        className="object-cover"
+        className={cn("object-cover", isFramed && "p-4")}
       />
 
-      <div className="from-surface-50 via-surface-50/60 absolute inset-x-0 bottom-0 h-[25%] bg-gradient-to-t from-10% via-60% to-transparent" />
+      {isFramed && (
+        <Image
+          src={DEFAULT_FRAME}
+          alt=""
+          aria-hidden
+          fill
+          sizes={sizes}
+          className={cn(
+            "pointer-events-none z-1 object-cover",
+            isFrameMuted && "grayscale",
+          )}
+        />
+      )}
 
-      <div className="absolute right-2 bottom-1 left-2 z-10 flex flex-col text-left">
+      <div className="from-surface-50 via-surface-50/60 absolute inset-x-0 bottom-0 z-2 h-[25%] bg-gradient-to-t from-10% via-60% to-transparent" />
+
+      <div className="absolute right-2 bottom-1 left-2 z-3 flex flex-col text-left">
         <p className="truncate leading-none">{displayName?.firstName}</p>
         <p className="-mt-0.5 ml-2 truncate text-xl leading-none font-extrabold">
           {displayName?.lastName}

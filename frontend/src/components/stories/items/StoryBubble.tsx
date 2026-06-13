@@ -38,8 +38,8 @@ export function StoryBubble({
             firstName: author.first_name,
             lastName: author.last_name,
           }}
-          isFramed={hasUnseen}
-          className={isEmptyOwner ? "opacity-50" : undefined}
+          isFramed={!isEmptyOwner}
+          isFrameMuted={!hasUnseen}
         />
       </button>
       {onAddStory && <AddStoryBubble onClick={onAddStory} />}
