@@ -4,15 +4,16 @@ import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
 import { API } from "@/constants";
 import { UserCard, Skeleton } from "@/components/ui";
-import type { UserSummary } from "@/types/user";
+import type { StoryViewer } from "@/types/story";
 
 /**
  * Fetches the viewers of one of the current user's own stories (lazily, on
- * mount). Only the author is authorised server-side. Returns `null` while
- * loading. Shared by the mobile bottom sheet and the desktop inline panel.
+ * mount), each flagged with whether they liked / reposted it. Only the author
+ * is authorised server-side. Returns `null` while loading. Shared by the mobile
+ * bottom sheet and the desktop inline panel.
  */
-export function useStoryViewers(storyId: string): UserSummary[] | null {
-  const [viewers, setViewers] = useState<UserSummary[] | null>(null);
+export function useStoryViewers(storyId: string): StoryViewer[] | null {
+  const [viewers, setViewers] = useState<StoryViewer[] | null>(null);
 
   useEffect(() => {
     let active = true;
@@ -34,7 +35,7 @@ export function useStoryViewers(storyId: string): UserSummary[] | null {
 
 interface StoryViewersListProps {
   /** Viewers from `useStoryViewers`; `null` renders the loading skeleton. */
-  viewers: UserSummary[] | null;
+  viewers: StoryViewer[] | null;
 }
 
 /** Presentational viewers list: skeleton while loading, empty state, or rows. */
@@ -53,17 +54,37 @@ export function StoryViewersList({ viewers }: StoryViewersListProps) {
 
   if (viewers.length === 0) {
     return (
-      <p className="text-txt-muted py-8 text-center text-sm">{t("noViewers")}</p>
+      <p className="text-txt-muted py-8 text-center text-sm">
+        {t("noViewers")}
+      </p>
     );
   }
 
   return (
     <ul>
-      {viewers.map((viewer) => (
-        <li key={viewer.pseudo}>
-          <UserCard {...viewer} />
-        </li>
-      ))}
+      {viewers
+        .sort(
+          (a, b) =>
+            Number(b.liked) - Number(a.liked) ||
+            Number(b.reposted) - Number(a.reposted),
+        )
+        .map(({ liked, reposted, ...summary }) => (
+          <li key={summary.pseudo} className="flex items-center gap-2">
+            <UserCard
+              {...summary}
+              className="text-txt hover:text-primary flex min-w-0 flex-1 gap-2 py-3"
+            />
+            {(liked || reposted) && (
+              <p className="text-primary shrink-0 text-xs font-medium">
+                {liked && reposted
+                  ? t("likedAndReposted")
+                  : liked
+                    ? t("likedIndicator")
+                    : t("repostedIndicator")}
+              </p>
+            )}
+          </li>
+        ))}
     </ul>
   );
 }

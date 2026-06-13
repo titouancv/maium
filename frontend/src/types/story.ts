@@ -33,6 +33,15 @@ export interface StoryBlock {
   text: string;
 }
 
+/**
+ * A user who viewed one of the author's stories, with whether they also liked
+ * and/or reposted it (shown as indicators in the author-only viewers list).
+ */
+export interface StoryViewer extends UserSummary {
+  liked: boolean;
+  reposted: boolean;
+}
+
 /** One author's stories, grouped for the home stories row and the reader. */
 export interface StoryGroup {
   author: UserSummary;
