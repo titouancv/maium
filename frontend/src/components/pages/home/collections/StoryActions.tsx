@@ -127,11 +127,13 @@ export function StoryActions({
     return (
       <>
         <div className="flex items-center justify-between gap-2">
+          {/* On desktop the viewers list is shown inline (StoryViewersPanel),
+              so the button + sheet are mobile-only. */}
           <Button
             variant="outline"
             size="none"
             onClick={() => setShowViewers(true)}
-            className="w-full py-2"
+            className="w-full py-2 md:hidden"
           >
             {t("viewers")}
           </Button>
