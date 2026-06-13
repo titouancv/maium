@@ -5,7 +5,6 @@ import { motion } from "framer-motion";
 import { useTranslations } from "next-intl";
 import { API } from "@/constants";
 import { useStoriesStore } from "@/stores/useStoriesStore";
-import { useCurrentUserStore } from "@/stores/useCurrentUserStore";
 import type { StoryPosition } from "./StoriesRow";
 import { StoryReaderHeader } from "./StoryReaderHeader";
 import { StoryProgressBar } from "./StoryProgressBar";
@@ -41,7 +40,6 @@ export function StoryReaderOverlay({
   const t = useTranslations("stories");
   const groups = useStoriesStore((s) => s.groups);
   const markSeen = useStoriesStore((s) => s.markSeen);
-  const currentUserId = useCurrentUserStore((s) => s.user?.id);
 
   const [cursor, setCursor] = useState<Cursor>(() => {
     const g = groups[start.groupIndex];
@@ -59,16 +57,15 @@ export function StoryReaderOverlay({
   const story = storyIndex >= 0 ? group?.stories[storyIndex] : undefined;
 
   // Mark the open story as seen (optimistic + persisted), once per story. The
-  // author viewing their own story doesn't count as a view (no self-view row).
+  // author's view of their own story is persisted too so the unseen ring stays
+  // gone after a hard refresh; the viewers list still excludes the author.
   const lastViewedRef = useRef<string | null>(null);
   useEffect(() => {
     if (!story || lastViewedRef.current === story.id) return;
     lastViewedRef.current = story.id;
     markSeen(story.id);
-    if (story.authorId !== currentUserId) {
-      fetch(API.STORY_VIEW(story.id), { method: "POST" }).catch(() => {});
-    }
-  }, [story, markSeen, currentUserId]);
+    fetch(API.STORY_VIEW(story.id), { method: "POST" }).catch(() => {});
+  }, [story, markSeen]);
 
   const goNext = useCallback(() => {
     if (!group || storyIndex < 0) return;

@@ -89,11 +89,14 @@ export const useStoriesStore = create<StoriesStore>((set) => ({
         (g) => g.author.pseudo !== author.pseudo,
       );
       const mine = state.groups.find((g) => g.author.pseudo === author.pseudo);
+      // Newest story last keeps the progress bar in chronological order.
+      const stories = [...(mine?.stories ?? []), story];
       const updated: StoryGroup = {
         author,
-        // Newest story last keeps the progress bar in chronological order.
-        stories: [...(mine?.stories ?? []), story],
-        hasUnseen: false,
+        stories,
+        // A freshly created/reposted story is unseen until the author opens it,
+        // so their own bubble shows the unseen ring right away.
+        hasUnseen: stories.some((s) => !s.seen),
       };
       // The viewer's own group is always shown first.
       return { groups: [updated, ...others] };

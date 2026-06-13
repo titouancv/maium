@@ -34,9 +34,11 @@ export async function POST(request: NextRequest) {
 
     if (error) throw error;
 
-    // The author has implicitly "seen" their own story (no unseen ring on self).
+    // A freshly published story is unseen until the author opens it, so their
+    // own bubble shows the unseen ring immediately (the self-view is recorded
+    // when they open the reader, like any other viewer).
     const story = mapStoryFromDb(data as unknown as DbStoryRaw, {
-      seen: true,
+      seen: false,
       likedByMe: false,
       repostedByMe: false,
     });

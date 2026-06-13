@@ -70,8 +70,10 @@ export async function POST(
 
     if (error) throw error;
 
+    // A fresh repost is unseen until the author opens it, so their own bubble
+    // shows the unseen ring immediately.
     const story = mapStoryFromDb(data as unknown as DbStoryRaw, {
-      seen: true,
+      seen: false,
       likedByMe: false,
       repostedByMe: false,
     });
