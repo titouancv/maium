@@ -42,7 +42,9 @@ export const API = {
   RESUME_PDF: (id: string) => `/api/resume/${id}/pdf`,
   RESUME_PROFILE_PDF: "/api/resume/profile/pdf",
   STORIES: "/api/stories",
+  STORY: (id: string) => `/api/stories/${id}`,
   STORY_VIEW: (id: string) => `/api/stories/${id}/view`,
+  STORY_VIEWERS: (id: string) => `/api/stories/${id}/viewers`,
   STORY_LIKE: (id: string) => `/api/stories/${id}/like`,
   STORY_REPOST: (id: string) => `/api/stories/${id}/repost`,
 } as const;

@@ -8,6 +8,7 @@ import { Button } from "@/components/ui";
 import { useStoriesStore } from "@/stores/useStoriesStore";
 import { useCurrentUserStore } from "@/stores/useCurrentUserStore";
 import type { StoryData } from "@/types/story";
+import { StoryViewersSheet } from "./StoryViewersSheet";
 
 interface StoryActionsProps {
   story: StoryData;
@@ -16,8 +17,9 @@ interface StoryActionsProps {
 }
 
 /**
- * Bottom action bar of the reader: send a direct message to the author, like
- * the story (persisted, optimistic), or repost it into your own stories.
+ * Bottom action bar of the reader. On someone else's story: message the author,
+ * like (persisted, optimistic), or repost it. On your own story: see who viewed
+ * it (viewers sheet) or delete it (two-tap confirm, optimistic removal).
  */
 export function StoryActions({
   story,
@@ -28,8 +30,11 @@ export function StoryActions({
   const router = useRouter();
   const setLiked = useStoriesStore((s) => s.setLiked);
   const addStory = useStoriesStore((s) => s.addStory);
+  const removeStory = useStoriesStore((s) => s.removeStory);
   const currentUser = useCurrentUserStore((s) => s.user);
   const [busy, setBusy] = useState(false);
+  const [showViewers, setShowViewers] = useState(false);
+  const [confirmDelete, setConfirmDelete] = useState(false);
 
   const isOwn = currentUser?.id === story.authorId;
 
@@ -65,6 +70,25 @@ export function StoryActions({
     }
   };
 
+  const handleDelete = async () => {
+    if (busy) return;
+    // First tap arms the confirmation; second tap actually deletes.
+    if (!confirmDelete) {
+      setConfirmDelete(true);
+      return;
+    }
+    setBusy(true);
+    try {
+      const res = await fetch(API.STORY(story.id), { method: "DELETE" });
+      if (res.ok) {
+        removeStory(story.id); // optimistic; closes the reader below
+        onClose();
+      }
+    } finally {
+      setBusy(false);
+    }
+  };
+
   const handleRepost = async () => {
     if (busy || !currentUser) return;
     setBusy(true);
@@ -83,13 +107,46 @@ export function StoryActions({
     }
   };
 
+  // Own story: manage it (see who viewed it, delete it) instead of reacting to it.
+  if (isOwn) {
+    return (
+      <>
+        <div className="flex items-center justify-between gap-2">
+          <Button
+            variant="outline"
+            size="none"
+            onClick={() => setShowViewers(true)}
+            className="w-full py-2"
+          >
+            {t("viewers")}
+          </Button>
+          <Button
+            variant="outline"
+            size="none"
+            onClick={handleDelete}
+            disabled={busy}
+            className="w-full py-2"
+          >
+            {confirmDelete ? t("confirmDelete") : t("delete")}
+          </Button>
+        </div>
+        {showViewers && (
+          <StoryViewersSheet
+            storyId={story.id}
+            onClose={() => setShowViewers(false)}
+          />
+        )}
+      </>
+    );
+  }
+
   return (
     <div className="flex items-center justify-between gap-2">
       <Button
         variant="outline"
         size="none"
         onClick={handleMessage}
-        disabled={busy || isOwn}
+        disabled={busy}
         className="w-full py-2"
       >
         {t("message")}
@@ -106,7 +163,7 @@ export function StoryActions({
         variant="outline"
         size="none"
         onClick={handleRepost}
-        disabled={busy || isOwn}
+        disabled={busy}
         className="w-full py-2"
       >
         {t("repost")}

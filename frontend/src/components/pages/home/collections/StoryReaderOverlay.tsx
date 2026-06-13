@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import { useTranslations } from "next-intl";
 import { API } from "@/constants";
 import { useStoriesStore } from "@/stores/useStoriesStore";
+import { useCurrentUserStore } from "@/stores/useCurrentUserStore";
 import type { StoryPosition } from "./StoriesRow";
 import { StoryReaderHeader } from "./StoryReaderHeader";
 import { StoryProgressBar } from "./StoryProgressBar";
@@ -40,6 +41,7 @@ export function StoryReaderOverlay({
   const t = useTranslations("stories");
   const groups = useStoriesStore((s) => s.groups);
   const markSeen = useStoriesStore((s) => s.markSeen);
+  const currentUserId = useCurrentUserStore((s) => s.user?.id);
 
   const [cursor, setCursor] = useState<Cursor>(() => {
     const g = groups[start.groupIndex];
@@ -56,14 +58,17 @@ export function StoryReaderOverlay({
     : -1;
   const story = storyIndex >= 0 ? group?.stories[storyIndex] : undefined;
 
-  // Mark the open story as seen (optimistic + persisted), once per story.
+  // Mark the open story as seen (optimistic + persisted), once per story. The
+  // author viewing their own story doesn't count as a view (no self-view row).
   const lastViewedRef = useRef<string | null>(null);
   useEffect(() => {
     if (!story || lastViewedRef.current === story.id) return;
     lastViewedRef.current = story.id;
     markSeen(story.id);
-    fetch(API.STORY_VIEW(story.id), { method: "POST" }).catch(() => {});
-  }, [story, markSeen]);
+    if (story.authorId !== currentUserId) {
+      fetch(API.STORY_VIEW(story.id), { method: "POST" }).catch(() => {});
+    }
+  }, [story, markSeen, currentUserId]);
 
   const goNext = useCallback(() => {
     if (!group || storyIndex < 0) return;

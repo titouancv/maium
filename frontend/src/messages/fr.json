@@ -164,6 +164,12 @@
     "like": "J'aime",
     "repost": "Republier",
     "message": "Message",
+    "viewers": "Vues",
+    "delete": "Supprimer",
+    "confirmDelete": "Confirmer la suppression",
+    "viewersTitle": "Vues",
+    "viewersCount": "{count, plural, =0 {Aucune vue} one {# vue} other {# vues}}",
+    "noViewers": "Personne n'a encore vu cette story",
     "repostFrom": "Republié depuis @{pseudo}",
     "empty": "Aucune story pour le moment",
     "error": "Une erreur est survenue. Veuillez réessayer."

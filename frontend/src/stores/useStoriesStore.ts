@@ -20,6 +20,8 @@ interface StoriesStore {
   setLiked: (storyId: string, liked: boolean) => void;
   /** Insert a freshly created/ reposted story into the viewer's own group. */
   addStory: (story: StoryData, author: UserSummary) => void;
+  /** Remove a story (optimistic); drops the author's group if it becomes empty. */
+  removeStory: (storyId: string) => void;
 }
 
 function applySeen(group: StoryGroup, seenIds: Set<string>): StoryGroup {
@@ -80,4 +82,15 @@ export const useStoriesStore = create<StoriesStore>((set) => ({
       // The viewer's own group is always shown first.
       return { groups: [updated, ...others] };
     }),
+
+  removeStory: (storyId) =>
+    set((state) => ({
+      groups: state.groups
+        .map((g) => {
+          if (!g.stories.some((s) => s.id === storyId)) return g;
+          const stories = g.stories.filter((s) => s.id !== storyId);
+          return { ...g, stories, hasUnseen: stories.some((s) => !s.seen) };
+        })
+        .filter((g) => g.stories.length > 0),
+    })),
 }));
