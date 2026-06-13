@@ -52,7 +52,7 @@ export function StoryViewersSheet({
         animate={{ y: 0 }}
         exit={{ y: "100%" }}
         transition={{ type: "spring", damping: 30, stiffness: 300 }}
-        className="bg-surface-50 relative flex max-h-[70vh] w-full max-w-md flex-col rounded-t-md px-4 pt-3 pb-8"
+        className="bg-surface-50 relative flex max-h-[70vh] w-full max-w-7xl flex-col rounded-t-md px-4 pt-3 pb-8"
       >
         <div className="mb-2 flex items-center justify-between">
           <Title
