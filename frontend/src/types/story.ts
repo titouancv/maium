@@ -8,8 +8,11 @@ export interface StoryData {
   isRepost: boolean;
   originalAuthorId?: string | null;
   originalStoryId?: string | null;
-  /** Pseudo of the original author, for the « Republié depuis @… » mention. */
-  originalAuthorPseudo?: string | null;
+  /**
+   * Original author (reposts only): shown in the reader header (linking to
+   * their profile) and in the « Republié depuis @… » mention.
+   */
+  originalAuthor?: UserSummary | null;
   /** Epoch ms. */
   createdAt: number;
   /** Whether the current viewer has already seen this story. */

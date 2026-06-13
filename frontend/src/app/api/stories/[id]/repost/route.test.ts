@@ -35,7 +35,7 @@ function setup({ userId, original, insertResult }: SetupOptions) {
             original_author_id: original?.author_id,
             original_story_id: original?.id,
             created_at: "2026-06-10T12:00:00Z",
-            original_author: { pseudo: "bob" },
+            original_author: { pseudo: "bob", first_name: "Bob", last_name: "B" },
           },
           error: null,
         },
@@ -111,7 +111,7 @@ describe("POST /api/stories/[id]/repost", () => {
       isRepost: true,
       originalAuthorId: "bob",
       originalStoryId: "orig-1",
-      originalAuthorPseudo: "bob",
+      originalAuthor: { pseudo: "bob", first_name: "Bob", last_name: "B" },
     });
   });
 });

@@ -27,7 +27,7 @@ export function StoryReaderContent({ story }: StoryReaderContentProps) {
         transition={{ duration: 0.25, ease: "easeInOut" }}
         className="h-full overflow-y-auto"
       >
-        {story.isRepost && story.originalAuthorPseudo ? (
+        {story.isRepost && story.originalAuthor ? (
           <div className="border-brd-200 text-txt-muted mb-4 inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs">
             <svg
               width="13"
@@ -44,7 +44,7 @@ export function StoryReaderContent({ story }: StoryReaderContentProps) {
               <polyline points="7 23 3 19 7 15" />
               <path d="M21 13v2a4 4 0 0 1-4 4H3" />
             </svg>
-            {t("repostFrom", { pseudo: story.originalAuthorPseudo })}
+            {t("repostFrom", { pseudo: story.originalAuthor.pseudo })}
           </div>
         ) : null}
 

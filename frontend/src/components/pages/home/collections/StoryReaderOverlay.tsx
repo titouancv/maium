@@ -124,6 +124,16 @@ export function StoryReaderOverlay({
 
   if (!group || !story) return null;
 
+  // On a repost, the header shows the *original* author (and links to their
+  // profile); otherwise the group's own author. Keying the header roll by this
+  // id keeps the user-switch animation when navigating across authors/reposts.
+  const headerAuthor =
+    story.isRepost && story.originalAuthor ? story.originalAuthor : group.author;
+  const headerAuthorId =
+    story.isRepost && story.originalAuthorId
+      ? story.originalAuthorId
+      : story.authorId;
+
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -137,8 +147,8 @@ export function StoryReaderOverlay({
         <div className="z-20 flex shrink-0 flex-col gap-3 px-4">
           <StoryProgressBar total={group.stories.length} current={storyIndex} />
           <StoryReaderHeader
-            author={group.author}
-            authorId={story.authorId}
+            author={headerAuthor}
+            authorId={headerAuthorId}
             onClose={onClose}
           />
         </div>
