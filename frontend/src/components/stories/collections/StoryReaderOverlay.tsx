@@ -160,7 +160,7 @@ export function StoryReaderOverlay({
     >
       <div className="relative mx-auto flex h-dvh w-full max-w-7xl flex-col">
         {/* Progress: always full-width, above both columns. */}
-        <div className="z-20 shrink-0 px-4 pt-3">
+        <div className="z-20 shrink-0 px-4 py-2">
           <StoryProgressBar total={group.stories.length} current={storyIndex} />
         </div>
 
@@ -172,7 +172,7 @@ export function StoryReaderOverlay({
          */}
         <div className="relative grid min-h-0 flex-1 grid-cols-1 grid-rows-[auto_1fr_auto] [grid-template-areas:'header'_'content'_'actions'] md:grid-cols-[3fr_2fr] md:grid-rows-[auto_auto_1fr] md:[grid-template-areas:'content_header'_'content_actions'_'content_viewers']">
           {/* Header */}
-          <div className="z-20 px-4 pt-3 [grid-area:header]">
+          <div className="z-20 px-4 [grid-area:header]">
             <StoryReaderHeader
               author={headerAuthor}
               authorId={headerAuthorId}
@@ -186,7 +186,7 @@ export function StoryReaderOverlay({
           {/* Content + navigation: tap zones on mobile, explicit prev/next
               buttons under the content on desktop. */}
           <div className="relative flex min-h-0 flex-col overflow-hidden [grid-area:content]">
-            <div className="min-h-0 flex-1 overflow-hidden px-4 pb-4">
+            <div className="min-h-0 flex-1 overflow-hidden px-4 pt-2 pb-4">
               <StoryReaderContent story={story} />
             </div>
 

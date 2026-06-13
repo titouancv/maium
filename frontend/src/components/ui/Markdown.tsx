@@ -8,7 +8,7 @@ const COMPONENTS: Components = {
   h1: (props) => (
     <div className="flex flex-col gap-1 pb-2">
       <div className="flex justify-start">
-        <h2 className="text-txt mt-5 mb-2 text-2xl font-extrabold" {...props} />
+        <h2 className="text-txt text-2xl font-extrabold" {...props} />
       </div>
       <div className="h-1 w-22 rounded-full bg-current"></div>
     </div>
@@ -16,7 +16,7 @@ const COMPONENTS: Components = {
   h2: (props) => (
     <div className="flex flex-col gap-1 pb-2">
       <div className="flex justify-start">
-        <h3 className="text-txt mt-5 mb-2 text-xl font-extrabold" {...props} />
+        <h3 className="text-txt text-xl font-extrabold" {...props} />
       </div>
       <div className="h-1 w-22 rounded-full bg-current"></div>
     </div>
@@ -24,7 +24,7 @@ const COMPONENTS: Components = {
   h3: (props) => (
     <div className="flex flex-col gap-1 pb-2">
       <div className="flex justify-start">
-        <h4 className="text-txt mt-4 mb-2 text-lg font-extrabold" {...props} />
+        <h4 className="text-txt text-lg font-extrabold" {...props} />
       </div>
       <div className="h-1 w-22 rounded-full bg-current"></div>
     </div>
