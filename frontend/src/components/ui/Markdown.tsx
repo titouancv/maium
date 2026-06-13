@@ -48,9 +48,9 @@ const COMPONENTS: Components = {
   ),
   li: (props) => <li className="leading-relaxed" {...props} />,
   blockquote: (props) => (
-    <div className="flex items-center gap-4">
-      <div className="bg-primary my-1 w-1 self-stretch rounded-full"></div>
-      <blockquote className="italic" {...props} />
+    <div className="my-3 flex items-stretch gap-4">
+      <div className="bg-primary w-1 shrink-0 self-stretch rounded-full"></div>
+      <blockquote className="text-txt italic [&>p]:my-0" {...props} />
     </div>
   ),
   code: (props) => (
