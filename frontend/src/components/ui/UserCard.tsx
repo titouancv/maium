@@ -34,8 +34,7 @@ export function UserCard({
     subtitle ?? (location ? `@${pseudo} • ${location}` : `@${pseudo}`);
 
   const defaultClassName =
-    className ??
-    "text-txt hover:text-primary flex w-full gap-2 rounded-sm py-3";
+    className ?? "text-txt hover:text-primary flex w-full gap-2 py-3";
 
   const content = (
     <div className="min-w-0 flex-1 text-left">
