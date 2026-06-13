@@ -29,6 +29,7 @@ export function StoryActions({
   const t = useTranslations("stories");
   const router = useRouter();
   const setLiked = useStoriesStore((s) => s.setLiked);
+  const setReposted = useStoriesStore((s) => s.setReposted);
   const addStory = useStoriesStore((s) => s.addStory);
   const removeStory = useStoriesStore((s) => s.removeStory);
   const currentUser = useCurrentUserStore((s) => s.user);
@@ -93,14 +94,28 @@ export function StoryActions({
     if (busy || !currentUser) return;
     setBusy(true);
     try {
-      const res = await fetch(API.STORY_REPOST(story.id), { method: "POST" });
-      if (res.ok) {
-        const { story: newStory } = await res.json();
-        addStory(newStory, {
-          pseudo: currentUser.pseudo,
-          first_name: currentUser.first_name,
-          last_name: currentUser.last_name,
+      // A story can only be reposted once: toggle between creating the repost
+      // and removing it.
+      if (story.repostedByMe) {
+        const res = await fetch(API.STORY_REPOST(story.id), {
+          method: "DELETE",
         });
+        if (res.ok) {
+          const { id } = await res.json();
+          setReposted(story.id, false);
+          removeStory(id); // drops the repost from the viewer's own group
+        }
+      } else {
+        const res = await fetch(API.STORY_REPOST(story.id), { method: "POST" });
+        if (res.ok) {
+          const { story: newStory } = await res.json();
+          addStory(newStory, {
+            pseudo: currentUser.pseudo,
+            first_name: currentUser.first_name,
+            last_name: currentUser.last_name,
+          });
+          setReposted(story.id, true);
+        }
       }
     } finally {
       setBusy(false);
@@ -160,13 +175,13 @@ export function StoryActions({
         {t("like")}
       </Button>
       <Button
-        variant="outline"
+        variant={story.repostedByMe ? "primary" : "outline"}
         size="none"
         onClick={handleRepost}
         disabled={busy}
         className="w-full py-2"
       >
-        {t("repost")}
+        {t(story.repostedByMe ? "removeRepost" : "repost")}
       </Button>
     </div>
   );

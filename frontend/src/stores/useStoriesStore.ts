@@ -18,6 +18,8 @@ interface StoriesStore {
   markSeen: (storyId: string) => void;
   /** Toggle the viewer's like on a story (optimistic). */
   setLiked: (storyId: string, liked: boolean) => void;
+  /** Toggle the viewer's repost flag on a story (optimistic). */
+  setReposted: (storyId: string, reposted: boolean) => void;
   /** Insert a freshly created/ reposted story into the viewer's own group. */
   addStory: (story: StoryData, author: UserSummary) => void;
   /** Remove a story (optimistic); drops the author's group if it becomes empty. */
@@ -61,6 +63,20 @@ export const useStoriesStore = create<StoriesStore>((set) => ({
               ...g,
               stories: g.stories.map((s) =>
                 s.id === storyId ? { ...s, likedByMe: liked } : s,
+              ),
+            }
+          : g,
+      ),
+    })),
+
+  setReposted: (storyId, reposted) =>
+    set((state) => ({
+      groups: state.groups.map((g) =>
+        g.stories.some((s) => s.id === storyId)
+          ? {
+              ...g,
+              stories: g.stories.map((s) =>
+                s.id === storyId ? { ...s, repostedByMe: reposted } : s,
               ),
             }
           : g,

@@ -19,6 +19,8 @@ export interface StoryData {
   seen: boolean;
   /** Whether the current viewer has liked this story. */
   likedByMe: boolean;
+  /** Whether the current viewer has already reposted this story. */
+  repostedByMe: boolean;
 }
 
 /** The four Notion-like block kinds, each serialized to a markdown primitive. */

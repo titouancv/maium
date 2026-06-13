@@ -37,6 +37,23 @@ export async function POST(
       );
     }
 
+    // A story can only be reposted once: bail if the viewer already has a repost
+    // of it (the client toggles to « remove repost » in that case).
+    const { data: existing } = await supabase
+      .from("stories")
+      .select("id")
+      .eq("author_id", user.id)
+      .eq("is_repost", true)
+      .eq("original_story_id", original.id)
+      .maybeSingle();
+
+    if (existing) {
+      return NextResponse.json(
+        { error: "Already reposted" },
+        { status: 409 },
+      );
+    }
+
     // Copy the content so the repost renders standalone, and keep references to
     // the original story / author for the « Republié depuis @… » mention.
     const { data, error } = await supabase
@@ -56,10 +73,55 @@ export async function POST(
     const story = mapStoryFromDb(data as unknown as DbStoryRaw, {
       seen: true,
       likedByMe: false,
+      repostedByMe: false,
     });
     return NextResponse.json({ story }, { status: 201 });
   } catch (error) {
     console.error("[POST /api/stories/[id]/repost]", error);
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
+  }
+}
+
+/**
+ * Remove the viewer's repost of the story `id`. Deletes the viewer's repost row
+ * (RLS restricts deletes to the author) and returns its id so the client can
+ * drop it from the feed.
+ */
+export async function DELETE(
+  _request: NextRequest,
+  { params }: { params: Promise<{ id: string }> },
+) {
+  try {
+    const supabase = await createClient();
+    const {
+      data: { user },
+      error: authError,
+    } = await supabase.auth.getUser();
+
+    if (authError || !user) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    const { id } = await params;
+
+    const { data, error } = await supabase
+      .from("stories")
+      .delete()
+      .eq("author_id", user.id)
+      .eq("is_repost", true)
+      .eq("original_story_id", id)
+      .select("id")
+      .maybeSingle();
+
+    if (error) throw error;
+
+    if (!data) {
+      return NextResponse.json({ error: "Repost not found" }, { status: 404 });
+    }
+
+    return NextResponse.json({ id: data.id });
+  } catch (error) {
+    console.error("[DELETE /api/stories/[id]/repost]", error);
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }

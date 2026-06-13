@@ -38,6 +38,7 @@ export async function POST(request: NextRequest) {
     const story = mapStoryFromDb(data as unknown as DbStoryRaw, {
       seen: true,
       likedByMe: false,
+      repostedByMe: false,
     });
     return NextResponse.json({ story }, { status: 201 });
   } catch (error) {

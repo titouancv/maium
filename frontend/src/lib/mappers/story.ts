@@ -27,7 +27,7 @@ export const STORY_AUTHOR_SELECT =
 
 export function mapStoryFromDb(
   raw: DbStoryRaw,
-  flags: { seen: boolean; likedByMe: boolean },
+  flags: { seen: boolean; likedByMe: boolean; repostedByMe: boolean },
 ): StoryData {
   return {
     id: raw.id,
@@ -46,5 +46,6 @@ export function mapStoryFromDb(
     createdAt: new Date(raw.created_at).getTime(),
     seen: flags.seen,
     likedByMe: flags.likedByMe,
+    repostedByMe: flags.repostedByMe,
   };
 }

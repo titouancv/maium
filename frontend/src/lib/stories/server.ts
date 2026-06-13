@@ -43,7 +43,7 @@ export async function getStoriesFeed(): Promise<StoryGroup[]> {
 
   const storyIds = rows.map((r) => r.id);
 
-  const [views, likes] = await Promise.all([
+  const [views, likes, reposts] = await Promise.all([
     supabase
       .from("story_views")
       .select("story_id")
@@ -54,10 +54,21 @@ export async function getStoriesFeed(): Promise<StoryGroup[]> {
       .select("story_id")
       .eq("liker_id", authUser.id)
       .in("story_id", storyIds),
+    // The viewer's own reposts of these stories — drives the « repost / remove
+    // repost » toggle so a story can only be reposted once.
+    supabase
+      .from("stories")
+      .select("original_story_id")
+      .eq("author_id", authUser.id)
+      .eq("is_repost", true)
+      .in("original_story_id", storyIds),
   ]);
 
   const seenIds = new Set((views.data ?? []).map((v) => v.story_id));
   const likedIds = new Set((likes.data ?? []).map((l) => l.story_id));
+  const repostedIds = new Set(
+    (reposts.data ?? []).map((r) => r.original_story_id),
+  );
 
   // Group by author, preserving the oldest-first order within each group.
   const groups = new Map<string, StoryGroup>();
@@ -66,6 +77,7 @@ export async function getStoriesFeed(): Promise<StoryGroup[]> {
     const story: StoryData = mapStoryFromDb(row, {
       seen: seenIds.has(row.id),
       likedByMe: likedIds.has(row.id),
+      repostedByMe: repostedIds.has(row.id),
     });
 
     let group = groups.get(row.author_id);
