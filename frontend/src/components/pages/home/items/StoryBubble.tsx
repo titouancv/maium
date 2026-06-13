@@ -34,17 +34,13 @@ export function StoryBubble({
       >
         <ProfilePhoto
           pseudo={author.pseudo}
+          displayName={{
+            firstName: author.first_name,
+            lastName: author.last_name,
+          }}
           isFramed={hasUnseen}
           className={isEmptyOwner ? "opacity-50" : undefined}
         />
-
-        {/* Author name, sitting on the photo's bottom surface fade */}
-        <div className="flex flex-col text-left">
-          <p className="truncate leading-none">{author.first_name}</p>
-          <p className="-mt-0.5 ml-2 truncate text-xl leading-none font-extrabold">
-            {author.last_name}
-          </p>
-        </div>
       </button>
       {onAddStory && <AddStoryBubble onClick={onAddStory} />}
     </div>

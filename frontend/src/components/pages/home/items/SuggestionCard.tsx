@@ -32,13 +32,10 @@ export const SuggestionCard = ({ user }: SuggestionCardProps) => {
         }
         className="hover:text-primary relative min-w-0 flex-1"
       >
-        <ProfilePhoto pseudo={user.pseudo} />
-        <div className="absolute right-2 bottom-0 left-2 flex flex-col">
-          <p className="truncate leading-none">{user.first_name}</p>
-          <p className="-mt-0.5 ml-2 truncate text-xl leading-none font-extrabold">
-            {user.last_name}
-          </p>
-        </div>
+        <ProfilePhoto
+          pseudo={user.pseudo}
+          displayName={{ firstName: user.first_name, lastName: user.last_name }}
+        />
       </Link>
       <Button
         variant={following ? "outline" : "primary"}
