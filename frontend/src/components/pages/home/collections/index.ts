@@ -5,5 +5,3 @@ export * from "./StatsRow";
 export * from "./StatsRowSkeleton";
 export * from "./SuggestionsList";
 export * from "./SuggestionsListSkeleton";
-export * from "./StoriesRow";
-export * from "./StoriesRowSkeleton";

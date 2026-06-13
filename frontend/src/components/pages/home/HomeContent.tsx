@@ -17,12 +17,11 @@ import { GreetingSection } from "./items/GreetingSection";
 import {
   StatsRow,
   StatsRowSkeleton,
-  StoriesRow,
-  StoriesRowSkeleton,
   SuggestionsList,
   SuggestionsListSkeleton,
   WelcomeCelebration,
 } from "./collections";
+import { StoriesRow, StoriesRowSkeleton } from "@/components/stories";
 import { Title } from "@/components/ui";
 
 interface HomeContentProps {
