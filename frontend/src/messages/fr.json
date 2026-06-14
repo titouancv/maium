@@ -293,6 +293,7 @@
     "messageButton": "Message",
     "followers": "{count} abonnés",
     "following": "{count} abonnements",
+    "joinRank": "{rank} à rejoindre maium",
     "professionalExperiences": "Expériences professionnelles",
     "educationalExperiences": "Formation",
     "personalExperiences": "Expériences personnelles",

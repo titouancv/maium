@@ -13,6 +13,8 @@ export interface ProfileBundle {
   user: UserData;
   isOwner: boolean;
   isAuthenticated: boolean;
+  /** Signup timestamp, used to derive the "Nth on maium" join rank. */
+  createdAt: string;
 }
 
 /**
@@ -26,7 +28,7 @@ export const getProfileBundle = cache(
       admin
         .from("users")
         .select(
-          `id, first_name, last_name, pseudo, dob, location, nationality, bio, ${USER_PROFILE_SELECT}`,
+          `id, created_at, first_name, last_name, pseudo, dob, location, nationality, bio, ${USER_PROFILE_SELECT}`,
         )
         .eq("pseudo", pseudo)
         .single(),
@@ -34,7 +36,9 @@ export const getProfileBundle = cache(
       getCurrentUserProfile(),
     ]);
 
-    const raw = profileResult.data as (DbUserRaw & { id: string }) | null;
+    const raw = profileResult.data as
+      | (DbUserRaw & { id: string; created_at: string })
+      | null;
     if (!raw) return null;
 
     return {
@@ -42,7 +46,28 @@ export const getProfileBundle = cache(
       user: mapUserFromDb(raw),
       isOwner: currentUser?.pseudo === pseudo,
       isAuthenticated: !!authUser,
+      createdAt: raw.created_at,
     };
+  },
+);
+
+/**
+ * The profile's 1-indexed signup position ("Nth on maium"): how many users
+ * had signed up by the time this one did. Depends on the cached
+ * {@link getProfileBundle}, so it streams in behind its own Suspense boundary.
+ */
+export const getProfileRank = cache(
+  async (pseudo: string): Promise<number | null> => {
+    const bundle = await getProfileBundle(pseudo);
+    if (!bundle) return null;
+
+    const admin = createAdminClient();
+    const { count } = await admin
+      .from("users")
+      .select("*", { count: "exact", head: true })
+      .lte("created_at", bundle.createdAt);
+
+    return count ?? null;
   },
 );
 

@@ -14,6 +14,8 @@ interface ProfileContentProps {
   user: UserData;
   /** Streamed follow counts + follow/message/settings buttons (round-trip 2). */
   followSlot: React.ReactNode;
+  /** Streamed "Nth on maium" join rank (round-trip 2). */
+  rankSlot: React.ReactNode;
   /** Streamed stories for this profile; undefined when the viewer is signed out. */
   storiesPromise?: Promise<StoryGroup | null>;
 }
@@ -21,6 +23,7 @@ interface ProfileContentProps {
 export const ProfileContent = ({
   user,
   followSlot,
+  rankSlot,
   storiesPromise,
 }: ProfileContentProps) => {
   const t = useTranslations("profile");
@@ -63,6 +66,7 @@ export const ProfileContent = ({
               <p className="text-txt-muted text-sm">{user.location}</p>
             )}
           </div>
+          {rankSlot}
           {followSlot}
         </div>
       </aside>
