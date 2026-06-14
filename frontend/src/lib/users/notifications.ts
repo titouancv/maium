@@ -19,6 +19,13 @@ export interface HomeNotification {
 /** Max notifications surfaced in the overlay. */
 const NOTIFICATIONS_LIMIT = 30;
 
+/**
+ * Notification kinds currently hidden from the user. The feature (DB trigger,
+ * type, rendering) is kept intact — these are only filtered out at read time,
+ * so re-enabling a kind is a one-line change. `profile_view` is disabled for now.
+ */
+const HIDDEN_KINDS: NotificationKind[] = ["profile_view"];
+
 interface NotificationRow {
   id: number;
   kind: NotificationKind;
@@ -47,6 +54,7 @@ export async function getNotifications(
        actor:actor_id ( pseudo, first_name, last_name, location )`,
     )
     .eq("user_id", authUser.id)
+    .not("kind", "in", `(${HIDDEN_KINDS.join(",")})`)
     .order("created_at", { ascending: false })
     .limit(limit);
   if (error) throw error;
@@ -76,6 +84,7 @@ export async function getUnreadNotificationsCount(): Promise<number> {
     .from("notifications")
     .select("*", { count: "exact", head: true })
     .eq("user_id", authUser.id)
+    .not("kind", "in", `(${HIDDEN_KINDS.join(",")})`)
     .is("read_at", null);
   return count ?? 0;
 }
@@ -90,6 +99,7 @@ export async function markNotificationsRead(): Promise<void> {
     .from("notifications")
     .update({ read_at: new Date().toISOString() })
     .eq("user_id", authUser.id)
+    .not("kind", "in", `(${HIDDEN_KINDS.join(",")})`)
     .is("read_at", null);
   if (error) throw error;
 }
