@@ -14,3 +14,5 @@ export { LongTextForm } from "./LongTextForm";
 export { DateRangeForm } from "./DateRangeForm";
 export { ExperiencesForm } from "./ExperiencesForm";
 export { LinkListForm } from "./LinkListForm";
+export { SelectForm } from "./SelectForm";
+export type { SelectOption } from "./SelectForm";

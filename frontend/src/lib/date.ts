@@ -12,6 +12,21 @@ export function formatTimestampToDate(ts: number): string {
   return `${dd}/${mm}/${d.getUTCFullYear()}`;
 }
 
+/**
+ * Whether someone born at `dobTs` (UTC-midnight epoch ms, as produced by the
+ * date inputs and stored on `users.dob`) is at least `years` old today.
+ * Computed in UTC to stay consistent with how dates of birth are stored.
+ */
+export function isAtLeastYearsOld(dobTs: number, years: number): boolean {
+  const now = new Date();
+  const cutoff = Date.UTC(
+    now.getUTCFullYear() - years,
+    now.getUTCMonth(),
+    now.getUTCDate(),
+  );
+  return dobTs <= cutoff;
+}
+
 /** Format an ISO date string as a locale-aware `HH:MM` time. */
 export function formatTime(dateStr: string, locale: string): string {
   return new Date(dateStr).toLocaleTimeString(locale, {

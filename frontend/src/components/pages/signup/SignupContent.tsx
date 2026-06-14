@@ -4,7 +4,14 @@ import { useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { useRouter } from "@/i18n/navigation";
-import { ROUTES, API, SIGNUP_FORM_ID, EXPERIENCE_NAMESPACE } from "@/constants";
+import {
+  ROUTES,
+  API,
+  SIGNUP_FORM_ID,
+  EXPERIENCE_NAMESPACE,
+  GENDERS,
+  type Gender,
+} from "@/constants";
 import { Form } from "../../form/Form";
 import type { FormProps } from "../../form/Form";
 import type { Experience } from "@/types/experience";
@@ -38,6 +45,8 @@ export const SignupContent = ({
   const tCommon = useTranslations("common");
   const tNav = useTranslations("nav");
   const tSignup = useTranslations("auth.signup");
+  const tForm = useTranslations("form");
+  const tGender = useTranslations("gender");
 
   // Persist a slice of the draft to the user row. Each wizard step saves
   // incrementally so a refresh/resume never loses progress.
@@ -120,6 +129,20 @@ export const SignupContent = ({
           onChange: nextStep,
         };
       case 4:
+        return {
+          ...base,
+          title: tForm("genderTitle"),
+          type: "select",
+          options: GENDERS.map((value) => ({
+            value,
+            label: tGender(value),
+          })),
+          defaultValue: draft.gender ?? GENDERS[0],
+          onChange: (value) =>
+            setDraft((d) => ({ ...d, gender: value as Gender })),
+          onPrimary: () => nextStep({ gender: draft.gender ?? GENDERS[0] }),
+        };
+      case 5:
         return {
           ...base,
           type: "experiences",

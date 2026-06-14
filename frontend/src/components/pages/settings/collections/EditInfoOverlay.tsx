@@ -2,7 +2,13 @@
 
 import { useState } from "react";
 import { useTranslations } from "next-intl";
-import { API, SIGNUP_FORM_ID, EXPERIENCE_NAMESPACE } from "@/constants";
+import {
+  API,
+  SIGNUP_FORM_ID,
+  EXPERIENCE_NAMESPACE,
+  GENDERS,
+  type Gender,
+} from "@/constants";
 import { Form } from "@/components/form";
 import type { FormProps } from "@/components/form";
 import type { UserData } from "@/types/user";
@@ -13,6 +19,7 @@ export type EditableField =
   | "name"
   | "pseudo"
   | "dob"
+  | "gender"
   | "phone"
   | "nationality"
   | "location"
@@ -35,8 +42,12 @@ interface Props {
 export const EditInfoOverlay = ({ field, user, onClose, onSaved }: Props) => {
   const t = useTranslations("settings");
   const tCommon = useTranslations("common");
+  const tGender = useTranslations("gender");
 
   const [isSaving, setIsSaving] = useState(false);
+  const [currentGender, setCurrentGender] = useState<Gender>(
+    user.gender ?? GENDERS[0],
+  );
 
   const [currentExperiences, setCurrentExperiences] = useState<Experience[]>(
     () => {
@@ -117,6 +128,19 @@ export const EditInfoOverlay = ({ field, user, onClose, onSaved }: Props) => {
           formId: SIGNUP_FORM_ID,
           onChange: (d) => save({ dob: d.dob }),
           defaultValue: user.dob ?? null,
+        };
+      case "gender":
+        return {
+          ...base,
+          title: t("editGender"),
+          type: "select",
+          options: GENDERS.map((value) => ({
+            value,
+            label: tGender(value),
+          })),
+          defaultValue: user.gender ?? GENDERS[0],
+          onChange: (value) => setCurrentGender(value as Gender),
+          onPrimary: () => save({ gender: currentGender }),
         };
       case "phone":
         return {

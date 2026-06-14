@@ -1,7 +1,8 @@
 "use client";
 
-import { use, useEffect, useState } from "react";
+import { use, useEffect, useRef, useState } from "react";
 import dynamic from "next/dynamic";
+import { useSearchParams } from "next/navigation";
 import { AnimatePresence } from "framer-motion";
 import { useStoriesStore } from "@/stores/useStoriesStore";
 import { useCurrentUserStore } from "@/stores/useCurrentUserStore";
@@ -46,6 +47,27 @@ export function StoriesRow({ storiesPromise }: StoriesRowProps) {
 
   const [readerStart, setReaderStart] = useState<StoryPosition | null>(null);
   const [isCreating, setIsCreating] = useState(false);
+
+  // Deep link: a story notification links to `/?story=<id>`. Locate that story
+  // in the feed and open the reader on it, then strip the param so closing the
+  // reader doesn't reopen it. Re-runs as `groups` hydrate (the story may not be
+  // loaded on first paint); a ref guards against handling it more than once.
+  const storyParam = useSearchParams().get("story");
+  const handledStoryRef = useRef<string | null>(null);
+  useEffect(() => {
+    if (!storyParam || handledStoryRef.current === storyParam) return;
+    for (let groupIndex = 0; groupIndex < groups.length; groupIndex++) {
+      const storyIndex = groups[groupIndex].stories.findIndex(
+        (s) => s.id === storyParam,
+      );
+      if (storyIndex >= 0) {
+        handledStoryRef.current = storyParam;
+        setReaderStart({ groupIndex, storyIndex });
+        window.history.replaceState(null, "", window.location.pathname);
+        break;
+      }
+    }
+  }, [storyParam, groups]);
 
   const openReader = (groupIndex: number) => {
     const group = groups[groupIndex];

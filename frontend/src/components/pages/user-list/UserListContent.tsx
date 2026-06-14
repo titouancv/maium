@@ -14,7 +14,7 @@ export function UserListContent({ title, children }: UserListContentProps) {
 
   return (
     <PageLayout title={title} backLabel={t("backButton")}>
-      <div className="w-full max-w-7xl">{children}</div>
+      <div className="w-full max-w-2xl">{children}</div>
     </PageLayout>
   );
 }

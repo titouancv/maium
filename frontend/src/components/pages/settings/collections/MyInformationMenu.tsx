@@ -8,15 +8,16 @@ import { EditInfoOverlay, type EditableField } from "./EditInfoOverlay";
 import type { UserData } from "@/types";
 import { formatTimestampToDate } from "@/lib/date";
 
-interface PersonalDataMenuProps {
+interface MyInformationMenuProps {
   userPromise: Promise<UserData | null>;
 }
 
 /** Unwraps the streamed user promise and renders the editable data menus. */
-export const PersonalDataMenu = ({ userPromise }: PersonalDataMenuProps) => {
+export const MyInformationMenu = ({ userPromise }: MyInformationMenuProps) => {
   const user = use(userPromise);
   const t = useTranslations("settings");
   const tHome = useTranslations("home");
+  const tGender = useTranslations("gender");
   const router = useRouter();
   const [editingField, setEditingField] = useState<EditableField | null>(null);
 
@@ -44,6 +45,11 @@ export const PersonalDataMenu = ({ userPromise }: PersonalDataMenuProps) => {
               value:
                 user.dob != null ? formatTimestampToDate(user.dob) : undefined,
               onClick: () => setEditingField("dob"),
+            },
+            {
+              label: t("gender"),
+              value: user.gender ? tGender(user.gender) : undefined,
+              onClick: () => setEditingField("gender"),
             },
             {
               label: t("bio"),

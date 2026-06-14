@@ -2,6 +2,7 @@
 
 import { useTranslations } from "next-intl";
 import { ProfilePhoto } from "@/components/ui";
+import { cn } from "@/lib/utils";
 import type { StoryGroup } from "@/types/story";
 import { AddStoryBubble } from "./AddStoryBubble";
 
@@ -10,6 +11,10 @@ interface StoryBubbleProps {
   onOpen: () => void;
   onAddStory?: () => void;
   isEmptyOwner?: boolean;
+  /** Override the bubble width (defaults to the home row's fixed `w-44`). */
+  className?: string;
+  /** Hide the name overlay (e.g. desktop profile, where @pseudo shows below). */
+  hideName?: boolean;
 }
 
 export function StoryBubble({
@@ -17,6 +22,8 @@ export function StoryBubble({
   onOpen,
   onAddStory,
   isEmptyOwner,
+  className,
+  hideName,
 }: StoryBubbleProps) {
   const t = useTranslations("stories");
   const { author, hasUnseen } = group;
@@ -30,14 +37,18 @@ export function StoryBubble({
             ? t("addStory")
             : t("openStories", { name: author.first_name })
         }
-        className="hover:text-primary relative flex w-44 min-w-0 shrink-0 cursor-pointer flex-col gap-2"
+        className={cn(
+          "hover:text-primary relative flex w-44 min-w-0 shrink-0 cursor-pointer flex-col gap-2",
+          className,
+        )}
       >
         <ProfilePhoto
           pseudo={author.pseudo}
-          displayName={{
-            firstName: author.first_name,
-            lastName: author.last_name,
-          }}
+          displayName={
+            hideName
+              ? undefined
+              : { firstName: author.first_name, lastName: author.last_name }
+          }
           isFramed={!isEmptyOwner}
           isFrameMuted={!hasUnseen}
         />

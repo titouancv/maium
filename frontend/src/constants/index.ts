@@ -5,12 +5,14 @@ export const ROUTES = {
   SIGNUP: "/signup",
   SETTINGS: "/settings",
   SETTINGS_ACCOUNT: "/settings/account",
-  SETTINGS_PERSONAL_DATA: "/settings/personal-data",
+  SETTINGS_MY_INFORMATION: "/settings/my-information",
   SETTINGS_PERSONALIZATION: "/settings/personalization",
   AUTH_CALLBACK: "/auth/callback",
   PROFILE: (pseudo: string) => `/profile/${pseudo}`,
   PROFILE_FOLLOWERS: (pseudo: string) => `/profile/${pseudo}/followers`,
   PROFILE_FOLLOWING: (pseudo: string) => `/profile/${pseudo}/following`,
+  /** Home with the story reader deep-linked open (opened by `StoriesRow`). */
+  STORY: (id: string) => `/?story=${id}`,
   PRIVACY_POLICY: "/privacy-policy",
   MESSAGES: "/messages",
   CONVERSATION: (id: string) => `/messages/${id}`,
@@ -35,6 +37,8 @@ export const API = {
   MESSAGES_CONVERSATION_READ: (id: string) =>
     `/api/messages/conversations/${id}/read`,
   HOME_STATS: "/api/home/stats",
+  HOME_NOTIFICATIONS: "/api/home/notifications",
+  HOME_NOTIFICATIONS_READ: "/api/home/notifications/read",
   ANALYZE_JOB: "/api/analyze-job",
   ANALYSIS: (id: string) => `/api/analysis/${id}`,
   HISTORY: "/api/history",
@@ -44,7 +48,6 @@ export const API = {
   STORIES: "/api/stories",
   STORY: (id: string) => `/api/stories/${id}`,
   STORY_VIEW: (id: string) => `/api/stories/${id}/view`,
-  STORY_VIEWERS: (id: string) => `/api/stories/${id}/viewers`,
   STORY_LIKE: (id: string) => `/api/stories/${id}/like`,
   STORY_REPOST: (id: string) => `/api/stories/${id}/repost`,
 } as const;
@@ -55,6 +58,9 @@ export const EXTERNAL_API = {
 } as const;
 
 export const SIGNUP_FORM_ID = "signup-step-form";
+
+/** Minimum age (in years) required to create an account. */
+export const MIN_SIGNUP_AGE = 16;
 
 // --- Job-analysis pipeline -------------------------------------------------
 
@@ -112,3 +118,8 @@ export const EXPERIENCE_NAMESPACE = {
 
 export type ExperienceNamespace =
   (typeof EXPERIENCE_NAMESPACE)[keyof typeof EXPERIENCE_NAMESPACE];
+
+/** Allowed gender values (stored as canonical codes; labels are translated). */
+export const GENDERS = ["male", "female", "other"] as const;
+
+export type Gender = (typeof GENDERS)[number];

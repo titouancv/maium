@@ -6,7 +6,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useRouter } from "@/i18n/navigation";
 import { API, ROUTES } from "@/constants";
 import { SearchLayout } from "@/components/layout";
-import { SearchInput } from "@/components/ui";
+import { SearchInput, UserCard } from "@/components/ui";
 import type { UserSummary } from "@/types";
 
 interface SearchOverlayProps {
@@ -102,23 +102,14 @@ export function SearchOverlay({ onClose, onSelect }: SearchOverlayProps) {
                   <p className="text-sm">{t("searching")}</p>
                 ) : (
                   <ul>
-                    {results.map((user, idx) => (
+                    {results.map((user) => (
                       <li key={user.pseudo}>
-                        <button
-                          key={idx}
-                          className="text-txt hover:text-primary flex w-full cursor-pointer gap-2 rounded-sm py-3"
+                        <UserCard
+                          {...user}
                           onClick={() => handleSelect(user.pseudo)}
-                        >
-                          <div className="min-w-0 text-left">
-                            <p className="truncate">
-                              {user.first_name} {user.last_name}
-                            </p>
-                            <p className="text-txt-muted truncate text-xs">
-                              {user.pseudo}
-                              {user.location ? ` • ${user.location}` : ""}
-                            </p>
-                          </div>
-                        </button>
+                          showFollow={!onSelect}
+                          initialFollowing={user.is_following ?? false}
+                        />
                       </li>
                     ))}
                   </ul>

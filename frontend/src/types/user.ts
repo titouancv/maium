@@ -1,3 +1,4 @@
+import type { Gender } from "@/constants";
 import { Experience } from "./experience";
 
 export interface Hobby {
@@ -12,6 +13,8 @@ export interface UserSummary {
   first_name: string;
   last_name: string;
   location?: string | null;
+  /** Whether the current viewer follows this user (drives the follow button). */
+  is_following?: boolean;
 }
 
 /** A user surfaced as a connection suggestion, with their follower count. */
@@ -27,6 +30,7 @@ export interface UserData {
   last_name: string;
   pseudo: string;
   dob: number | null;
+  gender?: Gender | null;
   onboarding_completed?: boolean;
   phone?: string | null;
   nationality?: string | null;

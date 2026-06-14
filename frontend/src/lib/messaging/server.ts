@@ -107,47 +107,6 @@ export async function getConversations(): Promise<Conversation[]> {
   return rows.map(mapConversation);
 }
 
-/**
- * Number of the current user's conversations with an unread incoming message —
- * i.e. the newest message wasn't sent by them and arrived after their
- * `last_read_at` (or they've never read it). Reuses the denormalized
- * `last_message_*` columns, so it's a single indexed read. Returns 0 when
- * signed out.
- */
-export async function getUnreadConversationsCount(): Promise<number> {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  if (!user) return 0;
-
-  const { data } = await supabase
-    .from("conversation_members")
-    .select(
-      `last_read_at,
-       conversations:conversation_id ( last_message_at, last_message_sender_id )`,
-    )
-    .eq("user_id", user.id);
-
-  type Row = {
-    last_read_at: string | null;
-    conversations: {
-      last_message_at: string | null;
-      last_message_sender_id: string | null;
-    } | null;
-  };
-
-  const rows = (data ?? []) as unknown as Row[];
-  return rows.reduce((count, row) => {
-    const conv = row.conversations;
-    if (!conv?.last_message_at) return count;
-    if (conv.last_message_sender_id === user.id) return count;
-    const unread =
-      !row.last_read_at || row.last_read_at < conv.last_message_at;
-    return unread ? count + 1 : count;
-  }, 0);
-}
-
 export async function getConversationById(
   conversationId: string,
 ): Promise<Conversation | null> {

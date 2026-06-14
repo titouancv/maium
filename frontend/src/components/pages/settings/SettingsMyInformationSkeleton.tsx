@@ -11,8 +11,8 @@ const MenuListSkeleton = ({ rows }: { rows: number }) => (
   </div>
 );
 
-/** Personal-data menu placeholder (the page frame renders around it). */
-export const SettingsPersonalDataSkeleton = () => (
+/** My-information menu placeholder (the page frame renders around it). */
+export const SettingsMyInformationSkeleton = () => (
   <div className="flex w-full max-w-2xl flex-col gap-12">
     <MenuListSkeleton rows={7} />
     <MenuListSkeleton rows={3} />

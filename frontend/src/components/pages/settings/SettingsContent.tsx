@@ -10,7 +10,10 @@ export const SettingsContent = () => {
 
   const menuItems = [
     { label: t("accountMenuLabel"), href: ROUTES.SETTINGS_ACCOUNT },
-    { label: t("personalDataMenuLabel"), href: ROUTES.SETTINGS_PERSONAL_DATA },
+    {
+      label: t("myInformationMenuLabel"),
+      href: ROUTES.SETTINGS_MY_INFORMATION,
+    },
     {
       label: t("personalizationMenuLabel"),
       href: ROUTES.SETTINGS_PERSONALIZATION,

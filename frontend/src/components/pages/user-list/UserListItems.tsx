@@ -24,7 +24,11 @@ export async function UserListItems({
     <ul>
       {users.map((user) => (
         <li key={user.pseudo}>
-          <UserCard {...user} />
+          <UserCard
+            {...user}
+            showFollow
+            initialFollowing={user.is_following ?? false}
+          />
         </li>
       ))}
     </ul>

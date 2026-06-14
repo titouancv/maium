@@ -1,19 +1,39 @@
 "use client";
 
+import { Suspense } from "react";
 import { useTranslations } from "next-intl";
 import { ChipList, ProfilePhoto, Section } from "@/components/ui";
 import { ExperienceList } from "@/components/ui";
 import type { UserData } from "@/types";
+import type { StoryGroup } from "@/types/story";
 import { HobbyList, SocialNetworkItem, UrlItem } from "@/components/ui";
+import { ProfileStoryPhoto } from "@/components/stories";
+import { useMediaQuery } from "@/hooks";
 
 interface ProfileContentProps {
   user: UserData;
   /** Streamed follow counts + follow/message/settings buttons (round-trip 2). */
   followSlot: React.ReactNode;
+  /** Streamed "Nth on maium" join rank (round-trip 2). */
+  rankSlot: React.ReactNode;
+  /** Streamed stories for this profile; undefined when the viewer is signed out. */
+  storiesPromise?: Promise<StoryGroup | null>;
 }
 
-export const ProfileContent = ({ user, followSlot }: ProfileContentProps) => {
+export const ProfileContent = ({
+  user,
+  followSlot,
+  rankSlot,
+  storiesPromise,
+}: ProfileContentProps) => {
   const t = useTranslations("profile");
+  const isDesktop = useMediaQuery("(min-width: 768px)");
+
+  // Name overlay shows on the mobile avatar only (desktop has the @pseudo below).
+  const displayName = isDesktop
+    ? undefined
+    : { firstName: user.first_name, lastName: user.last_name };
+  const photo = <ProfilePhoto pseudo={user.pseudo} displayName={displayName} />;
 
   const hasProfessional = (user.professional_experiences?.length ?? 0) > 0;
   const hasEducational = (user.educational_experiences?.length ?? 0) > 0;
@@ -27,13 +47,26 @@ export const ProfileContent = ({ user, followSlot }: ProfileContentProps) => {
     <div className="flex h-full w-full max-w-7xl flex-col gap-8 pt-0 md:flex-row">
       <aside className="flex flex-col gap-8 md:w-1/5">
         <div className="flex flex-col gap-4">
-          <ProfilePhoto pseudo={user.pseudo} />
+          <div className="px-4 md:px-0">
+            {storiesPromise ? (
+              <Suspense fallback={photo}>
+                <ProfileStoryPhoto
+                  storiesPromise={storiesPromise}
+                  pseudo={user.pseudo}
+                  displayName={displayName}
+                />
+              </Suspense>
+            ) : (
+              photo
+            )}
+          </div>
           <div className="flex flex-col gap-1">
             <p className="text-base">@{user.pseudo}</p>
             {user.location && (
               <p className="text-txt-muted text-sm">{user.location}</p>
             )}
           </div>
+          {rankSlot}
           {followSlot}
         </div>
       </aside>

@@ -1,10 +1,12 @@
 {
   "nav": {
-    "home": "maium",
+    "home": "Accueil",
     "settings": "Paramètres",
     "searchLabel": "Rechercher",
-    "messages": "messages",
-    "jobs": "offres"
+    "messages": "Messages",
+    "jobs": "Offres",
+    "profile": "Profil",
+    "privacyPolicy": "Politique de confidentialité"
   },
   "jobs": {
     "title": "Analyse d'offre",
@@ -108,12 +110,19 @@
       "evening": "Bonsoir, {name}",
       "night": "Encore debout, {name} ?"
     },
-    "stats": {
-      "followers": "Abonnés",
-      "following": "Abonnements",
-      "unread": "Messages non lus",
-      "profileViews": "Vues du profil",
-      "trendTitle": "vs. 7 derniers jours"
+    "notifications": {
+      "label": "Notifications",
+      "title": "Notifications",
+      "empty": "Aucune notification pour le moment",
+      "actionFollow": "vous suit",
+      "actionMessage": "vous a envoyé un message",
+      "actionProfileView": "a vu votre profil",
+      "storyLikeSingle": "{name} a aimé votre story",
+      "storyLikeDouble": "{name1} et {name2} ont aimé votre story",
+      "storyLikeMultiple": "{name1}, {name2} et {count} autres personnes ont aimé votre story",
+      "storyRepostSingle": "{name} a republié votre story",
+      "storyRepostDouble": "{name1} et {name2} ont republié votre story",
+      "storyRepostMultiple": "{name1}, {name2} et {count} autres personnes ont republié votre story"
     },
     "actions": {
       "analyzeTitle": "Analyser une offre",
@@ -185,7 +194,7 @@
     "title": "Paramètres",
     "backButton": "Retour",
     "accountMenuLabel": "Mon compte",
-    "personalDataMenuLabel": "Mes données personnelles",
+    "myInformationMenuLabel": "Mes informations",
     "privacyPolicyMenuLabel": "Politique de confidentialité",
     "logoutButton": "Se déconnecter",
     "deleteAccountButton": "Supprimer le compte",
@@ -203,6 +212,8 @@
     "professionalExperiencesLabel": "Expériences professionnelles",
     "educationalExperiencesLabel": "Parcours éducatif",
     "editNationality": "Modifier la nationalité",
+    "gender": "Genre",
+    "editGender": "Modifier le genre",
     "socialNetworks": "Réseaux sociaux",
     "hobbies": "Loisirs",
     "personalExperiences": "Expériences personnelles",
@@ -255,7 +266,8 @@
       "step4": {
         "title": "Vous êtes né(e) quand ?",
         "dobInvalid": "Veuillez entrer une date valide",
-        "dobFuture": "La date de naissance ne peut pas être dans le futur"
+        "dobFuture": "La date de naissance ne peut pas être dans le futur",
+        "dobTooYoung": "Vous devez avoir au moins {minAge} ans pour vous inscrire"
       },
       "step5": {
         "title": "Votre parcours"
@@ -274,6 +286,7 @@
     "fullNameTitle": "Comment vous appelez-vous ?",
     "pseudoTitle": "Choisissez votre pseudo",
     "dateTitle": "Vous êtes né(e) quand ?",
+    "genderTitle": "Quel est votre genre ?",
     "phoneNumberTitle": "Comment vous joindre ?",
     "locationTitle": "Où êtes-vous basé(e) ?",
     "socialNetworkTitle": "Vos liens",
@@ -290,6 +303,7 @@
     "messageButton": "Message",
     "followers": "{count} abonnés",
     "following": "{count} abonnements",
+    "joinRank": "{rank} à rejoindre maium",
     "professionalExperiences": "Expériences professionnelles",
     "educationalExperiences": "Formation",
     "personalExperiences": "Expériences personnelles",
@@ -302,6 +316,11 @@
     "followingTitle": "Abonnements",
     "noFollowers": "Aucun abonné pour l'instant",
     "noFollowing": "Aucun abonnement pour l'instant"
+  },
+  "gender": {
+    "male": "Homme",
+    "female": "Femme",
+    "other": "Autre"
   },
   "experience": {
     "professional": {
@@ -348,22 +367,65 @@
   "privacyPolicy": {
     "title": "Politique de confidentialité",
     "backButton": "Retour",
-    "lastUpdated": "Dernière mise à jour : 23 mai 2025",
-    "intro": "maium (\"nous\", \"notre\") s'engage à protéger votre vie privée. Cette politique explique quelles données nous collectons, pourquoi, et comment nous les utilisons.",
-    "section1Title": "1. Données collectées",
-    "section1Body": "Lors de la création de votre compte et de l'utilisation de maium, nous collectons : votre adresse e-mail, prénom et nom, nom d'utilisateur, date de naissance, numéro de téléphone (optionnel), nationalité, localisation, expériences professionnelles et éducatives, liens vers les réseaux sociaux, loisirs, compétences et projets. Nous collectons également des données d'authentification via Google et Apple OAuth.",
-    "section2Title": "2. Utilisation des données",
-    "section2Body": "Vos données servent à créer et afficher votre profil public, vous authentifier en toute sécurité, fournir les fonctionnalités de l'application (recherche, recommandations) et améliorer le service. Nous ne vendons pas vos données personnelles à des tiers.",
-    "section3Title": "3. Partage des données",
-    "section3Body": "Les informations de votre profil (nom, pseudo, expériences, loisirs, compétences, projets et liens) sont visibles par les autres utilisateurs de maium. Les données sensibles comme votre adresse e-mail, numéro de téléphone, date de naissance et nationalité ne sont jamais affichées publiquement.",
-    "section4Title": "4. Conservation des données",
-    "section4Body": "Vos données sont conservées tant que votre compte est actif. Lorsque vous supprimez votre compte, toutes vos données personnelles sont définitivement supprimées de nos systèmes dans un délai de 30 jours.",
-    "section5Title": "5. Vos droits",
-    "section5Body": "Vous avez le droit d'accéder, de corriger ou de supprimer vos données personnelles à tout moment depuis la page Paramètres. Pour toute autre demande, contactez-nous à titouancv@icloud.com.",
-    "section6Title": "6. Cookies",
-    "section6Body": "Nous utilisons uniquement des cookies strictement nécessaires pour l'authentification et la gestion de session. Aucun cookie publicitaire ou de suivi n'est utilisé.",
-    "section7Title": "7. Contact",
-    "section7Body": "Pour toute question concernant cette politique de confidentialité, contactez-nous à titouancv@icloud.com."
+    "lastUpdated": "Dernière mise à jour : 14 juin 2026",
+    "intro": "maium (« nous ») accorde une grande importance à la protection de vos données personnelles. La présente politique de confidentialité décrit, conformément au Règlement général sur la protection des données (RGPD), les données que nous collectons, les finalités et bases légales de leur traitement, leurs destinataires, leur durée de conservation ainsi que les droits dont vous disposez.",
+    "controllerTitle": "1. Responsable du traitement",
+    "controllerBody": "Le responsable du traitement de vos données personnelles est :\n\n[Raison sociale], [forme juridique] au capital de [montant], immatriculée sous le numéro [SIREN/RCS], dont le siège social est situé [adresse].\n\nPour toute question relative au traitement de vos données, vous pouvez nous contacter à l'adresse contact@maium.app.",
+    "dataCollectedTitle": "2. Données que nous collectons",
+    "dataCollectedBody": "Dans le cadre de la création de votre compte et de l'utilisation de maium, nous collectons les catégories de données suivantes :",
+    "dataCollectedItems": [
+      "Données d'identification et de profil : prénom, nom, nom d'utilisateur, adresse e-mail, date de naissance, genre, photo et biographie.",
+      "Données de contact et de localisation (facultatives) : numéro de téléphone, nationalité, localisation.",
+      "Données de parcours : expériences professionnelles, éducatives et personnelles, compétences, projets, loisirs et liens vers vos réseaux sociaux.",
+      "Contenus que vous publiez : stories, messages échangés avec d'autres utilisateurs, offres d'emploi soumises à l'analyse et CV générés.",
+      "Données d'authentification fournies par Google lors de votre connexion via OAuth.",
+      "Données techniques et d'usage : données de connexion, statistiques d'audience et préférences (thème, langue)."
+    ],
+    "purposesTitle": "3. Finalités et bases légales",
+    "purposesBody": "Vos données sont traitées pour les finalités suivantes, chacune reposant sur une base légale prévue par le RGPD :",
+    "purposesItems": [
+      "Création, gestion et affichage de votre profil public, et fourniture des fonctionnalités du service (recherche, messagerie, stories, abonnements) — exécution du contrat (art. 6.1.b).",
+      "Analyse des offres d'emploi et optimisation de votre CV au moyen d'outils d'intelligence artificielle — exécution du contrat et votre consentement (art. 6.1.a et b).",
+      "Authentification sécurisée, prévention de la fraude et des abus — intérêt légitime (art. 6.1.f).",
+      "Mesure d'audience et amélioration du service — intérêt légitime (art. 6.1.f).",
+      "Respect de nos obligations légales et réglementaires — obligation légale (art. 6.1.c)."
+    ],
+    "automatedProcessingTitle": "4. Traitements automatisés et intelligence artificielle",
+    "automatedProcessingBody": "maium utilise des services d'intelligence artificielle (Mistral AI) pour analyser les offres d'emploi que vous soumettez, évaluer leur correspondance avec votre profil et générer des CV optimisés. Ces traitements produisent des recommandations fournies à titre indicatif et ne donnent lieu à aucune décision produisant des effets juridiques à votre égard ou vous affectant de manière significative au sens de l'article 22 du RGPD. Vous restez libre d'utiliser ou non les suggestions générées.",
+    "recipientsTitle": "5. Destinataires et sous-traitants",
+    "recipientsBody": "Nous ne vendons jamais vos données personnelles. Les informations publiques de votre profil (nom, nom d'utilisateur, photo, biographie, expériences, compétences, projets, loisirs et liens) sont visibles par les autres utilisateurs de maium ; vos données sensibles (adresse e-mail, numéro de téléphone, date de naissance, nationalité) ne sont jamais affichées publiquement. Pour fournir le service, nous faisons appel à des sous-traitants qui agissent sur nos instructions :",
+    "recipientsItems": [
+      "Supabase — hébergement de la base de données, authentification et stockage des fichiers.",
+      "Google — authentification via OAuth et fourniture d'icônes de sites web.",
+      "Mistral AI — analyse des offres d'emploi et génération de CV.",
+      "Vercel — hébergement de l'application et mesure d'audience (Analytics et Speed Insights).",
+      "Photon / Komoot — suggestions d'adresses lors de la saisie de votre localisation."
+    ],
+    "transfersTitle": "6. Transferts de données hors de l'Union européenne",
+    "transfersBody": "Certains de nos sous-traitants peuvent traiter vos données en dehors de l'Union européenne. Dans ce cas, ces transferts sont encadrés par des garanties appropriées prévues par le RGPD, telles que les clauses contractuelles types de la Commission européenne ou une décision d'adéquation, afin d'assurer à vos données un niveau de protection équivalent à celui garanti au sein de l'Union européenne.",
+    "retentionTitle": "7. Durée de conservation",
+    "retentionBody": "Vos données sont conservées tant que votre compte est actif. Lorsque vous supprimez votre compte, l'ensemble de vos données personnelles est définitivement effacé de nos systèmes dans un délai maximal de 30 jours, sous réserve des durées de conservation imposées par la loi (notamment à des fins comptables ou probatoires).",
+    "securityTitle": "8. Sécurité des données",
+    "securityBody": "Nous mettons en œuvre des mesures techniques et organisationnelles appropriées pour protéger vos données contre tout accès non autorisé, perte ou divulgation : chiffrement des communications, contrôle d'accès strict et cloisonnement des données propre à chaque utilisateur. En cas de violation de données susceptible d'engendrer un risque pour vos droits et libertés, nous nous engageons à en informer l'autorité de contrôle compétente et, le cas échéant, les personnes concernées, conformément au RGPD.",
+    "rightsTitle": "9. Vos droits",
+    "rightsBody": "Conformément au RGPD, vous disposez à tout moment des droits suivants sur vos données personnelles. Vous pouvez en exercer la plupart directement depuis la page Paramètres, ou en nous écrivant à contact@maium.app :",
+    "rightsItems": [
+      "Droit d'accès : obtenir une copie des données que nous détenons sur vous.",
+      "Droit de rectification : corriger des données inexactes ou incomplètes.",
+      "Droit à l'effacement : supprimer votre compte et vos données.",
+      "Droit à la limitation du traitement et droit d'opposition.",
+      "Droit à la portabilité : recevoir vos données dans un format structuré et lisible par machine.",
+      "Droit de retirer votre consentement à tout moment, sans remettre en cause la licéité des traitements déjà effectués.",
+      "Droit d'introduire une réclamation auprès de l'autorité de contrôle compétente en matière de protection des données."
+    ],
+    "cookiesTitle": "10. Cookies et traceurs",
+    "cookiesBody": "Nous utilisons uniquement des cookies strictement nécessaires au fonctionnement du service, en particulier pour l'authentification et la gestion de votre session. Pour la mesure d'audience, nous avons recours à Vercel Analytics et Speed Insights, des outils respectueux de la vie privée qui ne déposent pas de cookies publicitaires et ne permettent pas de vous identifier individuellement. Aucun cookie de publicité ou de suivi tiers n'est utilisé.",
+    "minorsTitle": "11. Protection des mineurs",
+    "minorsBody": "maium n'est pas destiné aux personnes de moins de 16 ans : la création de compte est refusée en deçà de cet âge. Nous ne collectons pas sciemment de données relatives à des mineurs de moins de 16 ans sans le consentement des titulaires de l'autorité parentale. Si vous estimez qu'un mineur nous a communiqué des données sans cette autorisation, contactez-nous afin que nous procédions à leur suppression.",
+    "changesTitle": "12. Modifications de la politique",
+    "changesBody": "Nous sommes susceptibles de modifier la présente politique de confidentialité afin de refléter des évolutions légales, techniques ou fonctionnelles. Toute modification importante vous sera notifiée et la date de dernière mise à jour figurant en haut de cette page sera actualisée en conséquence.",
+    "contactTitle": "13. Contact",
+    "contactBody": "Pour toute question relative à la présente politique de confidentialité ou à l'exercice de vos droits, vous pouvez nous contacter à l'adresse contact@maium.app."
   },
   "messaging": {
     "title": "Messages",
@@ -390,6 +452,10 @@
     "newFollower": "{name} vous suit",
     "newFollowerGeneric": "Nouveau follower",
     "newMessage": "Nouveau message de {name}",
-    "newMessageGeneric": "Nouveau message"
+    "newMessageGeneric": "Nouveau message",
+    "storyLike": "{name} a aimé votre story",
+    "storyLikeGeneric": "Quelqu'un a aimé votre story",
+    "storyRepost": "{name} a republié votre story",
+    "storyRepostGeneric": "Quelqu'un a republié votre story"
   }
 }

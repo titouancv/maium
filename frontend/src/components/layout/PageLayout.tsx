@@ -31,7 +31,15 @@ export const PageLayout = ({
   const tabTitle = documentTitle ?? (typeof title === "string" ? title : null);
 
   useEffect(() => {
-    if (tabTitle) document.title = tabTitle.toLowerCase() + " • maium";
+    if (!tabTitle) return;
+    // Capture the current title so it can be restored on unmount — otherwise an
+    // overlay rendered over a still-mounted page leaves the tab name stuck on
+    // the overlay's title after it closes (the page's effect never re-runs).
+    const previous = document.title;
+    document.title = tabTitle.toLowerCase() + " • maium";
+    return () => {
+      document.title = previous;
+    };
   }, [tabTitle]);
 
   return (
@@ -60,9 +68,9 @@ export const PageLayout = ({
       </div>
 
       <>
-        <div className="absolute right-0 bottom-0 left-0 h-12 [mask-image:linear-gradient(to_top,black_20%,transparent)] backdrop-blur-sm" />
+        <div className="absolute right-0 bottom-0 left-0 z-3 h-12 [mask-image:linear-gradient(to_top,black_20%,transparent)] backdrop-blur-sm" />
         {showNavigationBar && backLabel === undefined && (
-          <div className="absolute bottom-8 left-1/2 -translate-x-1/2">
+          <div className="absolute bottom-8 left-1/2 z-4 -translate-x-1/2">
             <NavigationBar />
           </div>
         )}

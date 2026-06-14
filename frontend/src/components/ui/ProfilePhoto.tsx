@@ -36,7 +36,7 @@ export const ProfilePhoto = ({
   return (
     <div
       className={cn(
-        "bg-surface-50 relative aspect-[5/7] w-full overflow-hidden rounded-sm",
+        "bg-surface-50 @container relative aspect-[5/7] w-full overflow-hidden rounded-sm",
         className,
       )}
     >
@@ -54,7 +54,6 @@ export const ProfilePhoto = ({
           alt=""
           aria-hidden
           fill
-          sizes={sizes}
           className={cn(
             "pointer-events-none z-1 object-cover",
             isFrameMuted && "grayscale",
@@ -64,9 +63,11 @@ export const ProfilePhoto = ({
 
       <div className="from-surface-50 via-surface-50/60 absolute inset-x-0 bottom-0 z-2 h-[25%] bg-gradient-to-t from-10% via-60% to-transparent" />
 
-      <div className="absolute right-2 bottom-1 left-2 z-3 flex flex-col text-left">
-        <p className="truncate leading-none">{displayName?.firstName}</p>
-        <p className="-mt-0.5 ml-2 truncate text-xl leading-none font-extrabold">
+      <div className="absolute right-[3cqw] bottom-[1.5cqw] left-[3cqw] z-3 flex flex-col text-left">
+        <p className="truncate text-[9cqw] leading-none">
+          {displayName?.firstName}
+        </p>
+        <p className="-mt-[0.5cqw] ml-[3cqw] truncate text-[13cqw] leading-none font-extrabold">
           {displayName?.lastName}
         </p>
       </div>

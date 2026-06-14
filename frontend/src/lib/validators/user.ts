@@ -1,4 +1,6 @@
 import { z } from "zod";
+import { GENDERS, MIN_SIGNUP_AGE } from "@/constants";
+import { isAtLeastYearsOld } from "@/lib/date";
 
 const optionalUrl = z
   .union([z.url(), z.literal("")])
@@ -38,7 +40,14 @@ export const UpdateUserSchema = z
     firstName: z.string().min(1).max(50).optional(),
     lastName: z.string().min(1).max(50).optional(),
     pseudo: z.string().min(2).max(30).optional(),
-    dob: z.number().int().optional(),
+    dob: z
+      .number()
+      .int()
+      .refine((v) => isAtLeastYearsOld(v, MIN_SIGNUP_AGE), {
+        message: `Must be at least ${MIN_SIGNUP_AGE} years old`,
+      })
+      .optional(),
+    gender: z.enum(GENDERS).optional(),
     onboardingCompleted: z.boolean().optional(),
     professionalExperiences: z.array(ExperienceSchema).optional(),
     educationalExperiences: z.array(ExperienceSchema).optional(),

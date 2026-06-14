@@ -1,4 +1,4 @@
-import type { StoryData } from "@/types/story";
+import type { StoryData, StoryViewer } from "@/types/story";
 import type { UserSummary } from "@/types/user";
 
 export type DbStoryRaw = {
@@ -67,6 +67,8 @@ export function mapStoryFromDb(
     repostedByMe: flags.repostedByMe,
     likeCount: flags.likeCount,
     repostCount: flags.repostCount,
+    // A just-created / just-reposted story has no viewers yet.
+    viewers: [],
   };
 }
 
@@ -91,6 +93,8 @@ export type DbStoryFeedRow = {
   seen: boolean;
   liked_by_me: boolean;
   reposted_by_me: boolean;
+  /** Author-only: viewers of this story (empty on others' stories). */
+  viewers: StoryViewer[] | null;
 };
 
 /** Build the domain story from a flat feed row (flags already resolved server-side). */
@@ -115,6 +119,7 @@ export function mapFeedRowToStory(row: DbStoryFeedRow): StoryData {
     repostedByMe: row.reposted_by_me,
     likeCount: row.like_count,
     repostCount: row.repost_count,
+    viewers: row.viewers ?? [],
   };
 }
 

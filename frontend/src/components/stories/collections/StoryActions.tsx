@@ -10,6 +10,7 @@ import { useCurrentUserStore } from "@/stores/useCurrentUserStore";
 import { userToSummary } from "@/lib/mappers/user";
 import type { StoryData } from "@/types/story";
 import { StoryViewersSheet } from "./StoryViewersSheet";
+import { cn } from "@/lib/utils";
 
 interface StoryActionsProps {
   story: StoryData;
@@ -83,6 +84,11 @@ export function StoryActions({
     try {
       const res = await fetch(API.STORY(story.id), { method: "DELETE" });
       if (res.ok) {
+        // Deleting your repost must also clear the « reposted » state on the
+        // original story, so its repost button resets live (no refresh needed).
+        if (story.isRepost && story.originalStoryId) {
+          setReposted(story.originalStoryId, false);
+        }
         removeStory(story.id); // optimistic; closes the reader below
         onClose();
       }
@@ -146,7 +152,7 @@ export function StoryActions({
         </div>
         {showViewers && (
           <StoryViewersSheet
-            storyId={story.id}
+            viewers={story.viewers}
             onClose={() => setShowViewers(false)}
           />
         )}
@@ -178,7 +184,7 @@ export function StoryActions({
         size="none"
         onClick={handleRepost}
         disabled={busy}
-        className="w-full py-2"
+        className={cn("w-full py-2", story.repostedByMe && "py-3 text-xs")}
       >
         {t(story.repostedByMe ? "removeRepost" : "repost")}
       </Button>

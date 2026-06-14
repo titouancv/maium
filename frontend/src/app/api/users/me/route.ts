@@ -20,6 +20,7 @@ export async function PATCH(request: NextRequest) {
       lastName,
       pseudo,
       dob,
+      gender,
       onboardingCompleted,
       professionalExperiences,
       educationalExperiences,
@@ -40,6 +41,7 @@ export async function PATCH(request: NextRequest) {
     if (lastName !== undefined) coreUpdates.last_name = lastName;
     if (pseudo !== undefined) coreUpdates.pseudo = pseudo;
     if (dob !== undefined) coreUpdates.dob = new Date(dob).toISOString().slice(0, 10);
+    if (gender !== undefined) coreUpdates.gender = gender;
     if (onboardingCompleted !== undefined) coreUpdates.onboarding_completed = onboardingCompleted;
     if (phone !== undefined) coreUpdates.phone = phone ?? null;
     if (nationality !== undefined) coreUpdates.nationality = nationality ?? null;

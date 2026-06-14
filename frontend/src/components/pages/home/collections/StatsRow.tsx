@@ -7,7 +7,8 @@ import { getProfileCompletion } from "@/lib/home";
 import type { HomeStats } from "@/lib/users";
 import type { UserData } from "@/types";
 import { useHomeStats } from "@/hooks/useHomeStats";
-import { StatCard, ActionCard, DownloadCvCard } from "../items";
+import { ActionCard, DownloadCvCard } from "../items";
+import { NotificationsCenter } from "./NotificationsCenter";
 
 interface StatsRowProps {
   statsPromise: Promise<HomeStats>;
@@ -22,6 +23,7 @@ export const StatsRow = ({ statsPromise, user }: StatsRowProps) => {
 
   return (
     <div className="flex gap-6 overflow-x-auto">
+      <NotificationsCenter count={stats.unreadNotificationsCount} />
       {!completion.isComplete && (
         <ActionCard
           actionLabel={t("actions.completeProfileTitle")}
@@ -29,7 +31,7 @@ export const StatsRow = ({ statsPromise, user }: StatsRowProps) => {
             percent: completion.percent,
           })}
           description={t("actions.completeProfileDescription")}
-          href={ROUTES.SETTINGS}
+          href={ROUTES.SETTINGS_MY_INFORMATION}
           primary
         />
       )}
@@ -41,24 +43,6 @@ export const StatsRow = ({ statsPromise, user }: StatsRowProps) => {
         primary
       />
       <DownloadCvCard user={user} />
-      <StatCard
-        value={stats.followersCount}
-        label={t("stats.followers")}
-        href={ROUTES.PROFILE_FOLLOWERS(user.pseudo)}
-        trend={stats.followersTrend}
-        trendTitle={t("stats.trendTitle")}
-      />
-      <StatCard
-        value={stats.unreadCount}
-        label={t("stats.unread")}
-        href={ROUTES.MESSAGES}
-        isValueHighlighted={stats.unreadCount > 0}
-      />
-      <StatCard
-        value={stats.profileViewsCount}
-        label={t("stats.profileViews")}
-        href={ROUTES.PROFILE(user.pseudo)}
-      />
     </div>
   );
 };

@@ -24,16 +24,15 @@ export function ProfileTitle({
   const seeded = useProfilePreviewStore((s) => s.previews[pseudo]);
 
   return (
-    <>
+    <div className="flex w-full justify-end md:justify-between">
       {seeded ? (
-        <Title
-          label={`${seeded.first_name} ${seeded.last_name}`}
-          size="h1"
-        />
+        <div className="hidden md:flex">
+          <Title label={`${seeded.first_name} ${seeded.last_name}`} size="h1" />
+        </div>
       ) : (
         streamedName
       )}
       {backSlot}
-    </>
+    </div>
   );
 }

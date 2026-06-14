@@ -1,3 +1,4 @@
+import type { Gender } from "@/constants";
 import type { Experience } from "@/types/experience";
 import type { UserData } from "@/types";
 
@@ -11,6 +12,7 @@ export interface SignupDraft {
   lastName?: string;
   pseudo?: string;
   dob?: number;
+  gender?: Gender;
   professionalExperiences: Experience[];
   educationalExperiences: Experience[];
 }
@@ -19,6 +21,7 @@ export type SignupStepKey =
   | "fullName"
   | "pseudo"
   | "date"
+  | "gender"
   | "professional"
   | "educational";
 
@@ -41,6 +44,7 @@ export const SIGNUP_STEPS: SignupStep[] = [
   },
   { key: "pseudo", required: true, isFilled: (d) => !!d.pseudo },
   { key: "date", required: true, isFilled: (d) => d.dob != null },
+  { key: "gender", required: true, isFilled: (d) => !!d.gender },
   { key: "professional", required: false, isFilled: () => true },
   { key: "educational", required: false, isFilled: () => true },
 ];
@@ -74,6 +78,7 @@ export function hasCompletedOnboarding(user: UserData): boolean {
     lastName: user.last_name,
     pseudo: user.pseudo,
     dob: user.dob ?? undefined,
+    gender: user.gender ?? undefined,
     professionalExperiences: [],
     educationalExperiences: [],
   };
