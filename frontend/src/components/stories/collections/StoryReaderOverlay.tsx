@@ -145,10 +145,9 @@ export function StoryReaderOverlay({
   // actions (mobile keeps the button + sheet inside StoryActions).
   const isOwn = currentUserId === story.authorId;
 
-  // Edges of the whole feed: disable the matching desktop nav button.
+  // Start of the whole feed: disable the desktop "previous" button. There is no
+  // matching "next" edge — on the last story, "next" closes the reader instead.
   const isFirst = groupIndex === 0 && storyIndex === 0;
-  const isLast =
-    groupIndex === groups.length - 1 && storyIndex === group.stories.length - 1;
 
   return (
     <motion.div
@@ -221,7 +220,6 @@ export function StoryReaderOverlay({
                 variant="outline"
                 size="none"
                 onClick={goNext}
-                disabled={isLast}
                 className="w-full px-4 py-2"
               >
                 {t("next")}
