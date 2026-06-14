@@ -32,7 +32,10 @@ export const NotificationRow = ({ notification }: NotificationRowProps) => {
       ? ROUTES.CONVERSATION(conversationId)
       : ROUTES.PROFILE(actor.pseudo);
 
-  const relativeTime = formatRelativeTime(new Date(createdAt).getTime(), locale);
+  const relativeTime = formatRelativeTime(
+    new Date(createdAt).getTime(),
+    locale,
+  );
   const subtitle = `${t(ACTION_KEY[kind])} · ${relativeTime}`;
 
   return (
@@ -43,14 +46,9 @@ export const NotificationRow = ({ notification }: NotificationRowProps) => {
         last_name={actor.last_name}
         href={href}
         subtitle={subtitle}
-        className="text-txt hover:text-primary flex min-w-0 flex-1 gap-2 py-3"
+        subtitleClassName={!readAt ? "text-primary" : undefined}
+        showFollow={kind === "follow"}
       />
-      {!readAt && (
-        <span
-          className="bg-primary mr-1 h-2 w-2 shrink-0 rounded-full"
-          aria-hidden
-        />
-      )}
     </li>
   );
 };

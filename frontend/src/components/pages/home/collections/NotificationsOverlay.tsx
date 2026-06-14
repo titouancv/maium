@@ -49,7 +49,7 @@ export const NotificationsOverlay = ({
         backLabel={tCommon("backButton")}
         showNavigationBar={false}
       >
-        <div className="w-full max-w-7xl">
+        <div className="w-full max-w-2xl">
           <NotificationsList notifications={notifications} loading={loading} />
         </div>
       </PageLayout>
