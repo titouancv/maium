@@ -3,7 +3,7 @@
 import { useTranslations } from "next-intl";
 import type { StoryBlockType } from "@/types/story";
 import { FormLayout } from "@/components/layout/FormLayout";
-import { TabsVertical } from "@/components/ui/TabsVertical";
+import { SelectForm } from "@/components/form";
 import { useState } from "react";
 import { Button } from "@/components/ui";
 
@@ -49,7 +49,7 @@ export function StoryBlockTypeSheet({
 }: StoryBlockTypeSheetProps) {
   const t = useTranslations("stories");
   const tCommon = useTranslations("common");
-  const [tabIndex, setTabIndex] = useState(0);
+  const [selected, setSelected] = useState<StoryBlockType>(BLOCK_TYPES[0]);
 
   return (
     <>
@@ -63,25 +63,24 @@ export function StoryBlockTypeSheet({
             totalSteps={1}
             cancelLabel={tCommon("backButton")}
             primaryLabel={t("addBlock")}
-            onPrimary={() => onSelect(BLOCK_TYPES[tabIndex])}
+            onPrimary={() => onSelect(selected)}
           >
-            <div className="flex h-full flex-col justify-between gap-6">
-              <div className="flex flex-col gap-6">
-                <TabsVertical
-                  tabs={BLOCK_TYPES.map((type) => t(LABEL_KEY[type]))}
-                  activeTab={tabIndex}
-                  onChange={setTabIndex}
-                />
-                <p className="text-txt-muted text-sm">
-                  {t(DESC_KEY[BLOCK_TYPES[tabIndex]])}
-                </p>
-              </div>
-              {showRemove && (
-                <Button variant="outline" onClick={onRemove}>
-                  {t("removeBlock")}
-                </Button>
-              )}
-            </div>
+            <SelectForm
+              options={BLOCK_TYPES.map((type) => ({
+                value: type,
+                label: t(LABEL_KEY[type]),
+                description: t(DESC_KEY[type]),
+              }))}
+              defaultValue={BLOCK_TYPES[0]}
+              onChange={setSelected}
+              footer={
+                showRemove && (
+                  <Button variant="outline" onClick={onRemove}>
+                    {t("removeBlock")}
+                  </Button>
+                )
+              }
+            />
           </FormLayout>
         </div>
       )}
