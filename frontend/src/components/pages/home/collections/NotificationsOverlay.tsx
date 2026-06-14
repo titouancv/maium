@@ -50,7 +50,11 @@ export const NotificationsOverlay = ({
         showNavigationBar={false}
       >
         <div className="w-full max-w-2xl">
-          <NotificationsList notifications={notifications} loading={loading} />
+          <NotificationsList
+            notifications={notifications}
+            loading={loading}
+            onNavigate={onClose}
+          />
         </div>
       </PageLayout>
     </motion.div>

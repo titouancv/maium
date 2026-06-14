@@ -116,7 +116,13 @@
       "empty": "No notifications yet",
       "actionFollow": "started following you",
       "actionMessage": "sent you a message",
-      "actionProfileView": "viewed your profile"
+      "actionProfileView": "viewed your profile",
+      "storyLikeSingle": "{name} liked your story",
+      "storyLikeDouble": "{name1} and {name2} liked your story",
+      "storyLikeMultiple": "{name1}, {name2} and {count} others liked your story",
+      "storyRepostSingle": "{name} reposted your story",
+      "storyRepostDouble": "{name1} and {name2} reposted your story",
+      "storyRepostMultiple": "{name1}, {name2} and {count} others reposted your story"
     },
     "actions": {
       "analyzeTitle": "Analyze a job posting",

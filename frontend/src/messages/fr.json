@@ -116,7 +116,13 @@
       "empty": "Aucune notification pour le moment",
       "actionFollow": "vous suit",
       "actionMessage": "vous a envoyé un message",
-      "actionProfileView": "a vu votre profil"
+      "actionProfileView": "a vu votre profil",
+      "storyLikeSingle": "{name} a aimé votre story",
+      "storyLikeDouble": "{name1} et {name2} ont aimé votre story",
+      "storyLikeMultiple": "{name1}, {name2} et {count} autres personnes ont aimé votre story",
+      "storyRepostSingle": "{name} a republié votre story",
+      "storyRepostDouble": "{name1} et {name2} ont republié votre story",
+      "storyRepostMultiple": "{name1}, {name2} et {count} autres personnes ont republié votre story"
     },
     "actions": {
       "analyzeTitle": "Analyser une offre",
