@@ -1,5 +1,7 @@
 import type { OptimisticMessage } from "@/types";
 import { formatTime } from "@/lib/date";
+import { cn } from "@/lib/utils";
+import { UserCard } from "@/components/ui";
 
 interface MessageBubbleProps {
   message: OptimisticMessage;
@@ -21,10 +23,16 @@ export function MessageBubble({
       <div className={`flex w-full flex-col items-start gap-1`}>
         {message.sender && showSender && (
           <div className="flex w-full items-center justify-between gap-2">
-            <p className={isOwn ? "text-primary" : "text-txt"}>
-              {message.sender.first_name} {message.sender.last_name}
-            </p>
-            <p className="text-txt-muted text-xs">
+            <UserCard
+              pseudo={message.sender.pseudo}
+              first_name={message.sender.first_name}
+              last_name={message.sender.last_name}
+              className={cn(
+                "flex min-w-0 items-center gap-2 hover:text-primary",
+                isOwn ? "text-primary" : "text-txt",
+              )}
+            />
+            <p className="text-txt-muted shrink-0 text-xs">
               {formatTime(message.created_at, locale)}
             </p>
           </div>
