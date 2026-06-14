@@ -46,7 +46,7 @@ export function StoryReaderHeader({
   const relative = formatRelativeTime(createdAt, locale);
   const subtitle =
     isRepost && reposterPseudo
-      ? `@${author.pseudo} • ${tStories("repostedBy", { pseudo: reposterPseudo })}`
+      ? `${tStories("repostedBy", { pseudo: reposterPseudo })}`
       : `@${author.pseudo}`;
 
   return (
@@ -67,6 +67,9 @@ export function StoryReaderHeader({
                 first_name={author.first_name}
                 last_name={author.last_name}
                 subtitle={subtitle}
+                subtitleClassName={
+                  isRepost && reposterPseudo ? "text-primary" : undefined
+                }
               />
             </motion.span>
           </AnimatePresence>
