@@ -21,6 +21,10 @@ export interface StoryData {
   likedByMe: boolean;
   /** Whether the current viewer has already reposted this story. */
   repostedByMe: boolean;
+  /** Total number of likes on this story (across all users). */
+  likeCount: number;
+  /** Total number of reposts of this story (across all users). */
+  repostCount: number;
 }
 
 /** The four Notion-like block kinds, each serialized to a markdown primitive. */

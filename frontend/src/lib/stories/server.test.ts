@@ -1,13 +1,16 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 
 vi.mock("@/lib/supabase/server", () => ({ createClient: vi.fn() }));
+vi.mock("@/lib/supabase/admin", () => ({ createAdminClient: vi.fn() }));
 vi.mock("@/lib/auth/getCurrentUser", () => ({ getAuthUser: vi.fn() }));
 
 import { getStoriesFeed } from "./server";
 import { createClient } from "@/lib/supabase/server";
+import { createAdminClient } from "@/lib/supabase/admin";
 import { getAuthUser } from "@/lib/auth/getCurrentUser";
 
 const mockCreateClient = vi.mocked(createClient);
+const mockCreateAdminClient = vi.mocked(createAdminClient);
 const mockGetAuthUser = vi.mocked(getAuthUser);
 
 type Row = Record<string, unknown>;
@@ -28,6 +31,16 @@ function mockSupabase(results: Record<string, { data: unknown; error: unknown }>
   } as never);
 }
 
+/**
+ * Admin client stub. Its `story_likes` / `stories` reads return the *global*
+ * like / repost totals, keyed separately from the per-viewer server reads.
+ */
+function mockAdmin(results: Record<string, { data: unknown; error: unknown }>) {
+  mockCreateAdminClient.mockReturnValue({
+    from: vi.fn((table: string) => chain(results[table] ?? { data: [], error: null })),
+  } as never);
+}
+
 function storyRow(over: Partial<Row>): Row {
   return {
     id: "x",
@@ -45,6 +58,7 @@ function storyRow(over: Partial<Row>): Row {
 
 beforeEach(() => {
   vi.clearAllMocks();
+  mockAdmin({});
 });
 
 describe("getStoriesFeed", () => {
@@ -92,5 +106,39 @@ describe("getStoriesFeed", () => {
     expect(feed[1].stories.map((s) => s.id)).toEqual(["b1", "b2"]);
     expect(feed[1].hasUnseen).toBe(true);
     expect(feed[1].stories[1].seen).toBe(false);
+  });
+
+  it("tallies global like and repost totals per story", async () => {
+    mockGetAuthUser.mockResolvedValue({ id: "me" } as never);
+
+    mockSupabase({
+      stories: {
+        data: [
+          storyRow({ id: "a1" }),
+          storyRow({ id: "a2", created_at: "2026-06-10T09:00:00Z" }),
+        ],
+        error: null,
+      },
+      story_views: { data: [], error: null },
+      story_likes: { data: [], error: null },
+    });
+    // a1: two likes + one repost; a2: nothing.
+    mockAdmin({
+      story_likes: {
+        data: [{ story_id: "a1" }, { story_id: "a1" }],
+        error: null,
+      },
+      stories: { data: [{ original_story_id: "a1" }], error: null },
+    });
+
+    const feed = await getStoriesFeed();
+    const stories = feed[0].stories;
+    const a1 = stories.find((s) => s.id === "a1")!;
+    const a2 = stories.find((s) => s.id === "a2")!;
+
+    expect(a1.likeCount).toBe(2);
+    expect(a1.repostCount).toBe(1);
+    expect(a2.likeCount).toBe(0);
+    expect(a2.repostCount).toBe(0);
   });
 });

@@ -27,7 +27,13 @@ export const STORY_AUTHOR_SELECT =
 
 export function mapStoryFromDb(
   raw: DbStoryRaw,
-  flags: { seen: boolean; likedByMe: boolean; repostedByMe: boolean },
+  flags: {
+    seen: boolean;
+    likedByMe: boolean;
+    repostedByMe: boolean;
+    likeCount: number;
+    repostCount: number;
+  },
 ): StoryData {
   return {
     id: raw.id,
@@ -47,5 +53,7 @@ export function mapStoryFromDb(
     seen: flags.seen,
     likedByMe: flags.likedByMe,
     repostedByMe: flags.repostedByMe,
+    likeCount: flags.likeCount,
+    repostCount: flags.repostCount,
   };
 }

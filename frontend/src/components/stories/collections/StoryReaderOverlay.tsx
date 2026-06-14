@@ -179,6 +179,8 @@ export function StoryReaderOverlay({
               createdAt={story.createdAt}
               isRepost={story.isRepost}
               reposterPseudo={group.author.pseudo}
+              likeCount={story.likeCount}
+              repostCount={story.repostCount}
               onClose={onClose}
             />
           </div>

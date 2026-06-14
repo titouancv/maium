@@ -41,6 +41,8 @@ export async function POST(request: NextRequest) {
       seen: false,
       likedByMe: false,
       repostedByMe: false,
+      likeCount: 0,
+      repostCount: 0,
     });
     return NextResponse.json({ story }, { status: 201 });
   } catch (error) {

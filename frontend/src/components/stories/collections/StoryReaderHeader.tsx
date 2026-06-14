@@ -16,14 +16,18 @@ interface StoryReaderHeaderProps {
   isRepost: boolean;
   /** Pseudo of the user who reposted (the group author), for the repost marker. */
   reposterPseudo?: string | null;
+  /** Total likes on this story (across all users). */
+  likeCount: number;
+  /** Total reposts of this story (across all users). */
+  repostCount: number;
   onClose: () => void;
 }
 
 /**
  * Reader header: author card on the left (rolls vertically as a block when
  * switching to another author, inspired by NumberRoller), close button right.
- * The card's subtitle carries the relative publish time and, for reposts, a
- * « republié » marker.
+ * Below the card, a stats line carries the like / repost totals and the
+ * relative publish time; for reposts the subtitle keeps the « republié » marker.
  */
 export function StoryReaderHeader({
   author,
@@ -31,6 +35,8 @@ export function StoryReaderHeader({
   createdAt,
   isRepost,
   reposterPseudo,
+  likeCount,
+  repostCount,
   onClose,
 }: StoryReaderHeaderProps) {
   const tCommon = useTranslations("common");
@@ -40,34 +46,43 @@ export function StoryReaderHeader({
   const relative = formatRelativeTime(createdAt, locale);
   const subtitle =
     isRepost && reposterPseudo
-      ? `@${author.pseudo} • ${tStories("repostedBy", { pseudo: reposterPseudo })} • ${relative}`
-      : `@${author.pseudo} • ${relative}`;
+      ? `@${author.pseudo} • ${tStories("repostedBy", { pseudo: reposterPseudo })}`
+      : `@${author.pseudo}`;
 
   return (
-    <div className="flex items-center justify-between gap-3">
-      <span className="relative block min-w-0 overflow-hidden">
-        <AnimatePresence mode="popLayout" initial={false}>
-          <motion.span
-            key={authorId}
-            initial={{ y: "110%", opacity: 0 }}
-            animate={{ y: "0%", opacity: 1 }}
-            exit={{ y: "-110%", opacity: 0 }}
-            transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
-            className="block"
-          >
-            <UserCard
-              pseudo={author.pseudo}
-              first_name={author.first_name}
-              last_name={author.last_name}
-              subtitle={subtitle}
-            />
-          </motion.span>
-        </AnimatePresence>
-      </span>
+    <div className="flex flex-col gap-1.5">
+      <div className="flex items-center justify-between gap-3">
+        <span className="relative block min-w-0 overflow-hidden">
+          <AnimatePresence mode="popLayout" initial={false}>
+            <motion.span
+              key={authorId}
+              initial={{ y: "110%", opacity: 0 }}
+              animate={{ y: "0%", opacity: 1 }}
+              exit={{ y: "-110%", opacity: 0 }}
+              transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+              className="block"
+            >
+              <UserCard
+                pseudo={author.pseudo}
+                first_name={author.first_name}
+                last_name={author.last_name}
+                subtitle={subtitle}
+              />
+            </motion.span>
+          </AnimatePresence>
+        </span>
 
-      <Button variant="ghost" size="none" onClick={onClose} className="p-1">
-        {tCommon("backButton")}
-      </Button>
+        <Button variant="ghost" size="none" onClick={onClose} className="p-1">
+          {tCommon("backButton")}
+        </Button>
+      </div>
+
+      <div className="text-txt-muted flex items-center gap-2 text-xs">
+        <span>{tStories("likesCount", { count: likeCount })}</span>
+        <span aria-hidden>•</span>
+        <span>{tStories("repostsCount", { count: repostCount })}</span>
+        <span className="ml-auto">{relative}</span>
+      </div>
     </div>
   );
 }

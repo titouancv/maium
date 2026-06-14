@@ -1,4 +1,5 @@
 import { createClient } from "@/lib/supabase/server";
+import { createAdminClient } from "@/lib/supabase/admin";
 import { getAuthUser } from "@/lib/auth/getCurrentUser";
 import {
   STORY_SELECT,
@@ -43,7 +44,14 @@ export async function getStoriesFeed(): Promise<StoryGroup[]> {
 
   const storyIds = rows.map((r) => r.id);
 
-  const [views, likes, reposts] = await Promise.all([
+  // Total like/repost counts are read with the admin client: `story_likes` RLS
+  // scopes reads to the viewer's own rows, and reposts (story rows) are only
+  // visible to the author + their followers — so a normal client would
+  // undercount both. Ownership/visibility of the feed itself is still enforced
+  // by RLS on the `stories` query above.
+  const admin = createAdminClient();
+
+  const [views, likes, reposts, likeTotals, repostTotals] = await Promise.all([
     supabase
       .from("story_views")
       .select("story_id")
@@ -62,6 +70,14 @@ export async function getStoriesFeed(): Promise<StoryGroup[]> {
       .eq("author_id", authUser.id)
       .eq("is_repost", true)
       .in("original_story_id", storyIds),
+    // Every like on these stories (any user) for the displayed total.
+    admin.from("story_likes").select("story_id").in("story_id", storyIds),
+    // Every repost of these stories (any user) for the displayed total.
+    admin
+      .from("stories")
+      .select("original_story_id")
+      .eq("is_repost", true)
+      .in("original_story_id", storyIds),
   ]);
 
   const seenIds = new Set((views.data ?? []).map((v) => v.story_id));
@@ -69,6 +85,20 @@ export async function getStoriesFeed(): Promise<StoryGroup[]> {
   const repostedIds = new Set(
     (reposts.data ?? []).map((r) => r.original_story_id),
   );
+
+  // Tally per-story totals from the admin rows.
+  const likeCounts = new Map<string, number>();
+  for (const { story_id } of likeTotals.data ?? []) {
+    likeCounts.set(story_id, (likeCounts.get(story_id) ?? 0) + 1);
+  }
+  const repostCounts = new Map<string, number>();
+  for (const { original_story_id } of repostTotals.data ?? []) {
+    if (!original_story_id) continue;
+    repostCounts.set(
+      original_story_id,
+      (repostCounts.get(original_story_id) ?? 0) + 1,
+    );
+  }
 
   // Group by author, preserving the oldest-first order within each group.
   const groups = new Map<string, StoryGroup>();
@@ -78,6 +108,8 @@ export async function getStoriesFeed(): Promise<StoryGroup[]> {
       seen: seenIds.has(row.id),
       likedByMe: likedIds.has(row.id),
       repostedByMe: repostedIds.has(row.id),
+      likeCount: likeCounts.get(row.id) ?? 0,
+      repostCount: repostCounts.get(row.id) ?? 0,
     });
 
     let group = groups.get(row.author_id);

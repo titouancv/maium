@@ -62,7 +62,15 @@ export const useStoriesStore = create<StoriesStore>((set) => ({
           ? {
               ...g,
               stories: g.stories.map((s) =>
-                s.id === storyId ? { ...s, likedByMe: liked } : s,
+                // Only adjust the count when the flag actually flips, so a
+                // repeated/no-op toggle never double-counts.
+                s.id === storyId && s.likedByMe !== liked
+                  ? {
+                      ...s,
+                      likedByMe: liked,
+                      likeCount: Math.max(0, s.likeCount + (liked ? 1 : -1)),
+                    }
+                  : s,
               ),
             }
           : g,
@@ -76,7 +84,16 @@ export const useStoriesStore = create<StoriesStore>((set) => ({
           ? {
               ...g,
               stories: g.stories.map((s) =>
-                s.id === storyId ? { ...s, repostedByMe: reposted } : s,
+                s.id === storyId && s.repostedByMe !== reposted
+                  ? {
+                      ...s,
+                      repostedByMe: reposted,
+                      repostCount: Math.max(
+                        0,
+                        s.repostCount + (reposted ? 1 : -1),
+                      ),
+                    }
+                  : s,
               ),
             }
           : g,
