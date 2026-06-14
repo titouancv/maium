@@ -23,9 +23,9 @@ export const NotificationCard = ({
     <button
       type="button"
       onClick={onClick}
-      className="hover:text-primary flex min-w-44 shrink-0 flex-col items-start justify-start text-left transition-colors"
+      className="hover:text-primary flex shrink-0 flex-col items-start justify-start text-left transition-colors"
     >
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-2 pr-2">
         <div className="my-1 w-1 self-stretch rounded-full bg-current" />
         <div className="flex flex-col items-start justify-end">
           <NumberRoller
@@ -35,7 +35,7 @@ export const NotificationCard = ({
               highlighted && "text-primary",
             )}
           />
-          <p className="truncate">{label}</p>
+          <p className="truncate text-lg">{label}</p>
         </div>
       </div>
     </button>

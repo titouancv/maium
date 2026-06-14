@@ -23,6 +23,7 @@ export const StatsRow = ({ statsPromise, user }: StatsRowProps) => {
 
   return (
     <div className="flex gap-6 overflow-x-auto">
+      <NotificationsCenter count={stats.unreadNotificationsCount} />
       {!completion.isComplete && (
         <ActionCard
           actionLabel={t("actions.completeProfileTitle")}
@@ -42,7 +43,6 @@ export const StatsRow = ({ statsPromise, user }: StatsRowProps) => {
         primary
       />
       <DownloadCvCard user={user} />
-      <NotificationsCenter count={stats.unreadNotificationsCount} />
     </div>
   );
 };
