@@ -25,7 +25,7 @@ export function NavigationBar() {
   const tabs = [
     { name: t("home"), href: ROUTES.HOME },
     pseudo ? { name: t("messages"), href: ROUTES.MESSAGES } : undefined,
-    pseudo ? { name: `@${pseudo}`, href: ROUTES.PROFILE(pseudo) } : undefined,
+    pseudo ? { name: t("profile"), href: ROUTES.PROFILE(pseudo) } : undefined,
   ].filter((tab) => tab !== undefined);
 
   const isOnTabRoute = tabs.some(

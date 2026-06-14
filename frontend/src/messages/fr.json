@@ -1,10 +1,11 @@
 {
   "nav": {
-    "home": "maium",
+    "home": "Accueil",
     "settings": "Paramètres",
     "searchLabel": "Rechercher",
-    "messages": "messages",
-    "jobs": "offres"
+    "messages": "Messages",
+    "jobs": "Offres",
+    "profile": "Profil"
   },
   "jobs": {
     "title": "Analyse d'offre",
