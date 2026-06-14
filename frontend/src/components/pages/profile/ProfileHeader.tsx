@@ -9,10 +9,12 @@ export async function ProfileName({ pseudo }: { pseudo: string }) {
   if (!bundle) notFound();
 
   return (
-    <Title
-      label={`${bundle.user.first_name} ${bundle.user.last_name}`}
-      size="h1"
-    />
+    <div className="hidden md:flex">
+      <Title
+        label={`${bundle.user.first_name} ${bundle.user.last_name}`}
+        size="h1"
+      />
+    </div>
   );
 }
 

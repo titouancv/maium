@@ -58,3 +58,19 @@ export async function getStoriesFeed(): Promise<StoryGroup[]> {
     return latestOf(b) - latestOf(a);
   });
 }
+
+/**
+ * A single profile's stories (grouped), or null when the viewer can see none.
+ *
+ * Reuses {@link getStoriesFeed}: the feed already returns exactly the set of
+ * stories the viewer is allowed to see (own + followed authors), so a given
+ * profile's stories are just that author's group within it. A profile the
+ * viewer doesn't follow has no visible stories — RLS hides them — so it
+ * correctly yields null, with no extra round trip beyond the feed RPC.
+ */
+export async function getUserStoryGroup(
+  pseudo: string,
+): Promise<StoryGroup | null> {
+  const groups = await getStoriesFeed();
+  return groups.find((g) => g.author.pseudo === pseudo) ?? null;
+}
