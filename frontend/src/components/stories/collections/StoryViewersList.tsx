@@ -41,7 +41,7 @@ export function StoryViewersList({ viewers }: StoryViewersListProps) {
               className="text-txt hover:text-primary flex min-w-0 flex-1 gap-2 py-3"
             />
             {(liked || reposted) && (
-              <p className="text-primary shrink-0 text-xs font-medium">
+              <p className="text-primary shrink-0 text-xs">
                 {liked && reposted
                   ? t("likedAndReposted")
                   : liked

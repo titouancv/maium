@@ -87,7 +87,7 @@ export function UserCard({
         className="h-10 w-auto self-center"
       />
       <div className="min-w-0 flex-1 text-left">
-        <p className="truncate font-extrabold">{displayName}</p>
+        <p className="text-md truncate font-extrabold">{displayName}</p>
         <p
           className={`truncate text-xs ${subtitleClassName ?? "text-txt-muted"}`}
         >
