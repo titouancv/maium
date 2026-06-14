@@ -28,8 +28,6 @@ const ExperienceSchema = z
     path: ["endPeriod"],
   });
 
-export type ExperienceInput = z.infer<typeof ExperienceSchema>;
-
 const HobbySchema = z.object({
   title: z.string().min(1).max(100),
   description: z.string(),
@@ -57,5 +55,3 @@ export const UpdateUserSchema = z
   .refine((data) => Object.values(data).some((v) => v !== undefined), {
     message: "At least one field must be provided",
   });
-
-export type UpdateUserInput = z.infer<typeof UpdateUserSchema>;

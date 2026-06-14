@@ -41,6 +41,12 @@ export const API = {
   RESUME: (id: string) => `/api/resume/${id}`,
   RESUME_PDF: (id: string) => `/api/resume/${id}/pdf`,
   RESUME_PROFILE_PDF: "/api/resume/profile/pdf",
+  STORIES: "/api/stories",
+  STORY: (id: string) => `/api/stories/${id}`,
+  STORY_VIEW: (id: string) => `/api/stories/${id}/view`,
+  STORY_VIEWERS: (id: string) => `/api/stories/${id}/viewers`,
+  STORY_LIKE: (id: string) => `/api/stories/${id}/like`,
+  STORY_REPOST: (id: string) => `/api/stories/${id}/repost`,
 } as const;
 
 export const EXTERNAL_API = {
@@ -95,6 +101,9 @@ export const DEFAULT_PROFILE_PHOTO_COUNT = 10;
 /** Path to a bundled default profile photo (1-based index). */
 export const DEFAULT_PROFILE_PHOTO = (index: number) =>
   `/assets/defaultProfilePhoto${index}.png`;
+
+/** Decorative frame overlaid on a framed profile photo. */
+export const DEFAULT_FRAME = "/assets/defaultFrame.png";
 
 export const EXPERIENCE_NAMESPACE = {
   professional: "experience.professional",

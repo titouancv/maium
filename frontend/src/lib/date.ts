@@ -58,6 +58,28 @@ export function experiencePeriodYears(
   return { startYear, endYear: new Date(endDate).getUTCFullYear() };
 }
 
+/**
+ * Locale-aware relative time from an epoch-ms timestamp to now, picking the
+ * largest sensible unit (e.g. `2h ago` / `il y a 2 h`, `yesterday` / `hier`).
+ */
+export function formatRelativeTime(ts: number, locale: string): string {
+  const rtf = new Intl.RelativeTimeFormat(locale, { numeric: "auto" });
+  const diffSec = Math.round((ts - Date.now()) / 1000); // negative in the past
+  const abs = Math.abs(diffSec);
+  const units: [Intl.RelativeTimeFormatUnit, number][] = [
+    ["year", 31536000],
+    ["month", 2592000],
+    ["week", 604800],
+    ["day", 86400],
+    ["hour", 3600],
+    ["minute", 60],
+  ];
+  for (const [unit, secs] of units) {
+    if (abs >= secs) return rtf.format(Math.round(diffSec / secs), unit);
+  }
+  return rtf.format(diffSec, "second");
+}
+
 /** Whether two ISO date strings fall on the same calendar day (local time). */
 export function isSameDay(a: string, b: string): boolean {
   const da = new Date(a);

@@ -15,10 +15,8 @@ export const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
         <input
           ref={ref}
           className={cn(
-            "h-12 w-full rounded-xl p-1 transition-all outline-none placeholder:uppercase",
-            infoType === "error"
-              ? "text-error bg-error/10"
-              : "text-txt hover:bg-surface-100 focus:bg-surface-100",
+            "bg-surface-100 inset-shadow-dark-900/40 dark:inset-shadow-dark-900 h-12 w-full rounded-xl p-1 inset-shadow-sm transition-all outline-none placeholder:uppercase",
+            infoType === "error" ? "text-error bg-error/10" : "text-txt",
             className,
           )}
           {...props}

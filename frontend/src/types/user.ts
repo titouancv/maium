@@ -40,8 +40,3 @@ export interface UserData {
   skills?: string[];
   projects?: string[];
 }
-
-export type PublicUserData = Omit<UserData, "email" | "phone" | "onboarding_completed"> & {
-  followers_count: number;
-  following_count: number;
-};

@@ -6,6 +6,7 @@ import { redirect } from "@/i18n/navigation";
 import { ROUTES } from "@/constants";
 import { getCurrentUserProfile } from "@/lib/auth/getCurrentUser";
 import { getHomeStats, getSuggestedUsers } from "@/lib/users";
+import { getStoriesFeed } from "@/lib/stories";
 
 export default async function HomePage() {
   // `getCurrentUserProfile` resolves to null when signed out, so it doubles as
@@ -28,6 +29,7 @@ export default async function HomePage() {
   // their own Suspense boundaries.
   const statsPromise = userData ? getHomeStats() : undefined;
   const suggestionsPromise = userData ? getSuggestedUsers() : undefined;
+  const storiesPromise = userData ? getStoriesFeed() : undefined;
 
   return (
     <Suspense>
@@ -35,6 +37,7 @@ export default async function HomePage() {
         user={userData}
         statsPromise={statsPromise}
         suggestionsPromise={suggestionsPromise}
+        storiesPromise={storiesPromise}
       />
     </Suspense>
   );

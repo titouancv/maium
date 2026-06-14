@@ -9,6 +9,7 @@ import { Suspense } from "react";
 import { useTranslations } from "next-intl";
 import { UserData, SuggestedUser } from "@/types";
 import type { HomeStats } from "@/lib/users";
+import type { StoryGroup } from "@/types/story";
 import { PageLayout } from "../../layout";
 import { HeroSection } from "../../ui/collections/HeroSection";
 import { CurrentUserSync } from "./CurrentUserSync";
@@ -20,21 +21,25 @@ import {
   SuggestionsListSkeleton,
   WelcomeCelebration,
 } from "./collections";
+import { StoriesRow, StoriesRowSkeleton } from "@/components/stories";
 import { Title } from "@/components/ui";
 
 interface HomeContentProps {
   user: UserData | null;
   statsPromise?: Promise<HomeStats>;
   suggestionsPromise?: Promise<SuggestedUser[]>;
+  storiesPromise?: Promise<StoryGroup[]>;
 }
 
 export const HomeContent = ({
   user,
   statsPromise,
   suggestionsPromise,
+  storiesPromise,
 }: HomeContentProps) => {
   const tNav = useTranslations("nav");
   const t = useTranslations("home");
+  const tStories = useTranslations("stories");
 
   return (
     <PageLayout title={tNav("home")}>
@@ -47,6 +52,15 @@ export const HomeContent = ({
           <div className="flex w-full max-w-7xl flex-col gap-12">
             <GreetingSection firstName={user.first_name} />
 
+            {storiesPromise && (
+              <div className="flex flex-col gap-2">
+                <Title label={tStories("title")} size="h2" />
+                <Suspense fallback={<StoriesRowSkeleton />}>
+                  <StoriesRow storiesPromise={storiesPromise} />
+                </Suspense>
+              </div>
+            )}
+
             {statsPromise && (
               <div className="shrink-0">
                 <Suspense fallback={<StatsRowSkeleton />}>
@@ -56,7 +70,7 @@ export const HomeContent = ({
             )}
 
             {suggestionsPromise && (
-              <div className="flex flex-col">
+              <div className="flex flex-col gap-2">
                 <Title label={t("suggestions.title")} size="h2" />
                 <Suspense fallback={<SuggestionsListSkeleton />}>
                   <SuggestionsList suggestionsPromise={suggestionsPromise} />

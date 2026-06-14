@@ -2,7 +2,6 @@
 
 import { useSyncExternalStore } from "react";
 import { useTranslations } from "next-intl";
-import { getTodayEvent } from "@/lib/home";
 
 interface GreetingSectionProps {
   firstName: string;
@@ -32,7 +31,6 @@ export const GreetingSection = ({ firstName }: GreetingSectionProps) => {
   const now = mounted ? new Date() : null;
 
   const period = now ? periodKey(now.getHours()) : null;
-  const event = now ? getTodayEvent(now) : null;
 
   return (
     <div className="flex shrink-0 flex-col gap-1">
@@ -43,11 +41,6 @@ export const GreetingSection = ({ firstName }: GreetingSectionProps) => {
           <span className="opacity-0">{firstName}</span>
         )}
       </h1>
-      {event && (
-        <p className="text-primary text-sm font-medium">
-          {t(`events.${event.key}`)}
-        </p>
-      )}
     </div>
   );
 };

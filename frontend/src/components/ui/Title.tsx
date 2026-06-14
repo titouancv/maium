@@ -9,11 +9,11 @@ export interface TitleProps extends React.HTMLAttributes<HTMLHeadingElement> {
 
 const sizes: Record<TitleSize, string> = {
   h1: "text-3xl font-extrabold",
-  h2: "text-2xl",
-  h3: "text-xl",
-  h4: "text-lg",
-  h5: "text-base",
-  h6: "text-sm",
+  h2: "text-2xl font-extrabold",
+  h3: "text-xl font-extrabold",
+  h4: "text-lg font-extrabold",
+  h5: "text-base font-extrabold",
+  h6: "text-sm font-extrabold",
 };
 
 export function Title({

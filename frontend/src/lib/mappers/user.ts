@@ -1,5 +1,17 @@
 import type { Experience } from "@/types/experience";
-import type { UserData, Hobby } from "@/types/user";
+import type { UserData, Hobby, UserSummary } from "@/types/user";
+
+/** Narrow a (current) user down to the public summary embedded in feeds/cards. */
+export function userToSummary(
+  user: Pick<UserData, "pseudo" | "first_name" | "last_name" | "location">,
+): UserSummary {
+  return {
+    pseudo: user.pseudo,
+    first_name: user.first_name,
+    last_name: user.last_name,
+    location: user.location,
+  };
+}
 
 export type DbExperience = {
   type: "professional" | "educational" | "personal";
