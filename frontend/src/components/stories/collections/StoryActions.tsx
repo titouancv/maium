@@ -10,6 +10,7 @@ import { useCurrentUserStore } from "@/stores/useCurrentUserStore";
 import { userToSummary } from "@/lib/mappers/user";
 import type { StoryData } from "@/types/story";
 import { StoryViewersSheet } from "./StoryViewersSheet";
+import { cn } from "@/lib/utils";
 
 interface StoryActionsProps {
   story: StoryData;
@@ -178,7 +179,7 @@ export function StoryActions({
         size="none"
         onClick={handleRepost}
         disabled={busy}
-        className="w-full py-2"
+        className={cn("w-full py-2", story.repostedByMe && "py-3 text-xs")}
       >
         {t(story.repostedByMe ? "removeRepost" : "repost")}
       </Button>
