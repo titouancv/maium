@@ -13,6 +13,8 @@ export interface UserSummary {
   first_name: string;
   last_name: string;
   location?: string | null;
+  /** Whether the current viewer follows this user (drives the follow button). */
+  is_following?: boolean;
 }
 
 /** A user surfaced as a connection suggestion, with their follower count. */
