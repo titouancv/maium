@@ -5,7 +5,8 @@
     "searchLabel": "Search",
     "messages": "Messages",
     "jobs": "Jobs",
-    "profile": "Profile"
+    "profile": "Profile",
+    "privacyPolicy": "Privacy policy"
   },
   "jobs": {
     "title": "Job Analysis",

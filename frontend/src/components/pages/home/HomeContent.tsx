@@ -7,6 +7,8 @@
 
 import { Suspense } from "react";
 import { useTranslations } from "next-intl";
+import { ROUTES } from "@/constants";
+import { Link } from "@/i18n/navigation";
 import { UserData, SuggestedUser } from "@/types";
 import type { HomeStats } from "@/lib/users";
 import type { StoryGroup } from "@/types/story";
@@ -49,34 +51,42 @@ export const HomeContent = ({
 
       {user && (
         <>
-          <div className="flex w-full max-w-7xl flex-col gap-12">
+          <div className="flex w-full max-w-7xl flex-col gap-6 pt-4">
             <GreetingSection firstName={user.first_name} />
+            <div className="flex w-full max-w-7xl flex-col gap-12">
+              {storiesPromise && (
+                <div className="flex flex-col gap-4">
+                  <Title label={tStories("title")} size="h2" />
+                  <Suspense fallback={<StoriesRowSkeleton />}>
+                    <StoriesRow storiesPromise={storiesPromise} />
+                  </Suspense>
+                </div>
+              )}
 
-            {storiesPromise && (
-              <div className="flex flex-col gap-4">
-                <Title label={tStories("title")} size="h2" />
-                <Suspense fallback={<StoriesRowSkeleton />}>
-                  <StoriesRow storiesPromise={storiesPromise} />
-                </Suspense>
-              </div>
-            )}
+              {statsPromise && (
+                <div className="shrink-0">
+                  <Suspense fallback={<StatsRowSkeleton />}>
+                    <StatsRow statsPromise={statsPromise} user={user} />
+                  </Suspense>
+                </div>
+              )}
 
-            {statsPromise && (
-              <div className="shrink-0">
-                <Suspense fallback={<StatsRowSkeleton />}>
-                  <StatsRow statsPromise={statsPromise} user={user} />
-                </Suspense>
-              </div>
-            )}
+              {suggestionsPromise && (
+                <div className="flex flex-col gap-4">
+                  <Title label={t("suggestions.title")} size="h2" />
+                  <Suspense fallback={<SuggestionsListSkeleton />}>
+                    <SuggestionsList suggestionsPromise={suggestionsPromise} />
+                  </Suspense>
+                </div>
+              )}
 
-            {suggestionsPromise && (
-              <div className="flex flex-col gap-4">
-                <Title label={t("suggestions.title")} size="h2" />
-                <Suspense fallback={<SuggestionsListSkeleton />}>
-                  <SuggestionsList suggestionsPromise={suggestionsPromise} />
-                </Suspense>
-              </div>
-            )}
+              <Link
+                href={ROUTES.PRIVACY_POLICY}
+                className="text-txt-muted text-xs underline-offset-2 hover:underline"
+              >
+                {tNav("privacyPolicy")}
+              </Link>
+            </div>
           </div>
 
           <Suspense fallback={null}>

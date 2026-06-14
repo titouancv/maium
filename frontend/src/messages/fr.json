@@ -5,7 +5,8 @@
     "searchLabel": "Rechercher",
     "messages": "Messages",
     "jobs": "Offres",
-    "profile": "Profil"
+    "profile": "Profil",
+    "privacyPolicy": "Politique de confidentialité"
   },
   "jobs": {
     "title": "Analyse d'offre",
