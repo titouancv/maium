@@ -27,7 +27,14 @@ export const FormLayout = ({
   children,
 }: FormLayoutProps) => {
   useEffect(() => {
+    // Capture the current title so it can be restored on unmount — otherwise an
+    // overlay rendered over a still-mounted page leaves the tab name stuck on
+    // the overlay's title after it closes (the page's effect never re-runs).
+    const previous = document.title;
     document.title = title.toLowerCase() + " • maium";
+    return () => {
+      document.title = previous;
+    };
   }, [title]);
 
   return (

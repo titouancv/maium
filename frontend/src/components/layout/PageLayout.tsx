@@ -31,7 +31,15 @@ export const PageLayout = ({
   const tabTitle = documentTitle ?? (typeof title === "string" ? title : null);
 
   useEffect(() => {
-    if (tabTitle) document.title = tabTitle.toLowerCase() + " • maium";
+    if (!tabTitle) return;
+    // Capture the current title so it can be restored on unmount — otherwise an
+    // overlay rendered over a still-mounted page leaves the tab name stuck on
+    // the overlay's title after it closes (the page's effect never re-runs).
+    const previous = document.title;
+    document.title = tabTitle.toLowerCase() + " • maium";
+    return () => {
+      document.title = previous;
+    };
   }, [tabTitle]);
 
   return (
