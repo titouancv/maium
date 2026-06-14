@@ -185,7 +185,7 @@
     "title": "Paramètres",
     "backButton": "Retour",
     "accountMenuLabel": "Mon compte",
-    "personalDataMenuLabel": "Mes données personnelles",
+    "myInformationMenuLabel": "Mes informations",
     "privacyPolicyMenuLabel": "Politique de confidentialité",
     "logoutButton": "Se déconnecter",
     "deleteAccountButton": "Supprimer le compte",

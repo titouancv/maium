@@ -29,7 +29,7 @@ export const StatsRow = ({ statsPromise, user }: StatsRowProps) => {
             percent: completion.percent,
           })}
           description={t("actions.completeProfileDescription")}
-          href={ROUTES.SETTINGS}
+          href={ROUTES.SETTINGS_MY_INFORMATION}
           primary
         />
       )}

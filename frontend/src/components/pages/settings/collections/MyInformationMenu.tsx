@@ -8,12 +8,12 @@ import { EditInfoOverlay, type EditableField } from "./EditInfoOverlay";
 import type { UserData } from "@/types";
 import { formatTimestampToDate } from "@/lib/date";
 
-interface PersonalDataMenuProps {
+interface MyInformationMenuProps {
   userPromise: Promise<UserData | null>;
 }
 
 /** Unwraps the streamed user promise and renders the editable data menus. */
-export const PersonalDataMenu = ({ userPromise }: PersonalDataMenuProps) => {
+export const MyInformationMenu = ({ userPromise }: MyInformationMenuProps) => {
   const user = use(userPromise);
   const t = useTranslations("settings");
   const tHome = useTranslations("home");
