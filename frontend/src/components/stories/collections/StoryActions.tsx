@@ -84,6 +84,11 @@ export function StoryActions({
     try {
       const res = await fetch(API.STORY(story.id), { method: "DELETE" });
       if (res.ok) {
+        // Deleting your repost must also clear the « reposted » state on the
+        // original story, so its repost button resets live (no refresh needed).
+        if (story.isRepost && story.originalStoryId) {
+          setReposted(story.originalStoryId, false);
+        }
         removeStory(story.id); // optimistic; closes the reader below
         onClose();
       }
