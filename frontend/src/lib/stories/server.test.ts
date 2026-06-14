@@ -1,47 +1,26 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 
 vi.mock("@/lib/supabase/server", () => ({ createClient: vi.fn() }));
-vi.mock("@/lib/supabase/admin", () => ({ createAdminClient: vi.fn() }));
 vi.mock("@/lib/auth/getCurrentUser", () => ({ getAuthUser: vi.fn() }));
 
 import { getStoriesFeed } from "./server";
 import { createClient } from "@/lib/supabase/server";
-import { createAdminClient } from "@/lib/supabase/admin";
 import { getAuthUser } from "@/lib/auth/getCurrentUser";
 
 const mockCreateClient = vi.mocked(createClient);
-const mockCreateAdminClient = vi.mocked(createAdminClient);
 const mockGetAuthUser = vi.mocked(getAuthUser);
 
 type Row = Record<string, unknown>;
 
-/** A thenable, chainable query-builder stub that resolves to `result`. */
-function chain(result: { data: unknown; error: unknown }) {
-  const obj: Record<string, unknown> = {};
-  for (const m of ["select", "gt", "order", "eq", "in"]) {
-    obj[m] = vi.fn(() => obj);
-  }
-  obj.then = (resolve: (v: unknown) => unknown) => resolve(result);
-  return obj;
-}
-
-function mockSupabase(results: Record<string, { data: unknown; error: unknown }>) {
+/** Stub a client whose `get_stories_feed` RPC resolves to `result`. */
+function mockRpc(result: { data: unknown; error: unknown }) {
   mockCreateClient.mockResolvedValue({
-    from: vi.fn((table: string) => chain(results[table])),
+    rpc: vi.fn(() => Promise.resolve(result)),
   } as never);
 }
 
-/**
- * Admin client stub. Its `story_likes` / `stories` reads return the *global*
- * like / repost totals, keyed separately from the per-viewer server reads.
- */
-function mockAdmin(results: Record<string, { data: unknown; error: unknown }>) {
-  mockCreateAdminClient.mockReturnValue({
-    from: vi.fn((table: string) => chain(results[table] ?? { data: [], error: null })),
-  } as never);
-}
-
-function storyRow(over: Partial<Row>): Row {
+/** A flat `get_stories_feed` row with sensible defaults, overridable per case. */
+function feedRow(over: Partial<Row>): Row {
   return {
     id: "x",
     author_id: "me",
@@ -50,15 +29,31 @@ function storyRow(over: Partial<Row>): Row {
     original_author_id: null,
     original_story_id: null,
     created_at: "2026-06-10T08:00:00Z",
-    original_author: null,
-    author: { pseudo: "me", first_name: "Me", last_name: "Self" },
+    like_count: 0,
+    repost_count: 0,
+    author_pseudo: "me",
+    author_first_name: "Me",
+    author_last_name: "Self",
+    author_location: null,
+    original_author_pseudo: null,
+    original_author_first_name: null,
+    original_author_last_name: null,
+    seen: false,
+    liked_by_me: false,
+    reposted_by_me: false,
     ...over,
   };
 }
 
+const bob = {
+  author_id: "b",
+  author_pseudo: "bob",
+  author_first_name: "Bob",
+  author_last_name: "B",
+};
+
 beforeEach(() => {
   vi.clearAllMocks();
-  mockAdmin({});
 });
 
 describe("getStoriesFeed", () => {
@@ -70,29 +65,14 @@ describe("getStoriesFeed", () => {
   it("groups by author, puts the viewer's own group first, and marks unseen", async () => {
     mockGetAuthUser.mockResolvedValue({ id: "me" } as never);
 
-    const bobAuthor = { pseudo: "bob", first_name: "Bob", last_name: "B" };
-    mockSupabase({
-      stories: {
-        data: [
-          storyRow({ id: "a1", created_at: "2026-06-10T08:00:00Z" }),
-          storyRow({
-            id: "b1",
-            author_id: "b",
-            author: bobAuthor,
-            created_at: "2026-06-10T09:00:00Z",
-          }),
-          storyRow({
-            id: "b2",
-            author_id: "b",
-            author: bobAuthor,
-            created_at: "2026-06-10T10:00:00Z",
-          }),
-        ],
-        error: null,
-      },
-      // a1 and b1 already seen; b2 unseen.
-      story_views: { data: [{ story_id: "a1" }, { story_id: "b1" }], error: null },
-      story_likes: { data: [], error: null },
+    mockRpc({
+      data: [
+        // a1 and b1 already seen; b2 unseen.
+        feedRow({ id: "a1", seen: true, created_at: "2026-06-10T08:00:00Z" }),
+        feedRow({ ...bob, id: "b1", seen: true, created_at: "2026-06-10T09:00:00Z" }),
+        feedRow({ ...bob, id: "b2", seen: false, created_at: "2026-06-10T10:00:00Z" }),
+      ],
+      error: null,
     });
 
     const feed = await getStoriesFeed();
@@ -108,27 +88,15 @@ describe("getStoriesFeed", () => {
     expect(feed[1].stories[1].seen).toBe(false);
   });
 
-  it("tallies global like and repost totals per story", async () => {
+  it("carries per-story like and repost counts from the feed row", async () => {
     mockGetAuthUser.mockResolvedValue({ id: "me" } as never);
 
-    mockSupabase({
-      stories: {
-        data: [
-          storyRow({ id: "a1" }),
-          storyRow({ id: "a2", created_at: "2026-06-10T09:00:00Z" }),
-        ],
-        error: null,
-      },
-      story_views: { data: [], error: null },
-      story_likes: { data: [], error: null },
-    });
-    // a1: two likes + one repost; a2: nothing.
-    mockAdmin({
-      story_likes: {
-        data: [{ story_id: "a1" }, { story_id: "a1" }],
-        error: null,
-      },
-      stories: { data: [{ original_story_id: "a1" }], error: null },
+    mockRpc({
+      data: [
+        feedRow({ id: "a1", like_count: 2, repost_count: 1 }),
+        feedRow({ id: "a2", created_at: "2026-06-10T09:00:00Z" }),
+      ],
+      error: null,
     });
 
     const feed = await getStoriesFeed();

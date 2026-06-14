@@ -65,14 +65,8 @@ export async function POST(
     if (error) throw error;
 
     // A fresh repost is unseen until the author opens it, so their own bubble
-    // shows the unseen ring immediately.
-    const story = mapStoryFromDb(data as unknown as DbStoryRaw, {
-      seen: false,
-      likedByMe: false,
-      repostedByMe: false,
-      likeCount: 0,
-      repostCount: 0,
-    });
+    // shows the unseen ring immediately (the fresh-story flags are the default).
+    const story = mapStoryFromDb(data as unknown as DbStoryRaw);
     return NextResponse.json({ story }, { status: 201 });
   } catch (error) {
     console.error("[POST /api/stories/[id]/repost]", error);

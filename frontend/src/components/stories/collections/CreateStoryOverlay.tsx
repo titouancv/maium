@@ -6,6 +6,7 @@ import { motion } from "framer-motion";
 import { API } from "@/constants";
 import { useStoriesStore } from "@/stores/useStoriesStore";
 import { useCurrentUserStore } from "@/stores/useCurrentUserStore";
+import { userToSummary } from "@/lib/mappers/user";
 import { StoryBlockEditor } from "./StoryBlockEditor";
 
 interface CreateStoryOverlayProps {
@@ -41,11 +42,7 @@ export function CreateStoryOverlay({ onClose }: CreateStoryOverlayProps) {
         return;
       }
       const { story } = await res.json();
-      addStory(story, {
-        pseudo: currentUser.pseudo,
-        first_name: currentUser.first_name,
-        last_name: currentUser.last_name,
-      });
+      addStory(story, userToSummary(currentUser));
       onClose();
     } catch {
       setError(t("error"));

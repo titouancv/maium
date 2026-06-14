@@ -1,4 +1,5 @@
 import type { StoryData } from "@/types/story";
+import type { UserSummary } from "@/types/user";
 
 export type DbStoryRaw = {
   id: string;
@@ -15,25 +16,36 @@ export type DbStoryRaw = {
   } | null;
 };
 
-/** Subset select string to embed the author + original author for a story row. */
+/** Subset select string to embed the original author for a freshly inserted story. */
 export const STORY_SELECT = `
   id, author_id, content, is_repost, original_author_id, original_story_id, created_at,
   original_author:original_author_id(pseudo, first_name, last_name)
 `.trim();
 
-/** Author summary embedded alongside a story when grouping the feed. */
-export const STORY_AUTHOR_SELECT =
-  "author:author_id(pseudo, first_name, last_name)";
+type StoryFlags = {
+  seen: boolean;
+  likedByMe: boolean;
+  repostedByMe: boolean;
+  likeCount: number;
+  repostCount: number;
+};
+
+/**
+ * Defaults for a just-created / just-reposted story: unseen by its author,
+ * unliked, unreposted, no counts yet. Lets insert routes call `mapStoryFromDb`
+ * without restating these every time.
+ */
+const FRESH_STORY_FLAGS: StoryFlags = {
+  seen: false,
+  likedByMe: false,
+  repostedByMe: false,
+  likeCount: 0,
+  repostCount: 0,
+};
 
 export function mapStoryFromDb(
   raw: DbStoryRaw,
-  flags: {
-    seen: boolean;
-    likedByMe: boolean;
-    repostedByMe: boolean;
-    likeCount: number;
-    repostCount: number;
-  },
+  flags: StoryFlags = FRESH_STORY_FLAGS,
 ): StoryData {
   return {
     id: raw.id,
@@ -55,5 +67,63 @@ export function mapStoryFromDb(
     repostedByMe: flags.repostedByMe,
     likeCount: flags.likeCount,
     repostCount: flags.repostCount,
+  };
+}
+
+/** Flat row returned by the `get_stories_feed` RPC (one per visible story). */
+export type DbStoryFeedRow = {
+  id: string;
+  author_id: string;
+  content: string;
+  is_repost: boolean;
+  original_author_id: string | null;
+  original_story_id: string | null;
+  created_at: string;
+  like_count: number;
+  repost_count: number;
+  author_pseudo: string;
+  author_first_name: string;
+  author_last_name: string;
+  author_location: string | null;
+  original_author_pseudo: string | null;
+  original_author_first_name: string | null;
+  original_author_last_name: string | null;
+  seen: boolean;
+  liked_by_me: boolean;
+  reposted_by_me: boolean;
+};
+
+/** Build the domain story from a flat feed row (flags already resolved server-side). */
+export function mapFeedRowToStory(row: DbStoryFeedRow): StoryData {
+  return {
+    id: row.id,
+    authorId: row.author_id,
+    content: row.content,
+    isRepost: row.is_repost,
+    originalAuthorId: row.original_author_id,
+    originalStoryId: row.original_story_id,
+    originalAuthor: row.original_author_pseudo
+      ? {
+          pseudo: row.original_author_pseudo,
+          first_name: row.original_author_first_name ?? "",
+          last_name: row.original_author_last_name ?? "",
+        }
+      : null,
+    createdAt: new Date(row.created_at).getTime(),
+    seen: row.seen,
+    likedByMe: row.liked_by_me,
+    repostedByMe: row.reposted_by_me,
+    likeCount: row.like_count,
+    repostCount: row.repost_count,
+  };
+}
+
+/** Author summary carried alongside each feed row, for grouping the feed. */
+export function mapFeedRowToAuthor(row: DbStoryFeedRow): UserSummary {
+  return {
+    pseudo: row.author_pseudo,
+    first_name: row.author_first_name,
+    last_name: row.author_last_name,
+    location: row.author_location,
   };
 }

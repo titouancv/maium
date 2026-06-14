@@ -7,6 +7,7 @@ import { API, ROUTES } from "@/constants";
 import { Button } from "@/components/ui";
 import { useStoriesStore } from "@/stores/useStoriesStore";
 import { useCurrentUserStore } from "@/stores/useCurrentUserStore";
+import { userToSummary } from "@/lib/mappers/user";
 import type { StoryData } from "@/types/story";
 import { StoryViewersSheet } from "./StoryViewersSheet";
 
@@ -109,11 +110,7 @@ export function StoryActions({
         const res = await fetch(API.STORY_REPOST(story.id), { method: "POST" });
         if (res.ok) {
           const { story: newStory } = await res.json();
-          addStory(newStory, {
-            pseudo: currentUser.pseudo,
-            first_name: currentUser.first_name,
-            last_name: currentUser.last_name,
-          });
+          addStory(newStory, userToSummary(currentUser));
           setReposted(story.id, true);
         }
       }
