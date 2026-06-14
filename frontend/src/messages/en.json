@@ -110,12 +110,13 @@
       "evening": "Good evening, {name}",
       "night": "Still up, {name}?"
     },
-    "stats": {
-      "followers": "Followers",
-      "following": "Following",
-      "unread": "Unread messages",
-      "profileViews": "Profile views",
-      "trendTitle": "vs. last 7 days"
+    "notifications": {
+      "label": "Notifications",
+      "title": "Notifications",
+      "empty": "No notifications yet",
+      "actionFollow": "started following you",
+      "actionMessage": "sent you a message",
+      "actionProfileView": "viewed your profile"
     },
     "actions": {
       "analyzeTitle": "Analyze a job posting",

@@ -35,6 +35,8 @@ export const API = {
   MESSAGES_CONVERSATION_READ: (id: string) =>
     `/api/messages/conversations/${id}/read`,
   HOME_STATS: "/api/home/stats",
+  HOME_NOTIFICATIONS: "/api/home/notifications",
+  HOME_NOTIFICATIONS_READ: "/api/home/notifications/read",
   ANALYZE_JOB: "/api/analyze-job",
   ANALYSIS: (id: string) => `/api/analysis/${id}`,
   HISTORY: "/api/history",

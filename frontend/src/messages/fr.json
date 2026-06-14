@@ -110,12 +110,13 @@
       "evening": "Bonsoir, {name}",
       "night": "Encore debout, {name} ?"
     },
-    "stats": {
-      "followers": "Abonnés",
-      "following": "Abonnements",
-      "unread": "Messages non lus",
-      "profileViews": "Vues du profil",
-      "trendTitle": "vs. 7 derniers jours"
+    "notifications": {
+      "label": "Notifications",
+      "title": "Notifications",
+      "empty": "Aucune notification pour le moment",
+      "actionFollow": "vous suit",
+      "actionMessage": "vous a envoyé un message",
+      "actionProfileView": "a vu votre profil"
     },
     "actions": {
       "analyzeTitle": "Analyser une offre",
