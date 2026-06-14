@@ -26,7 +26,9 @@ export function NavigationBar() {
     { name: t("home"), href: ROUTES.HOME },
     pseudo ? { name: t("messages"), href: ROUTES.MESSAGES } : undefined,
     pseudo ? { name: t("profile"), href: ROUTES.PROFILE(pseudo) } : undefined,
-  ].filter((tab) => tab !== undefined);
+  ]
+    .filter((tab) => tab !== undefined)
+    .map((tab) => ({ name: tab.name.toLowerCase(), href: tab.href }));
 
   const isOnTabRoute = tabs.some(
     (tab) => pathname === tab.href || pathname.startsWith(`${tab.href}/`),
