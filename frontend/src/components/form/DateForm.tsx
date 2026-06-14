@@ -7,9 +7,12 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useTranslations } from "next-intl";
 import { DateInput } from "@/components/ui/DateInput";
-import { SIGNUP_FORM_ID } from "@/constants";
+import { SIGNUP_FORM_ID, MIN_SIGNUP_AGE } from "@/constants";
+import { isAtLeastYearsOld } from "@/lib/date";
 
 const isPastDate = (v: number | null): boolean => v === null || v < Date.now();
+const isOldEnough = (v: number | null): boolean =>
+  v === null || isAtLeastYearsOld(v, MIN_SIGNUP_AGE);
 interface DateFormProps {
   onChange: (d: { dob: number }) => void;
   defaultValue?: number | null;
@@ -25,7 +28,10 @@ export const DateForm = ({ onChange, defaultValue }: DateFormProps) => {
           .number()
           .nullable()
           .refine((v) => v !== null, { message: t("dobInvalid") })
-          .refine(isPastDate, { message: t("dobFuture") }),
+          .refine(isPastDate, { message: t("dobFuture") })
+          .refine(isOldEnough, {
+            message: t("dobTooYoung", { minAge: MIN_SIGNUP_AGE }),
+          }),
       }),
     [t],
   );

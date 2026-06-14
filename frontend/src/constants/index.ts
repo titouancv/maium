@@ -55,6 +55,9 @@ export const EXTERNAL_API = {
 
 export const SIGNUP_FORM_ID = "signup-step-form";
 
+/** Minimum age (in years) required to create an account. */
+export const MIN_SIGNUP_AGE = 16;
+
 // --- Job-analysis pipeline -------------------------------------------------
 
 /** Max job analyses a user can launch per rolling hour (rate-limit). */

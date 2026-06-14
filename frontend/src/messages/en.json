@@ -258,7 +258,8 @@
       "step4": {
         "title": "When's your birthday?",
         "dobInvalid": "Please enter a valid date",
-        "dobFuture": "Date of birth cannot be in the future"
+        "dobFuture": "Date of birth cannot be in the future",
+        "dobTooYoung": "You must be at least {minAge} years old to sign up"
       },
       "step5": {
         "title": "Your career"
@@ -358,22 +359,65 @@
   "privacyPolicy": {
     "title": "Privacy policy",
     "backButton": "Back",
-    "lastUpdated": "Last updated: May 23, 2025",
-    "intro": "maium (\"we\", \"our\", \"us\") is committed to protecting your privacy. This policy explains what data we collect, why we collect it, and how we use it.",
-    "section1Title": "1. Data we collect",
-    "section1Body": "When you create an account and use maium, we collect: your email address, first and last name, username, date of birth, phone number (optional), nationality, location, professional and educational experiences, social network links, hobbies, skills, and projects. We also collect authentication data via Google and Apple OAuth.",
-    "section2Title": "2. How we use your data",
-    "section2Body": "Your data is used to create and display your public profile, authenticate you securely, provide app features (search, recommendations), and improve the service. We do not sell your personal data to third parties.",
-    "section3Title": "3. Data sharing",
-    "section3Body": "Your profile information (name, username, experiences, hobbies, skills, projects, and links) is visible to other maium users. Sensitive data such as your email address, phone number, date of birth, and nationality are never shown publicly.",
-    "section4Title": "4. Data retention",
-    "section4Body": "Your data is retained as long as your account is active. When you delete your account, all your personal data is permanently deleted from our systems within 30 days.",
-    "section5Title": "5. Your rights",
-    "section5Body": "You have the right to access, correct, or delete your personal data at any time from the Settings page. For any other requests, contact us at titouancv@icloud.com.",
-    "section6Title": "6. Cookies",
-    "section6Body": "We use strictly necessary cookies for authentication and session management. No advertising or tracking cookies are used.",
-    "section7Title": "7. Contact",
-    "section7Body": "For any questions about this privacy policy, please contact us at titouancv@icloud.com."
+    "lastUpdated": "Last updated: June 14, 2026",
+    "intro": "maium (\"we\", \"our\", \"us\") places great importance on protecting your personal data. In accordance with the General Data Protection Regulation (GDPR), this privacy policy describes the data we collect, the purposes and legal bases for processing it, who receives it, how long we keep it, and the rights available to you.",
+    "controllerTitle": "1. Data controller",
+    "controllerBody": "The controller of your personal data is:\n\n[Company name], [legal form] with a share capital of [amount], registered under number [registration number], whose registered office is located at [address].\n\nFor any question regarding the processing of your data, you can contact us at contact@maium.app.",
+    "dataCollectedTitle": "2. Data we collect",
+    "dataCollectedBody": "When you create an account and use maium, we collect the following categories of data:",
+    "dataCollectedItems": [
+      "Identification and profile data: first and last name, username, email address, date of birth, gender, photo, and biography.",
+      "Contact and location data (optional): phone number, nationality, location.",
+      "Background data: professional, educational, and personal experiences, skills, projects, hobbies, and links to your social networks.",
+      "Content you publish: stories, messages exchanged with other users, job offers submitted for analysis, and generated resumes.",
+      "Authentication data provided by Google when you sign in via OAuth.",
+      "Technical and usage data: connection data, audience statistics, and preferences (theme, language)."
+    ],
+    "purposesTitle": "3. Purposes and legal bases",
+    "purposesBody": "Your data is processed for the following purposes, each relying on a legal basis set out by the GDPR:",
+    "purposesItems": [
+      "Creating, managing, and displaying your public profile, and providing the service's features (search, messaging, stories, follows) — performance of the contract (Art. 6.1.b).",
+      "Analyzing job offers and optimizing your resume using artificial intelligence tools — performance of the contract and your consent (Art. 6.1.a and b).",
+      "Secure authentication and prevention of fraud and abuse — legitimate interest (Art. 6.1.f).",
+      "Audience measurement and service improvement — legitimate interest (Art. 6.1.f).",
+      "Compliance with our legal and regulatory obligations — legal obligation (Art. 6.1.c)."
+    ],
+    "automatedProcessingTitle": "4. Automated processing and artificial intelligence",
+    "automatedProcessingBody": "maium uses artificial intelligence services (Mistral AI) to analyze the job offers you submit, assess how well they match your profile, and generate optimized resumes. This processing produces recommendations provided for guidance only and does not result in any decision producing legal effects concerning you or significantly affecting you within the meaning of Article 22 of the GDPR. You remain free to use the generated suggestions or not.",
+    "recipientsTitle": "5. Recipients and processors",
+    "recipientsBody": "We never sell your personal data. The public information in your profile (name, username, photo, biography, experiences, skills, projects, hobbies, and links) is visible to other maium users; your sensitive data (email address, phone number, date of birth, nationality) is never shown publicly. To provide the service, we rely on processors acting on our instructions:",
+    "recipientsItems": [
+      "Supabase — database hosting, authentication, and file storage.",
+      "Google — authentication via OAuth and the provision of website icons.",
+      "Mistral AI — job offer analysis and resume generation.",
+      "Vercel — application hosting and audience measurement (Analytics and Speed Insights).",
+      "Photon / Komoot — address suggestions when you enter your location."
+    ],
+    "transfersTitle": "6. Transfers outside the European Union",
+    "transfersBody": "Some of our processors may process your data outside the European Union. In such cases, these transfers are governed by appropriate safeguards provided for by the GDPR, such as the European Commission's standard contractual clauses or an adequacy decision, in order to ensure your data a level of protection equivalent to that guaranteed within the European Union.",
+    "retentionTitle": "7. Data retention",
+    "retentionBody": "Your data is retained for as long as your account is active. When you delete your account, all of your personal data is permanently erased from our systems within a maximum of 30 days, subject to retention periods required by law (in particular for accounting or evidentiary purposes).",
+    "securityTitle": "8. Data security",
+    "securityBody": "We implement appropriate technical and organizational measures to protect your data against unauthorized access, loss, or disclosure: encryption of communications, strict access control, and per-user data isolation. In the event of a data breach likely to result in a risk to your rights and freedoms, we undertake to notify the competent supervisory authority and, where applicable, the data subjects, in accordance with the GDPR.",
+    "rightsTitle": "9. Your rights",
+    "rightsBody": "In accordance with the GDPR, you have the following rights over your personal data at any time. You can exercise most of them directly from the Settings page, or by writing to us at contact@maium.app:",
+    "rightsItems": [
+      "Right of access: obtain a copy of the data we hold about you.",
+      "Right to rectification: correct inaccurate or incomplete data.",
+      "Right to erasure: delete your account and your data.",
+      "Right to restriction of processing and right to object.",
+      "Right to portability: receive your data in a structured, machine-readable format.",
+      "Right to withdraw your consent at any time, without affecting the lawfulness of processing already carried out.",
+      "Right to lodge a complaint with the competent data protection supervisory authority."
+    ],
+    "cookiesTitle": "10. Cookies and trackers",
+    "cookiesBody": "We only use cookies that are strictly necessary for the service to work, in particular for authentication and session management. For audience measurement, we use Vercel Analytics and Speed Insights, privacy-friendly tools that do not set advertising cookies and do not allow you to be individually identified. No advertising or third-party tracking cookies are used.",
+    "minorsTitle": "11. Protection of minors",
+    "minorsBody": "maium is not intended for people under the age of 16: account creation is refused below that age. We do not knowingly collect data relating to minors under the age of 16 without the consent of the holders of parental authority. If you believe that a minor has provided us with data without such authorization, please contact us so that we can delete it.",
+    "changesTitle": "12. Changes to this policy",
+    "changesBody": "We may amend this privacy policy to reflect legal, technical, or functional changes. Any significant change will be notified to you, and the last-updated date shown at the top of this page will be updated accordingly.",
+    "contactTitle": "13. Contact",
+    "contactBody": "For any question regarding this privacy policy or the exercise of your rights, you can contact us at contact@maium.app."
   },
   "messaging": {
     "title": "Messages",
