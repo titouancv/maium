@@ -203,6 +203,8 @@
     "professionalExperiencesLabel": "Professional experiences",
     "educationalExperiencesLabel": "Educational background",
     "editNationality": "Edit nationality",
+    "gender": "Gender",
+    "editGender": "Edit gender",
     "socialNetworks": "Social networks",
     "hobbies": "Hobbies",
     "personalExperiences": "Personal experiences",
@@ -274,6 +276,7 @@
     "fullNameTitle": "What's your name?",
     "pseudoTitle": "Pick your username",
     "dateTitle": "When's your birthday?",
+    "genderTitle": "What's your gender?",
     "phoneNumberTitle": "How can we reach you?",
     "locationTitle": "Where are you based?",
     "socialNetworkTitle": "Your links",
@@ -302,6 +305,11 @@
     "followingTitle": "Following",
     "noFollowers": "No followers yet",
     "noFollowing": "Not following anyone yet"
+  },
+  "gender": {
+    "male": "Male",
+    "female": "Female",
+    "other": "Other"
   },
   "experience": {
     "professional": {

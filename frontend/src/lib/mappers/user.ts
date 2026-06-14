@@ -1,3 +1,4 @@
+import type { Gender } from "@/constants";
 import type { Experience } from "@/types/experience";
 import type { UserData, Hobby, UserSummary } from "@/types/user";
 
@@ -37,6 +38,7 @@ export type DbUserRaw = {
   last_name?: string | null;
   pseudo?: string | null;
   dob?: string | null;
+  gender?: string | null;
   onboarding_completed?: boolean;
   phone?: string | null;
   nationality?: string | null;
@@ -75,6 +77,7 @@ export function mapUserFromDb(raw: DbUserRaw): UserData {
     last_name: raw.last_name ?? "",
     pseudo: raw.pseudo ?? "",
     dob: raw.dob ? new Date(raw.dob + "T00:00:00Z").getTime() : null,
+    gender: (raw.gender as Gender | null) ?? null,
     onboarding_completed: raw.onboarding_completed,
     phone: raw.phone,
     nationality: raw.nationality,

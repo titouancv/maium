@@ -30,6 +30,7 @@ export default async function SignupPage() {
       lastName: userData.last_name || undefined,
       pseudo: userData.pseudo || undefined,
       dob: userData.dob ?? undefined,
+      gender: userData.gender ?? undefined,
       professionalExperiences: userData.professional_experiences ?? [],
       educationalExperiences: userData.educational_experiences ?? [],
     };

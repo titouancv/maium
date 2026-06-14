@@ -15,6 +15,7 @@ import { DateRangeForm } from "./DateRangeForm";
 import { ExperiencesForm } from "./ExperiencesForm";
 import { HobbiesForm } from "./HobbiesForm";
 import { PseudoForm } from "./PseudoForm";
+import { SelectForm, type SelectOption } from "./SelectForm";
 import type { DateMode } from "@/components/ui/DateInput";
 import type { Experience } from "@/types/experience";
 import { HobbyData } from "@/types/user";
@@ -54,6 +55,7 @@ export type FormValueMap = {
   dateRange: { startDate: number | null; endDate: number | null };
   experiences: Experience[];
   pseudo: { pseudo: string };
+  select: string;
 };
 
 export type FormDefaultValueMap = {
@@ -73,6 +75,7 @@ export type FormDefaultValueMap = {
   };
   experiences: Experience[];
   pseudo: string;
+  select: string;
 };
 
 export type FormConfigMap = {
@@ -101,6 +104,7 @@ export type FormConfigMap = {
     dateMode?: "MM-YYYY" | "YYYY";
   };
   pseudo: never;
+  select: { options: SelectOption<string>[]; footer?: React.ReactNode };
 };
 
 export type FormType = keyof FormValueMap;
@@ -208,6 +212,15 @@ const renderContent = (props: FormProps) => {
         <PseudoForm
           onChange={props.onChange}
           defaultValue={props.defaultValue}
+        />
+      );
+    case "select":
+      return (
+        <SelectForm
+          options={props.options}
+          defaultValue={props.defaultValue}
+          onChange={props.onChange}
+          footer={props.footer}
         />
       );
     case "hobbies":

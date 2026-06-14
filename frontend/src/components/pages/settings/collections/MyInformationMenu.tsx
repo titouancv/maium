@@ -17,6 +17,7 @@ export const MyInformationMenu = ({ userPromise }: MyInformationMenuProps) => {
   const user = use(userPromise);
   const t = useTranslations("settings");
   const tHome = useTranslations("home");
+  const tGender = useTranslations("gender");
   const router = useRouter();
   const [editingField, setEditingField] = useState<EditableField | null>(null);
 
@@ -44,6 +45,11 @@ export const MyInformationMenu = ({ userPromise }: MyInformationMenuProps) => {
               value:
                 user.dob != null ? formatTimestampToDate(user.dob) : undefined,
               onClick: () => setEditingField("dob"),
+            },
+            {
+              label: t("gender"),
+              value: user.gender ? tGender(user.gender) : undefined,
+              onClick: () => setEditingField("gender"),
             },
             {
               label: t("bio"),

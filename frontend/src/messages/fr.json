@@ -203,6 +203,8 @@
     "professionalExperiencesLabel": "Expériences professionnelles",
     "educationalExperiencesLabel": "Parcours éducatif",
     "editNationality": "Modifier la nationalité",
+    "gender": "Genre",
+    "editGender": "Modifier le genre",
     "socialNetworks": "Réseaux sociaux",
     "hobbies": "Loisirs",
     "personalExperiences": "Expériences personnelles",
@@ -274,6 +276,7 @@
     "fullNameTitle": "Comment vous appelez-vous ?",
     "pseudoTitle": "Choisissez votre pseudo",
     "dateTitle": "Vous êtes né(e) quand ?",
+    "genderTitle": "Quel est votre genre ?",
     "phoneNumberTitle": "Comment vous joindre ?",
     "locationTitle": "Où êtes-vous basé(e) ?",
     "socialNetworkTitle": "Vos liens",
@@ -302,6 +305,11 @@
     "followingTitle": "Abonnements",
     "noFollowers": "Aucun abonné pour l'instant",
     "noFollowing": "Aucun abonnement pour l'instant"
+  },
+  "gender": {
+    "male": "Homme",
+    "female": "Femme",
+    "other": "Autre"
   },
   "experience": {
     "professional": {

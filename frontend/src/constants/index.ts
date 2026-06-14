@@ -111,3 +111,8 @@ export const EXPERIENCE_NAMESPACE = {
 
 export type ExperienceNamespace =
   (typeof EXPERIENCE_NAMESPACE)[keyof typeof EXPERIENCE_NAMESPACE];
+
+/** Allowed gender values (stored as canonical codes; labels are translated). */
+export const GENDERS = ["male", "female", "other"] as const;
+
+export type Gender = (typeof GENDERS)[number];

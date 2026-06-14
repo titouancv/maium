@@ -2,8 +2,7 @@
 
 import { useTranslations } from "next-intl";
 import type { StoryBlockType } from "@/types/story";
-import { FormLayout } from "@/components/layout/FormLayout";
-import { SelectForm } from "@/components/form";
+import { Form } from "@/components/form";
 import { useState } from "react";
 import { Button } from "@/components/ui";
 
@@ -55,7 +54,8 @@ export function StoryBlockTypeSheet({
     <>
       {open && (
         <div className="bg-surface-50 fixed inset-0 z-50">
-          <FormLayout
+          <Form
+            type="select"
             title={t("blockMenuTitle")}
             isCancelable
             onCancel={onClose}
@@ -64,24 +64,21 @@ export function StoryBlockTypeSheet({
             cancelLabel={tCommon("backButton")}
             primaryLabel={t("addBlock")}
             onPrimary={() => onSelect(selected)}
-          >
-            <SelectForm
-              options={BLOCK_TYPES.map((type) => ({
-                value: type,
-                label: t(LABEL_KEY[type]),
-                description: t(DESC_KEY[type]),
-              }))}
-              defaultValue={BLOCK_TYPES[0]}
-              onChange={setSelected}
-              footer={
-                showRemove && (
-                  <Button variant="outline" onClick={onRemove}>
-                    {t("removeBlock")}
-                  </Button>
-                )
-              }
-            />
-          </FormLayout>
+            options={BLOCK_TYPES.map((type) => ({
+              value: type,
+              label: t(LABEL_KEY[type]),
+              description: t(DESC_KEY[type]),
+            }))}
+            defaultValue={BLOCK_TYPES[0]}
+            onChange={(value) => setSelected(value as StoryBlockType)}
+            footer={
+              showRemove && (
+                <Button variant="outline" onClick={onRemove}>
+                  {t("removeBlock")}
+                </Button>
+              )
+            }
+          />
         </div>
       )}
     </>

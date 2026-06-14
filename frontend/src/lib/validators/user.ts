@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { GENDERS } from "@/constants";
 
 const optionalUrl = z
   .union([z.url(), z.literal("")])
@@ -39,6 +40,7 @@ export const UpdateUserSchema = z
     lastName: z.string().min(1).max(50).optional(),
     pseudo: z.string().min(2).max(30).optional(),
     dob: z.number().int().optional(),
+    gender: z.enum(GENDERS).optional(),
     onboardingCompleted: z.boolean().optional(),
     professionalExperiences: z.array(ExperienceSchema).optional(),
     educationalExperiences: z.array(ExperienceSchema).optional(),
