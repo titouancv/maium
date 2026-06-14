@@ -1,14 +1,14 @@
 export const PRIMARY_COLORS =
   "bg-radial from-secondary-400 from-10% to-primary to-90% text-on-primary hover:from-primary hover:to-secondary-400 shadow-md inset-shadow-sm transition-colors duration-300 ease-in-out inset-shadow-light-100/60";
-export const INVERSE_COLORS =
+const INVERSE_COLORS =
   "bg-inverse-50 text-txt-inverse hover:bg-inverse-200 shadow-md inset-shadow-sm transition-colors duration-300 ease-in-out inset-shadow-surface-50/80";
-export const OUTLINE_COLORS =
+const OUTLINE_COLORS =
   "text-txt border-b border-brd-200 hover:bg-surface-200 shadow-md inset-shadow-sm transition-colors duration-300 ease-in-out inset-shadow-primary-200/80 dark:inset-shadow-primary-400/80";
-export const OUTLINE_SECONDARY_COLORS =
+const OUTLINE_SECONDARY_COLORS =
   "text-txt border-b border-brd-200 hover:bg-surface-200 shadow-md inset-shadow-sm transition-colors duration-300 ease-in-out inset-shadow-secondary-200/80 dark:inset-shadow-secondary-400/80";
-export const OUTLINE_MUTED_COLORS =
+const OUTLINE_MUTED_COLORS =
   "text-txt border-b border-brd-200 hover:bg-surface-200 shadow-md inset-shadow-sm transition-colors duration-300 ease-in-out inset-shadow-dark-200/80";
-export const GHOST_COLORS = "bg-transparent text-txt hover:text-primary";
+const GHOST_COLORS = "bg-transparent text-txt hover:text-primary";
 
 export type UIVariant =
   | "primary"

@@ -1,23 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createClient } from "@/lib/supabase/server";
-
-async function getUser() {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  return { supabase, user };
-}
+import { requireApiUser } from "@/lib/auth";
 
 export async function POST(
   _request: NextRequest,
   { params }: { params: Promise<{ id: string }> },
 ) {
   try {
-    const { supabase, user } = await getUser();
-    if (!user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
+    const auth = await requireApiUser();
+    if (auth instanceof NextResponse) return auth;
+    const { user, supabase } = auth;
 
     const { id } = await params;
     const { error } = await supabase
@@ -41,10 +32,9 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string }> },
 ) {
   try {
-    const { supabase, user } = await getUser();
-    if (!user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
+    const auth = await requireApiUser();
+    if (auth instanceof NextResponse) return auth;
+    const { user, supabase } = auth;
 
     const { id } = await params;
     const { error } = await supabase

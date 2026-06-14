@@ -45,37 +45,3 @@ export function BlockIcon({ type }: { type: StoryBlockType }) {
       );
   }
 }
-
-export function PlusIcon() {
-  return (
-    <svg {...ICON_PROPS}>
-      <path d="M12 5v14M5 12h14" />
-    </svg>
-  );
-}
-
-export function CloseIcon() {
-  return (
-    <svg {...ICON_PROPS}>
-      <path d="M18 6 6 18M6 6l12 12" />
-    </svg>
-  );
-}
-
-export function EyeIcon() {
-  return (
-    <svg {...ICON_PROPS} width={16} height={16}>
-      <path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z" />
-      <circle cx="12" cy="12" r="3" />
-    </svg>
-  );
-}
-
-export function EditIcon() {
-  return (
-    <svg {...ICON_PROPS} width={16} height={16}>
-      <path d="M12 20h9" />
-      <path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z" />
-    </svg>
-  );
-}

@@ -59,6 +59,21 @@ Three Supabase client factories — always pick the right one:
 
 **Always use `supabase.auth.getUser()`**, never `getSession()`. `getSession()` reads from the cookie without re-validating with the server; `getUser()` does a round-trip and is the only safe option for authorization checks.
 
+In **route handlers** that require an authenticated user, don't re-implement the
+`createClient()` + `getUser()` + `401` dance — call
+[requireApiUser()](src/lib/auth/requireApiUser.ts) (`@/lib/auth`). It returns
+either `{ user, supabase }` or a ready-to-return `401` `NextResponse`; narrow
+with `instanceof NextResponse`:
+
+```ts
+const auth = await requireApiUser();
+if (auth instanceof NextResponse) return auth;
+const { user, supabase } = auth;
+```
+
+(Routes with **optional** auth — e.g. `/api/users/search`, `/api/users/view`,
+which don't 401 — still call `getUser()` directly.)
+
 ### Signup Flows
 
 There is a single signup path: **Google OAuth**. (Email/password was removed —
@@ -91,15 +106,24 @@ OAuth flow: Google → Supabase → `/auth/callback` → `exchangeCodeForSession
 | `GET` | `/api/users/followers` | List a user's followers |
 | `GET` | `/api/users/following` | List who a user follows |
 | `POST/DELETE` | `/api/users/follow` | Follow / unfollow a user |
+| `POST` | `/api/users/view` | Record a (deduped) profile view |
 | `GET/POST` | `/api/messages/conversations` | List / create conversations |
 | `GET/POST` | `/api/messages/conversations/:id/messages` | Get / send messages in a conversation |
 | `PATCH` | `/api/messages/conversations/:id/read` | Mark a conversation as read |
+| `GET` | `/api/home/stats` | Home dashboard stats (followers trend, profile views) |
+| `POST` | `/api/stories` | Publish a story |
+| `DELETE` | `/api/stories/:id` | Delete a story (cascades reposts) |
+| `POST` | `/api/stories/:id/view` | Mark a story as viewed |
+| `GET` | `/api/stories/:id/viewers` | List a story's viewers (author only) |
+| `POST/DELETE` | `/api/stories/:id/like` | Like / unlike a story |
+| `POST/DELETE` | `/api/stories/:id/repost` | Repost / un-repost a story |
 | `GET` | `/api/url-title` | Fetch the title of an external URL |
 | `POST` | `/api/analyze-job` | Run the job analysis pipeline |
 | `GET` | `/api/analysis/:id` | Get a single job analysis |
 | `GET` | `/api/history` | List the user's past job analyses |
 | `GET/DELETE` | `/api/resume/:id` | Get / delete an optimized resume |
 | `GET/POST` | `/api/resume/:id/pdf` | Render / generate the resume PDF |
+| `GET/POST` | `/api/resume/profile/pdf` | Render the CV PDF from the user's profile |
 | `POST` | `/api/auth/logout` | Sign out |
 | `GET` | `/api/health` | Health check |
 
@@ -283,12 +307,31 @@ Rules:
 - Root-level infra (`Providers.tsx`, `ThemeApplier.tsx`, `UserHydration.tsx`,
   `PresenceTracker.tsx`) stays at `src/components/` root.
 
+### Cross-cutting feature folders
+
+A self-contained **feature** that spans its own reader/editor/overlays and is
+designed to be embedded into more than one page lives in its own top-level
+folder `src/components/<feature>/` (same `collections/` + `items/` layout as a
+page folder, with a barrel). It is **not** under `pages/` because it is not owned
+by a single route.
+
+- **`stories/`** — the Stories feature (reader overlay, create overlay, block
+  editor, bubbles row, viewers sheet). Currently embedded by
+  [HomeContent](src/components/pages/home/HomeContent.tsx) and intended for reuse
+  (e.g. profiles). Server access lives in [lib/stories](src/lib/stories/); its
+  endpoints are under `/api/stories/*`. Import via `@/components/stories`.
+
+Prefer a per-page folder by default — only promote to a feature folder when a
+block is genuinely reused across pages (or clearly will be).
+
 ### Deciding where a component goes
 
 1. Used by a single page → that page's folder (`collections/` for lists/overlays,
    `items/` for items, root otherwise).
-2. Reused across pages or by forms → `ui/` (`ui/collections/`, `ui/items/`, or root).
-3. Form-related → `form/`. Layout wrapper → `layout/`.
+2. A self-contained feature embedded across pages → `components/<feature>/`
+   (e.g. `stories/`).
+3. Reused across pages or by forms → `ui/` (`ui/collections/`, `ui/items/`, or root).
+4. Form-related → `form/`. Layout wrapper → `layout/`.
 
 ### Imports
 
@@ -308,6 +351,7 @@ frontend/src/
 │   └── api/                       # API route handlers
 ├── components/
 │   ├── pages/<page>/              # Per-page folders (see Components Architecture above)
+│   ├── stories/                   # Cross-cutting Stories feature (reader/editor/overlays)
 │   ├── ui/                        # Shared presentational components
 │   ├── form/                      # Form components and sub-form building blocks
 │   ├── layout/                    # Layout wrappers (PageLayout, FormLayout, SearchLayout)
@@ -320,12 +364,14 @@ frontend/src/
 │   └── request.ts                 # Server-side locale config
 ├── lib/
 │   ├── supabase/                  # client.ts, server.ts, admin.ts, index.ts
-│   ├── auth/                      # getCurrentUser helper
+│   ├── auth/                      # getCurrentUser + requireApiUser (route-handler auth gate)
 │   ├── date.ts                    # Shared date/time + experience-period helpers
 │   ├── jobs/                      # Job analysis pipeline (extract, matching, resume)
 │   ├── resume/                    # Resume data + PDF templates/services
 │   ├── mistral/                   # Mistral AI client
 │   ├── mappers/                   # DB row → domain type mappers
+│   ├── home/                      # Home dashboard stats + profile completion
+│   ├── stories/                   # Stories server access (feed, viewers)
 │   ├── users/ · messaging/        # Server-side data access per domain
 │   └── validators/                # Zod schemas (user.ts, job.ts)
 ├── messages/
@@ -338,6 +384,7 @@ frontend/src/
 │   ├── usePresenceStore.ts        # Online-presence tracking
 │   ├── useMessagingStore.ts       # Messaging client source of truth (conversations + read state)
 │   ├── useProfilePreviewStore.ts  # Profile preview cache
+│   ├── useNotificationStore.ts    # Transient in-app notification banner
 │   └── useThemeStore.ts           # Theme preference (light/dark)
 ├── proxy.ts                       # Middleware (i18n + session refresh)
 ├── hooks/                         # Custom React hooks

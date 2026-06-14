@@ -6,7 +6,6 @@ import { Title, Markdown } from "@/components/ui";
 import { Button } from "@/components/ui/Button";
 import type { StoryBlock, StoryBlockType } from "@/types/story";
 import { StoryBlockRow } from "../items/StoryBlockRow";
-import { PlusIcon } from "../storyBlockIcons";
 import { StoryBlockTypeSheet } from "./StoryBlockTypeSheet";
 
 interface StoryBlockEditorProps {
@@ -150,10 +149,7 @@ export function StoryBlockEditor({
               size="lg"
               onClick={() => setMenuTarget(null)}
             >
-              <span className="flex items-center gap-1.5">
-                <PlusIcon />
-                {t("addBlock")}
-              </span>
+              <span className="flex items-center gap-1.5">{t("addBlock")}</span>
             </Button>
           )}
         </div>

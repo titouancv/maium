@@ -30,7 +30,6 @@ export const JobExtractionSchema = z.object({
   skills: z.array(z.string()).default([]),
   seniority: z.string().default(""),
 });
-export type JobExtraction = z.infer<typeof JobExtractionSchema>;
 
 /** A single experience/education entry inside a stored `resume_json`. */
 const ResumeEntrySchema = z.object({
@@ -52,7 +51,6 @@ export const ResumeJsonInputSchema = z.object({
   education: z.array(ResumeEntrySchema).default([]),
   skills: z.array(z.string()).default([]),
 });
-export type ResumeJsonInput = z.infer<typeof ResumeJsonInputSchema>;
 
 /** Full match analysis that Mistral provides: dimension scores + explanation. */
 export const MatchingExplanationSchema = z.object({
@@ -100,4 +98,3 @@ export const OptimizedResumeSchema = z.object({
   skills: z.array(z.string()).default([]),
   ats_score: z.number().min(0).max(100).default(0),
 });
-export type OptimizedResumeOutput = z.infer<typeof OptimizedResumeSchema>;

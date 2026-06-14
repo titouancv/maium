@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createClient } from "@/lib/supabase/server";
+import { requireApiUser } from "@/lib/auth";
 import { STORY_SELECT, mapStoryFromDb, type DbStoryRaw } from "@/lib/mappers/story";
 
 /** Max characters allowed in a story body. */
@@ -7,15 +7,9 @@ const STORY_MAX_LENGTH = 5000;
 
 export async function POST(request: NextRequest) {
   try {
-    const supabase = await createClient();
-    const {
-      data: { user },
-      error: authError,
-    } = await supabase.auth.getUser();
-
-    if (authError || !user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
+    const auth = await requireApiUser();
+    if (auth instanceof NextResponse) return auth;
+    const { user, supabase } = auth;
 
     const { content } = await request.json();
     const trimmed = typeof content === "string" ? content.trim() : "";

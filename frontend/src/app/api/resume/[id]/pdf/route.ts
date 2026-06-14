@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createClient } from "@/lib/supabase/server";
+import { requireApiUser } from "@/lib/auth";
 import {
   buildResumePdfData,
   renderResumePdf,
@@ -15,13 +15,8 @@ export async function GET(
   req: NextRequest,
   { params }: { params: Promise<{ id: string }> },
 ) {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  if (!user) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
+  const auth = await requireApiUser();
+  if (auth instanceof NextResponse) return auth;
 
   const { id } = await params;
   const template = resolveTemplate(req.nextUrl.searchParams.get("template"));
@@ -43,13 +38,8 @@ export async function POST(
   req: NextRequest,
   { params }: { params: Promise<{ id: string }> },
 ) {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  if (!user) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
+  const auth = await requireApiUser();
+  if (auth instanceof NextResponse) return auth;
 
   const body = (await req.json().catch(() => null)) as {
     resume_json?: unknown;

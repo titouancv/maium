@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { after } from "next/server";
-import { createClient } from "@/lib/supabase/server";
+import { requireApiUser } from "@/lib/auth";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { AnalyzeJobSchema } from "@/lib/validators/job";
 import { isUnderRateLimit, incrementUsage } from "@/lib/jobs/usage";
@@ -11,13 +11,9 @@ import { runAnalysisPipeline } from "@/lib/jobs/pipeline";
 export const maxDuration = 300;
 
 export async function POST(req: NextRequest) {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  if (!user) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
+  const auth = await requireApiUser();
+  if (auth instanceof NextResponse) return auth;
+  const { user } = auth;
 
   const parsed = AnalyzeJobSchema.safeParse(await req.json().catch(() => null));
   if (!parsed.success) {
