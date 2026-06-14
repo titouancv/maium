@@ -452,6 +452,10 @@
     "newFollower": "{name} vous suit",
     "newFollowerGeneric": "Nouveau follower",
     "newMessage": "Nouveau message de {name}",
-    "newMessageGeneric": "Nouveau message"
+    "newMessageGeneric": "Nouveau message",
+    "storyLike": "{name} a aimé votre story",
+    "storyLikeGeneric": "Quelqu'un a aimé votre story",
+    "storyRepost": "{name} a republié votre story",
+    "storyRepostGeneric": "Quelqu'un a republié votre story"
   }
 }
