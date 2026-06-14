@@ -41,6 +41,7 @@ function feedRow(over: Partial<Row>): Row {
     seen: false,
     liked_by_me: false,
     reposted_by_me: false,
+    viewers: null,
     ...over,
   };
 }
@@ -108,5 +109,31 @@ describe("getStoriesFeed", () => {
     expect(a1.repostCount).toBe(1);
     expect(a2.likeCount).toBe(0);
     expect(a2.repostCount).toBe(0);
+  });
+
+  it("carries the embedded viewers from the feed row (empty when null)", async () => {
+    mockGetAuthUser.mockResolvedValue({ id: "me" } as never);
+
+    const viewer = {
+      pseudo: "alice",
+      first_name: "Alice",
+      last_name: "A",
+      location: null,
+      liked: true,
+      reposted: false,
+    };
+
+    mockRpc({
+      data: [
+        feedRow({ id: "a1", viewers: [viewer] }),
+        feedRow({ id: "a2", created_at: "2026-06-10T09:00:00Z", viewers: null }),
+      ],
+      error: null,
+    });
+
+    const stories = (await getStoriesFeed())[0].stories;
+    expect(stories.find((s) => s.id === "a1")!.viewers).toEqual([viewer]);
+    // A null viewers column (others' stories) maps to an empty list.
+    expect(stories.find((s) => s.id === "a2")!.viewers).toEqual([]);
   });
 });

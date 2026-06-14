@@ -25,6 +25,12 @@ export interface StoryData {
   likeCount: number;
   /** Total number of reposts of this story (across all users). */
   repostCount: number;
+  /**
+   * Viewers of the story, carried with the feed so the author-only viewers list
+   * paints instantly. Populated only on the viewer's own stories (empty array
+   * otherwise — server-side authorization), most-recent-first.
+   */
+  viewers: StoryViewer[];
 }
 
 /** The four Notion-like block kinds, each serialized to a markdown primitive. */

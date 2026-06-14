@@ -44,7 +44,6 @@ export const API = {
   STORIES: "/api/stories",
   STORY: (id: string) => `/api/stories/${id}`,
   STORY_VIEW: (id: string) => `/api/stories/${id}/view`,
-  STORY_VIEWERS: (id: string) => `/api/stories/${id}/viewers`,
   STORY_LIKE: (id: string) => `/api/stories/${id}/like`,
   STORY_REPOST: (id: string) => `/api/stories/${id}/repost`,
 } as const;

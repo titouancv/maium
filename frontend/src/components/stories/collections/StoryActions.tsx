@@ -146,7 +146,7 @@ export function StoryActions({
         </div>
         {showViewers && (
           <StoryViewersSheet
-            storyId={story.id}
+            viewers={story.viewers}
             onClose={() => setShowViewers(false)}
           />
         )}

@@ -3,25 +3,23 @@
 import { motion } from "framer-motion";
 import { useTranslations } from "next-intl";
 import { Title, Button } from "@/components/ui";
-import { StoryViewersList, useStoryViewers } from "./StoryViewersList";
+import type { StoryViewer } from "@/types/story";
+import { StoryViewersList } from "./StoryViewersList";
 
 interface StoryViewersSheetProps {
-  storyId: string;
+  viewers: StoryViewer[];
   onClose: () => void;
 }
 
 /**
  * Bottom sheet listing the users who have viewed one of the current user's own
- * stories. Fetched lazily on open; only the author is authorised server-side.
- * Used on mobile; on desktop the list is shown inline (see StoryViewersPanel).
+ * stories. The viewers ship with the story (see `StoryData.viewers`), so the
+ * list paints instantly with no extra fetch. Used on mobile; on desktop the
+ * list is shown inline (see StoryViewersPanel).
  */
-export function StoryViewersSheet({
-  storyId,
-  onClose,
-}: StoryViewersSheetProps) {
+export function StoryViewersSheet({ viewers, onClose }: StoryViewersSheetProps) {
   const t = useTranslations("stories");
   const tCommon = useTranslations("common");
-  const viewers = useStoryViewers(storyId);
 
   return (
     <div className="fixed inset-0 z-[70] flex items-end justify-center">
@@ -39,14 +37,7 @@ export function StoryViewersSheet({
         className="bg-surface-50 relative flex max-h-[70vh] w-full max-w-7xl flex-col rounded-t-md px-4 pt-3 pb-8"
       >
         <div className="mb-2 flex items-center justify-between">
-          <Title
-            size="h4"
-            label={
-              viewers
-                ? t("viewersCount", { count: viewers.length })
-                : t("viewersTitle")
-            }
-          />
+          <Title size="h4" label={t("viewersCount", { count: viewers.length })} />
           <Button variant="ghost" size="none" onClick={onClose} className="p-1">
             {tCommon("backButton")}
           </Button>

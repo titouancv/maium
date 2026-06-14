@@ -114,7 +114,6 @@ OAuth flow: Google → Supabase → `/auth/callback` → `exchangeCodeForSession
 | `POST` | `/api/stories` | Publish a story |
 | `DELETE` | `/api/stories/:id` | Delete a story (cascades reposts) |
 | `POST` | `/api/stories/:id/view` | Mark a story as viewed |
-| `GET` | `/api/stories/:id/viewers` | List a story's viewers (author only) |
 | `POST/DELETE` | `/api/stories/:id/like` | Like / unlike a story |
 | `POST/DELETE` | `/api/stories/:id/repost` | Repost / un-repost a story |
 | `GET` | `/api/url-title` | Fetch the title of an external URL |

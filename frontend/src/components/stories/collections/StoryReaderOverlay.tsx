@@ -239,7 +239,7 @@ export function StoryReaderOverlay({
           {/* Desktop-only: own-story viewers, inline under the actions. */}
           {isDesktop && isOwn && (
             <div className="z-20 flex min-h-0 flex-col overflow-hidden px-4 py-6 [grid-area:viewers]">
-              <StoryViewersPanel storyId={story.id} />
+              <StoryViewersPanel viewers={story.viewers} />
             </div>
           )}
         </div>
