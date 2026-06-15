@@ -6,7 +6,14 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useTranslations } from "next-intl";
 import { TextInput } from "@/components/ui/TextInput";
-import { API, SIGNUP_FORM_ID, type InfoType } from "@/constants";
+import { sanitizePseudo } from "@/lib/utils";
+import {
+  API,
+  PSEUDO_MIN_LENGTH,
+  PSEUDO_REGEX,
+  SIGNUP_FORM_ID,
+  type InfoType,
+} from "@/constants";
 
 type AvailabilityStatus = "idle" | "checking" | "available" | "taken";
 
@@ -18,7 +25,10 @@ interface PseudoFormProps {
 export const PseudoForm = ({ onChange, defaultValue }: PseudoFormProps) => {
   const t = useTranslations("auth.signup.step3");
   const schema = z.object({
-    pseudo: z.string().min(3, t("pseudoMinLength")),
+    pseudo: z
+      .string()
+      .min(PSEUDO_MIN_LENGTH, t("pseudoMinLength"))
+      .regex(PSEUDO_REGEX, t("pseudoFormat")),
   });
   const {
     register,
@@ -42,13 +52,15 @@ export const PseudoForm = ({ onChange, defaultValue }: PseudoFormProps) => {
 
   const pseudo = useWatch({ control, name: "pseudo" });
 
+  const pseudoField = register("pseudo");
+
   useEffect(() => {
     trigger();
     setFocus("pseudo");
   }, [trigger, setFocus]);
 
   useEffect(() => {
-    if (!pseudo || pseudo.length < 3) {
+    if (!pseudo || pseudo.length < PSEUDO_MIN_LENGTH) {
       const timer = setTimeout(() => setAvailabilityStatus("idle"), 0);
       return () => clearTimeout(timer);
     }
@@ -114,7 +126,11 @@ export const PseudoForm = ({ onChange, defaultValue }: PseudoFormProps) => {
           autoCorrect="off"
           autoComplete="username"
           enterKeyHint="done"
-          {...register("pseudo")}
+          {...pseudoField}
+          onChange={(e) => {
+            e.target.value = sanitizePseudo(e.target.value);
+            pseudoField.onChange(e);
+          }}
         />
       </form>
     </div>

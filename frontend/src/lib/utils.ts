@@ -22,6 +22,11 @@ export function formatOrdinal(n: number, locale: string): string {
   return `${n}${ORDINAL_SUFFIX_EN[rule]}`;
 }
 
+/** Normalize a pseudo to the allowed format: lowercase letters and dots only. */
+export function sanitizePseudo(value: string): string {
+  return value.toLowerCase().replace(/[^a-z.]/g, "");
+}
+
 export function faviconUrl(domainOrUrl: string, size = 32): string {
   let domain = domainOrUrl;
   try {

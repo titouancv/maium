@@ -62,6 +62,15 @@ export const SIGNUP_FORM_ID = "signup-step-form";
 /** Minimum age (in years) required to create an account. */
 export const MIN_SIGNUP_AGE = 16;
 
+// --- Pseudo (username) -----------------------------------------------------
+
+/** Min / max length of a user pseudo. */
+export const PSEUDO_MIN_LENGTH = 3;
+export const PSEUDO_MAX_LENGTH = 30;
+
+/** Allowed pseudo format: lowercase letters and dots only (no spaces/digits). */
+export const PSEUDO_REGEX = /^[a-z.]+$/;
+
 // --- Job-analysis pipeline -------------------------------------------------
 
 /** Max job analyses a user can launch per rolling hour (rate-limit). */

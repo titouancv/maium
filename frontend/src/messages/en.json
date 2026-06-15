@@ -258,8 +258,9 @@
       },
       "step3": {
         "title": "Pick your username",
-        "pseudoPlaceholder": "johndoe42",
+        "pseudoPlaceholder": "john.doe",
         "pseudoMinLength": "Username must be at least 3 characters",
+        "pseudoFormat": "Only lowercase letters and dots are allowed",
         "pseudoChecking": "Checking...",
         "pseudoAvailable": "Username available",
         "pseudoTaken": "This username is already taken"
