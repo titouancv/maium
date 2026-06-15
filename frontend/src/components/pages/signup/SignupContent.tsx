@@ -145,6 +145,10 @@ export const SignupContent = ({
       case 5:
         return {
           ...base,
+          primaryLabel:
+            draft.professionalExperiences.length === 0
+              ? tCommon("skipButton")
+              : tCommon("nextButton"),
           type: "experiences",
           namespace: EXPERIENCE_NAMESPACE.professional,
           defaultValue: draft.professionalExperiences,
@@ -157,6 +161,10 @@ export const SignupContent = ({
       default:
         return {
           ...base,
+          primaryLabel:
+            draft.educationalExperiences.length === 0
+              ? tCommon("skipButton")
+              : tCommon("nextButton"),
           type: "experiences",
           namespace: EXPERIENCE_NAMESPACE.educational,
           defaultValue: draft.educationalExperiences,
