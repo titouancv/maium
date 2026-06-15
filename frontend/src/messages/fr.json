@@ -77,6 +77,7 @@
   "common": {
     "loading": "Chargement",
     "nextButton": "Suivant",
+    "skipButton": "Passer",
     "cancelButton": "Annuler",
     "backButton": "Retour",
     "addButton": "Ajouter",
