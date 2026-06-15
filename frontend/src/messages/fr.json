@@ -200,6 +200,7 @@
     "deleteAccountButton": "Supprimer le compte",
     "deleteAccountConfirmButton": "Oui, supprimer",
     "deleteAccountSlideLabel": "Glisser pour supprimer",
+    "deleteAccountError": "Nous n'avons pas pu supprimer votre compte. Veuillez réessayer.",
     "phone": "Numéro de téléphone",
     "nationality": "Nationalité",
     "location": "Localisation",

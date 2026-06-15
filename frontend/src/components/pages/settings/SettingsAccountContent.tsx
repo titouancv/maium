@@ -7,10 +7,12 @@ import { SlideToEnter } from "@/components/ui/SlideToEnter";
 import { API, ROUTES } from "@/constants";
 import { useRouter } from "@/i18n/navigation";
 import { PageLayout } from "@/components/layout";
+import { useNotificationStore } from "@/stores/useNotificationStore";
 
 export const SettingsAccountContent = () => {
   const t = useTranslations("settings");
   const router = useRouter();
+  const notify = useNotificationStore((s) => s.notify);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
   const [isDeletingAccount, setIsDeletingAccount] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
@@ -24,7 +26,12 @@ export const SettingsAccountContent = () => {
 
   const handleDeleteAccount = async () => {
     setIsDeletingAccount(true);
-    await fetch(API.USERS_ME, { method: "DELETE" });
+    const res = await fetch(API.USERS_ME, { method: "DELETE" });
+    if (!res.ok) {
+      setIsDeletingAccount(false);
+      notify(t("deleteAccountError"));
+      return;
+    }
     router.push(ROUTES.HOME);
     router.refresh();
   };

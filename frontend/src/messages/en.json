@@ -200,6 +200,7 @@
     "deleteAccountButton": "Delete account",
     "deleteAccountConfirmButton": "Yes, delete",
     "deleteAccountSlideLabel": "Slide to delete",
+    "deleteAccountError": "We couldn't delete your account. Please try again.",
     "phone": "Phone number",
     "nationality": "Nationality",
     "location": "Location",
