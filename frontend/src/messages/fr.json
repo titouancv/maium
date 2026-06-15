@@ -258,8 +258,9 @@
       },
       "step3": {
         "title": "Choisissez votre pseudo",
-        "pseudoPlaceholder": "jeandupont42",
+        "pseudoPlaceholder": "jean.dupont",
         "pseudoMinLength": "Le pseudo doit contenir au moins 3 caractères",
+        "pseudoFormat": "Uniquement des lettres minuscules et des points",
         "pseudoChecking": "Vérification...",
         "pseudoAvailable": "Pseudo disponible",
         "pseudoTaken": "Ce pseudo est déjà utilisé"

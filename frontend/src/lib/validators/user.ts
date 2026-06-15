@@ -1,5 +1,11 @@
 import { z } from "zod";
-import { GENDERS, MIN_SIGNUP_AGE } from "@/constants";
+import {
+  GENDERS,
+  MIN_SIGNUP_AGE,
+  PSEUDO_MAX_LENGTH,
+  PSEUDO_MIN_LENGTH,
+  PSEUDO_REGEX,
+} from "@/constants";
 import { isAtLeastYearsOld } from "@/lib/date";
 
 const optionalUrl = z
@@ -39,7 +45,12 @@ export const UpdateUserSchema = z
   .object({
     firstName: z.string().min(1).max(50).optional(),
     lastName: z.string().min(1).max(50).optional(),
-    pseudo: z.string().min(2).max(30).optional(),
+    pseudo: z
+      .string()
+      .min(PSEUDO_MIN_LENGTH)
+      .max(PSEUDO_MAX_LENGTH)
+      .regex(PSEUDO_REGEX)
+      .optional(),
     dob: z
       .number()
       .int()
