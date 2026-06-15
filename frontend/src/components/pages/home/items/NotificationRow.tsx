@@ -104,6 +104,7 @@ export const NotificationRow = ({
         subtitle={subtitle}
         subtitleClassName={!readAt ? "text-primary" : undefined}
         showFollow={kind === "follow"}
+        initialFollowing={actor.is_following ?? false}
       />
     </li>
   );

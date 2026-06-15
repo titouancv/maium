@@ -52,6 +52,9 @@ const NOTIFICATIONS_FETCH_LIMIT = 200;
  */
 const HIDDEN_KINDS: NotificationKind[] = ["profile_view"];
 
+/** Actor as embedded by the query — the public summary plus the internal id. */
+type ActorRow = UserSummary & { id: string };
+
 interface NotificationRow {
   id: number;
   kind: NotificationKind;
@@ -59,7 +62,18 @@ interface NotificationRow {
   story_id: string | null;
   created_at: string;
   read_at: string | null;
-  actor: UserSummary | null;
+  actor: ActorRow | null;
+}
+
+/** Strip the internal id and (optionally) annotate the follow state. */
+function toSummary(actor: ActorRow, isFollowing?: boolean): UserSummary {
+  return {
+    pseudo: actor.pseudo,
+    first_name: actor.first_name,
+    last_name: actor.last_name,
+    location: actor.location,
+    ...(isFollowing === undefined ? {} : { is_following: isFollowing }),
+  };
 }
 
 /**
@@ -82,7 +96,7 @@ export async function getNotifications(
     .from("notifications")
     .select(
       `id, kind, conversation_id, story_id, created_at, read_at,
-       actor:actor_id ( pseudo, first_name, last_name, location )`,
+       actor:actor_id ( id, pseudo, first_name, last_name, location )`,
     )
     .eq("user_id", authUser.id)
     .not("kind", "in", `(${HIDDEN_KINDS.join(",")})`)
@@ -91,6 +105,23 @@ export async function getNotifications(
   if (error) throw error;
 
   const rows = (data ?? []) as unknown as NotificationRow[];
+
+  // `follow` rows show a follow/unfollow button, so resolve which of those
+  // actors the viewer already follows (one query for the whole batch).
+  const followActorIds = rows
+    .filter((row) => row.kind === "follow" && row.actor)
+    .map((row) => row.actor!.id);
+  let followedSet = new Set<string>();
+  if (followActorIds.length > 0) {
+    const { data: followData } = await admin
+      .from("user_follows")
+      .select("followed_id")
+      .eq("follower_id", authUser.id)
+      .in("followed_id", followActorIds);
+    followedSet = new Set(
+      (followData ?? []).map((row) => row.followed_id as string),
+    );
+  }
 
   // Rows arrive newest-first. For story kinds we keep one notification per
   // (kind, story) and append later (older) actors to it; the first time a group
@@ -105,7 +136,7 @@ export async function getNotifications(
       const key = `${row.kind}:${row.story_id}`;
       const existing = storyGroups.get(key);
       if (existing) {
-        existing.actors.push(row.actor);
+        existing.actors.push(toSummary(row.actor));
         existing.actorCount += 1;
         if (!row.read_at) existing.readAt = null; // unread if any in the group is
         continue;
@@ -113,7 +144,7 @@ export async function getNotifications(
       const notification: HomeNotification = {
         id: row.id,
         kind: row.kind,
-        actors: [row.actor],
+        actors: [toSummary(row.actor)],
         actorCount: 1,
         conversationId: null,
         storyId: row.story_id,
@@ -125,10 +156,14 @@ export async function getNotifications(
       continue;
     }
 
+    // Only `follow` rows carry follow state; others stay unannotated.
+    const isFollowing =
+      row.kind === "follow" ? followedSet.has(row.actor.id) : undefined;
+
     result.push({
       id: row.id,
       kind: row.kind,
-      actors: [row.actor],
+      actors: [toSummary(row.actor, isFollowing)],
       actorCount: 1,
       conversationId: row.conversation_id,
       storyId: null,
