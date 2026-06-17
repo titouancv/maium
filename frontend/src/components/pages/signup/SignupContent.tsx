@@ -4,13 +4,7 @@ import { useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { useRouter } from "@/i18n/navigation";
-import {
-  ROUTES,
-  API,
-  SIGNUP_FORM_ID,
-  GENDERS,
-  type Gender,
-} from "@/constants";
+import { ROUTES, API, SIGNUP_FORM_ID, GENDERS, type Gender } from "@/constants";
 import { Form } from "../../form/Form";
 import type { FormProps } from "../../form/Form";
 import { SIGNUP_TOTAL_STEPS, type SignupDraft } from "./steps";

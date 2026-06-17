@@ -1,7 +1,10 @@
 import { Suspense } from "react";
 import { getLocale } from "next-intl/server";
 import { SignupContent } from "@/components/pages/signup";
-import { getResumeStep, type SignupDraft } from "@/components/pages/signup/steps";
+import {
+  getResumeStep,
+  type SignupDraft,
+} from "@/components/pages/signup/steps";
 import { redirect } from "@/i18n/navigation";
 import { ROUTES } from "@/constants";
 import { getCurrentUserProfile } from "@/lib/auth/getCurrentUser";

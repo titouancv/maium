@@ -107,7 +107,7 @@
     "feature1": "Meet the talents who matter for your projects.",
     "feature2": "Take your job search up a gear with our AI.",
     "feature3": "Your data never leaves Europe: security, compliance and sovereignty guaranteed.",
-    "dataUsagePrefix": "By signing in with Google, we access your name and email address to create your account. Your data is never sold or shared with third parties. Read our",
+    "dataUsagePrefix": "By signing in with Google, we access your name and email address to create your account. Your data is never sold with third parties. Read our",
     "privacyPolicyLink": "privacy policy",
     "goToAnalysis": "Analyze a job posting",
     "greeting": {
@@ -143,6 +143,7 @@
     },
     "suggestions": {
       "title": "People to connect with",
+      "popularTitle": "Popular accounts",
       "empty": "No suggestions for now — check back later.",
       "follow": "Follow",
       "following": "Following",

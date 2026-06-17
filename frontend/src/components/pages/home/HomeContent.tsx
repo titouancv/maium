@@ -47,7 +47,19 @@ export const HomeContent = ({
     <PageLayout title={tNav("home")}>
       <CurrentUserSync user={user} />
 
-      {!user && <HeroSection />}
+      {!user && (
+        <div className="flex w-full max-w-7xl flex-col gap-6 pt-4">
+          <HeroSection />
+          {suggestionsPromise && (
+            <div className="flex flex-col gap-4">
+              <Title label={t("suggestions.popularTitle")} size="h2" />
+              <Suspense fallback={<SuggestionsListSkeleton />}>
+                <SuggestionsList suggestionsPromise={suggestionsPromise} />
+              </Suspense>
+            </div>
+          )}
+        </div>
+      )}
 
       {user && (
         <>
