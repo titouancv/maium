@@ -1,5 +1,6 @@
 export * from "./AnalysisDetailOverlay";
 export * from "./DownloadResumeButton";
+export * from "./CoverLetterButton";
 export * from "./ResumeEditorOverlay";
 export * from "./AnalysisHistoryList";
 export * from "./AnalysisProgress";

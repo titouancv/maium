@@ -18,7 +18,7 @@ export async function getAnalysisHistory(): Promise<AnalysisListItem[]> {
     .from("analyses")
     .select(
       `id, job_id, matching_score, confidence_score, strengths, weaknesses,
-       missing_skills, recommendations, summary, created_at,
+       missing_skills, recommendations, summary, cover_letter, created_at,
        job:job_id ( title, company, location, source_url ),
        resume:optimized_resumes!analysis_id ( id, is_active, deleted_at )`,
     )
@@ -40,6 +40,7 @@ export async function getAnalysisHistory(): Promise<AnalysisListItem[]> {
       missing_skills: (a.missing_skills as string[]) ?? [],
       recommendations: (a.recommendations as string[]) ?? [],
       summary: a.summary,
+      cover_letter: a.cover_letter,
       created_at: a.created_at,
       job: a.job as unknown as AnalysisListItem["job"],
       resume_id: activeResume?.id ?? null,

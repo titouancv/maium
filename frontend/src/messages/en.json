@@ -70,7 +70,11 @@
       "skillPlaceholder": "Add a skill",
       "chooseTemplateTitle": "Choose a layout",
       "chooseTemplateDescription": "Pick the layout that best fits the role, then generate your PDF.",
-      "generateButton": "Generate my resume"
+      "generateButton": "Generate my resume",
+      "coverLetter": "Cover letter",
+      "coverLetterPlaceholder": "Your cover letter…",
+      "copyCoverLetter": "Copy to clipboard",
+      "coverLetterCopied": "Cover letter copied"
     }
   },
   "search": {
