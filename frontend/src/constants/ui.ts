@@ -27,6 +27,13 @@ export const UI_VARIANTS: Record<UIVariant, string> = {
   ghost: GHOST_COLORS,
 };
 
+export type NotificationVariant = "primary" | "surface";
+
+export const NOTIFICATION_VARIANTS: Record<NotificationVariant, string> = {
+  primary: "bg-primary text-on-primary",
+  surface: "bg-surface-50 text-txt",
+};
+
 export type UISize = "none" | "sm" | "md" | "lg";
 
 export type InfoType = "error" | "success" | "info";

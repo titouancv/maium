@@ -27,7 +27,7 @@ export function CoverLetterButton({ coverLetter }: Props) {
   const copy = async () => {
     try {
       await navigator.clipboard.writeText(text);
-      notify(t("detail.coverLetterCopied"));
+      notify(t("detail.coverLetterCopied"), undefined, "surface");
     } catch {
       // Clipboard can be unavailable (insecure context / denied permission);
       // nothing actionable to do beyond leaving the text on screen to copy.

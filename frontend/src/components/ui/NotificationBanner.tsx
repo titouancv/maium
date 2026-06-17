@@ -1,14 +1,21 @@
 "use client";
 
-import { Fragment, useEffect } from "react";
+import { Fragment, useEffect, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
 import { AnimatePresence, motion } from "framer-motion";
 import { Link } from "@/i18n/navigation";
+import { NOTIFICATION_VARIANTS } from "@/constants";
+import { cn } from "@/lib/utils";
 import { useNotificationStore } from "@/stores/useNotificationStore";
 
 /** How long a notification stays before it auto-dismisses. */
 const AUTO_DISMISS_MS = 5000;
-const MARQUEE_COPIES = 4;
+/**
+ * Minimum number of message copies. The actual count is derived from the
+ * message + viewport width (see {@link Marquee}) so the strip always spans the
+ * screen; it must stay a multiple of 4 so the `-25%` scroll loops seamlessly.
+ */
+const MIN_MARQUEE_COPIES = 4;
 
 /**
  * Global alert band shown at the top of {@link PageLayout}. Reads the current
@@ -38,11 +45,16 @@ export function NotificationBanner() {
           animate={{ height: "auto", opacity: 1 }}
           exit={{ height: 0, opacity: 0 }}
           transition={{ duration: 0.25, ease: "easeOut" }}
-          className="fixed top-0 right-0 left-0 z-50 shrink-0 overflow-hidden"
+          className="fixed top-0 right-0 left-0 z-[80] shrink-0 overflow-hidden"
           role="status"
           aria-live="polite"
         >
-          <div className="bg-primary text-on-primary flex w-full items-center gap-3 pt-10 pr-4 pb-2 md:pt-2">
+          <div
+            className={cn(
+              "flex w-full items-center gap-3 pt-10 pr-4 pb-2 md:pt-2",
+              NOTIFICATION_VARIANTS[notification.variant ?? "primary"],
+            )}
+          >
             {notification.href ? (
               <Link
                 href={notification.href}
@@ -84,15 +96,38 @@ export function NotificationBanner() {
 }
 
 function Marquee({ message }: { message: string }) {
+  const [copies, setCopies] = useState(MIN_MARQUEE_COPIES);
+  const unitRef = useRef<HTMLSpanElement>(null);
+
+  useEffect(() => {
+    const recompute = () => {
+      const unitWidth = unitRef.current?.getBoundingClientRect().width ?? 0;
+      if (!unitWidth) return;
+      // The strip scrolls left by 25%, so only 75% of it is ever on-screen:
+      // size it so that 75% still spans the viewport, then round up to a
+      // multiple of 4 to keep the loop seamless.
+      const needed = window.innerWidth / 0.75 / unitWidth;
+      setCopies(Math.max(MIN_MARQUEE_COPIES, Math.ceil(needed / 4) * 4));
+    };
+    recompute();
+    window.addEventListener("resize", recompute);
+    return () => window.removeEventListener("resize", recompute);
+  }, [message]);
+
   return (
     <motion.div
       className="flex w-max"
       animate={{ x: ["0%", "-25%"] }}
       transition={{ duration: 20, ease: "linear", repeat: Infinity }}
     >
-      {Array.from({ length: MARQUEE_COPIES }).map((_, i) => (
+      {Array.from({ length: copies }).map((_, i) => (
         <Fragment key={i}>
-          <span className="pr-4 whitespace-nowrap md:pr-8">{message}</span>
+          <span
+            ref={i === 0 ? unitRef : undefined}
+            className="pr-4 whitespace-nowrap md:pr-8"
+          >
+            {message}
+          </span>
           <span className="pr-4 md:pr-8">•</span>
         </Fragment>
       ))}
