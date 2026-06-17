@@ -19,11 +19,15 @@ import { TextArea } from "@/components/ui/TextArea";
 import { Tabs } from "@/components/ui/Tabs";
 import { AnalysisProgress } from "./AnalysisProgress";
 import { Link } from "@/i18n/navigation";
+import { useCurrentUserStore } from "@/stores/useCurrentUserStore";
+import { hasEnoughProfileForAnalysis } from "@/lib/home";
+import { Section } from "@/components/ui";
 
 type Mode = "url" | "text";
 
 export function AnalyzeJob() {
   const t = useTranslations("jobs");
+  const user = useCurrentUserStore((s) => s.user);
   const [mode, setMode] = useState<Mode>("url");
   const [activeId, setActiveId] = useState<string | null>(null);
   const [submitError, setSubmitError] = useState<string | null>(null);
@@ -60,6 +64,23 @@ export function AnalyzeJob() {
 
   const urlErrors = urlForm.formState.errors;
   const textErrors = textForm.formState.errors;
+
+  // The AI needs a sufficiently filled profile to produce an accurate match.
+  // Below the threshold, gate the analysis behind a "complete your profile" prompt.
+  if (user && !hasEnoughProfileForAnalysis(user)) {
+    return (
+      <div className="flex h-full flex-col items-center justify-center gap-6">
+        <Section title={t("gate.title")}>
+          <p className="max-w-md text-sm">{t("gate.description")}</p>
+          <Link href={ROUTES.SETTINGS_MY_INFORMATION}>
+            <Button size="none" className="px-6 py-2">
+              {t("gate.action")}
+            </Button>
+          </Link>
+        </Section>
+      </div>
+    );
+  }
 
   return (
     <div className="flex h-full flex-col gap-4">

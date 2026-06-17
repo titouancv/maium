@@ -19,6 +19,11 @@
     "invalidText": "Collez au moins 50 caractères de contenu",
     "submitError": "Impossible de lancer l'analyse. Réessayez.",
     "rateLimited": "Vous avez atteint la limite d'analyses par heure. Réessayez plus tard.",
+    "gate": {
+      "title": "Complétez d'abord votre profil",
+      "description": "Remplissez votre profil à au moins 60 % pour que l'IA puisse évaluer précisément votre adéquation avec une offre. Sans assez d'informations, l'analyse ne sera pas fiable.",
+      "action": "Compléter mes informations"
+    },
     "queued": "En file d'attente…",
     "error": {
       "insufficientData": "Impossible d'extraire suffisamment d'informations. Vérifiez que le contenu décrit une vraie offre d'emploi.",

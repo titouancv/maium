@@ -18,6 +18,18 @@ function hasText(value?: string | null): boolean {
 const COMPLETE_THRESHOLD_PERCENT = 75;
 
 /**
+ * Minimum profile fill ratio required before running a job analysis. Below this,
+ * the AI lacks enough signal to produce an accurate match, so the analysis form
+ * is gated behind a "complete your profile" prompt.
+ */
+export const ANALYSIS_MIN_PROFILE_PERCENT = 60;
+
+/** Whether the profile is filled enough for the AI to produce an accurate analysis. */
+export function hasEnoughProfileForAnalysis(user: UserData): boolean {
+  return getProfileCompletion(user).percent >= ANALYSIS_MIN_PROFILE_PERCENT;
+}
+
+/**
  * How complete the user's profile is, based on the optional fields that enrich
  * a public profile. Drives the "complete your profile" home action, which is
  * hidden once `isComplete` is true (≥ 75% of tracked fields filled).
