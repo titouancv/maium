@@ -58,6 +58,8 @@ export interface AnalysisData {
   missing_skills: string[];
   recommendations: string[];
   summary: string | null;
+  /** AI-generated cover letter for this job, if generation succeeded. */
+  cover_letter: string | null;
   created_at: string;
 }
 

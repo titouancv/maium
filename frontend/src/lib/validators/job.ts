@@ -98,3 +98,8 @@ export const OptimizedResumeSchema = z.object({
   skills: z.array(z.string()).default([]),
   ats_score: z.number().min(0).max(100).default(0),
 });
+
+/** Shape Mistral must return when writing a cover letter for a job. */
+export const CoverLetterSchema = z.object({
+  cover_letter: z.string().default(""),
+});

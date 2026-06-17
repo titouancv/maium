@@ -5,6 +5,7 @@ import type { AnalysisListItem } from "@/types/job";
 import { Button, ChipList, Section } from "@/components/ui";
 import { PageLayout } from "@/components/layout/PageLayout";
 import { DownloadResumeButton } from "./DownloadResumeButton";
+import { CoverLetterButton } from "./CoverLetterButton";
 
 interface Props {
   analysis: AnalysisListItem;
@@ -58,6 +59,9 @@ export function AnalysisDetailOverlay({ analysis, onClose }: Props) {
               </div>
               {analysis.resume_id && (
                 <DownloadResumeButton resumeId={analysis.resume_id} />
+              )}
+              {analysis.cover_letter && (
+                <CoverLetterButton coverLetter={analysis.cover_letter} />
               )}
               {analysis.job?.source_url?.startsWith("http") && (
                 <a

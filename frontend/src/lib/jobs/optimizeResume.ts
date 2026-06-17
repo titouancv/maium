@@ -3,6 +3,60 @@ import { chatJSON } from "@/lib/mistral";
 import { OptimizedResumeSchema } from "@/lib/validators/job";
 import type { CandidateProfile, JobData, ResumeJson } from "@/types/job";
 
+/** Optimized entry as returned by the model (description rewritten, facts referenced by index). */
+type OptimizedEntry = {
+  source_index: number;
+  organization: string;
+  role: string;
+  description: string;
+};
+type ResumeEntry = ResumeJson["experiences"][number];
+type SourceEntry = CandidateProfile["experiences"][number];
+
+/**
+ * Reconciles the model's optimized entries with the candidate's source entries:
+ * each optimized entry keeps its rewritten wording but pulls immutable facts
+ * (dates, location) from its `source_index`, and any source entry the model
+ * dropped is re-appended with its original (possibly empty) description, so the
+ * resume always lists every experience/education — including the un-improved
+ * ones that have no description.
+ */
+function mergeOptimizedEntries(
+  optimized: OptimizedEntry[],
+  sources: SourceEntry[],
+): ResumeEntry[] {
+  const used = new Set<number>();
+  const merged: ResumeEntry[] = optimized.flatMap((e) => {
+    const src = sources[e.source_index];
+    if (!src) return [];
+    used.add(e.source_index);
+    return [
+      {
+        organization: e.organization || src.organization,
+        role: e.role || src.role,
+        startPeriod: src.startPeriod,
+        endPeriod: src.endPeriod,
+        location: src.location,
+        description: e.description,
+      },
+    ];
+  });
+
+  sources.forEach((src, index) => {
+    if (used.has(index)) return;
+    merged.push({
+      organization: src.organization,
+      role: src.role,
+      startPeriod: src.startPeriod,
+      endPeriod: src.endPeriod,
+      location: src.location,
+      description: src.description,
+    });
+  });
+
+  return merged;
+}
+
 /**
  * Generates an ATS-optimized resume tailored to a job and persists it
  * (`optimized_resumes` + its first `resume_versions` row). Hard constraint:
@@ -26,7 +80,8 @@ export async function optimizeResume(params: {
     "Every skill, experience and education entry in your output MUST come from the candidate data.",
     "For each output experience, set source_index to the 0-based index of the matching candidate.experiences entry, and write description as a single optimized prose paragraph (NOT a bullet list).",
     "For each output education entry, set source_index to the 0-based index of the matching candidate.education entry, and write description as a single optimized prose paragraph (NOT a bullet list) that highlights relevant coursework, achievements or skills for the job.",
-    "You may reorder and drop experiences and education, but never duplicate a source_index within the same array.",
+    "You may reorder experiences and education, but you MUST include EVERY candidate experience and education entry (never drop one) and never duplicate a source_index within the same array.",
+    "If a candidate experience or education entry has no description, still include it but leave its description empty — never invent one.",
     "Return a JSON object with keys: summary, experiences (array of {source_index, organization, role, description}), education (array of {source_index, organization, role, description}), skills (string array), ats_score (0-100).",
   ].join(" ");
 
@@ -65,40 +120,18 @@ export async function optimizeResume(params: {
   });
 
   // Merge the model's optimized wording with the immutable facts (dates,
-  // location) read from the matching candidate experience via source_index.
-  const experiences: ResumeJson["experiences"] = output.experiences.flatMap(
-    (e) => {
-      const src = params.profile.experiences[e.source_index];
-      if (!src) return [];
-      return [
-        {
-          organization: e.organization || src.organization,
-          role: e.role || src.role,
-          startPeriod: src.startPeriod,
-          endPeriod: src.endPeriod,
-          location: src.location,
-          description: e.description,
-        },
-      ];
-    },
+  // location) read from the matching candidate entry via source_index, then
+  // re-append any candidate entry the model omitted (e.g. experiences with no
+  // description it couldn't optimize) so the resume keeps the full history —
+  // even the un-improved entries the user wants on their CV.
+  const experiences = mergeOptimizedEntries(
+    output.experiences,
+    params.profile.experiences,
   );
-
-  // Same merge for education: the model rewrites the description while dates,
-  // location, organization and role stay sourced from the candidate profile.
-  const education: ResumeJson["education"] = output.education.flatMap((e) => {
-    const src = params.profile.education[e.source_index];
-    if (!src) return [];
-    return [
-      {
-        organization: e.organization || src.organization,
-        role: e.role || src.role,
-        startPeriod: src.startPeriod,
-        endPeriod: src.endPeriod,
-        location: src.location,
-        description: e.description,
-      },
-    ];
-  });
+  const education = mergeOptimizedEntries(
+    output.education,
+    params.profile.education,
+  );
 
   const resumeJson: ResumeJson = {
     summary: output.summary,

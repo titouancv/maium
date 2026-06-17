@@ -6,6 +6,7 @@ import { extractJob, extractJobFromText } from "./extract";
 import { getCandidateProfile, profileToText } from "./profile";
 import { cosineSimilarity, getMatchingExplanation } from "./matching";
 import { optimizeResume } from "./optimizeResume";
+import { generateCoverLetter } from "./coverLetter";
 
 const CHAT_MODEL = process.env.MISTRAL_CHAT_MODEL ?? "mistral-large-latest";
 
@@ -94,6 +95,14 @@ export async function runAnalysisPipeline(analysisJobId: string): Promise<void> 
       semanticSimilarity,
     });
 
+    // Best-effort: a cover-letter failure must never sink the whole analysis.
+    let coverLetter: string | null = null;
+    try {
+      coverLetter = await generateCoverLetter({ userId, job, profile });
+    } catch {
+      coverLetter = null;
+    }
+
     const { data: analysis } = await admin
       .from("analyses")
       .insert({
@@ -106,6 +115,7 @@ export async function runAnalysisPipeline(analysisJobId: string): Promise<void> 
         missing_skills: explanation.missing_skills,
         recommendations: explanation.recommendations,
         summary: explanation.summary,
+        cover_letter: coverLetter || null,
         model: CHAT_MODEL,
         prompt_version: PROMPT_VERSION,
       })
