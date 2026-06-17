@@ -19,6 +19,11 @@
     "invalidText": "Paste at least 50 characters of job content",
     "submitError": "Could not start the analysis. Try again.",
     "rateLimited": "You've reached the hourly analysis limit. Try again later.",
+    "gate": {
+      "title": "Complete your profile first",
+      "description": "Fill out your profile to at least 60% so the AI can accurately assess how well you match a job. Without enough information, the analysis won't be reliable.",
+      "action": "Complete my information"
+    },
     "queued": "Queued…",
     "error": {
       "insufficientData": "Not enough information could be extracted. Make sure the content describes a real job posting.",
@@ -102,7 +107,7 @@
     "feature1": "Meet the talents who matter for your projects.",
     "feature2": "Take your job search up a gear with our AI.",
     "feature3": "Your data never leaves Europe: security, compliance and sovereignty guaranteed.",
-    "dataUsagePrefix": "By signing in with Google, we access your name and email address to create your account. Your data is never sold or shared with third parties. Read our",
+    "dataUsagePrefix": "By signing in with Google, we access your name and email address to create your account. Your data is never sold with third parties. Read our",
     "privacyPolicyLink": "privacy policy",
     "goToAnalysis": "Analyze a job posting",
     "greeting": {
@@ -138,6 +143,7 @@
     },
     "suggestions": {
       "title": "People to connect with",
+      "popularTitle": "Popular accounts",
       "empty": "No suggestions for now — check back later.",
       "follow": "Follow",
       "following": "Following",

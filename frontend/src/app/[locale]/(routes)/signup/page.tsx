@@ -1,7 +1,10 @@
 import { Suspense } from "react";
 import { getLocale } from "next-intl/server";
 import { SignupContent } from "@/components/pages/signup";
-import { getResumeStep, type SignupDraft } from "@/components/pages/signup/steps";
+import {
+  getResumeStep,
+  type SignupDraft,
+} from "@/components/pages/signup/steps";
 import { redirect } from "@/i18n/navigation";
 import { ROUTES } from "@/constants";
 import { getCurrentUserProfile } from "@/lib/auth/getCurrentUser";
@@ -17,10 +20,7 @@ export default async function SignupPage() {
   }
 
   let initialStep = 0;
-  let initialDraft: SignupDraft = {
-    professionalExperiences: [],
-    educationalExperiences: [],
-  };
+  let initialDraft: SignupDraft = {};
 
   // No authenticated user → show the OAuth entry point (step 0). Otherwise the
   // DB trigger has created a partial row; resume the wizard from the first gap.
@@ -31,8 +31,6 @@ export default async function SignupPage() {
       pseudo: userData.pseudo || undefined,
       dob: userData.dob ?? undefined,
       gender: userData.gender ?? undefined,
-      professionalExperiences: userData.professional_experiences ?? [],
-      educationalExperiences: userData.educational_experiences ?? [],
     };
     initialStep = getResumeStep(initialDraft);
   }

@@ -1,5 +1,4 @@
 import type { Gender } from "@/constants";
-import type { Experience } from "@/types/experience";
 import type { UserData } from "@/types";
 
 /**
@@ -13,22 +12,12 @@ export interface SignupDraft {
   pseudo?: string;
   dob?: number;
   gender?: Gender;
-  professionalExperiences: Experience[];
-  educationalExperiences: Experience[];
 }
 
-export type SignupStepKey =
-  | "fullName"
-  | "pseudo"
-  | "date"
-  | "gender"
-  | "professional"
-  | "educational";
+export type SignupStepKey = "fullName" | "pseudo" | "date" | "gender";
 
 interface SignupStep {
   key: SignupStepKey;
-  /** Required steps gate onboarding; optional steps (experiences) never block. */
-  required: boolean;
   isFilled: (draft: SignupDraft) => boolean;
 }
 
@@ -37,40 +26,29 @@ interface SignupStep {
  * 0 is the OAuth entry point and is not part of this list.
  */
 export const SIGNUP_STEPS: SignupStep[] = [
-  {
-    key: "fullName",
-    required: true,
-    isFilled: (d) => !!(d.firstName && d.lastName),
-  },
-  { key: "pseudo", required: true, isFilled: (d) => !!d.pseudo },
-  { key: "date", required: true, isFilled: (d) => d.dob != null },
-  { key: "gender", required: true, isFilled: (d) => !!d.gender },
-  { key: "professional", required: false, isFilled: () => true },
-  { key: "educational", required: false, isFilled: () => true },
+  { key: "fullName", isFilled: (d) => !!(d.firstName && d.lastName) },
+  { key: "pseudo", isFilled: (d) => !!d.pseudo },
+  { key: "date", isFilled: (d) => d.dob != null },
+  { key: "gender", isFilled: (d) => !!d.gender },
 ];
 
 export const SIGNUP_TOTAL_STEPS = SIGNUP_STEPS.length;
 
 /**
  * Wizard step (1-based) at which to resume an authenticated user: the first
- * required field still missing, or the first experiences step once all required
- * fields are filled.
+ * field still missing, or the last step once everything is filled.
  */
 export function getResumeStep(draft: SignupDraft): number {
-  const firstIncompleteRequired = SIGNUP_STEPS.findIndex(
-    (s) => s.required && !s.isFilled(draft),
-  );
+  const firstIncomplete = SIGNUP_STEPS.findIndex((s) => !s.isFilled(draft));
   const index =
-    firstIncompleteRequired === -1
-      ? SIGNUP_STEPS.findIndex((s) => !s.required)
-      : firstIncompleteRequired;
+    firstIncomplete === -1 ? SIGNUP_STEPS.length - 1 : firstIncomplete;
   return index + 1;
 }
 
 /**
- * Whether a persisted user has filled every onboarding-required field, derived
- * from the same {@link SIGNUP_STEPS} `required` definitions the wizard enforces.
- * Used by the home page to send a still-incomplete user back to the wizard.
+ * Whether a persisted user has filled every onboarding field, derived from the
+ * same {@link SIGNUP_STEPS} definitions the wizard enforces. Used by the home
+ * page to send a still-incomplete user back to the wizard.
  */
 export function hasCompletedOnboarding(user: UserData): boolean {
   const draft: SignupDraft = {
@@ -79,8 +57,6 @@ export function hasCompletedOnboarding(user: UserData): boolean {
     pseudo: user.pseudo,
     dob: user.dob ?? undefined,
     gender: user.gender ?? undefined,
-    professionalExperiences: [],
-    educationalExperiences: [],
   };
-  return SIGNUP_STEPS.every((s) => !s.required || s.isFilled(draft));
+  return SIGNUP_STEPS.every((s) => s.isFilled(draft));
 }

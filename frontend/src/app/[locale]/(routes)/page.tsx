@@ -27,8 +27,10 @@ export default async function HomePage() {
   // Stream the dashboard data: start the fetches without awaiting so the page
   // renders its shell immediately and the stats / suggestions resolve behind
   // their own Suspense boundaries.
+  // Suggestions are streamed for signed-out visitors too: with a NULL caller the
+  // RPC degenerates to "the most-followed profiles" (the popular-accounts list).
   const statsPromise = userData ? getHomeStats() : undefined;
-  const suggestionsPromise = userData ? getSuggestedUsers() : undefined;
+  const suggestionsPromise = getSuggestedUsers();
   const storiesPromise = userData ? getStoriesFeed() : undefined;
 
   return (

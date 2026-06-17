@@ -6,6 +6,7 @@ import { ROUTES } from "@/constants";
 import { Button, ProfilePhoto } from "@/components/ui";
 import { useFollow } from "@/hooks";
 import { useProfilePreviewStore } from "@/stores/useProfilePreviewStore";
+import { useCurrentUserStore } from "@/stores/useCurrentUserStore";
 import type { SuggestedUser } from "@/types";
 
 interface SuggestionCardProps {
@@ -14,9 +15,13 @@ interface SuggestionCardProps {
 
 export const SuggestionCard = ({ user }: SuggestionCardProps) => {
   const t = useTranslations("home");
+  // Signed-out visitors see this card on the public home page; toggling follow
+  // then redirects to signup instead of firing an unauthenticated request.
+  const isAuthenticated = useCurrentUserStore((s) => !!s.user?.id);
   const { following, toggle, isPending } = useFollow({
     pseudo: user.pseudo,
     initialFollowing: false,
+    isAuthenticated,
   });
 
   return (

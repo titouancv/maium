@@ -4,17 +4,9 @@ import { useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { useRouter } from "@/i18n/navigation";
-import {
-  ROUTES,
-  API,
-  SIGNUP_FORM_ID,
-  EXPERIENCE_NAMESPACE,
-  GENDERS,
-  type Gender,
-} from "@/constants";
+import { ROUTES, API, SIGNUP_FORM_ID, GENDERS, type Gender } from "@/constants";
 import { Form } from "../../form/Form";
 import type { FormProps } from "../../form/Form";
-import type { Experience } from "@/types/experience";
 import { SIGNUP_TOTAL_STEPS, type SignupDraft } from "./steps";
 import { HeroSection } from "../home/collections";
 import { PageLayout } from "@/components/layout/PageLayout";
@@ -24,10 +16,7 @@ interface SignupContentProps {
   initialDraft?: SignupDraft;
 }
 
-const EMPTY_DRAFT: SignupDraft = {
-  professionalExperiences: [],
-  educationalExperiences: [],
-};
+const EMPTY_DRAFT: SignupDraft = {};
 
 export const SignupContent = ({
   initialStep = 0,
@@ -80,16 +69,11 @@ export const SignupContent = ({
   // to the home page which shows the welcome celebration (?welcome=1).
   const finish = async () => {
     const ok = await patchProfile({
-      educationalExperiences: draft.educationalExperiences,
+      gender: draft.gender ?? GENDERS[0],
       onboardingCompleted: true,
     });
     if (ok) router.push(`${ROUTES.HOME}?welcome=1`);
   };
-
-  const setProExperiences = (exps: Experience[]) =>
-    setDraft((d) => ({ ...d, professionalExperiences: exps }));
-  const setEduExperiences = (exps: Experience[]) =>
-    setDraft((d) => ({ ...d, educationalExperiences: exps }));
 
   const base = {
     step,
@@ -128,7 +112,7 @@ export const SignupContent = ({
           defaultValue: draft.dob ?? null,
           onChange: nextStep,
         };
-      case 4:
+      default:
         return {
           ...base,
           title: tForm("genderTitle"),
@@ -140,35 +124,6 @@ export const SignupContent = ({
           defaultValue: draft.gender ?? GENDERS[0],
           onChange: (value) =>
             setDraft((d) => ({ ...d, gender: value as Gender })),
-          onPrimary: () => nextStep({ gender: draft.gender ?? GENDERS[0] }),
-        };
-      case 5:
-        return {
-          ...base,
-          primaryLabel:
-            draft.professionalExperiences.length === 0
-              ? tCommon("skipButton")
-              : tCommon("nextButton"),
-          type: "experiences",
-          namespace: EXPERIENCE_NAMESPACE.professional,
-          defaultValue: draft.professionalExperiences,
-          onChange: setProExperiences,
-          onPrimary: () =>
-            nextStep({
-              professionalExperiences: draft.professionalExperiences,
-            }),
-        };
-      default:
-        return {
-          ...base,
-          primaryLabel:
-            draft.educationalExperiences.length === 0
-              ? tCommon("skipButton")
-              : tCommon("nextButton"),
-          type: "experiences",
-          namespace: EXPERIENCE_NAMESPACE.educational,
-          defaultValue: draft.educationalExperiences,
-          onChange: setEduExperiences,
           onPrimary: finish,
         };
     }
