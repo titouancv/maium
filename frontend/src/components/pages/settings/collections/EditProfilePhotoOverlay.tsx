@@ -169,7 +169,7 @@ export const EditProfilePhotoOverlay = ({ user, onClose, onSaved }: Props) => {
                 value={zoom}
                 onChange={(e) => setZoom(Number(e.target.value))}
                 aria-label={t("profilePhotoZoom")}
-                className="accent-primary w-full"
+                className="accent-primary hidden w-full md:block"
               />
               <Button
                 variant="outline"

@@ -94,6 +94,7 @@ export function StoriesRow({ storiesPromise }: StoriesRowProps) {
             first_name: currentUser.first_name,
             last_name: currentUser.last_name,
             location: currentUser.location,
+            profile_photo: currentUser.profile_photo,
           },
           stories: [],
           hasUnseen: false,
