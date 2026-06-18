@@ -38,6 +38,7 @@ export function StoryViewersList({ viewers }: StoryViewersListProps) {
           <li key={summary.pseudo} className="flex items-center gap-2">
             <UserCard
               {...summary}
+              profilePhoto={summary.profile_photo}
               className="text-txt hover:text-primary flex min-w-0 flex-1 gap-2 py-3"
             />
             {(liked || reposted) && (

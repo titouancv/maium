@@ -44,6 +44,7 @@ export function StoryBubble({
       >
         <ProfilePhoto
           pseudo={author.pseudo}
+          src={author.profile_photo}
           displayName={
             hideName
               ? undefined

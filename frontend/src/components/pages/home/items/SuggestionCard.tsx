@@ -39,6 +39,7 @@ export const SuggestionCard = ({ user }: SuggestionCardProps) => {
       >
         <ProfilePhoto
           pseudo={user.pseudo}
+          src={user.profile_photo}
           displayName={{ firstName: user.first_name, lastName: user.last_name }}
         />
       </Link>

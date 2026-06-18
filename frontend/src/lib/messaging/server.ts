@@ -12,6 +12,7 @@ interface MemberUserRow {
   pseudo: string;
   first_name: string;
   last_name: string;
+  profile_photo: string | null;
 }
 
 interface ConversationMemberRow {
@@ -39,7 +40,12 @@ interface MessageRow {
   created_at: string;
   edited_at: string | null;
   deleted_at: string | null;
-  sender: { pseudo: string; first_name: string; last_name: string } | null;
+  sender: {
+    pseudo: string;
+    first_name: string;
+    last_name: string;
+    profile_photo: string | null;
+  } | null;
 }
 
 const CONVERSATION_SELECT = `id, created_at, is_group, title,
@@ -47,7 +53,7 @@ const CONVERSATION_SELECT = `id, created_at, is_group, title,
    conversation_members (
      user_id,
      last_read_at,
-     users:user_id ( id, pseudo, first_name, last_name )
+     users:user_id ( id, pseudo, first_name, last_name, profile_photo )
    )`;
 
 function mapMembers(rows: ConversationMemberRow[]): ConversationMember[] {
@@ -154,7 +160,7 @@ export async function getMessages(
     .from("messages")
     .select(
       `id, conversation_id, sender_id, content, created_at, edited_at, deleted_at,
-       sender:sender_id ( pseudo, first_name, last_name )`,
+       sender:sender_id ( pseudo, first_name, last_name, profile_photo )`,
     )
     .eq("conversation_id", conversationId)
     .is("deleted_at", null)

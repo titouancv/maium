@@ -33,7 +33,13 @@ export const ProfileContent = ({
   const displayName = isDesktop
     ? undefined
     : { firstName: user.first_name, lastName: user.last_name };
-  const photo = <ProfilePhoto pseudo={user.pseudo} displayName={displayName} />;
+  const photo = (
+    <ProfilePhoto
+      pseudo={user.pseudo}
+      src={user.profile_photo}
+      displayName={displayName}
+    />
+  );
 
   const hasProfessional = (user.professional_experiences?.length ?? 0) > 0;
   const hasEducational = (user.educational_experiences?.length ?? 0) > 0;
@@ -53,6 +59,7 @@ export const ProfileContent = ({
                 <ProfileStoryPhoto
                   storiesPromise={storiesPromise}
                   pseudo={user.pseudo}
+                  src={user.profile_photo}
                   displayName={displayName}
                 />
               </Suspense>

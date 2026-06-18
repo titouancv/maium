@@ -106,6 +106,7 @@ export function SearchOverlay({ onClose, onSelect }: SearchOverlayProps) {
                       <li key={user.pseudo}>
                         <UserCard
                           {...user}
+                          profilePhoto={user.profile_photo}
                           onClick={() => handleSelect(user.pseudo)}
                           showFollow={!onSelect}
                           initialFollowing={user.is_following ?? false}

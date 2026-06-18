@@ -13,6 +13,8 @@ export interface UserSummary {
   first_name: string;
   last_name: string;
   location?: string | null;
+  /** Uploaded profile photo URL; null/undefined falls back to a default photo. */
+  profile_photo?: string | null;
   /** Whether the current viewer follows this user (drives the follow button). */
   is_following?: boolean;
 }
@@ -36,6 +38,8 @@ export interface UserData {
   nationality?: string | null;
   location?: string | null;
   bio?: string | null;
+  /** Uploaded profile photo URL; null/undefined falls back to a default photo. */
+  profile_photo?: string | null;
   professional_experiences?: Experience[];
   educational_experiences?: Experience[];
   social_networks?: string[];

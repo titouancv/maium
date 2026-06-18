@@ -111,6 +111,8 @@ OAuth flow: Google → Supabase → `/auth/callback` → `exchangeCodeForSession
 | `GET/POST` | `/api/messages/conversations/:id/messages` | Get / send messages in a conversation |
 | `PATCH` | `/api/messages/conversations/:id/read` | Mark a conversation as read |
 | `GET` | `/api/home/stats` | Home dashboard stats (followers trend, profile views) |
+| `GET` | `/api/home/notifications` | List the user's home notifications |
+| `POST` | `/api/home/notifications/read` | Mark home notifications as read |
 | `POST` | `/api/stories` | Publish a story |
 | `DELETE` | `/api/stories/:id` | Delete a story (cascades reposts) |
 | `POST` | `/api/stories/:id/view` | Mark a story as viewed |
@@ -256,7 +258,7 @@ served from cache instead of refetching. Don't lower these without reason.
 - **State**: Zustand
 - **Fetching**: native Server Components (stream promises, unwrap with `use()`)
 - **Forms**: React Hook Form + Zod
-- **Tests**: Vitest + Testing Library (jsdom)
+- **Tests**: Vitest + jsdom (with `@testing-library/jest-dom` matchers)
 
 ---
 
@@ -402,7 +404,7 @@ export const ROUTES = {
   SIGNUP: "/signup",
   SETTINGS: "/settings",
   SETTINGS_ACCOUNT: "/settings/account",
-  SETTINGS_PERSONAL_DATA: "/settings/personal-data",
+  SETTINGS_MY_INFORMATION: "/settings/my-information",
   SETTINGS_PERSONALIZATION: "/settings/personalization",
   AUTH_CALLBACK: "/auth/callback",
   PROFILE: (pseudo: string) => `/profile/${pseudo}`,

@@ -17,14 +17,15 @@ const AUTO_DISMISS_MS = 5000;
  */
 const MIN_MARQUEE_COPIES = 4;
 
+/** Shared classes for the scrolling message strip. */
+const marqueeClasses =
+  "min-w-0 flex-1 overflow-hidden font-extrabold uppercase";
+
 /**
  * Global alert band shown at the top of {@link PageLayout}. Reads the current
  * notification from {@link useNotificationStore}; trigger one from anywhere via
  * `useNotificationStore.getState().notify("…")`.
  */
-const marqueeClasses =
-  "min-w-0 flex-1 overflow-hidden font-extrabold uppercase";
-
 export function NotificationBanner() {
   const t = useTranslations("common");
   const notification = useNotificationStore((s) => s.notification);

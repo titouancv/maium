@@ -54,6 +54,7 @@ export function ConversationItem({
       pseudo={other?.pseudo ?? ""}
       first_name={other?.first_name ?? t("unknownUser")}
       last_name={other?.last_name ?? ""}
+      profilePhoto={other?.profile_photo}
       href={ROUTES.CONVERSATION(conversation.id)}
       subtitle={subtitle ?? t("noMessagesYet")}
       subtitleClassName={unread ? "text-primary" : undefined}

@@ -4,17 +4,21 @@ import type { UserData, Hobby, UserSummary } from "@/types/user";
 
 /** Narrow a (current) user down to the public summary embedded in feeds/cards. */
 export function userToSummary(
-  user: Pick<UserData, "pseudo" | "first_name" | "last_name" | "location">,
+  user: Pick<
+    UserData,
+    "pseudo" | "first_name" | "last_name" | "location" | "profile_photo"
+  >,
 ): UserSummary {
   return {
     pseudo: user.pseudo,
     first_name: user.first_name,
     last_name: user.last_name,
     location: user.location,
+    profile_photo: user.profile_photo,
   };
 }
 
-export type DbExperience = {
+type DbExperience = {
   type: "professional" | "educational" | "personal";
   organization: string;
   role: string;
@@ -26,10 +30,10 @@ export type DbExperience = {
   position: number;
 };
 
-export type DbSkill = { name: string; position: number };
-export type DbProject = { url: string; position: number };
-export type DbSocialNetwork = { url: string; position: number };
-export type DbHobby = { title: string; description: string; position: number };
+type DbSkill = { name: string; position: number };
+type DbProject = { url: string; position: number };
+type DbSocialNetwork = { url: string; position: number };
+type DbHobby = { title: string; description: string; position: number };
 
 export type DbUserRaw = {
   id?: string | null;
@@ -44,6 +48,7 @@ export type DbUserRaw = {
   nationality?: string | null;
   location?: string | null;
   bio?: string | null;
+  profile_photo?: string | null;
   user_experiences?: DbExperience[];
   user_skills?: DbSkill[];
   user_projects?: DbProject[];
@@ -83,6 +88,7 @@ export function mapUserFromDb(raw: DbUserRaw): UserData {
     nationality: raw.nationality,
     location: raw.location,
     bio: raw.bio,
+    profile_photo: raw.profile_photo ?? null,
     professional_experiences: exps.filter((e) => e.type === "professional").map(mapExperience),
     educational_experiences: exps.filter((e) => e.type === "educational").map(mapExperience),
     personal_experiences: exps.filter((e) => e.type === "personal").map(mapExperience),

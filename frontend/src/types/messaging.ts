@@ -3,6 +3,7 @@ export interface ConversationMember {
   pseudo: string;
   first_name: string;
   last_name: string;
+  profile_photo?: string | null;
   /** When this member last read the conversation (read receipts). */
   last_read_at?: string | null;
 }
@@ -32,6 +33,7 @@ export interface Message {
     pseudo: string;
     first_name: string;
     last_name: string;
+    profile_photo?: string | null;
   } | null;
 }
 

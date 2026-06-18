@@ -27,6 +27,7 @@ export function MessageBubble({
               pseudo={message.sender.pseudo}
               first_name={message.sender.first_name}
               last_name={message.sender.last_name}
+              profilePhoto={message.sender.profile_photo}
               className={cn(
                 "flex min-w-0 items-center gap-2 hover:text-primary",
                 isOwn ? "text-primary" : "text-txt",

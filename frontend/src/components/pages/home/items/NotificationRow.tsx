@@ -70,6 +70,7 @@ export const NotificationRow = ({
         >
           <ProfilePhoto
             pseudo={actors[0].pseudo}
+            src={actors[0].profile_photo}
             sizes="40px"
             className="h-10 w-auto self-center"
           />
@@ -100,6 +101,7 @@ export const NotificationRow = ({
         pseudo={actor.pseudo}
         first_name={actor.first_name}
         last_name={actor.last_name}
+        profilePhoto={actor.profile_photo}
         href={href}
         subtitle={subtitle}
         subtitleClassName={!readAt ? "text-primary" : undefined}

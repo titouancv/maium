@@ -20,6 +20,8 @@ interface ProfileStoryPhotoProps {
   storiesPromise: Promise<StoryGroup | null>;
   pseudo: string;
   displayName?: { firstName: string; lastName: string };
+  /** Uploaded profile photo URL; falls back to a default when absent. */
+  src?: string | null;
 }
 
 /**
@@ -32,6 +34,7 @@ export function ProfileStoryPhoto({
   storiesPromise,
   pseudo,
   displayName,
+  src,
 }: ProfileStoryPhotoProps) {
   const group = use(storiesPromise);
   const hydrate = useStoriesStore((s) => s.hydrate);
@@ -48,7 +51,8 @@ export function ProfileStoryPhoto({
     if (group) hydrate([group]);
   }, [group, hydrate]);
 
-  if (!group) return <ProfilePhoto pseudo={pseudo} displayName={displayName} />;
+  if (!group)
+    return <ProfilePhoto pseudo={pseudo} src={src} displayName={displayName} />;
 
   const liveGroup = storedGroup ?? group;
   const firstUnseen = liveGroup.stories.findIndex((s) => !s.seen);

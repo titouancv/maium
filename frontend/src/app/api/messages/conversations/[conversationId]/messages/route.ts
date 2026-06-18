@@ -45,7 +45,7 @@ export async function POST(request: NextRequest, { params }: RouteContext) {
       })
       .select(
         `id, conversation_id, sender_id, content, created_at, edited_at, deleted_at,
-         sender:sender_id ( pseudo, first_name, last_name )`,
+         sender:sender_id ( pseudo, first_name, last_name, profile_photo )`,
       )
       .single();
 
