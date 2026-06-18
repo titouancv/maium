@@ -24,9 +24,11 @@ function loadImage(src: string): Promise<HTMLImageElement> {
 }
 
 /**
- * Draw the selected crop rectangle onto a 5:7 canvas and export it as a JPEG
- * blob, re-encoding any accepted input format (PNG, WebP, …) to a single,
- * size-bounded output. Throws if the canvas context or export is unavailable.
+ * Draw the selected crop rectangle onto a 5:7 canvas and export it as a WebP
+ * blob, re-encoding any accepted input format (PNG, JPEG, …) to a single,
+ * size-bounded output. WebP is used (over JPEG) so transparent PNGs keep their
+ * alpha channel instead of getting a black background. Throws if the canvas
+ * context or export is unavailable.
  */
 export async function cropImageToBlob(
   imageSrc: string,
@@ -60,7 +62,7 @@ export async function cropImageToBlob(
     canvas.toBlob(
       (blob) =>
         blob ? resolve(blob) : reject(new Error("Could not export image")),
-      "image/jpeg",
+      "image/webp",
       0.9,
     );
   });
@@ -77,11 +79,11 @@ export async function uploadProfilePhoto(
   userId: string,
 ): Promise<string> {
   const supabase = createBrowserClient();
-  const path = `${userId}/avatar.jpg`;
+  const path = `${userId}/avatar.webp`;
 
   const { error } = await supabase.storage
     .from(PROFILE_PHOTO_BUCKET)
-    .upload(path, blob, { upsert: true, contentType: "image/jpeg" });
+    .upload(path, blob, { upsert: true, contentType: "image/webp" });
   if (error) throw error;
 
   const {

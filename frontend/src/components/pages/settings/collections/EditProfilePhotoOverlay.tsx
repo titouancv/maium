@@ -27,7 +27,8 @@ interface Props {
 /**
  * Settings overlay to add or replace the user's profile photo. The picked image
  * is cropped interactively to the 5:7 portrait frame (zoom + drag), exported to
- * a JPEG, uploaded to Storage, and its public URL saved via PATCH /api/users/me.
+ * a WebP (keeps PNG transparency), uploaded to Storage, and its public URL saved
+ * via PATCH /api/users/me.
  * "Delete" clears the photo, reverting to the default avatar.
  */
 export const EditProfilePhotoOverlay = ({ user, onClose, onSaved }: Props) => {
