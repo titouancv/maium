@@ -18,7 +18,7 @@ export function userToSummary(
   };
 }
 
-export type DbExperience = {
+type DbExperience = {
   type: "professional" | "educational" | "personal";
   organization: string;
   role: string;
@@ -30,10 +30,10 @@ export type DbExperience = {
   position: number;
 };
 
-export type DbSkill = { name: string; position: number };
-export type DbProject = { url: string; position: number };
-export type DbSocialNetwork = { url: string; position: number };
-export type DbHobby = { title: string; description: string; position: number };
+type DbSkill = { name: string; position: number };
+type DbProject = { url: string; position: number };
+type DbSocialNetwork = { url: string; position: number };
+type DbHobby = { title: string; description: string; position: number };
 
 export type DbUserRaw = {
   id?: string | null;

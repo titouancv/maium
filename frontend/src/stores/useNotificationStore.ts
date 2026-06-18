@@ -21,7 +21,7 @@ interface NotificationState {
 
 export const useNotificationStore = create<NotificationState>((set) => ({
   notification: null,
-  notify: (message, href?, variant?) =>
+  notify: (message, href, variant) =>
     set({ notification: { id: Date.now(), message, href, variant } }),
   dismiss: () => set({ notification: null }),
 }));

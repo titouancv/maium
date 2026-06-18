@@ -1,10 +1,3 @@
-export const EXPERIENCE_TYPES = [
-  "professional",
-  "educational",
-  "personal",
-] as const;
-export type ExperienceType = (typeof EXPERIENCE_TYPES)[number];
-
 export interface Experience {
   organization: string;
   role: string;

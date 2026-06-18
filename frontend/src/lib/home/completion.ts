@@ -22,7 +22,7 @@ const COMPLETE_THRESHOLD_PERCENT = 75;
  * the AI lacks enough signal to produce an accurate match, so the analysis form
  * is gated behind a "complete your profile" prompt.
  */
-export const ANALYSIS_MIN_PROFILE_PERCENT = 60;
+const ANALYSIS_MIN_PROFILE_PERCENT = 60;
 
 /** Whether the profile is filled enough for the AI to produce an accurate analysis. */
 export function hasEnoughProfileForAnalysis(user: UserData): boolean {
