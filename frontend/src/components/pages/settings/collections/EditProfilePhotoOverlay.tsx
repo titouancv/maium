@@ -37,17 +37,21 @@ export const EditProfilePhotoOverlay = ({ user, onClose, onSaved }: Props) => {
   const currentUserId = useCurrentUserStore((s) => s.user?.id);
 
   const inputRef = useRef<HTMLInputElement>(null);
-  const [imageSrc, setImageSrc] = useState<string | null>(null);
+  // Preload the existing photo so it opens ready to re-crop (or delete).
+  const [imageSrc, setImageSrc] = useState<string | null>(
+    user.profile_photo ?? null,
+  );
   const [crop, setCrop] = useState({ x: 0, y: 0 });
   const [zoom, setZoom] = useState(1);
   const [croppedArea, setCroppedArea] = useState<CropArea | null>(null);
   const [isSaving, setIsSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // Release the object URL created for the picked file when it changes/unmounts.
+  // Release the object URL created for a picked file when it changes/unmounts.
+  // Remote URLs (the preloaded photo) aren't blobs, so they're left untouched.
   useEffect(() => {
     return () => {
-      if (imageSrc) URL.revokeObjectURL(imageSrc);
+      if (imageSrc?.startsWith("blob:")) URL.revokeObjectURL(imageSrc);
     };
   }, [imageSrc]);
 
@@ -70,7 +74,7 @@ export const EditProfilePhotoOverlay = ({ user, onClose, onSaved }: Props) => {
     }
 
     setError(null);
-    if (imageSrc) URL.revokeObjectURL(imageSrc);
+    if (imageSrc?.startsWith("blob:")) URL.revokeObjectURL(imageSrc);
     setImageSrc(URL.createObjectURL(file));
     setCrop({ x: 0, y: 0 });
     setZoom(1);
