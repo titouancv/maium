@@ -33,16 +33,14 @@ export const MyInformationMenu = ({ userPromise }: MyInformationMenuProps) => {
         <MenuList
           items={[
             {
-              label: t("profilePhoto"),
-              value: user.profile_photo
-                ? t("profilePhotoSet")
-                : undefined,
-              onClick: () => setEditingPhoto(true),
-            },
-            {
               label: tHome("name"),
               value: `${user.first_name} ${user.last_name}`,
               onClick: () => setEditingField("name"),
+            },
+            {
+              label: t("profilePhoto"),
+              value: user.profile_photo ? t("profilePhotoSet") : undefined,
+              onClick: () => setEditingPhoto(true),
             },
             {
               label: tHome("pseudo"),
@@ -60,6 +58,10 @@ export const MyInformationMenu = ({ userPromise }: MyInformationMenuProps) => {
               value: user.gender ? tGender(user.gender) : undefined,
               onClick: () => setEditingField("gender"),
             },
+          ]}
+        />
+        <MenuList
+          items={[
             {
               label: t("bio"),
               value: user.bio ?? undefined,
