@@ -26,6 +26,7 @@ export async function UserListItems({
         <li key={user.pseudo}>
           <UserCard
             {...user}
+            profilePhoto={user.profile_photo}
             showFollow
             initialFollowing={user.is_following ?? false}
           />

@@ -35,9 +35,11 @@ function feedRow(over: Partial<Row>): Row {
     author_first_name: "Me",
     author_last_name: "Self",
     author_location: null,
+    author_profile_photo: null,
     original_author_pseudo: null,
     original_author_first_name: null,
     original_author_last_name: null,
+    original_author_profile_photo: null,
     seen: false,
     liked_by_me: false,
     reposted_by_me: false,
@@ -87,6 +89,23 @@ describe("getStoriesFeed", () => {
     expect(feed[1].stories.map((s) => s.id)).toEqual(["b1", "b2"]);
     expect(feed[1].hasUnseen).toBe(true);
     expect(feed[1].stories[1].seen).toBe(false);
+  });
+
+  it("carries the author's profile photo from the feed row", async () => {
+    mockGetAuthUser.mockResolvedValue({ id: "me" } as never);
+
+    mockRpc({
+      data: [
+        feedRow({
+          id: "a1",
+          author_profile_photo: "https://cdn.example/avatar.jpg",
+        }),
+      ],
+      error: null,
+    });
+
+    const feed = await getStoriesFeed();
+    expect(feed[0].author.profile_photo).toBe("https://cdn.example/avatar.jpg");
   });
 
   it("carries per-story like and repost counts from the feed row", async () => {

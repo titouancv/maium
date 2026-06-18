@@ -2,7 +2,8 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import { getAuthUser } from "@/lib/auth/getCurrentUser";
 import type { UserSummary } from "@/types/user";
 
-const SUMMARY_COLUMNS = "id, pseudo, first_name, last_name, location";
+const SUMMARY_COLUMNS =
+  "id, pseudo, first_name, last_name, location, profile_photo";
 
 type SummaryRow = UserSummary & { id: string };
 type FollowerRow = { follower: SummaryRow | null };
@@ -51,6 +52,7 @@ async function withFollowState(rows: SummaryRow[]): Promise<UserSummary[]> {
     first_name: row.first_name,
     last_name: row.last_name,
     location: row.location,
+    profile_photo: row.profile_photo,
     is_following: followedSet.has(row.id),
   }));
 }

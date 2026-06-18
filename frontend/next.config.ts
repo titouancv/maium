@@ -30,6 +30,12 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: "media1.giphy.com",
       },
+      {
+        // Supabase Storage (self-hosted) — public bucket holding profile photos.
+        protocol: "https",
+        hostname: "vps.maium.app",
+        pathname: "/storage/v1/object/public/**",
+      },
     ],
   },
 };

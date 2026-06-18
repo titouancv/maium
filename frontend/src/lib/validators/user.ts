@@ -66,6 +66,7 @@ export const UpdateUserSchema = z
     nationality: z.string().nullable().optional(),
     location: z.string().nullable().optional(),
     bio: z.string().nullable().optional(),
+    profilePhoto: z.union([z.url(), z.literal("")]).nullable().optional(),
     socialNetworks: z.array(z.string().url()).optional(),
     hobbies: z.array(HobbySchema).optional(),
     personalExperiences: z.array(ExperienceSchema).optional(),

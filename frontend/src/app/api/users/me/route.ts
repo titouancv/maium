@@ -28,6 +28,7 @@ export async function PATCH(request: NextRequest) {
       nationality,
       location,
       bio,
+      profilePhoto,
       socialNetworks,
       hobbies,
       personalExperiences,
@@ -47,6 +48,8 @@ export async function PATCH(request: NextRequest) {
     if (nationality !== undefined) coreUpdates.nationality = nationality ?? null;
     if (location !== undefined) coreUpdates.location = location ?? null;
     if (bio !== undefined) coreUpdates.bio = bio ?? null;
+    if (profilePhoto !== undefined)
+      coreUpdates.profile_photo = profilePhoto || null;
 
     if (Object.keys(coreUpdates).length > 0) {
       const { error: dbError } = await supabase

@@ -5,6 +5,7 @@ import { useTranslations } from "next-intl";
 import { useRouter } from "@/i18n/navigation";
 import { MenuList } from "@/components/ui";
 import { EditInfoOverlay, type EditableField } from "./EditInfoOverlay";
+import { EditProfilePhotoOverlay } from "./EditProfilePhotoOverlay";
 import type { UserData } from "@/types";
 import { formatTimestampToDate } from "@/lib/date";
 
@@ -20,6 +21,7 @@ export const MyInformationMenu = ({ userPromise }: MyInformationMenuProps) => {
   const tGender = useTranslations("gender");
   const router = useRouter();
   const [editingField, setEditingField] = useState<EditableField | null>(null);
+  const [editingPhoto, setEditingPhoto] = useState(false);
 
   const handleSaved = () => router.refresh();
 
@@ -30,6 +32,13 @@ export const MyInformationMenu = ({ userPromise }: MyInformationMenuProps) => {
       <div className="flex w-full max-w-2xl flex-col gap-12">
         <MenuList
           items={[
+            {
+              label: t("profilePhoto"),
+              value: user.profile_photo
+                ? t("profilePhotoSet")
+                : undefined,
+              onClick: () => setEditingPhoto(true),
+            },
             {
               label: tHome("name"),
               value: `${user.first_name} ${user.last_name}`,
@@ -137,6 +146,14 @@ export const MyInformationMenu = ({ userPromise }: MyInformationMenuProps) => {
           field={editingField}
           user={user}
           onClose={() => setEditingField(null)}
+          onSaved={handleSaved}
+        />
+      )}
+
+      {editingPhoto && (
+        <EditProfilePhotoOverlay
+          user={user}
+          onClose={() => setEditingPhoto(false)}
           onSaved={handleSaved}
         />
       )}

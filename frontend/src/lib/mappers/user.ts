@@ -4,13 +4,17 @@ import type { UserData, Hobby, UserSummary } from "@/types/user";
 
 /** Narrow a (current) user down to the public summary embedded in feeds/cards. */
 export function userToSummary(
-  user: Pick<UserData, "pseudo" | "first_name" | "last_name" | "location">,
+  user: Pick<
+    UserData,
+    "pseudo" | "first_name" | "last_name" | "location" | "profile_photo"
+  >,
 ): UserSummary {
   return {
     pseudo: user.pseudo,
     first_name: user.first_name,
     last_name: user.last_name,
     location: user.location,
+    profile_photo: user.profile_photo,
   };
 }
 
@@ -44,6 +48,7 @@ export type DbUserRaw = {
   nationality?: string | null;
   location?: string | null;
   bio?: string | null;
+  profile_photo?: string | null;
   user_experiences?: DbExperience[];
   user_skills?: DbSkill[];
   user_projects?: DbProject[];
@@ -83,6 +88,7 @@ export function mapUserFromDb(raw: DbUserRaw): UserData {
     nationality: raw.nationality,
     location: raw.location,
     bio: raw.bio,
+    profile_photo: raw.profile_photo ?? null,
     professional_experiences: exps.filter((e) => e.type === "professional").map(mapExperience),
     educational_experiences: exps.filter((e) => e.type === "educational").map(mapExperience),
     personal_experiences: exps.filter((e) => e.type === "personal").map(mapExperience),

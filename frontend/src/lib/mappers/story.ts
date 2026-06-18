@@ -13,13 +13,14 @@ export type DbStoryRaw = {
     pseudo: string | null;
     first_name: string | null;
     last_name: string | null;
+    profile_photo: string | null;
   } | null;
 };
 
 /** Subset select string to embed the original author for a freshly inserted story. */
 export const STORY_SELECT = `
   id, author_id, content, is_repost, original_author_id, original_story_id, created_at,
-  original_author:original_author_id(pseudo, first_name, last_name)
+  original_author:original_author_id(pseudo, first_name, last_name, profile_photo)
 `.trim();
 
 type StoryFlags = {
@@ -59,6 +60,7 @@ export function mapStoryFromDb(
           pseudo: raw.original_author.pseudo,
           first_name: raw.original_author.first_name ?? "",
           last_name: raw.original_author.last_name ?? "",
+          profile_photo: raw.original_author.profile_photo,
         }
       : null,
     createdAt: new Date(raw.created_at).getTime(),
@@ -87,9 +89,11 @@ export type DbStoryFeedRow = {
   author_first_name: string;
   author_last_name: string;
   author_location: string | null;
+  author_profile_photo: string | null;
   original_author_pseudo: string | null;
   original_author_first_name: string | null;
   original_author_last_name: string | null;
+  original_author_profile_photo: string | null;
   seen: boolean;
   liked_by_me: boolean;
   reposted_by_me: boolean;
@@ -111,6 +115,7 @@ export function mapFeedRowToStory(row: DbStoryFeedRow): StoryData {
           pseudo: row.original_author_pseudo,
           first_name: row.original_author_first_name ?? "",
           last_name: row.original_author_last_name ?? "",
+          profile_photo: row.original_author_profile_photo,
         }
       : null,
     createdAt: new Date(row.created_at).getTime(),
@@ -130,5 +135,6 @@ export function mapFeedRowToAuthor(row: DbStoryFeedRow): UserSummary {
     first_name: row.author_first_name,
     last_name: row.author_last_name,
     location: row.author_location,
+    profile_photo: row.author_profile_photo,
   };
 }

@@ -120,6 +120,18 @@ export const DEFAULT_PROFILE_PHOTO = (index: number) =>
 /** Decorative frame overlaid on a framed profile photo. */
 export const DEFAULT_FRAME = "/assets/defaultFrame.png";
 
+/** Supabase Storage bucket holding user-uploaded profile photos. */
+export const PROFILE_PHOTO_BUCKET = "profile-photos";
+
+/** Profile photo aspect ratio (width / height) — 5:7 portrait. */
+export const PROFILE_PHOTO_ASPECT = 5 / 7;
+
+/** Max accepted upload size for a profile photo, in bytes (5 MB). */
+export const PROFILE_PHOTO_MAX_BYTES = 5 * 1024 * 1024;
+
+/** Longest edge (px) of the exported, cropped profile photo. */
+export const PROFILE_PHOTO_OUTPUT_WIDTH = 700;
+
 export const EXPERIENCE_NAMESPACE = {
   professional: "experience.professional",
   educational: "experience.educational",

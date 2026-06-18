@@ -66,6 +66,7 @@ export function StoryReaderHeader({
                 pseudo={author.pseudo}
                 first_name={author.first_name}
                 last_name={author.last_name}
+                profilePhoto={author.profile_photo}
                 subtitle={subtitle}
                 subtitleClassName={
                   isRepost && reposterPseudo ? "text-primary" : undefined
