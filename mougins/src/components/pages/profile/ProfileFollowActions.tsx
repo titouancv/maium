@@ -1,12 +1,13 @@
 "use client";
 
-import { useTransition } from "react";
+import { useState, useTransition } from "react";
 import { useTranslations } from "next-intl";
 import { Link, useRouter } from "@/i18n/navigation";
 import { API, ROUTES } from "@/constants";
 import { Button } from "@/components/ui";
 import { useFollow } from "@/hooks";
 import type { FollowInfo } from "@/lib/users";
+import { ProfileQrOverlay } from "./collections";
 
 interface ProfileFollowActionsProps {
   pseudo: string;
@@ -36,6 +37,7 @@ export const ProfileFollowActions = ({
     isAuthenticated,
   });
   const [isMessagePending, startMessageTransition] = useTransition();
+  const [isQrOpen, setIsQrOpen] = useState(false);
 
   const handleMessage = () => {
     if (!isAuthenticated) {
@@ -81,6 +83,20 @@ export const ProfileFollowActions = ({
               {t("settingsButton")}
             </Button>
           </Link>
+          <Button
+            variant="outline"
+            type="button"
+            className="block w-full md:hidden"
+            onClick={() => setIsQrOpen(true)}
+          >
+            {t("qrTitle")}
+          </Button>
+          {isQrOpen && (
+            <ProfileQrOverlay
+              pseudo={pseudo}
+              onClose={() => setIsQrOpen(false)}
+            />
+          )}
         </div>
       ) : (
         <div className="flex flex-col gap-4">

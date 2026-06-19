@@ -4,3 +4,4 @@ export * from "./ProfileViewTracker";
 export * from "./ProfileHeader";
 export * from "./ProfileTitle";
 export * from "./ProfileSkeleton";
+export * from "./collections";

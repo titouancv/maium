@@ -88,6 +88,7 @@
     "nextButton": "Next",
     "skipButton": "Skip",
     "cancelButton": "Cancel",
+    "closeButton": "Close",
     "backButton": "Back",
     "addButton": "Add",
     "editButton": "Edit",
@@ -320,6 +321,7 @@
   },
   "profile": {
     "settingsButton": "Settings",
+    "qrTitle": "Share profile",
     "followButton": "Follow",
     "unfollowButton": "Unfollow",
     "messageButton": "Message",
