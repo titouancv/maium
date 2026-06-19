@@ -88,6 +88,7 @@
     "nextButton": "Suivant",
     "skipButton": "Passer",
     "cancelButton": "Annuler",
+    "closeButton": "Fermer",
     "backButton": "Retour",
     "addButton": "Ajouter",
     "editButton": "Modifier",
@@ -320,6 +321,7 @@
   },
   "profile": {
     "settingsButton": "Paramètres",
+    "qrTitle": "Partager le profil",
     "followButton": "Suivre",
     "unfollowButton": "Se désabonner",
     "messageButton": "Message",

@@ -13,8 +13,8 @@ export async function ProfileRank({ pseudo }: { pseudo: string }) {
   ]);
 
   return (
-    <div className="bg-secondary flex w-full justify-center rounded-sm px-4 py-1 text-center">
-      <p className="text-on-primary font-extrabold">
+    <div className="flex w-full">
+      <p className="text-secondary font-extrabold">
         {t("joinRank", { rank: formatOrdinal(rank, locale) })}
       </p>
     </div>
