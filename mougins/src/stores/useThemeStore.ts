@@ -11,9 +11,9 @@ interface ThemeState {
 export const useThemeStore = create<ThemeState>()(
   persist(
     (set) => ({
-      theme: "light",
+      theme: "system",
       setTheme: (theme) => set({ theme }),
     }),
-    { name: "maium-theme" }
-  )
+    { name: "maium-theme" },
+  ),
 );
