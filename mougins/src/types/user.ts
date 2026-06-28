@@ -15,6 +15,8 @@ export interface UserSummary {
   location?: string | null;
   /** Uploaded profile photo URL; null/undefined falls back to a default photo. */
   profile_photo?: string | null;
+  /** Biases the default-photo pick (even photos for male, odd for female). */
+  gender?: Gender | null;
   /** Whether the current viewer follows this user (drives the follow button). */
   is_following?: boolean;
 }

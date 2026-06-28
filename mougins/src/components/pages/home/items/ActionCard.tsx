@@ -48,12 +48,12 @@ export const ActionCard = ({
           aria-hidden
           width={1408}
           height={768}
-          className="mt-1 h-auto w-26 shrink-0 self-start rounded-sm object-contain md:w-54"
+          className="mt-1 h-auto w-22 shrink-0 self-start rounded-sm object-contain md:w-54"
         />
       )}
       <div className="flex h-full min-w-44 flex-col gap-4">
         <div className="flex flex-col gap-2">
-          <Title size="h4" className="mt-1" label={text} />
+          <Title size="h3" className="mt-1" label={text} />
           {description && <p className="max-w-44">{description}</p>}
         </div>
         {href ? (

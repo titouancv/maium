@@ -5,6 +5,7 @@ import dynamic from "next/dynamic";
 import { AnimatePresence } from "framer-motion";
 import { ProfilePhoto } from "@/components/ui";
 import { useStoriesStore } from "@/stores/useStoriesStore";
+import type { Gender } from "@/constants";
 import type { StoryGroup } from "@/types/story";
 import { StoryBubble } from "../items/StoryBubble";
 
@@ -22,6 +23,10 @@ interface ProfileStoryPhotoProps {
   displayName?: { firstName: string; lastName: string };
   /** Uploaded profile photo URL; falls back to a default when absent. */
   src?: string | null;
+  /** Biases the default-photo pick when no `src` is set. */
+  gender: Gender | null;
+  /** Hide the name overlay from `md` up (the @pseudo shows below on desktop). */
+  hideNameOnDesktop?: boolean;
 }
 
 /**
@@ -35,6 +40,8 @@ export function ProfileStoryPhoto({
   pseudo,
   displayName,
   src,
+  gender,
+  hideNameOnDesktop,
 }: ProfileStoryPhotoProps) {
   const group = use(storiesPromise);
   const hydrate = useStoriesStore((s) => s.hydrate);
@@ -52,7 +59,15 @@ export function ProfileStoryPhoto({
   }, [group, hydrate]);
 
   if (!group)
-    return <ProfilePhoto pseudo={pseudo} src={src} displayName={displayName} />;
+    return (
+      <ProfilePhoto
+        pseudo={pseudo}
+        src={src}
+        displayName={displayName}
+        gender={gender}
+        hideNameOnDesktop={hideNameOnDesktop}
+      />
+    );
 
   const liveGroup = storedGroup ?? group;
   const firstUnseen = liveGroup.stories.findIndex((s) => !s.seen);
@@ -64,6 +79,7 @@ export function ProfileStoryPhoto({
         onOpen={() => setReaderOpen(true)}
         className="w-full"
         hideName={!displayName}
+        hideNameOnDesktop={hideNameOnDesktop}
       />
 
       <AnimatePresence>

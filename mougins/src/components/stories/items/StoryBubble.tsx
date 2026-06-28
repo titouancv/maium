@@ -13,8 +13,10 @@ interface StoryBubbleProps {
   isEmptyOwner?: boolean;
   /** Override the bubble width (defaults to the home row's fixed `w-44`). */
   className?: string;
-  /** Hide the name overlay (e.g. desktop profile, where @pseudo shows below). */
+  /** Hide the name overlay entirely. */
   hideName?: boolean;
+  /** Hide the name overlay from `md` up (e.g. profile, where @pseudo shows below). */
+  hideNameOnDesktop?: boolean;
 }
 
 export function StoryBubble({
@@ -24,6 +26,7 @@ export function StoryBubble({
   isEmptyOwner,
   className,
   hideName,
+  hideNameOnDesktop,
 }: StoryBubbleProps) {
   const t = useTranslations("stories");
   const { author, hasUnseen } = group;
@@ -45,11 +48,13 @@ export function StoryBubble({
         <ProfilePhoto
           pseudo={author.pseudo}
           src={author.profile_photo}
+          gender={author.gender ?? null}
           displayName={
             hideName
               ? undefined
               : { firstName: author.first_name, lastName: author.last_name }
           }
+          hideNameOnDesktop={hideNameOnDesktop}
           isFramed={!isEmptyOwner}
           isFrameMuted={!hasUnseen}
         />

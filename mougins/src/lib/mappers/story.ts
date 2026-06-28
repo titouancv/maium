@@ -1,3 +1,4 @@
+import type { Gender } from "@/constants";
 import type { StoryData, StoryViewer } from "@/types/story";
 import type { UserSummary } from "@/types/user";
 
@@ -90,6 +91,7 @@ export type DbStoryFeedRow = {
   author_last_name: string;
   author_location: string | null;
   author_profile_photo: string | null;
+  author_gender: string | null;
   original_author_pseudo: string | null;
   original_author_first_name: string | null;
   original_author_last_name: string | null;
@@ -136,5 +138,6 @@ export function mapFeedRowToAuthor(row: DbStoryFeedRow): UserSummary {
     last_name: row.author_last_name,
     location: row.author_location,
     profile_photo: row.author_profile_photo,
+    gender: (row.author_gender as Gender | null) ?? null,
   };
 }
