@@ -157,7 +157,7 @@
   },
   "stories": {
     "title": "Stories",
-    "addStory": "Add story",
+    "addStory": "Publish",
     "openStories": "View {name}'s stories",
     "createTitle": "New story",
     "publish": "Publish",

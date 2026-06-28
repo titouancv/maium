@@ -17,8 +17,8 @@ import { HeroSection } from "../../ui/collections/HeroSection";
 import { CurrentUserSync } from "./CurrentUserSync";
 import { GreetingSection } from "./items/GreetingSection";
 import {
+  NotificationsCenter,
   StatsRow,
-  StatsRowSkeleton,
   SuggestionsList,
   SuggestionsListSkeleton,
   WelcomeCelebration,
@@ -41,14 +41,28 @@ export const HomeContent = ({
 }: HomeContentProps) => {
   const tNav = useTranslations("nav");
   const t = useTranslations("home");
-  const tStories = useTranslations("stories");
+
+  // The greeting becomes the page title and the notifications card sits in the
+  // header (where the back button would be); see PageLayout's node-title mode.
+  const headerTitle = user ? (
+    <>
+      <GreetingSection firstName={user.first_name} />
+      {statsPromise && (
+        <Suspense fallback={null}>
+          <NotificationsCenter statsPromise={statsPromise} userId={user.id} />
+        </Suspense>
+      )}
+    </>
+  ) : (
+    tNav("home")
+  );
 
   return (
-    <PageLayout title={tNav("home")}>
+    <PageLayout title={headerTitle} documentTitle={tNav("home")}>
       <CurrentUserSync user={user} />
 
       {!user && (
-        <div className="flex w-full max-w-7xl flex-col gap-6 pt-4">
+        <div className="flex w-full max-w-7xl flex-col gap-6">
           <HeroSection />
           {suggestionsPromise && (
             <div className="flex flex-col gap-4">
@@ -63,42 +77,34 @@ export const HomeContent = ({
 
       {user && (
         <>
-          <div className="flex w-full max-w-7xl flex-col gap-6 pt-4">
-            <GreetingSection firstName={user.first_name} />
-            <div className="flex w-full max-w-7xl flex-col gap-12">
-              {storiesPromise && (
-                <div className="flex flex-col gap-4">
-                  <Title label={tStories("title")} size="h2" />
-                  <Suspense fallback={<StoriesRowSkeleton />}>
-                    <StoriesRow storiesPromise={storiesPromise} />
-                  </Suspense>
-                </div>
-              )}
+          <div className="flex w-full max-w-7xl flex-col gap-16">
+            {storiesPromise && (
+              <div className="flex flex-col gap-4">
+                <Suspense fallback={<StoriesRowSkeleton />}>
+                  <StoriesRow storiesPromise={storiesPromise} />
+                </Suspense>
+              </div>
+            )}
 
-              {statsPromise && (
-                <div className="shrink-0">
-                  <Suspense fallback={<StatsRowSkeleton />}>
-                    <StatsRow statsPromise={statsPromise} user={user} />
-                  </Suspense>
-                </div>
-              )}
-
-              {suggestionsPromise && (
-                <div className="flex flex-col gap-4">
-                  <Title label={t("suggestions.title")} size="h2" />
-                  <Suspense fallback={<SuggestionsListSkeleton />}>
-                    <SuggestionsList suggestionsPromise={suggestionsPromise} />
-                  </Suspense>
-                </div>
-              )}
-
-              <Link
-                href={ROUTES.PRIVACY_POLICY}
-                className="text-txt-muted text-xs underline-offset-2 hover:underline"
-              >
-                {tNav("privacyPolicy")}
-              </Link>
+            <div className="shrink-0">
+              <StatsRow user={user} />
             </div>
+
+            {suggestionsPromise && (
+              <div className="flex flex-col gap-4">
+                <Title label={t("suggestions.title")} size="h2" />
+                <Suspense fallback={<SuggestionsListSkeleton />}>
+                  <SuggestionsList suggestionsPromise={suggestionsPromise} />
+                </Suspense>
+              </div>
+            )}
+
+            <Link
+              href={ROUTES.PRIVACY_POLICY}
+              className="text-txt-muted text-xs underline-offset-2 hover:underline"
+            >
+              {tNav("privacyPolicy")}
+            </Link>
           </div>
 
           <Suspense fallback={null}>

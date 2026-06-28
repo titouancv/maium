@@ -120,6 +120,12 @@ export const DEFAULT_PROFILE_PHOTO = (index: number) =>
 /** Decorative frame overlaid on a framed profile photo. */
 export const DEFAULT_FRAME = "/assets/defaultFrame.png";
 
+/** Illustrations bundled in `/public/assets/illustrations`. */
+export const ILLUSTRATIONS = {
+  ANALYZE_JOBS: "/assets/illustrations/analyseJobsIllustration.png",
+  DOWNLOAD_RESUME: "/assets/illustrations/downloadResumeIllustration.png",
+} as const;
+
 /** Supabase Storage bucket holding user-uploaded profile photos. */
 export const PROFILE_PHOTO_BUCKET = "profile-photos";
 

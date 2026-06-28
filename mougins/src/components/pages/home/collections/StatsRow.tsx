@@ -1,45 +1,25 @@
 "use client";
 
-import { use } from "react";
 import { useTranslations } from "next-intl";
-import { ROUTES } from "@/constants";
-import { getProfileCompletion } from "@/lib/home";
-import type { HomeStats } from "@/lib/users";
+import { ILLUSTRATIONS, ROUTES } from "@/constants";
 import type { UserData } from "@/types";
-import { useHomeStats } from "@/hooks/useHomeStats";
 import { ActionCard, DownloadCvCard } from "../items";
-import { NotificationsCenter } from "./NotificationsCenter";
 
 interface StatsRowProps {
-  statsPromise: Promise<HomeStats>;
   user: UserData;
 }
 
-export const StatsRow = ({ statsPromise, user }: StatsRowProps) => {
+export const StatsRow = ({ user }: StatsRowProps) => {
   const t = useTranslations("home");
-  // Seed from the streamed server stats and keep them live (Realtime refresh).
-  const stats = useHomeStats(use(statsPromise), user.id);
-  const completion = getProfileCompletion(user);
 
   return (
-    <div className="flex gap-6 overflow-x-auto">
-      <NotificationsCenter count={stats.unreadNotificationsCount} />
-      {!completion.isComplete && (
-        <ActionCard
-          actionLabel={t("actions.completeProfileTitle")}
-          text={t("actions.completeProfileSubtitle", {
-            percent: completion.percent,
-          })}
-          description={t("actions.completeProfileDescription")}
-          href={ROUTES.SETTINGS_MY_INFORMATION}
-          primary
-        />
-      )}
+    <div className="flex flex-col gap-6 md:flex-row md:justify-between">
       <ActionCard
         actionLabel={t("actions.analyzeTitle")}
         text={t("actions.analyzeSubtitle")}
         description={t("actions.analyzeDescription")}
         href={ROUTES.JOBS}
+        illustration={ILLUSTRATIONS.ANALYZE_JOBS}
         primary
       />
       <DownloadCvCard user={user} />

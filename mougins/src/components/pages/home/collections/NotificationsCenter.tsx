@@ -1,16 +1,19 @@
 "use client";
 
-import { useState } from "react";
+import { use, useState } from "react";
 import { AnimatePresence } from "framer-motion";
 import { useTranslations } from "next-intl";
 import { API } from "@/constants";
-import type { HomeNotification } from "@/lib/users";
+import { useHomeStats } from "@/hooks/useHomeStats";
+import type { HomeNotification, HomeStats } from "@/lib/users";
 import { NotificationCard } from "../items";
 import { NotificationsOverlay } from "./NotificationsOverlay";
 
 interface NotificationsCenterProps {
-  /** Unread count streamed from the home stats (kept live by `useHomeStats`). */
-  count: number;
+  /** Streamed home stats — the unread count is kept live by `useHomeStats`. */
+  statsPromise: Promise<HomeStats>;
+  /** Current user id, for the live `home-stats` Realtime channel. */
+  userId?: string;
 }
 
 /**
@@ -19,8 +22,14 @@ interface NotificationsCenterProps {
  * `home-stats` Realtime refetch reconciles, re-bumping the badge for any new
  * event).
  */
-export const NotificationsCenter = ({ count }: NotificationsCenterProps) => {
+export const NotificationsCenter = ({
+  statsPromise,
+  userId,
+}: NotificationsCenterProps) => {
   const t = useTranslations("home.notifications");
+
+  // Seed from the streamed server stats and keep the unread count live.
+  const count = useHomeStats(use(statsPromise), userId).unreadNotificationsCount;
 
   const [open, setOpen] = useState(false);
   const [items, setItems] = useState<HomeNotification[]>([]);
