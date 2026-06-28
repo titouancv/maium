@@ -38,7 +38,7 @@ export function StoryBubble({
             : t("openStories", { name: author.first_name })
         }
         className={cn(
-          "hover:text-primary relative flex w-44 min-w-0 shrink-0 cursor-pointer flex-col gap-2",
+          "hover:text-primary relative flex w-26 min-w-0 shrink-0 cursor-pointer flex-col gap-2",
           className,
         )}
       >

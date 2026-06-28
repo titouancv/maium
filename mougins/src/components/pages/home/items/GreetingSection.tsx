@@ -2,6 +2,8 @@
 
 import { useSyncExternalStore } from "react";
 import { useTranslations } from "next-intl";
+import { cn } from "@/lib/utils";
+import { Title } from "@/components/ui";
 
 interface GreetingSectionProps {
   firstName: string;
@@ -28,19 +30,15 @@ export const GreetingSection = ({ firstName }: GreetingSectionProps) => {
     () => true,
     () => false,
   );
-  const now = mounted ? new Date() : null;
+  const hour = mounted ? new Date().getHours() : null;
+  const period = hour !== null ? periodKey(hour) : null;
 
-  const period = now ? periodKey(now.getHours()) : null;
+  // Rendered as a classic page Title. Before mount we show the (invisible) name
+  // to reserve the title height and avoid a layout shift / greeting flash once
+  // the clock resolves.
+  const label = period ? t(`greeting.${period}`, { name: firstName }) : firstName;
 
   return (
-    <div className="flex shrink-0 flex-col gap-1">
-      <h1 className="text-3xl font-extrabold">
-        {period ? (
-          t(`greeting.${period}`, { name: firstName })
-        ) : (
-          <span className="opacity-0">{firstName}</span>
-        )}
-      </h1>
-    </div>
+    <Title label={label} size="h1" className={cn(!period && "opacity-0")} />
   );
 };

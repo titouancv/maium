@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { useTranslations } from "next-intl";
-import { API } from "@/constants";
+import { API, ILLUSTRATIONS } from "@/constants";
 import { profileToResumeJson } from "@/lib/resume/profileResume";
 // Import the overlay from its file (not the jobs barrel): pulling this client
 // tree through a barrel trips a Turbopack `export *` namespace-seal bug.
@@ -32,6 +32,7 @@ export const DownloadCvCard = ({ user }: DownloadCvCardProps) => {
         actionLabel={t("actions.downloadCvTitle")}
         text={t("actions.downloadCvSubtitle")}
         description={t("actions.downloadCvDescription")}
+        illustration={ILLUSTRATIONS.DOWNLOAD_RESUME}
         onClick={() => setOpen(true)}
       />
       {open && (

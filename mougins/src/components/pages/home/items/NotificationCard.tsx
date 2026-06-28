@@ -23,15 +23,15 @@ export const NotificationCard = ({
     <button
       type="button"
       onClick={onClick}
-      className="hover:text-primary flex shrink-0 flex-col items-start justify-start text-left transition-colors"
+      className="hover:text-primary flex h-full shrink-0 flex-col items-start justify-start text-left transition-colors"
     >
-      <div className="flex items-center gap-2 pr-2">
+      <div className="flex h-full items-center gap-2">
         <div className="my-1 w-1 self-stretch rounded-full bg-current" />
-        <div className="flex flex-col items-start justify-end">
+        <div className="flex items-center justify-end gap-1">
           <NumberRoller
             value={count}
             className={cn(
-              "text-4xl leading-none font-extrabold",
+              "text-2xl leading-none font-extrabold",
               highlighted && "text-primary",
             )}
           />
