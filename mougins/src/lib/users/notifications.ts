@@ -73,6 +73,7 @@ function toSummary(actor: ActorRow, isFollowing?: boolean): UserSummary {
     last_name: actor.last_name,
     location: actor.location,
     profile_photo: actor.profile_photo,
+    gender: actor.gender,
     ...(isFollowing === undefined ? {} : { is_following: isFollowing }),
   };
 }
@@ -97,7 +98,7 @@ export async function getNotifications(
     .from("notifications")
     .select(
       `id, kind, conversation_id, story_id, created_at, read_at,
-       actor:actor_id ( id, pseudo, first_name, last_name, location, profile_photo )`,
+       actor:actor_id ( id, pseudo, first_name, last_name, location, profile_photo, gender )`,
     )
     .eq("user_id", authUser.id)
     .not("kind", "in", `(${HIDDEN_KINDS.join(",")})`)

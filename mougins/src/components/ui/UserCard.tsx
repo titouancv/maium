@@ -2,7 +2,7 @@
 
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
-import { ROUTES } from "@/constants";
+import { ROUTES, type Gender } from "@/constants";
 import { useProfilePreviewStore } from "@/stores/useProfilePreviewStore";
 import { useCurrentUserStore } from "@/stores/useCurrentUserStore";
 import { ProfilePhoto } from "@/components/ui/ProfilePhoto";
@@ -18,6 +18,8 @@ interface UserCardProps {
   subtitleClassName?: string;
   /** Uploaded photo URL; falls back to a default derived from `pseudo`. */
   profilePhoto?: string | null;
+  /** Biases the default-photo pick when no `profilePhoto` is set. */
+  gender?: Gender | null;
   href?: string;
   className?: string;
   onClick?: () => void;
@@ -63,6 +65,7 @@ export function UserCard({
   subtitle,
   subtitleClassName,
   profilePhoto,
+  gender,
   href,
   className,
   onClick,
@@ -83,6 +86,7 @@ export function UserCard({
       <ProfilePhoto
         pseudo={pseudo}
         src={profilePhoto}
+        gender={gender ?? null}
         sizes="40px"
         className="h-10 w-auto self-center"
       />

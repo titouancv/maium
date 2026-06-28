@@ -22,6 +22,7 @@ export const StatsRow = ({ user }: StatsRowProps) => {
         illustration={ILLUSTRATIONS.ANALYZE_JOBS}
         primary
       />
+      <div className="my-10 hidden w-1 self-stretch rounded-full bg-current md:block" />
       <DownloadCvCard user={user} />
     </div>
   );

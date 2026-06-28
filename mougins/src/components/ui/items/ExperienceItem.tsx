@@ -30,6 +30,19 @@ export const ExperienceItem = ({
     return t("monthsCount", { count: months });
   };
 
+  const calculateTimeUntil = (futureDate: number): string => {
+    const from = new Date(now);
+    const target = new Date(futureDate);
+    const diffMonths = Math.max(
+      1,
+      (target.getUTCFullYear() - from.getUTCFullYear()) * 12 +
+        (target.getUTCMonth() - from.getUTCMonth()),
+    );
+    const years = Math.floor(diffMonths / 12);
+    if (years > 0) return t("inYearsCount", { count: years });
+    return t("inMonthsCount", { count: diffMonths });
+  };
+
   const formatPeriod = (startDate: number, endDate?: number): string => {
     const { startYear, endYear } = experiencePeriodYears(startDate, endDate);
     if (endYear === undefined) return `${t("sinceLabel")} ${startYear}`;
@@ -92,13 +105,17 @@ export const ExperienceItem = ({
               )}
               <div className="flex flex-nowrap gap-2">
                 <span className="text-txt-muted shrink-0">
-                  {calculateDuration(startPeriod, endPeriod ?? now)}
+                  {startPeriod > now
+                    ? calculateTimeUntil(startPeriod)
+                    : calculateDuration(startPeriod, endPeriod ?? now)}
                 </span>
                 <span className="text-txt-muted shrink-0">•</span>
                 <span
-                  className={`shrink-0 ${endPeriod ? "text-txt-muted" : "text-primary"}`}
+                  className={`shrink-0 ${endPeriod && startPeriod <= now ? "text-txt-muted" : "text-primary"}`}
                 >
-                  {formatPeriod(startPeriod, endPeriod)}
+                  {startPeriod > now
+                    ? t("startsSoon")
+                    : formatPeriod(startPeriod, endPeriod)}
                 </span>
               </div>
             </div>

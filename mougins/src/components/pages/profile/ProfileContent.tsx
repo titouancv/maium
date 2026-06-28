@@ -8,7 +8,6 @@ import type { UserData } from "@/types";
 import type { StoryGroup } from "@/types/story";
 import { HobbyList, SocialNetworkItem, UrlItem } from "@/components/ui";
 import { ProfileStoryPhoto } from "@/components/stories";
-import { useMediaQuery } from "@/hooks";
 
 interface ProfileContentProps {
   user: UserData;
@@ -27,17 +26,21 @@ export const ProfileContent = ({
   storiesPromise,
 }: ProfileContentProps) => {
   const t = useTranslations("profile");
-  const isDesktop = useMediaQuery("(min-width: 768px)");
 
-  // Name overlay shows on the mobile avatar only (desktop has the @pseudo below).
-  const displayName = isDesktop
-    ? undefined
-    : { firstName: user.first_name, lastName: user.last_name };
+  // Name overlay shows on the mobile avatar only (desktop has the @pseudo
+  // below). Hidden via CSS (`hideNameOnDesktop`), not a JS viewport branch, so
+  // SSR and the client render the same HTML and don't trip hydration.
+  const displayName = {
+    firstName: user.first_name,
+    lastName: user.last_name,
+  };
   const photo = (
     <ProfilePhoto
       pseudo={user.pseudo}
       src={user.profile_photo}
       displayName={displayName}
+      gender={user.gender ?? null}
+      hideNameOnDesktop
     />
   );
 
@@ -61,6 +64,8 @@ export const ProfileContent = ({
                   pseudo={user.pseudo}
                   src={user.profile_photo}
                   displayName={displayName}
+                  gender={user.gender ?? null}
+                  hideNameOnDesktop
                 />
               </Suspense>
             ) : (

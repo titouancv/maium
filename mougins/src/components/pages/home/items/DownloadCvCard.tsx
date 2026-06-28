@@ -34,6 +34,7 @@ export const DownloadCvCard = ({ user }: DownloadCvCardProps) => {
         description={t("actions.downloadCvDescription")}
         illustration={ILLUSTRATIONS.DOWNLOAD_RESUME}
         onClick={() => setOpen(true)}
+        primary
       />
       {open && (
         <ResumeEditorOverlay

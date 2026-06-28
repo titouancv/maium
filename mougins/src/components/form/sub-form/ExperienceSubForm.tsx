@@ -5,6 +5,7 @@ import { useTranslations } from "next-intl";
 import { Form } from "../Form";
 import type { FormProps } from "../Form";
 import { SIGNUP_FORM_ID, type ExperienceNamespace } from "@/constants";
+import { isValidUrl } from "@/lib/utils";
 
 export type SubValues = {
   organization: string;
@@ -64,8 +65,22 @@ export const ExperienceSubForm = ({
       setSubErrors({ role: t("roleRequired") });
       return;
     }
-    if (subStep === 3 && !subValues.startPeriod) {
-      setSubErrors({ startPeriod: t("startPeriodRequired") });
+    if (subStep === 3) {
+      if (!subValues.startPeriod) {
+        setSubErrors({ startPeriod: t("startPeriodRequired") });
+        return;
+      }
+      if (subValues.endPeriod && subValues.endPeriod < subValues.startPeriod) {
+        setSubErrors({ endPeriod: t("endPeriodBeforeStart") });
+        return;
+      }
+    }
+    if (
+      subStep === 5 &&
+      subValues.website.trim() &&
+      !isValidUrl(subValues.website.trim())
+    ) {
+      setSubErrors({ website: t("websiteInvalid") });
       return;
     }
     setSubErrors({});
@@ -132,9 +147,14 @@ export const ExperienceSubForm = ({
               startPeriod: startDate,
               endPeriod: endDate,
             }));
-            setSubErrors((prev) => ({ ...prev, startPeriod: undefined }));
+            setSubErrors((prev) => ({
+              ...prev,
+              startPeriod: undefined,
+              endPeriod: undefined,
+            }));
           },
           startError: subErrors.startPeriod,
+          endError: subErrors.endPeriod,
           onPrimary: advance,
         };
       case 4:
@@ -155,7 +175,12 @@ export const ExperienceSubForm = ({
           title: t("subStep5Title"),
           placeholder: t("websitePlaceholder"),
           defaultValue: subValues.website,
-          onChange: (v) => setSubValues((prev) => ({ ...prev, website: v })),
+          onChange: (v) => {
+            setSubValues((prev) => ({ ...prev, website: v }));
+            setSubErrors((prev) => ({ ...prev, website: undefined }));
+          },
+          infoLabel: subErrors.website,
+          infoType: subErrors.website ? "error" : "info",
           onPrimary: advance,
         };
       default:

@@ -28,7 +28,7 @@ export const getProfileBundle = cache(
       admin
         .from("users")
         .select(
-          `id, created_at, first_name, last_name, pseudo, dob, location, nationality, bio, profile_photo, ${USER_PROFILE_SELECT}`,
+          `id, created_at, first_name, last_name, pseudo, dob, gender, location, nationality, bio, profile_photo, ${USER_PROFILE_SELECT}`,
         )
         .eq("pseudo", pseudo)
         .single(),

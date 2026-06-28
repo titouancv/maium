@@ -6,7 +6,12 @@ import type { UserData, Hobby, UserSummary } from "@/types/user";
 export function userToSummary(
   user: Pick<
     UserData,
-    "pseudo" | "first_name" | "last_name" | "location" | "profile_photo"
+    | "pseudo"
+    | "first_name"
+    | "last_name"
+    | "location"
+    | "profile_photo"
+    | "gender"
   >,
 ): UserSummary {
   return {
@@ -15,6 +20,7 @@ export function userToSummary(
     last_name: user.last_name,
     location: user.location,
     profile_photo: user.profile_photo,
+    gender: user.gender,
   };
 }
 

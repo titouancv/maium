@@ -27,6 +27,16 @@ export function sanitizePseudo(value: string): string {
   return value.toLowerCase().replace(/[^a-z.]/g, "");
 }
 
+/** Whether `value` is a valid http(s) URL (matches the `z.url()` server schema). */
+export function isValidUrl(value: string): boolean {
+  try {
+    const { protocol } = new URL(value);
+    return protocol === "http:" || protocol === "https:";
+  } catch {
+    return false;
+  }
+}
+
 export function faviconUrl(domainOrUrl: string, size = 32): string {
   let domain = domainOrUrl;
   try {

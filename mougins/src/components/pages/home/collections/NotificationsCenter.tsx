@@ -48,6 +48,12 @@ export const NotificationsCenter = ({
 
   const openOverlay = async () => {
     setOpen(true);
+    // Clear the badge immediately and persist the read in the background, before
+    // the list fetch — so opening zeroes the count at once instead of waiting on
+    // the network.
+    setOverride(0);
+    void fetch(API.HOME_NOTIFICATIONS_READ, { method: "POST" });
+
     setLoading(true);
     try {
       const res = await fetch(API.HOME_NOTIFICATIONS);
@@ -57,9 +63,6 @@ export const NotificationsCenter = ({
     } finally {
       setLoading(false);
     }
-    // Clear the badge now, persist the read in the background.
-    setOverride(0);
-    void fetch(API.HOME_NOTIFICATIONS_READ, { method: "POST" });
   };
 
   return (

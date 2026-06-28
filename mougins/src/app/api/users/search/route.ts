@@ -19,7 +19,7 @@ export async function GET(request: NextRequest) {
 
   let query = supabase
     .from("users")
-    .select("id, pseudo, first_name, last_name, location, profile_photo")
+    .select("id, pseudo, first_name, last_name, location, profile_photo, gender")
     .or(
       `pseudo.ilike.${pattern},first_name.ilike.${pattern},last_name.ilike.${pattern},location.ilike.${pattern}`,
     )
@@ -63,6 +63,7 @@ export async function GET(request: NextRequest) {
     last_name: row.last_name,
     location: row.location,
     profile_photo: row.profile_photo,
+    gender: row.gender,
     is_following: followedSet.has(row.id),
   }));
 

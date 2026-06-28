@@ -3,7 +3,7 @@ import { getAuthUser } from "@/lib/auth/getCurrentUser";
 import type { UserSummary } from "@/types/user";
 
 const SUMMARY_COLUMNS =
-  "id, pseudo, first_name, last_name, location, profile_photo";
+  "id, pseudo, first_name, last_name, location, profile_photo, gender";
 
 type SummaryRow = UserSummary & { id: string };
 type FollowerRow = { follower: SummaryRow | null };
@@ -53,6 +53,7 @@ async function withFollowState(rows: SummaryRow[]): Promise<UserSummary[]> {
     last_name: row.last_name,
     location: row.location,
     profile_photo: row.profile_photo,
+    gender: row.gender,
     is_following: followedSet.has(row.id),
   }));
 }
