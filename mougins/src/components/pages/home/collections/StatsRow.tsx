@@ -13,7 +13,7 @@ export const StatsRow = ({ user }: StatsRowProps) => {
   const t = useTranslations("home");
 
   return (
-    <div className="flex flex-col gap-6 md:flex-row md:justify-between">
+    <div className="flex flex-col gap-8 md:flex-row md:justify-between">
       <ActionCard
         actionLabel={t("actions.analyzeTitle")}
         text={t("actions.analyzeSubtitle")}
