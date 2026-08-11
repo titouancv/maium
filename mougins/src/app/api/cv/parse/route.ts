@@ -43,22 +43,12 @@ export async function POST(request: NextRequest) {
       data: { user },
     } = await supabase.auth.getUser();
 
-    if (!user) {
-      const clientIp = getClientIp(request);
-      // No attributable IP means no way to enforce a per-caller limit, so the
-      // request cannot be served anonymously.
-      if (!clientIp) {
-        return NextResponse.json({ error: "Forbidden" }, { status: 403 });
-      }
-      const allowed = await checkAnonRateLimit({
-        operation: "cv_parse",
-        clientIp,
-        limit: CV_PARSE_PER_IP_PER_DAY,
-        windowMs: DAY_MS,
-      });
-      if (!allowed) {
-        return NextResponse.json({ error: "Rate limit exceeded" }, { status: 429 });
-      }
+    // No attributable IP means no way to enforce a per-caller limit, so the
+    // request can't be served anonymously. Checked up front — it's free, and
+    // there is no point reading a body we will refuse.
+    const clientIp = user ? null : getClientIp(request);
+    if (!user && !clientIp) {
+      return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     }
 
     // Reject on the declared size before `formData()` buffers the whole body.
@@ -85,6 +75,25 @@ export async function POST(request: NextRequest) {
     }
     if (file.size > CV_MAX_BYTES) {
       return NextResponse.json({ error: "File too large" }, { status: 400 });
+    }
+
+    // Consume quota only now that the request is known to be well-formed, and
+    // right before the first paid call. Charging it earlier would let a user
+    // who picked the wrong file a few times lock themselves out of a feature
+    // that never cost anything.
+    if (clientIp) {
+      const allowed = await checkAnonRateLimit({
+        operation: "cv_parse",
+        clientIp,
+        limit: CV_PARSE_PER_IP_PER_DAY,
+        windowMs: DAY_MS,
+      });
+      if (!allowed) {
+        return NextResponse.json(
+          { error: "Rate limit exceeded" },
+          { status: 429 },
+        );
+      }
     }
 
     const data = new Uint8Array(await file.arrayBuffer());
