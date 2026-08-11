@@ -27,6 +27,28 @@ export function isAtLeastYearsOld(dobTs: number, years: number): boolean {
   return dobTs <= cutoff;
 }
 
+/**
+ * Parse a `YYYY-MM` or `YYYY` partial date into a UTC-midnight epoch ms, the
+ * form experience periods are stored in (`user_experiences.start_period`).
+ * Returns `null` for anything else.
+ *
+ * Used for LLM-extracted dates: models emit partial calendar dates reliably but
+ * epoch timestamps badly, so they are asked for `YYYY-MM` and converted here.
+ * A bare `YYYY` lands on January 1st.
+ */
+export function parsePartialDateToTimestamp(value: string): number | null {
+  const match = /^(\d{4})(?:-(\d{2}))?$/.exec(value.trim());
+  if (!match) return null;
+
+  const year = Number(match[1]);
+  const month = match[2] === undefined ? 1 : Number(match[2]);
+  if (month < 1 || month > 12) return null;
+  // Guard against absurd years (OCR noise) rather than storing them.
+  if (year < 1900 || year > new Date().getUTCFullYear() + 10) return null;
+
+  return Date.UTC(year, month - 1, 1);
+}
+
 /** Format an ISO date string as a locale-aware `HH:MM` time. */
 export function formatTime(dateStr: string, locale: string): string {
   return new Date(dateStr).toLocaleTimeString(locale, {

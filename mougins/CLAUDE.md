@@ -114,6 +114,7 @@ OAuth flow: Google → Supabase → `/auth/callback` → `exchangeCodeForSession
 | `GET` | `/api/home/notifications` | List the user's home notifications |
 | `POST` | `/api/home/notifications/read` | Mark home notifications as read |
 | `GET` | `/api/url-title` | Fetch the title of an external URL |
+| `POST` | `/api/cv/parse` | OCR an uploaded CV into a profile draft (auth optional) |
 | `POST` | `/api/analyze-job` | Run the job analysis pipeline |
 | `GET` | `/api/analysis/:id` | Get a single job analysis |
 | `GET` | `/api/history` | List the user's past job analyses |
@@ -353,13 +354,14 @@ frontend/src/
 │   ├── supabase/                  # client.ts, server.ts, admin.ts, index.ts
 │   ├── auth/                      # getCurrentUser + requireApiUser (route-handler auth gate)
 │   ├── date.ts                    # Shared date/time + experience-period helpers
+│   ├── cv/                        # CV import: Mistral OCR + LLM parse into a profile draft
 │   ├── jobs/                      # Job analysis pipeline (extract, matching, resume)
 │   ├── resume/                    # Resume data + PDF templates/services
 │   ├── mistral/                   # Mistral AI client
 │   ├── mappers/                   # DB row → domain type mappers
 │   ├── home/                      # Home dashboard stats + profile completion
 │   ├── users/ · messaging/        # Server-side data access per domain
-│   └── validators/                # Zod schemas (user.ts, job.ts)
+│   └── validators/                # Zod schemas (user.ts, job.ts, cv.ts)
 ├── messages/
 │   ├── en.json                    # English translations
 │   └── fr.json                    # French translations (must stay in sync)
