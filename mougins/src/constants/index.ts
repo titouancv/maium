@@ -40,6 +40,7 @@ export const API = {
   ANALYZE_JOB: "/api/analyze-job",
   ANALYSIS: (id: string) => `/api/analysis/${id}`,
   HISTORY: "/api/history",
+  CV_PARSE: "/api/cv/parse",
   RESUME: (id: string) => `/api/resume/${id}`,
   RESUME_PDF: (id: string) => `/api/resume/${id}/pdf`,
   RESUME_PROFILE_PDF: "/api/resume/profile/pdf",
@@ -49,6 +50,11 @@ export const EXTERNAL_API = {
   PHOTON_GEOCODE: "https://photon.komoot.io/api/",
   FAVICON: "https://www.google.com/s2/favicons",
 } as const;
+
+// --- Durations -------------------------------------------------------------
+
+/** One day in milliseconds (rate-limit windows, cookie lifetimes). */
+export const DAY_MS = 24 * 60 * 60 * 1000;
 
 export const SIGNUP_FORM_ID = "signup-step-form";
 
@@ -74,6 +80,34 @@ export const JOB_TEXT_CHAR_LIMIT = 12000;
 
 /** Embedding dimension for `mistral-embed` (matches the `vector(1024)` column). */
 export const EMBEDDING_DIM = 1024;
+
+// --- CV import (OCR) -------------------------------------------------------
+
+/** Max size of an uploaded CV. Comfortably above a text-heavy scanned PDF. */
+export const CV_MAX_BYTES = 10 * 1024 * 1024;
+
+/** Content types accepted by `POST /api/cv/parse` (PDF + the common photo formats). */
+export const CV_ACCEPTED_MIME_TYPES = [
+  "application/pdf",
+  "image/png",
+  "image/jpeg",
+  "image/webp",
+] as const;
+
+/** `accept` attribute for the CV file picker, derived from the accepted types. */
+export const CV_ACCEPT_ATTRIBUTE = CV_ACCEPTED_MIME_TYPES.join(",");
+
+/** Max characters of OCR'd CV markdown sent to Mistral (token guardrail). */
+export const CV_TEXT_CHAR_LIMIT = 20000;
+
+/**
+ * CV imports an anonymous caller may run per day, per IP. `/api/cv/parse` is
+ * open by design (it serves the signup wizard *and* the signed-out analysis
+ * funnel) and each call costs an OCR + an LLM request. Set well above what a
+ * real visitor needs, so a shared office or campus IP isn't punished.
+ * Signed-in users are not limited by it.
+ */
+export const CV_PARSE_PER_IP_PER_DAY = 20;
 
 /** Prompt version stamped on stored analyses for auditability. */
 export const PROMPT_VERSION = "v1";

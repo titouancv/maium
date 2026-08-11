@@ -5,6 +5,7 @@ import { EMBEDDING_DIM } from "@/constants";
 
 const CHAT_MODEL = process.env.MISTRAL_CHAT_MODEL || "mistral-small-latest";
 const EMBED_MODEL = process.env.MISTRAL_EMBED_MODEL || "mistral-embed";
+const OCR_MODEL = process.env.MISTRAL_OCR_MODEL || "mistral-ocr-latest";
 
 // Rough public pricing ($/1M tokens) used only for the cost_estimate audit
 // column — not billing-grade, just an order of magnitude for observability.
@@ -128,4 +129,63 @@ export async function embed(params: {
     return vector;
   }
   return vector;
+}
+
+/**
+ * Runs Mistral OCR over a document and returns its pages as a single markdown
+ * string (pages joined by a blank line), plus an `llm_logs` audit row.
+ *
+ * The document is passed inline as a data URI, so nothing is uploaded to
+ * Mistral's Files API and nothing is persisted on our side — callers hold the
+ * bytes only for the duration of the request. PDFs go through `document_url`,
+ * images through `image_url` (the two chunk shapes the OCR endpoint accepts).
+ *
+ * OCR is billed per page rather than per token, so the usage row records zero
+ * tokens; it is kept for the latency / error-rate signal.
+ */
+export async function ocrDocument(params: {
+  operation: string;
+  userId: string | null;
+  data: Uint8Array;
+  mimeType: string;
+}): Promise<string> {
+  const started = Date.now();
+  const dataUri = `data:${params.mimeType};base64,${Buffer.from(params.data).toString("base64")}`;
+  const document = params.mimeType === "application/pdf"
+    ? ({ type: "document_url", documentUrl: dataUri } as const)
+    : ({ type: "image_url", imageUrl: dataUri } as const);
+
+  try {
+    const result = await getClient().ocr.process({
+      model: OCR_MODEL,
+      document,
+      includeImageBase64: false,
+    });
+
+    await logUsage({
+      userId: params.userId,
+      operation: params.operation,
+      model: OCR_MODEL,
+      inputTokens: 0,
+      outputTokens: 0,
+      latencyMs: Date.now() - started,
+      status: "success",
+    });
+
+    return (result.pages ?? [])
+      .map((page) => page.markdown ?? "")
+      .join("\n\n")
+      .trim();
+  } catch (error) {
+    await logUsage({
+      userId: params.userId,
+      operation: params.operation,
+      model: OCR_MODEL,
+      inputTokens: 0,
+      outputTokens: 0,
+      latencyMs: Date.now() - started,
+      status: "error",
+    });
+    throw error;
+  }
 }
