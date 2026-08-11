@@ -1,14 +1,18 @@
 import { NextRequest, NextResponse } from "next/server";
-import { requireApiUser } from "@/lib/auth";
 import { getAnalysisJobById } from "@/lib/jobs/server";
 
+/**
+ * Status of a running analysis, polled by the progress UI.
+ *
+ * No auth gate of its own: `getAnalysisJobById` returns the row only to its
+ * owner — a signed-in user or a browser holding the matching `anon_id` cookie —
+ * so a caller who doesn't own it gets the same 404 as a caller asking for an id
+ * that doesn't exist.
+ */
 export async function GET(
   _req: NextRequest,
   { params }: { params: Promise<{ id: string }> },
 ) {
-  const auth = await requireApiUser();
-  if (auth instanceof NextResponse) return auth;
-
   const { id } = await params;
   const job = await getAnalysisJobById(id);
   if (!job) {

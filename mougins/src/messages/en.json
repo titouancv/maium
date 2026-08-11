@@ -452,5 +452,30 @@
     "newFollowerGeneric": "New follower",
     "newMessage": "New message from {name}",
     "newMessageGeneric": "New message"
+  },
+  "analyze": {
+    "title": "Analyze a job offer",
+    "cv": {
+      "title": "Start with your CV",
+      "description": "Drop your CV and we'll read it — no account needed. It's what we match the offer against.",
+      "choose": "Choose your CV",
+      "parsing": "Reading your CV…",
+      "privacyNote": "Your file is read and discarded straight away. We never store it.",
+      "errorType": "Please choose a PDF or an image.",
+      "errorSize": "That file is too large (10 MB max).",
+      "errorParse": "We couldn't read that CV. Try another file.",
+      "errorRateLimited": "Too many imports for now. Try again later."
+    },
+    "job": {
+      "title": "Now the job offer",
+      "description": "Paste the offer's link, or the text itself. We'll score the match, rewrite your CV for it and draft a cover letter."
+    },
+    "gate": {
+      "title": "Create your account to keep going",
+      "description": "You've used your free analysis. Your CV is already imported and your analysis is waiting — creating an account takes three questions.",
+      "benefitProfile": "Your profile is already filled in from your CV",
+      "benefitHistory": "Your analysis, optimized CV and cover letter are kept",
+      "benefitUnlimited": "Analyze as many offers as you like"
+    }
   }
 }

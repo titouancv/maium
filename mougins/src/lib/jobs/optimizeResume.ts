@@ -64,7 +64,10 @@ function mergeOptimizedEntries(
  * invent, add or alter experience.
  */
 export async function optimizeResume(params: {
-  userId: string;
+  /** Tags the `llm_logs` audit rows; null for a signed-out run. */
+  userId: string | null;
+  /** Ownership + retention columns, copied from the driving `analysis_jobs` row. */
+  owner: { user_id: string | null; anon_id: string | null; expires_at: string | null };
   job: JobData;
   profile: CandidateProfile;
   analysisId: string;
@@ -143,7 +146,7 @@ export async function optimizeResume(params: {
   const { data: resume, error } = await admin
     .from("optimized_resumes")
     .insert({
-      user_id: params.userId,
+      ...params.owner,
       job_id: params.job.id,
       analysis_id: params.analysisId,
       version: 1,

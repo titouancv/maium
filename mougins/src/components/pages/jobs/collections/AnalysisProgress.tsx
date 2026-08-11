@@ -4,13 +4,25 @@ import { useEffect, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
 import { useRouter } from "@/i18n/navigation";
 import { createClient } from "@/lib/supabase/client";
-import { API, ROUTES } from "@/constants";
+import { ANALYSIS_POLL_INTERVAL_MS, API, ROUTES } from "@/constants";
 import { ProgressBar } from "@/components/ui";
 import type { AnalysisStatus, AnalysisStep } from "@/types/job";
 
 interface AnalysisProgressProps {
   analysisJobId: string;
   onDone: () => void;
+  /**
+   * Signed-out run: follow progress by polling instead of Realtime.
+   * A signed-out visitor's `analysis_jobs` row carries a NULL `user_id`, which
+   * no RLS policy matches, so Realtime would never deliver an update. The
+   * status endpoint authorizes on the `anon_id` cookie instead.
+   */
+  anonymous?: boolean;
+  /**
+   * Where to go when the analysis completes. Defaults to the signed-in history
+   * page, which a signed-out visitor can't reach.
+   */
+  onCompleted?: (analysisId: string) => void;
 }
 
 interface ProgressState {
@@ -30,6 +42,8 @@ interface ProgressState {
 export function AnalysisProgress({
   analysisJobId,
   onDone,
+  anonymous,
+  onCompleted,
 }: AnalysisProgressProps) {
   const t = useTranslations("jobs");
   const router = useRouter();
@@ -92,11 +106,11 @@ export function AnalysisProgress({
   useEffect(() => {
     let cancelled = false;
 
-    // Seed current state in case the job advanced before we subscribed.
-    fetch(API.ANALYSIS(analysisJobId))
-      .then((r) => (r.ok ? r.json() : null))
-      .then((data) => {
-        if (!cancelled && data) {
+    const readStatus = () =>
+      fetch(API.ANALYSIS(analysisJobId))
+        .then((r) => (r.ok ? r.json() : null))
+        .then((data) => {
+          if (cancelled || !data) return null;
           setState({
             status: data.status,
             currentStep: data.currentStep,
@@ -104,9 +118,25 @@ export function AnalysisProgress({
             error: data.error,
             analysisId: data.analysisId ?? null,
           });
+          return data.status as AnalysisStatus;
+        })
+        .catch(() => null);
+
+    // Seed current state in case the job advanced before we subscribed.
+    readStatus();
+
+    if (anonymous) {
+      const timer = setInterval(async () => {
+        const status = await readStatus();
+        if (status === "completed" || status === "failed") {
+          clearInterval(timer);
         }
-      })
-      .catch(() => {});
+      }, ANALYSIS_POLL_INTERVAL_MS);
+      return () => {
+        cancelled = true;
+        clearInterval(timer);
+      };
+    }
 
     const supabase = createClient();
     const channel = supabase
@@ -142,18 +172,28 @@ export function AnalysisProgress({
       cancelled = true;
       supabase.removeChannel(channel);
     };
-  }, [analysisJobId]);
+  }, [analysisJobId, anonymous]);
 
   const onDoneRef = useRef(onDone);
   useEffect(() => {
     onDoneRef.current = onDone;
   }, [onDone]);
 
+  const onCompletedRef = useRef(onCompleted);
+  useEffect(() => {
+    onCompletedRef.current = onCompleted;
+  }, [onCompleted]);
+
   const redirectedRef = useRef(false);
   useEffect(() => {
     if (state.status === "completed" && state.analysisId && !redirectedRef.current) {
       redirectedRef.current = true;
-      router.push(`${ROUTES.JOBS_HISTORY}?analysis=${state.analysisId}`);
+      const handler = onCompletedRef.current;
+      if (handler) {
+        handler(state.analysisId);
+      } else {
+        router.push(`${ROUTES.JOBS_HISTORY}?analysis=${state.analysisId}`);
+      }
     }
   }, [state.status, state.analysisId, router]);
 

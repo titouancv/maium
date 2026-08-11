@@ -2,6 +2,7 @@ import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 import { ROUTES } from "@/constants";
+import { claimAnonSession } from "@/lib/auth/claimAnonSession";
 
 export async function GET(request: Request) {
   const { searchParams, origin } = new URL(request.url);
@@ -32,6 +33,12 @@ export async function GET(request: Request) {
         data: { user },
       } = await supabase.auth.getUser();
       if (user) {
+        // Hand over anything they did signed out (their parsed CV fills the
+        // profile, their analysis becomes permanent). Best-effort — it must
+        // never cost them the sign-in — and it runs before the redirect so the
+        // wizard already sees the imported profile.
+        await claimAnonSession(user.id);
+
         const { data: profile } = await supabase
           .from("users")
           .select("onboarding_completed")

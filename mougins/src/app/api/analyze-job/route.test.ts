@@ -1,8 +1,17 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { NextRequest } from "next/server";
 
+/** In-memory cookie jar, so the anonymous quota can be driven per test. */
+const cookieJar = new Map<string, string>();
+
 vi.mock("next/headers", () => ({
-  cookies: vi.fn().mockResolvedValue({ getAll: () => [], set: vi.fn() }),
+  cookies: vi.fn().mockResolvedValue({
+    getAll: () => [],
+    get: (name: string) =>
+      cookieJar.has(name) ? { name, value: cookieJar.get(name) } : undefined,
+    set: (name: string, value: string) => cookieJar.set(name, value),
+    delete: (name: string) => cookieJar.delete(name),
+  }),
 }));
 
 vi.mock("next/server", async () => {
@@ -14,6 +23,7 @@ vi.mock("@/lib/supabase/server", () => ({ createClient: vi.fn() }));
 vi.mock("@/lib/supabase/admin", () => ({ createAdminClient: vi.fn() }));
 vi.mock("@/lib/jobs/usage", () => ({
   isUnderRateLimit: vi.fn().mockResolvedValue(true),
+  isAnonUnderQuota: vi.fn().mockResolvedValue(true),
   incrementUsage: vi.fn().mockResolvedValue(undefined),
 }));
 vi.mock("@/lib/jobs/pipeline", () => ({
@@ -23,16 +33,36 @@ vi.mock("@/lib/jobs/pipeline", () => ({
 import { POST } from "./route";
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
-import { isUnderRateLimit } from "@/lib/jobs/usage";
+import { isAnonUnderQuota, isUnderRateLimit } from "@/lib/jobs/usage";
+import { ANON_USED_COOKIE } from "@/constants";
 
 const mockCreateClient = vi.mocked(createClient);
 const mockCreateAdmin = vi.mocked(createAdminClient);
 const mockRateLimit = vi.mocked(isUnderRateLimit);
+const mockAnonQuota = vi.mocked(isAnonUnderQuota);
 
-function makeRequest(body: unknown) {
+/** A minimal extraction that satisfies `CvExtractionSchema`. */
+const CV_EXTRACTION = {
+  firstName: "Ada",
+  skills: ["TypeScript"],
+  professionalExperiences: [
+    {
+      organization: "Acme",
+      role: "Engineer",
+      startPeriod: Date.UTC(2020, 0, 1),
+    },
+  ],
+};
+
+function makeRequest(body: unknown, headers: Record<string, string> = {}) {
   return new NextRequest("http://localhost/api/analyze-job", {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: {
+      "Content-Type": "application/json",
+      // Anonymous callers need an attributable IP; the proxy sets this.
+      "x-forwarded-for": "203.0.113.7",
+      ...headers,
+    },
     body: JSON.stringify(body),
   });
 }
@@ -62,13 +92,9 @@ function mockAdminInsert(result: { data: { id: string } | null; error: unknown }
 describe("POST /api/analyze-job", () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    cookieJar.clear();
     mockRateLimit.mockResolvedValue(true);
-  });
-
-  it("returns 401 when unauthenticated", async () => {
-    mockAuth(null);
-    const res = await POST(makeRequest({ mode: "url", jobUrl: "https://example.com/job" }));
-    expect(res.status).toBe(401);
+    mockAnonQuota.mockResolvedValue(true);
   });
 
   it("returns 400 for an invalid URL", async () => {
@@ -108,5 +134,121 @@ describe("POST /api/analyze-job", () => {
     expect(res.status).toBe(202);
     const json = await res.json();
     expect(json).toEqual({ analysisId: "analysis-2", status: "queued" });
+  });
+
+  // A signed-out visitor gets one free run. The endpoint used to 401 them.
+  describe("signed out", () => {
+    it("runs the analysis when a parsed CV is supplied", async () => {
+      mockAuth(null);
+      mockAdminInsert({ data: { id: "analysis-3" }, error: null });
+      const res = await POST(
+        makeRequest({
+          mode: "url",
+          jobUrl: "https://example.com/job",
+          cvExtraction: CV_EXTRACTION,
+        }),
+      );
+      expect(res.status).toBe(202);
+    });
+
+    it("returns 400 without a CV, having no profile to match against", async () => {
+      mockAuth(null);
+      const res = await POST(
+        makeRequest({ mode: "url", jobUrl: "https://example.com/job" }),
+      );
+      expect(res.status).toBe(400);
+    });
+
+    it("returns 400 for a CV that fails validation", async () => {
+      mockAuth(null);
+      const res = await POST(
+        makeRequest({
+          mode: "url",
+          jobUrl: "https://example.com/job",
+          // `skills` must be strings — the body crossed a trust boundary and
+          // is re-validated rather than believed.
+          cvExtraction: { ...CV_EXTRACTION, skills: [{ evil: true }] },
+        }),
+      );
+      expect(res.status).toBe(400);
+    });
+
+    // 402, not 429: the UI shows "create an account", not "try again later".
+    it("returns 402 once the free run has been spent", async () => {
+      mockAuth(null);
+      cookieJar.set(ANON_USED_COOKIE, "1");
+      const res = await POST(
+        makeRequest({
+          mode: "url",
+          jobUrl: "https://example.com/job",
+          cvExtraction: CV_EXTRACTION,
+        }),
+      );
+      expect(res.status).toBe(402);
+      expect(await res.json()).toEqual({ error: "anon_quota_exhausted" });
+    });
+
+    it("returns 402 when the server-side quota refuses", async () => {
+      mockAuth(null);
+      mockAnonQuota.mockResolvedValue(false);
+      const res = await POST(
+        makeRequest({
+          mode: "url",
+          jobUrl: "https://example.com/job",
+          cvExtraction: CV_EXTRACTION,
+        }),
+      );
+      expect(res.status).toBe(402);
+    });
+
+    it("refuses a request with no attributable IP", async () => {
+      mockAuth(null);
+      const req = new NextRequest("http://localhost/api/analyze-job", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          mode: "url",
+          jobUrl: "https://example.com/job",
+          cvExtraction: CV_EXTRACTION,
+        }),
+      });
+      expect((await POST(req)).status).toBe(403);
+    });
+
+    it("marks the free run spent so the next one is refused", async () => {
+      mockAuth(null);
+      mockAdminInsert({ data: { id: "analysis-4" }, error: null });
+      const body = {
+        mode: "url",
+        jobUrl: "https://example.com/job",
+        cvExtraction: CV_EXTRACTION,
+      };
+      expect((await POST(makeRequest(body))).status).toBe(202);
+      expect((await POST(makeRequest(body))).status).toBe(402);
+    });
+  });
+
+  it("ignores a CV posted by a signed-in caller, whose profile wins", async () => {
+    mockAuth("user-1");
+    const insert = vi.fn().mockReturnValue({
+      select: vi.fn().mockReturnValue({
+        single: vi.fn().mockResolvedValue({ data: { id: "a" }, error: null }),
+      }),
+    });
+    mockCreateAdmin.mockReturnValue({
+      from: vi.fn().mockReturnValue({ insert }),
+    } as never);
+
+    await POST(
+      makeRequest({
+        mode: "url",
+        jobUrl: "https://example.com/job",
+        cvExtraction: CV_EXTRACTION,
+      }),
+    );
+
+    expect(insert).toHaveBeenCalledWith(
+      expect.objectContaining({ user_id: "user-1", cv_extraction: null }),
+    );
   });
 });

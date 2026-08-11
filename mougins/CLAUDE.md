@@ -74,6 +74,31 @@ const { user, supabase } = auth;
 (Routes with **optional** auth — e.g. `/api/users/search`, `/api/users/view`,
 which don't 401 — still call `getUser()` directly.)
 
+### Anonymous analyses
+
+`/analyze` lets a signed-out visitor run the pipeline **once**, so the product's
+best feature isn't hidden behind signup. The seams:
+
+- `analysis_jobs` / `analyses` / `optimized_resumes` have a nullable `user_id`
+  paired with an `anon_id`; a CHECK enforces exactly one owner. The visitor's
+  parsed CV rides on `analysis_jobs.cv_extraction`, standing in for the `users`
+  row the pipeline would otherwise read.
+- **Anonymous rows are invisible to RLS** (no policy matches a NULL `user_id`).
+  They are read with the service-role client behind an explicit ownership check
+  — [ownsRow](src/lib/jobs/access.ts) — against the httpOnly `maium_anon`
+  cookie. Holding that cookie *is* the authorization; never add an `anon` role
+  policy to these tables.
+- Realtime can't reach those rows either, so the progress UI polls when
+  `anonymous` is set ([AnalysisProgress](src/components/pages/jobs/collections/AnalysisProgress.tsx)).
+- Quota lives in [lib/auth/anonSession.ts](src/lib/auth/anonSession.ts) (a
+  `maium_anon_used` cookie) with a per-IP backstop in
+  [lib/jobs/usage.ts](src/lib/jobs/usage.ts). Refusals are **402**, distinct
+  from the signed-in **429**, so the UI says "create an account" rather than
+  "try again later".
+- On signup, [claimAnonSession](src/lib/auth/claimAnonSession.ts) writes the
+  visitor's CV onto the new profile and reassigns their rows. Best-effort — it
+  must never cost the user their sign-in.
+
 ### Signup Flows
 
 There is a single signup path: **Google OAuth**. (Email/password was removed —
@@ -122,8 +147,9 @@ OAuth flow: Google → Supabase → `/auth/callback` → `exchangeCodeForSession
 | `POST` | `/api/home/notifications/read` | Mark home notifications as read |
 | `GET` | `/api/url-title` | Fetch the title of an external URL |
 | `POST` | `/api/cv/parse` | OCR an uploaded CV into a profile draft (auth optional) |
-| `POST` | `/api/analyze-job` | Run the job analysis pipeline |
-| `GET` | `/api/analysis/:id` | Get a single job analysis |
+| `POST` | `/api/analyze-job` | Run the job analysis pipeline (auth optional) |
+| `GET` | `/api/analysis/:id` | Analysis job status (owner-scoped) |
+| `GET` | `/api/analysis/:id/result` | Get a finished analysis (owner-scoped) |
 | `GET` | `/api/history` | List the user's past job analyses |
 | `GET/DELETE` | `/api/resume/:id` | Get / delete an optimized resume |
 | `GET/POST` | `/api/resume/:id/pdf` | Render / generate the resume PDF |

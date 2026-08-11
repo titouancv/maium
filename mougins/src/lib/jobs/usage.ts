@@ -1,5 +1,44 @@
 import { createAdminClient } from "@/lib/supabase/admin";
-import { ANALYSES_PER_HOUR } from "@/constants";
+import {
+  ANALYSES_PER_HOUR,
+  ANON_ANALYSES_PER_IP_PER_DAY,
+  DAY_MS,
+} from "@/constants";
+
+/**
+ * Whether a signed-out visitor may run an analysis.
+ *
+ * Two barriers, both server-side and evaluated before any paid call:
+ *
+ *  1. `anon_id` — one free run per browser. The `maium_anon_used` cookie is the
+ *     nominal check (see lib/auth/anonSession); this catches the case where
+ *     that cookie is gone but the session one survives.
+ *  2. IP — the backstop for clearing cookies entirely. Deliberately above 1 so
+ *     a shared office or CGNAT address isn't locked out by one colleague.
+ *
+ * Signing in is what actually lifts the limit, which is the whole conversion
+ * argument, so this stays strict.
+ */
+export async function isAnonUnderQuota(params: {
+  anonId: string;
+  clientIp: string;
+}): Promise<boolean> {
+  const admin = createAdminClient();
+
+  const { count: ownCount } = await admin
+    .from("analysis_jobs")
+    .select("id", { count: "exact", head: true })
+    .eq("anon_id", params.anonId);
+  if ((ownCount ?? 0) >= 1) return false;
+
+  const since = new Date(Date.now() - DAY_MS).toISOString();
+  const { count: ipCount } = await admin
+    .from("analysis_jobs")
+    .select("id", { count: "exact", head: true })
+    .eq("client_ip", params.clientIp)
+    .gte("created_at", since);
+  return (ipCount ?? 0) < ANON_ANALYSES_PER_IP_PER_DAY;
+}
 
 /**
  * Rate-limit: true when the user is under the per-hour analysis cap. Counts
