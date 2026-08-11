@@ -14,6 +14,8 @@ export const ROUTES = {
   PRIVACY_POLICY: "/privacy-policy",
   MESSAGES: "/messages",
   CONVERSATION: (id: string) => `/messages/${id}`,
+  /** Public analysis funnel — signed-out visitors get one free run here. */
+  ANALYZE: "/analyze",
   JOBS: "/jobs",
   JOBS_HISTORY: "/jobs/history",
 } as const;
@@ -108,6 +110,38 @@ export const CV_TEXT_CHAR_LIMIT = 20000;
  * Signed-in users are not limited by it.
  */
 export const CV_PARSE_PER_IP_PER_DAY = 20;
+
+// --- Anonymous analysis ----------------------------------------------------
+
+/** Identifies a signed-out visitor's analyses (httpOnly). */
+export const ANON_SESSION_COOKIE = "maium_anon";
+
+/** Records that the one free analysis has been spent (httpOnly). */
+export const ANON_USED_COOKIE = "maium_anon_used";
+
+/** Client-side mirror of {@link ANON_USED_COOKIE}, for painting the right screen. */
+export const ANON_USED_STORAGE_KEY = "maium.anonAnalysisUsed";
+
+/** How long a signed-out visitor can come back to their results. */
+export const ANON_SESSION_MAX_AGE_S = 7 * 24 * 60 * 60;
+
+/** The free run is a lifetime allowance, so its marker outlives the session. */
+export const ANON_USED_MAX_AGE_S = 365 * 24 * 60 * 60;
+
+/**
+ * Analyses a signed-out visitor may run per IP per day.
+ *
+ * The cookie above is the nominal limit — one run, then sign up. This is the
+ * backstop for clearing cookies, and is deliberately above 1 so a shared office
+ * or CGNAT address isn't locked out by one colleague's visit.
+ */
+export const ANON_ANALYSES_PER_IP_PER_DAY = 3;
+
+/**
+ * How often the signed-out progress UI re-checks an analysis. Realtime is
+ * unavailable there (no RLS policy matches a NULL `user_id`), so it polls.
+ */
+export const ANALYSIS_POLL_INTERVAL_MS = 1500;
 
 /** Prompt version stamped on stored analyses for auditability. */
 export const PROMPT_VERSION = "v1";

@@ -1,6 +1,8 @@
 import QRCode from "qrcode";
 import { createClient } from "@/lib/supabase/server";
+import { createAdminClient } from "@/lib/supabase/admin";
 import { getResumeById } from "@/lib/jobs/server";
+import type { CvExtraction } from "@/lib/validators/cv";
 import { getCurrentUserProfile } from "@/lib/auth/getCurrentUser";
 import { ROUTES } from "@/constants";
 import { parseSocialUrl } from "@/lib/socialNetwork";
@@ -22,11 +24,58 @@ function resolveSocialNetworks(urls: string[]): SocialLink[] {
 }
 
 /**
+ * Header fields for a resume produced by a signed-out run, taken from the CV
+ * the visitor uploaded — there is no `public.users` row to read.
+ *
+ * The extraction lives on the driving `analysis_jobs` row, reached through the
+ * resume's `analysis_id`. Ownership was already settled by `getResumeById`, so
+ * this only assembles data.
+ */
+async function buildAnonResumeHeader(
+  analysisId: string | null,
+): Promise<Pick<
+  ResumePdfData,
+  "fullName" | "contact" | "socialNetworks" | "pseudo" | "profileUrl" | "profileQrCode"
+> | null> {
+  if (!analysisId) return null;
+
+  const { data } = await createAdminClient()
+    .from("analysis_jobs")
+    .select("cv_extraction")
+    .eq("analysis_id", analysisId)
+    .not("cv_extraction", "is", null)
+    .maybeSingle();
+
+  const cv = data?.cv_extraction as CvExtraction | null | undefined;
+  if (!cv) return null;
+
+  const fullName = [cv.firstName, cv.lastName].filter(Boolean).join(" ").trim();
+
+  return {
+    fullName,
+    contact: {
+      // A signed-out visitor never gave us an email — only what the CV held.
+      email: null,
+      phone: cv.phone ?? null,
+      location: cv.location ?? null,
+    },
+    socialNetworks: resolveSocialNetworks(cv.socialNetworks ?? []),
+    // Both point at a maium profile, which doesn't exist yet. The QR would
+    // otherwise encode a 404, so it is left off.
+    pseudo: "",
+    profileUrl: "",
+    profileQrCode: "",
+  };
+}
+
+/**
  * Assembles the data a resume template needs: the optimized `resume_json`
- * (RLS-scoped via `getResumeById`, including the AI-optimized experiences and
- * education) plus the owner's header fields read from the authenticated user's
- * own `public.users` row.
- * Returns `null` when the resume does not exist or isn't visible to the user.
+ * (ownership-scoped via `getResumeById`, including the AI-optimized experiences
+ * and education) plus the owner's header fields.
+ *
+ * The header comes from the signed-in user's `public.users` row, or — for a
+ * resume produced by a signed-out run — from the CV that drove it.
+ * Returns `null` when the resume does not exist or isn't visible to the caller.
  *
  * When `overrideJson` is provided (user-edited content from the resume editor),
  * it replaces the stored `resume_json` for rendering only — nothing is
@@ -46,7 +95,18 @@ export async function buildResumePdfData(
   const {
     data: { user },
   } = await supabase.auth.getUser();
-  if (!user) return null;
+
+  if (!user) {
+    const header = await buildAnonResumeHeader(result.resume.analysis_id);
+    if (!header) return null;
+    return {
+      ...header,
+      summary: resume_json.summary ?? "",
+      experiences: sortExperiences(resume_json.experiences ?? []),
+      skills: resume_json.skills ?? [],
+      education: sortExperiences(resume_json.education ?? []),
+    };
+  }
 
   const { data: profile } = await supabase
     .from("users")

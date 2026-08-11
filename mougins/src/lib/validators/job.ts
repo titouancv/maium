@@ -1,12 +1,13 @@
 import { z } from "zod";
+import { CvExtractionSchema } from "./cv";
 
-/** Request body for POST /api/analyze-job — URL mode. */
+/** The job-offer form — URL mode. */
 export const AnalyzeJobUrlSchema = z.object({
   mode: z.literal("url"),
   jobUrl: z.url(),
 });
 
-/** Request body for POST /api/analyze-job — pasted text mode. */
+/** The job-offer form — pasted text mode. */
 export const AnalyzeJobTextSchema = z.object({
   mode: z.literal("text"),
   jobText: z.string().min(50),
@@ -17,6 +18,21 @@ export const AnalyzeJobSchema = z.discriminatedUnion("mode", [
   AnalyzeJobTextSchema,
 ]);
 export type AnalyzeJobInput = z.infer<typeof AnalyzeJobSchema>;
+
+/**
+ * Full request body for `POST /api/analyze-job`: the form fields above plus,
+ * for a signed-out run, the CV parsed at `/api/cv/parse`.
+ *
+ * Kept separate from the form schemas so react-hook-form keeps validating only
+ * what the user actually types — the CV is attached by the page at submit time.
+ * It has crossed a trust boundary by then, so it is re-validated in full rather
+ * than taken on the client's word. Ignored for a signed-in caller, whose stored
+ * profile wins.
+ */
+export const AnalyzeJobRequestSchema = z.discriminatedUnion("mode", [
+  AnalyzeJobUrlSchema.extend({ cvExtraction: CvExtractionSchema.optional() }),
+  AnalyzeJobTextSchema.extend({ cvExtraction: CvExtractionSchema.optional() }),
+]);
 
 /** Shape Mistral must return when extracting a job posting from raw text. */
 export const JobExtractionSchema = z.object({

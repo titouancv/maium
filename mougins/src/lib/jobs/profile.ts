@@ -4,6 +4,7 @@ import {
   USER_PROFILE_SELECT,
   type DbUserRaw,
 } from "@/lib/mappers/user";
+import type { CvExtraction } from "@/lib/validators/cv";
 import type { CandidateProfile } from "@/types/job";
 
 /**
@@ -43,6 +44,36 @@ export async function getCandidateProfile(
     })),
     skills: user.skills ?? [],
     projects: user.projects ?? [],
+  };
+}
+
+/**
+ * The same profile, assembled from a parsed CV instead of a `users` row — the
+ * signed-out path, where there is no account to read.
+ *
+ * A pure mapping, deliberately symmetric with {@link getCandidateProfile}: the
+ * pipeline downstream can't tell the two apart. `CvExtraction` is stored rather
+ * than `CandidateProfile` because the same JSON also fills the account at
+ * signup, and only the extraction shape matches `PATCH /api/users/me`.
+ */
+export function cvExtractionToCandidateProfile(
+  extraction: CvExtraction,
+): CandidateProfile {
+  const toEntry = (e: NonNullable<CvExtraction["professionalExperiences"]>[number]) => ({
+    organization: e.organization,
+    role: e.role,
+    startPeriod: e.startPeriod,
+    endPeriod: e.endPeriod,
+    location: e.location,
+    description: e.description ?? "",
+  });
+
+  return {
+    bio: extraction.bio ?? "",
+    experiences: (extraction.professionalExperiences ?? []).map(toEntry),
+    education: (extraction.educationalExperiences ?? []).map(toEntry),
+    skills: extraction.skills ?? [],
+    projects: extraction.projects ?? [],
   };
 }
 

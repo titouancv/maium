@@ -41,7 +41,8 @@ export interface ScoreBreakdown {
  * The final score is the weighted sum of the LLM-provided dimension scores.
  */
 export async function getMatchingExplanation(params: {
-  userId: string;
+  /** Tags the `llm_logs` audit rows; null for a signed-out run. */
+  userId: string | null;
   job: JobData;
   profile: CandidateProfile;
   semanticSimilarity: number;

@@ -76,3 +76,6 @@ export const UpdateUserSchema = z
   .refine((data) => Object.values(data).some((v) => v !== undefined), {
     message: "At least one field must be provided",
   });
+
+/** A validated profile patch, as accepted by `writeProfile`. */
+export type UpdateUserInput = z.infer<typeof UpdateUserSchema>;

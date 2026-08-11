@@ -2,8 +2,13 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import { embed } from "@/lib/mistral";
 import { PROMPT_VERSION } from "@/constants";
 import type { AnalysisStep } from "@/types/job";
+import type { CvExtraction } from "@/lib/validators/cv";
 import { extractJob, extractJobFromText } from "./extract";
-import { getCandidateProfile, profileToText } from "./profile";
+import {
+  cvExtractionToCandidateProfile,
+  getCandidateProfile,
+  profileToText,
+} from "./profile";
 import { cosineSimilarity, getMatchingExplanation } from "./matching";
 import { optimizeResume } from "./optimizeResume";
 import { generateCoverLetter } from "./coverLetter";
@@ -40,12 +45,21 @@ export async function runAnalysisPipeline(analysisJobId: string): Promise<void> 
 
   const { data: jobRow } = await admin
     .from("analysis_jobs")
-    .select("id, user_id, source_url, job_text")
+    .select("id, user_id, anon_id, source_url, job_text, cv_extraction, expires_at")
     .eq("id", analysisJobId)
     .single();
 
   if (!jobRow) return;
-  const userId = jobRow.user_id as string;
+
+  // Exactly one owner (DB constraint). `userId` is null for a signed-out run —
+  // it only tags `llm_logs` rows there, which allows null.
+  const userId = jobRow.user_id as string | null;
+  const anonId = jobRow.anon_id as string | null;
+  const expiresAt = jobRow.expires_at as string | null;
+  const cvExtraction = jobRow.cv_extraction as CvExtraction | null;
+
+  /** Ownership + retention, applied identically to every row we create. */
+  const owner = { user_id: userId, anon_id: anonId, expires_at: expiresAt };
 
   try {
     await admin
@@ -70,8 +84,13 @@ export async function runAnalysisPipeline(analysisJobId: string): Promise<void> 
       .eq("id", analysisJobId);
 
     // 2. Match against the candidate profile (hybrid score + LLM explanation).
+    // A signed-out run carries its profile as a parsed CV on the row; a
+    // signed-in one reads it from the account. Everything downstream is
+    // identical from here.
     await setStep("MATCHING_PROFILE", 40);
-    const profile = await getCandidateProfile(userId);
+    const profile = cvExtraction
+      ? cvExtractionToCandidateProfile(cvExtraction)
+      : await getCandidateProfile(userId!);
 
     const profileEmbedding = await embed({
       operation: "profile_embedding",
@@ -106,7 +125,7 @@ export async function runAnalysisPipeline(analysisJobId: string): Promise<void> 
     const { data: analysis } = await admin
       .from("analyses")
       .insert({
-        user_id: userId,
+        ...owner,
         job_id: job.id,
         matching_score: breakdown.final,
         confidence_score: Math.round(breakdown.semantic * 100),
@@ -130,7 +149,7 @@ export async function runAnalysisPipeline(analysisJobId: string): Promise<void> 
 
     // 3. Optimize the resume for this job.
     await setStep("OPTIMIZING_RESUME", 70);
-    await optimizeResume({ userId, job, profile, analysisId });
+    await optimizeResume({ userId, owner, job, profile, analysisId });
 
     // 4. Embeddings already generated during extraction & matching.
     await setStep("GENERATING_EMBEDDINGS", 90);

@@ -10,7 +10,8 @@ import type { CandidateProfile, JobData } from "@/types/job";
  * sent to the employer as-is.
  */
 export async function generateCoverLetter(params: {
-  userId: string;
+  /** Tags the `llm_logs` audit rows; null for a signed-out run. */
+  userId: string | null;
   job: JobData;
   profile: CandidateProfile;
 }): Promise<string> {

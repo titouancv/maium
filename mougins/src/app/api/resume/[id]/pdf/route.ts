@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from "next/server";
-import { requireApiUser } from "@/lib/auth";
 import {
   buildResumePdfData,
   renderResumePdf,
@@ -11,13 +10,15 @@ import { ResumeJsonInputSchema } from "@/lib/validators/job";
 // react-pdf renders in Node (not Edge); pin the runtime explicitly.
 export const runtime = "nodejs";
 
+/**
+ * Renders the stored resume as a PDF. Open to whoever owns the resume, signed
+ * in or not — `buildResumePdfData` resolves ownership (via `getResumeById`) and
+ * returns `null` otherwise, which becomes the same 404 as a missing id.
+ */
 export async function GET(
   req: NextRequest,
   { params }: { params: Promise<{ id: string }> },
 ) {
-  const auth = await requireApiUser();
-  if (auth instanceof NextResponse) return auth;
-
   const { id } = await params;
   const template = resolveTemplate(req.nextUrl.searchParams.get("template"));
 
@@ -38,9 +39,6 @@ export async function POST(
   req: NextRequest,
   { params }: { params: Promise<{ id: string }> },
 ) {
-  const auth = await requireApiUser();
-  if (auth instanceof NextResponse) return auth;
-
   const body = (await req.json().catch(() => null)) as {
     resume_json?: unknown;
     template?: string;

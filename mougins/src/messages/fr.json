@@ -452,5 +452,30 @@
     "newFollowerGeneric": "Nouveau follower",
     "newMessage": "Nouveau message de {name}",
     "newMessageGeneric": "Nouveau message"
+  },
+  "analyze": {
+    "title": "Analyser une offre",
+    "cv": {
+      "title": "Commencez par votre CV",
+      "description": "Déposez votre CV et nous le lisons — sans compte. C'est lui que nous confronterons à l'offre.",
+      "choose": "Choisir votre CV",
+      "parsing": "Lecture de votre CV…",
+      "privacyNote": "Votre fichier est lu puis aussitôt supprimé. Nous ne le conservons jamais.",
+      "errorType": "Choisissez un PDF ou une image.",
+      "errorSize": "Ce fichier est trop volumineux (10 Mo maximum).",
+      "errorParse": "Nous n'avons pas pu lire ce CV. Essayez un autre fichier.",
+      "errorRateLimited": "Trop d'imports pour le moment. Réessayez plus tard."
+    },
+    "job": {
+      "title": "Maintenant l'offre",
+      "description": "Collez le lien de l'offre, ou son texte. Nous évaluons la correspondance, réécrivons votre CV pour elle et rédigeons une lettre de motivation."
+    },
+    "gate": {
+      "title": "Créez votre compte pour continuer",
+      "description": "Vous avez utilisé votre analyse gratuite. Votre CV est déjà importé et votre analyse vous attend — créer un compte tient en trois questions.",
+      "benefitProfile": "Votre profil est déjà rempli à partir de votre CV",
+      "benefitHistory": "Votre analyse, votre CV optimisé et votre lettre sont conservés",
+      "benefitUnlimited": "Analysez autant d'offres que vous voulez"
+    }
   }
 }
