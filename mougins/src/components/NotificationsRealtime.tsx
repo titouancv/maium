@@ -13,9 +13,7 @@ import { activeConversationIdFrom } from "@/lib/messaging/conversationPath";
 /** Payload broadcast by the `broadcast_user_notifications` DB triggers. */
 type NotifyPayload =
   | { kind: "follow"; actor_name: string | null; actor_pseudo: string | null }
-  | { kind: "message"; actor_name: string | null; conversation_id: string }
-  | { kind: "story_like"; actor_name: string | null; story_id: string }
-  | { kind: "story_repost"; actor_name: string | null; story_id: string };
+  | { kind: "message"; actor_name: string | null; conversation_id: string };
 
 /**
  * Global toast notifications. Mounted once at the layout level (next to
@@ -56,18 +54,6 @@ export function NotificationsRealtime() {
             ? t("newFollower", { name: payload.actor_name })
             : t("newFollowerGeneric"),
           payload.actor_pseudo ? ROUTES.PROFILE(payload.actor_pseudo) : undefined,
-        );
-        return;
-      }
-
-      // Story like / repost → toast linking to the story on the home feed.
-      if (payload.kind === "story_like" || payload.kind === "story_repost") {
-        const key = payload.kind === "story_like" ? "storyLike" : "storyRepost";
-        notify(
-          payload.actor_name
-            ? t(key, { name: payload.actor_name })
-            : t(`${key}Generic`),
-          ROUTES.STORY(payload.story_id),
         );
         return;
       }

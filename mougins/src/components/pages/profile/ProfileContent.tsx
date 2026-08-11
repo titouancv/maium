@@ -1,13 +1,10 @@
 "use client";
 
-import { Suspense } from "react";
 import { useTranslations } from "next-intl";
 import { ChipList, ProfilePhoto, Section } from "@/components/ui";
 import { ExperienceList } from "@/components/ui";
 import type { UserData } from "@/types";
-import type { StoryGroup } from "@/types/story";
 import { HobbyList, SocialNetworkItem, UrlItem } from "@/components/ui";
-import { ProfileStoryPhoto } from "@/components/stories";
 
 interface ProfileContentProps {
   user: UserData;
@@ -15,15 +12,12 @@ interface ProfileContentProps {
   followSlot: React.ReactNode;
   /** Streamed "Nth on maium" join rank (round-trip 2). */
   rankSlot: React.ReactNode;
-  /** Streamed stories for this profile; undefined when the viewer is signed out. */
-  storiesPromise?: Promise<StoryGroup | null>;
 }
 
 export const ProfileContent = ({
   user,
   followSlot,
   rankSlot,
-  storiesPromise,
 }: ProfileContentProps) => {
   const t = useTranslations("profile");
 
@@ -34,16 +28,6 @@ export const ProfileContent = ({
     firstName: user.first_name,
     lastName: user.last_name,
   };
-  const photo = (
-    <ProfilePhoto
-      pseudo={user.pseudo}
-      src={user.profile_photo}
-      displayName={displayName}
-      gender={user.gender ?? null}
-      hideNameOnDesktop
-    />
-  );
-
   const hasProfessional = (user.professional_experiences?.length ?? 0) > 0;
   const hasEducational = (user.educational_experiences?.length ?? 0) > 0;
   const hasPersonal = (user.personal_experiences?.length ?? 0) > 0;
@@ -57,20 +41,13 @@ export const ProfileContent = ({
       <aside className="flex flex-col gap-8 md:w-1/5">
         <div className="flex flex-col gap-4">
           <div className="px-4 md:px-0">
-            {storiesPromise ? (
-              <Suspense fallback={photo}>
-                <ProfileStoryPhoto
-                  storiesPromise={storiesPromise}
-                  pseudo={user.pseudo}
-                  src={user.profile_photo}
-                  displayName={displayName}
-                  gender={user.gender ?? null}
-                  hideNameOnDesktop
-                />
-              </Suspense>
-            ) : (
-              photo
-            )}
+            <ProfilePhoto
+              pseudo={user.pseudo}
+              src={user.profile_photo}
+              displayName={displayName}
+              gender={user.gender ?? null}
+              hideNameOnDesktop
+            />
           </div>
           <div className="flex flex-col gap-1">
             <p className="text-base">@{user.pseudo}</p>

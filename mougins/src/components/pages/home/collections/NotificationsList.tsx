@@ -8,15 +8,12 @@ import { NotificationRow } from "../items";
 interface NotificationsListProps {
   notifications: HomeNotification[];
   loading: boolean;
-  /** Forwarded to each row so a click can close the overlay (story links stay on home). */
-  onNavigate?: () => void;
 }
 
 /** Notifications list: loading skeletons, empty state, or the rows. */
 export const NotificationsList = ({
   notifications,
   loading,
-  onNavigate,
 }: NotificationsListProps) => {
   const t = useTranslations("home.notifications");
 
@@ -45,11 +42,7 @@ export const NotificationsList = ({
   return (
     <ul>
       {notifications.map((notification) => (
-        <NotificationRow
-          key={notification.id}
-          notification={notification}
-          onNavigate={onNavigate}
-        />
+        <NotificationRow key={notification.id} notification={notification} />
       ))}
     </ul>
   );

@@ -113,11 +113,6 @@ OAuth flow: Google → Supabase → `/auth/callback` → `exchangeCodeForSession
 | `GET` | `/api/home/stats` | Home dashboard stats (followers trend, profile views) |
 | `GET` | `/api/home/notifications` | List the user's home notifications |
 | `POST` | `/api/home/notifications/read` | Mark home notifications as read |
-| `POST` | `/api/stories` | Publish a story |
-| `DELETE` | `/api/stories/:id` | Delete a story (cascades reposts) |
-| `POST` | `/api/stories/:id/view` | Mark a story as viewed |
-| `POST/DELETE` | `/api/stories/:id/like` | Like / unlike a story |
-| `POST/DELETE` | `/api/stories/:id/repost` | Repost / un-repost a story |
 | `GET` | `/api/url-title` | Fetch the title of an external URL |
 | `POST` | `/api/analyze-job` | Run the job analysis pipeline |
 | `GET` | `/api/analysis/:id` | Get a single job analysis |
@@ -314,13 +309,7 @@ A self-contained **feature** that spans its own reader/editor/overlays and is
 designed to be embedded into more than one page lives in its own top-level
 folder `src/components/<feature>/` (same `collections/` + `items/` layout as a
 page folder, with a barrel). It is **not** under `pages/` because it is not owned
-by a single route.
-
-- **`stories/`** — the Stories feature (reader overlay, create overlay, block
-  editor, bubbles row, viewers sheet). Currently embedded by
-  [HomeContent](src/components/pages/home/HomeContent.tsx) and intended for reuse
-  (e.g. profiles). Server access lives in [lib/stories](src/lib/stories/); its
-  endpoints are under `/api/stories/*`. Import via `@/components/stories`.
+by a single route. There is currently no such folder.
 
 Prefer a per-page folder by default — only promote to a feature folder when a
 block is genuinely reused across pages (or clearly will be).
@@ -329,8 +318,7 @@ block is genuinely reused across pages (or clearly will be).
 
 1. Used by a single page → that page's folder (`collections/` for lists/overlays,
    `items/` for items, root otherwise).
-2. A self-contained feature embedded across pages → `components/<feature>/`
-   (e.g. `stories/`).
+2. A self-contained feature embedded across pages → `components/<feature>/`.
 3. Reused across pages or by forms → `ui/` (`ui/collections/`, `ui/items/`, or root).
 4. Form-related → `form/`. Layout wrapper → `layout/`.
 
@@ -347,12 +335,10 @@ block is genuinely reused across pages (or clearly will be).
 frontend/src/
 ├── app/
 │   ├── [locale]/(routes)/         # All locale-aware pages
-│   ├── [locale]/auth/callback/    # OAuth callback handler (locale-aware)
-│   ├── app/auth/callback/         # OAuth callback (non-locale fallback)
+│   ├── auth/callback/             # OAuth callback handler
 │   └── api/                       # API route handlers
 ├── components/
 │   ├── pages/<page>/              # Per-page folders (see Components Architecture above)
-│   ├── stories/                   # Cross-cutting Stories feature (reader/editor/overlays)
 │   ├── ui/                        # Shared presentational components
 │   ├── form/                      # Form components and sub-form building blocks
 │   ├── layout/                    # Layout wrappers (PageLayout, FormLayout, SearchLayout)
@@ -372,14 +358,12 @@ frontend/src/
 │   ├── mistral/                   # Mistral AI client
 │   ├── mappers/                   # DB row → domain type mappers
 │   ├── home/                      # Home dashboard stats + profile completion
-│   ├── stories/                   # Stories server access (feed, viewers)
 │   ├── users/ · messaging/        # Server-side data access per domain
 │   └── validators/                # Zod schemas (user.ts, job.ts)
 ├── messages/
 │   ├── en.json                    # English translations
 │   └── fr.json                    # French translations (must stay in sync)
 ├── stores/
-│   ├── useUserStore.ts            # Signup wizard state (UserState, Experience)
 │   ├── useLoadingStore.ts         # Loading overlay suppression flag
 │   ├── useCurrentUserStore.ts     # Authenticated user profile (populated after login)
 │   ├── usePresenceStore.ts        # Online-presence tracking

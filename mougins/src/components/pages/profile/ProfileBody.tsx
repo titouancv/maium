@@ -1,7 +1,6 @@
 import { Suspense } from "react";
 import { notFound } from "next/navigation";
 import { getProfileBundle } from "@/lib/users";
-import { getUserStoryGroup } from "@/lib/stories";
 import { ProfileContent } from "./ProfileContent";
 import { ProfileFollowSection } from "./ProfileFollowSection";
 import { ProfileRank } from "./ProfileRank";
@@ -13,12 +12,6 @@ export async function ProfileBody({ pseudo }: { pseudo: string }) {
   const bundle = await getProfileBundle(pseudo);
   if (!bundle) notFound();
 
-  // Stream the profile's stories (round-trip 2, alongside the follow section):
-  // the avatar paints immediately and gains the story ring when they resolve.
-  const storiesPromise = bundle.isAuthenticated
-    ? getUserStoryGroup(pseudo)
-    : undefined;
-
   return (
     <>
       {bundle.isAuthenticated && !bundle.isOwner && (
@@ -26,7 +19,6 @@ export async function ProfileBody({ pseudo }: { pseudo: string }) {
       )}
       <ProfileContent
         user={bundle.user}
-        storiesPromise={storiesPromise}
         rankSlot={
           <Suspense fallback={null}>
             <ProfileRank pseudo={pseudo} />
