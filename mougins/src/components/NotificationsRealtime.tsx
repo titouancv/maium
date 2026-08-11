@@ -44,29 +44,36 @@ export function NotificationsRealtime() {
     let channel: RealtimeChannel | undefined;
     let cancelled = false;
 
+    // Dispatches on `kind` rather than falling through: a payload from a
+    // trigger this build doesn't know about (e.g. a story one, until its drop
+    // migration has run) is ignored instead of toasting another kind's message.
     const handle = (payload: NotifyPayload) => {
       const { notify } = useNotificationStore.getState();
       const t = tRef.current;
 
-      if (payload.kind === "follow") {
-        notify(
-          payload.actor_name
-            ? t("newFollower", { name: payload.actor_name })
-            : t("newFollowerGeneric"),
-          payload.actor_pseudo ? ROUTES.PROFILE(payload.actor_pseudo) : undefined,
-        );
-        return;
+      switch (payload.kind) {
+        case "follow":
+          notify(
+            payload.actor_name
+              ? t("newFollower", { name: payload.actor_name })
+              : t("newFollowerGeneric"),
+            payload.actor_pseudo
+              ? ROUTES.PROFILE(payload.actor_pseudo)
+              : undefined,
+          );
+          return;
+
+        case "message":
+          // Already looking at this conversation → nothing to surface.
+          if (payload.conversation_id === activeIdRef.current) return;
+          notify(
+            payload.actor_name
+              ? t("newMessage", { name: payload.actor_name })
+              : t("newMessageGeneric"),
+            ROUTES.CONVERSATION(payload.conversation_id),
+          );
+          return;
       }
-
-      // Already looking at this conversation → nothing to surface.
-      if (payload.conversation_id === activeIdRef.current) return;
-
-      notify(
-        payload.actor_name
-          ? t("newMessage", { name: payload.actor_name })
-          : t("newMessageGeneric"),
-        ROUTES.CONVERSATION(payload.conversation_id),
-      );
     };
 
     // Private channels are gated by RLS on realtime.messages, so the socket must
