@@ -104,7 +104,8 @@
     "socialPlaceholder": "https://www.instagram.com/...",
     "seeMoreButton": "Voir plus",
     "seeLessButton": "Voir moins",
-    "dismissNotification": "Fermer la notification"
+    "dismissNotification": "Fermer la notification",
+    "skipButton": "Passer"
   },
   "home": {
     "name": "Nom complet",
@@ -263,7 +264,35 @@
     "keysTitle": "Vos points forts",
     "urlsTitle": "Vos réalisations",
     "experiencesProfessionalTitle": "Votre parcours",
-    "experiencesEducationalTitle": "Votre formation"
+    "experiencesEducationalTitle": "Votre formation",
+    "cvImport": {
+      "title": "Importez votre CV",
+      "description": "Déposez votre CV et nous remplissons votre profil — expériences, formations, compétences. Vous pourrez tout vérifier avant l'enregistrement.",
+      "choose": "Choisir un fichier",
+      "chooseAnother": "Choisir un autre fichier",
+      "parsing": "Lecture de votre CV…",
+      "confirm": "Utiliser ces informations",
+      "foundTitle": "Voici ce que nous avons trouvé",
+      "foundName": "Nom : {name}",
+      "found": {
+        "experiences": "{count, plural, one {# expérience} other {# expériences}}",
+        "education": "{count, plural, one {# formation} other {# formations}}",
+        "personal": "{count, plural, one {# expérience personnelle} other {# expériences personnelles}}",
+        "skills": "{count, plural, one {# compétence} other {# compétences}}",
+        "hobbies": "{count, plural, one {# centre d'intérêt} other {# centres d'intérêt}}",
+        "links": "{count, plural, one {# lien} other {# liens}}"
+      },
+      "errorType": "Choisissez un PDF ou une image.",
+      "errorSize": "Ce fichier est trop volumineux (10 Mo maximum).",
+      "errorParse": "Nous n'avons pas pu lire ce CV. Essayez un autre fichier, ou passez cette étape.",
+      "errorEmpty": "Nous n'avons trouvé aucune information de profil dans ce fichier. Essayez-en un autre, ou passez cette étape.",
+      "errorRateLimited": "Trop d'imports pour le moment. Réessayez plus tard, ou passez cette étape."
+    },
+    "profilePhoto": {
+      "title": "Ajoutez une photo",
+      "description": "Associez un visage à votre nom. Vous pourrez toujours en ajouter une plus tard depuis vos réglages.",
+      "save": "Utiliser cette photo"
+    }
   },
   "profile": {
     "settingsButton": "Paramètres",

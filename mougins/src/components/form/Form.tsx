@@ -16,8 +16,11 @@ import { ExperiencesForm } from "./ExperiencesForm";
 import { HobbiesForm } from "./HobbiesForm";
 import { PseudoForm } from "./PseudoForm";
 import { SelectForm, type SelectOption } from "./SelectForm";
+import { CvImportForm } from "./CvImportForm";
+import { ProfilePhotoForm } from "./ProfilePhotoForm";
 import type { DateMode } from "@/components/ui/DateInput";
 import type { Experience } from "@/types/experience";
+import type { CvExtraction } from "@/lib/validators/cv";
 import { HobbyData } from "@/types/user";
 import {
   EXPERIENCE_NAMESPACE,
@@ -56,6 +59,8 @@ export type FormValueMap = {
   experiences: Experience[];
   pseudo: { pseudo: string };
   select: string;
+  cvImport: CvExtraction;
+  profilePhoto: string;
 };
 
 export type FormDefaultValueMap = {
@@ -76,6 +81,8 @@ export type FormDefaultValueMap = {
   experiences: Experience[];
   pseudo: string;
   select: string;
+  cvImport: never;
+  profilePhoto: string;
 };
 
 export type FormConfigMap = {
@@ -105,6 +112,8 @@ export type FormConfigMap = {
   };
   pseudo: never;
   select: { options: SelectOption<string>[]; footer?: React.ReactNode };
+  cvImport: never;
+  profilePhoto: never;
 };
 
 export type FormType = keyof FormValueMap;
@@ -230,6 +239,21 @@ const renderContent = (props: FormProps) => {
           onChange={props.onChange}
         />
       );
+    case "cvImport":
+      return (
+        <CvImportForm
+          onChange={props.onChange}
+          isSubmitting={props.primaryLoading}
+        />
+      );
+    case "profilePhoto":
+      return (
+        <ProfilePhotoForm
+          defaultValue={props.defaultValue}
+          onChange={props.onChange}
+          isSubmitting={props.primaryLoading}
+        />
+      );
   }
 };
 
@@ -260,6 +284,10 @@ const getDefaultTitle = (
       if (props.namespace === EXPERIENCE_NAMESPACE.educational)
         return t("experiencesEducationalTitle");
       return t("experiencesProfessionalTitle");
+    case "cvImport":
+      return t("cvImport.title");
+    case "profilePhoto":
+      return t("profilePhoto.title");
     default:
       return "";
   }

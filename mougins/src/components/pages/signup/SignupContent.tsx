@@ -4,10 +4,12 @@ import { useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { useRouter } from "@/i18n/navigation";
-import { ROUTES, API, SIGNUP_FORM_ID, GENDERS, type Gender } from "@/constants";
+import { ROUTES, SIGNUP_FORM_ID, GENDERS, type Gender } from "@/constants";
+import { updateProfile } from "@/lib/users/updateProfile";
+import type { CvExtraction } from "@/lib/validators/cv";
 import { Form } from "../../form/Form";
 import type { FormProps } from "../../form/Form";
-import { SIGNUP_TOTAL_STEPS, type SignupDraft } from "./steps";
+import { SIGNUP_TOTAL_STEPS, stepIndexOf, type SignupDraft } from "./steps";
 import { HeroSection } from "../home/collections";
 import { PageLayout } from "@/components/layout/PageLayout";
 
@@ -42,20 +44,10 @@ export const SignupContent = ({
   const patchProfile = async (body: Record<string, unknown>) => {
     setIsLoading(true);
     setError(null);
-    try {
-      const res = await fetch(API.USERS_ME, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(body),
-      });
-      if (!res.ok) setError(tSignup("saveError"));
-      return res.ok;
-    } catch {
-      setError(tSignup("saveError"));
-      return false;
-    } finally {
-      setIsLoading(false);
-    }
+    const ok = await updateProfile(body);
+    if (!ok) setError(tSignup("saveError"));
+    setIsLoading(false);
+    return ok;
   };
 
   const nextStep = async (data: Partial<SignupDraft>) => {
@@ -65,13 +57,16 @@ export const SignupContent = ({
     setStep((s) => s + 1);
   };
 
-  // Last step: persist the final slice, mark onboarding complete, and hand off
-  // to the home page which shows the welcome celebration (?welcome=1).
+  /** Move on without writing anything — used by the two optional steps. */
+  const skipStep = () => {
+    setError(null);
+    setStep((s) => s + 1);
+  };
+
+  // Last step: mark onboarding complete and hand off to the home page, which
+  // shows the welcome celebration (?welcome=1).
   const finish = async () => {
-    const ok = await patchProfile({
-      gender: draft.gender ?? GENDERS[0],
-      onboardingCompleted: true,
-    });
+    const ok = await patchProfile({ onboardingCompleted: true });
     if (ok) router.push(`${ROUTES.HOME}?welcome=1`);
   };
 
@@ -83,9 +78,31 @@ export const SignupContent = ({
     error: error ?? undefined,
   };
 
+  /**
+   * The CV import fills the same fields the later steps ask for, so its result
+   * is saved in one PATCH and merged into the draft — `fullName` then opens
+   * pre-filled and the deep profile (experiences, skills) is already stored.
+   */
+  const applyCvExtraction = (extraction: CvExtraction) =>
+    nextStep(extraction as Partial<SignupDraft>);
+
+  const savePhotoAndFinish = async (profilePhoto: string) => {
+    const ok = await patchProfile({ profilePhoto, onboardingCompleted: true });
+    if (ok) router.push(`${ROUTES.HOME}?welcome=1`);
+  };
+
   const getFormProps = (): FormProps => {
     switch (step) {
-      case 1:
+      case stepIndexOf("cv"):
+        return {
+          ...base,
+          type: "cvImport",
+          // Optional step: the footer moves on without writing anything.
+          primaryLabel: tCommon("skipButton"),
+          onPrimary: skipStep,
+          onChange: applyCvExtraction,
+        };
+      case stepIndexOf("fullName"):
         return {
           ...base,
           type: "fullName",
@@ -96,7 +113,7 @@ export const SignupContent = ({
           },
           onChange: nextStep,
         };
-      case 2:
+      case stepIndexOf("pseudo"):
         return {
           ...base,
           type: "pseudo",
@@ -104,7 +121,7 @@ export const SignupContent = ({
           defaultValue: draft.pseudo,
           onChange: nextStep,
         };
-      case 3:
+      case stepIndexOf("date"):
         return {
           ...base,
           type: "date",
@@ -112,7 +129,7 @@ export const SignupContent = ({
           defaultValue: draft.dob ?? null,
           onChange: nextStep,
         };
-      default:
+      case stepIndexOf("gender"):
         return {
           ...base,
           title: tForm("genderTitle"),
@@ -124,7 +141,17 @@ export const SignupContent = ({
           defaultValue: draft.gender ?? GENDERS[0],
           onChange: (value) =>
             setDraft((d) => ({ ...d, gender: value as Gender })),
+          onPrimary: () => nextStep({ gender: draft.gender ?? GENDERS[0] }),
+        };
+      default:
+        return {
+          ...base,
+          type: "profilePhoto",
+          // Optional and last: the footer completes onboarding without a photo.
+          primaryLabel: tCommon("skipButton"),
           onPrimary: finish,
+          defaultValue: draft.profilePhoto,
+          onChange: savePhotoAndFinish,
         };
     }
   };

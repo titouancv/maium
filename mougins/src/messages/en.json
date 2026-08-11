@@ -104,7 +104,8 @@
     "socialPlaceholder": "https://www.instagram.com/...",
     "seeMoreButton": "See more",
     "seeLessButton": "See less",
-    "dismissNotification": "Dismiss notification"
+    "dismissNotification": "Dismiss notification",
+    "skipButton": "Skip"
   },
   "home": {
     "name": "Full name",
@@ -263,7 +264,35 @@
     "keysTitle": "What you're good at",
     "urlsTitle": "What you've built",
     "experiencesProfessionalTitle": "Your career",
-    "experiencesEducationalTitle": "Your education"
+    "experiencesEducationalTitle": "Your education",
+    "cvImport": {
+      "title": "Import your CV",
+      "description": "Upload your CV and we'll fill in your profile — experiences, education, skills. You can review everything before it's saved.",
+      "choose": "Choose a file",
+      "chooseAnother": "Choose another file",
+      "parsing": "Reading your CV…",
+      "confirm": "Use this",
+      "foundTitle": "Here's what we found",
+      "foundName": "Name: {name}",
+      "found": {
+        "experiences": "{count, plural, one {# experience} other {# experiences}}",
+        "education": "{count, plural, one {# qualification} other {# qualifications}}",
+        "personal": "{count, plural, one {# personal project} other {# personal projects}}",
+        "skills": "{count, plural, one {# skill} other {# skills}}",
+        "hobbies": "{count, plural, one {# interest} other {# interests}}",
+        "links": "{count, plural, one {# link} other {# links}}"
+      },
+      "errorType": "Please choose a PDF or an image.",
+      "errorSize": "That file is too large (10 MB max).",
+      "errorParse": "We couldn't read that CV. Try another file, or skip this step.",
+      "errorEmpty": "We couldn't find any profile details in that file. Try another one, or skip this step.",
+      "errorRateLimited": "Too many imports for now. Try again later, or skip this step."
+    },
+    "profilePhoto": {
+      "title": "Add a photo",
+      "description": "Put a face to your name. You can always add one later from your settings.",
+      "save": "Use this photo"
+    }
   },
   "profile": {
     "settingsButton": "Settings",
