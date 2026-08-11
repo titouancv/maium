@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
+import { APP_NAME } from "@/constants";
 import { Title, StepCounter } from "@/components/ui";
 import { Button } from "@/components/ui/Button";
 import { FormBaseProps } from "../form/Form";
@@ -31,7 +32,7 @@ export const FormLayout = ({
     // overlay rendered over a still-mounted page leaves the tab name stuck on
     // the overlay's title after it closes (the page's effect never re-runs).
     const previous = document.title;
-    document.title = title.toLowerCase() + " • maium";
+    document.title = title.toLowerCase() + ` • ${APP_NAME}`;
     return () => {
       document.title = previous;
     };

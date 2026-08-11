@@ -7,10 +7,13 @@ import { SuggestionCard } from "../items";
 
 interface SuggestionsListProps {
   suggestionsPromise: Promise<SuggestedUser[]>;
+  /** Hidden on the public landing, where following isn't the point yet. */
+  showFollow?: boolean;
 }
 
 export const SuggestionsList = ({
   suggestionsPromise,
+  showFollow = true,
 }: SuggestionsListProps) => {
   const t = useTranslations("home");
   const suggestions = use(suggestionsPromise);
@@ -22,7 +25,11 @@ export const SuggestionsList = ({
       ) : (
         <>
           {suggestions.map((user) => (
-            <SuggestionCard key={user.pseudo} user={user} />
+            <SuggestionCard
+              key={user.pseudo}
+              user={user}
+              showFollow={showFollow}
+            />
           ))}
         </>
       )}

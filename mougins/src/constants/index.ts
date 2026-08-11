@@ -1,5 +1,8 @@
 export * from "./ui";
 
+/** Product name — the public landing's title and the browser-tab suffix. */
+export const APP_NAME = "maium";
+
 export const ROUTES = {
   HOME: "/",
   SIGNUP: "/signup",
