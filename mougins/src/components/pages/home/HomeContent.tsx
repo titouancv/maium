@@ -11,7 +11,6 @@ import { ROUTES } from "@/constants";
 import { Link } from "@/i18n/navigation";
 import { UserData, SuggestedUser } from "@/types";
 import type { HomeStats } from "@/lib/users";
-import type { StoryGroup } from "@/types/story";
 import { PageLayout } from "../../layout";
 import { HeroSection } from "../../ui/collections/HeroSection";
 import { CurrentUserSync } from "./CurrentUserSync";
@@ -23,21 +22,18 @@ import {
   SuggestionsListSkeleton,
   WelcomeCelebration,
 } from "./collections";
-import { StoriesRow, StoriesRowSkeleton } from "@/components/stories";
 import { Title } from "@/components/ui";
 
 interface HomeContentProps {
   user: UserData | null;
   statsPromise?: Promise<HomeStats>;
   suggestionsPromise?: Promise<SuggestedUser[]>;
-  storiesPromise?: Promise<StoryGroup[]>;
 }
 
 export const HomeContent = ({
   user,
   statsPromise,
   suggestionsPromise,
-  storiesPromise,
 }: HomeContentProps) => {
   const tNav = useTranslations("nav");
   const t = useTranslations("home");
@@ -78,14 +74,6 @@ export const HomeContent = ({
       {user && (
         <>
           <div className="flex w-full max-w-7xl flex-col gap-16">
-            {storiesPromise && (
-              <div className="flex flex-col gap-4">
-                <Suspense fallback={<StoriesRowSkeleton />}>
-                  <StoriesRow storiesPromise={storiesPromise} />
-                </Suspense>
-              </div>
-            )}
-
             <div className="shrink-0">
               <StatsRow user={user} />
             </div>
