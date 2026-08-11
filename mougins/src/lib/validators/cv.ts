@@ -17,25 +17,48 @@ export const CV_LIMITS = {
 } as const;
 
 /**
+ * A model-supplied string. `.default()` only fills in `undefined`, but models
+ * routinely emit `null` for "absent" whatever the prompt says — and an
+ * unhandled `null` would throw out of `chatJSON` and turn a perfectly good OCR
+ * into a 500. Accept both and normalize to `""`, which the normalizer already
+ * treats as missing.
+ */
+const modelString = z
+  .string()
+  .nullish()
+  .transform((v) => v ?? "");
+
+/** Same, for a model-supplied array: `null` and `undefined` both mean "none". */
+const modelArray = <T extends z.ZodTypeAny>(item: T) =>
+  z
+    .array(item)
+    .nullish()
+    .transform((v) => v ?? []);
+
+/**
  * Shape the model is asked to return for one experience. Periods are partial
  * calendar dates (`YYYY-MM` / `YYYY`) because models emit those reliably and
- * epoch timestamps badly; they are converted to epoch ms server-side by
- * `cvExtractionToProfileDraft` (see lib/cv/parse.ts).
+ * epoch timestamps badly; they are converted to epoch ms by
+ * `normalizeCvExtraction` (see lib/cv/parse.ts).
+ *
+ * Every field is lenient, `organization` and `role` included: an entry missing
+ * one of them is *dropped* by `cleanExperiences`, which is far better than
+ * failing the whole extraction over a single malformed line.
  */
 const RawExperienceSchema = z.object({
-  organization: z.string(),
-  role: z.string(),
-  description: z.string().default(""),
-  location: z.string().default(""),
+  organization: modelString,
+  role: modelString,
+  description: modelString,
+  location: modelString,
   /** `YYYY-MM` or `YYYY`. Empty when the CV doesn't say. */
-  startPeriod: z.string().default(""),
+  startPeriod: modelString,
   /** Same format; empty for an ongoing role. */
-  endPeriod: z.string().default(""),
+  endPeriod: modelString,
 });
 
 const RawHobbySchema = z.object({
-  title: z.string(),
-  description: z.string().default(""),
+  title: modelString,
+  description: modelString,
 });
 
 /**
@@ -50,19 +73,19 @@ const RawHobbySchema = z.object({
  * no languages field in the data model.
  */
 export const CvExtractionRawSchema = z.object({
-  firstName: z.string().default(""),
-  lastName: z.string().default(""),
-  phone: z.string().default(""),
-  nationality: z.string().default(""),
-  location: z.string().default(""),
-  bio: z.string().default(""),
-  professionalExperiences: z.array(RawExperienceSchema).default([]),
-  educationalExperiences: z.array(RawExperienceSchema).default([]),
-  personalExperiences: z.array(RawExperienceSchema).default([]),
-  skills: z.array(z.string()).default([]),
-  projects: z.array(z.string()).default([]),
-  socialNetworks: z.array(z.string()).default([]),
-  hobbies: z.array(RawHobbySchema).default([]),
+  firstName: modelString,
+  lastName: modelString,
+  phone: modelString,
+  nationality: modelString,
+  location: modelString,
+  bio: modelString,
+  professionalExperiences: modelArray(RawExperienceSchema),
+  educationalExperiences: modelArray(RawExperienceSchema),
+  personalExperiences: modelArray(RawExperienceSchema),
+  skills: modelArray(modelString),
+  projects: modelArray(modelString),
+  socialNetworks: modelArray(modelString),
+  hobbies: modelArray(RawHobbySchema),
 });
 
 export type CvExtractionRaw = z.infer<typeof CvExtractionRawSchema>;

@@ -187,15 +187,77 @@ describe("normalizeCvExtraction", () => {
       raw({
         firstName: "a".repeat(80),
         skills: ["s".repeat(80)],
+        bio: "b".repeat(5000),
         professionalExperiences: [
-          experience({ organization: "o".repeat(200), location: "l".repeat(200) }),
+          experience({
+            organization: "o".repeat(200),
+            location: "l".repeat(200),
+            description: "d".repeat(5000),
+          }),
         ],
+        hobbies: [{ title: "t".repeat(200), description: "h".repeat(2000) }],
       }),
     );
     expect(result.firstName).toHaveLength(50);
     expect(result.skills![0]).toHaveLength(50);
+    expect(result.bio).toHaveLength(4000);
     expect(result.professionalExperiences![0].organization).toHaveLength(120);
     expect(result.professionalExperiences![0].location).toHaveLength(100);
+    expect(result.professionalExperiences![0].description).toHaveLength(4000);
+    expect(result.hobbies![0].title).toHaveLength(100);
+    expect(result.hobbies![0].description).toHaveLength(1000);
     expect(CvExtractionSchema.safeParse(result).success).toBe(true);
+  });
+
+  // Models emit `null` for "absent" regardless of what the prompt asks for.
+  // Anything that throws here becomes a 500 on a perfectly good OCR.
+  it("accepts null for every field the model may omit", () => {
+    const parsed = CvExtractionRawSchema.safeParse({
+      firstName: null,
+      lastName: null,
+      phone: null,
+      nationality: null,
+      location: null,
+      bio: null,
+      professionalExperiences: null,
+      educationalExperiences: null,
+      personalExperiences: null,
+      skills: null,
+      projects: null,
+      socialNetworks: null,
+      hobbies: null,
+    });
+    expect(parsed.success).toBe(true);
+    expect(normalizeCvExtraction(parsed.data!)).toEqual({
+      firstName: undefined,
+      lastName: undefined,
+      phone: undefined,
+      nationality: undefined,
+      location: undefined,
+      bio: undefined,
+      professionalExperiences: undefined,
+      educationalExperiences: undefined,
+      personalExperiences: undefined,
+      skills: undefined,
+      projects: undefined,
+      socialNetworks: undefined,
+      hobbies: undefined,
+    });
+  });
+
+  it("accepts a wholly empty object and null fields inside entries", () => {
+    expect(CvExtractionRawSchema.safeParse({}).success).toBe(true);
+
+    const parsed = CvExtractionRawSchema.parse({
+      professionalExperiences: [
+        { organization: "Acme", role: null, startPeriod: "2020-01" },
+        { organization: null, role: "Dev", startPeriod: "2020-01" },
+        { organization: "Kept", role: "Dev", startPeriod: "2020-01" },
+      ],
+    });
+    // The two malformed entries are dropped, not fatal.
+    const result = normalizeCvExtraction(parsed);
+    expect(result.professionalExperiences).toHaveLength(1);
+    expect(result.professionalExperiences![0].organization).toBe("Kept");
   });
 });

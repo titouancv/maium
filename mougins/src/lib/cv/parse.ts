@@ -112,7 +112,12 @@ export function normalizeCvExtraction(raw: CvExtractionRaw): CvExtraction {
   const hobbies = raw.hobbies.flatMap((hobby) => {
     const title = cleanText(hobby.title);
     return title
-      ? [{ title: title.slice(0, 100), description: hobby.description.trim() }]
+      ? [
+          {
+            title: title.slice(0, 100),
+            description: hobby.description.trim().slice(0, 1000),
+          },
+        ]
       : [];
   });
 

@@ -51,6 +51,11 @@ export const EXTERNAL_API = {
   FAVICON: "https://www.google.com/s2/favicons",
 } as const;
 
+// --- Durations -------------------------------------------------------------
+
+/** One day in milliseconds (rate-limit windows, cookie lifetimes). */
+export const DAY_MS = 24 * 60 * 60 * 1000;
+
 export const SIGNUP_FORM_ID = "signup-step-form";
 
 /** Minimum age (in years) required to create an account. */
@@ -94,6 +99,15 @@ export const CV_ACCEPT_ATTRIBUTE = CV_ACCEPTED_MIME_TYPES.join(",");
 
 /** Max characters of OCR'd CV markdown sent to Mistral (token guardrail). */
 export const CV_TEXT_CHAR_LIMIT = 20000;
+
+/**
+ * CV imports an anonymous caller may run per day, per IP. `/api/cv/parse` is
+ * open by design (it serves the signup wizard *and* the signed-out analysis
+ * funnel) and each call costs an OCR + an LLM request. Set well above what a
+ * real visitor needs, so a shared office or campus IP isn't punished.
+ * Signed-in users are not limited by it.
+ */
+export const CV_PARSE_PER_IP_PER_DAY = 20;
 
 /** Prompt version stamped on stored analyses for auditability. */
 export const PROMPT_VERSION = "v1";
