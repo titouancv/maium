@@ -63,13 +63,22 @@ export function stepIndexOf(key: SignupStepKey): number {
 }
 
 /**
- * Wizard step (1-based) at which to resume an authenticated user: the first
- * *required* field still missing, or the last step once everything is filled.
+ * Wizard step (1-based) at which to start an authenticated user.
  *
- * Optional steps are skipped when picking the resume point — they can't be
- * "filled", so resuming onto one would trap the user there on every reload.
+ * On a **first run** that is step 1, so the CV import is actually seen — it is
+ * the wizard's entry point and pre-fills most of what follows. "First run" is
+ * `pseudo` being unset: it is the first *required* field only the wizard can
+ * write (the OAuth trigger already supplies first/last name from Google), so
+ * its absence means nothing has been submitted yet.
+ *
+ * Afterwards the user is genuinely resuming, and lands on the first required
+ * field still missing — or the last step once everything is filled. Optional
+ * steps are never resume targets: they can't be "filled", so resuming onto one
+ * would put the user back there on every reload.
  */
 export function getResumeStep(draft: SignupDraft): number {
+  if (!draft.pseudo) return 1;
+
   const firstIncomplete = SIGNUP_STEPS.findIndex(
     (s) => !s.optional && !s.isFilled(draft),
   );

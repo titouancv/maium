@@ -31,11 +31,16 @@ export const EditProfilePhotoOverlay = ({ user, onClose, onSaved }: Props) => {
     initialSrc: user.profile_photo,
     userId: currentUserId,
   });
-  const [saveFailed, setSaveFailed] = useState(false);
+  // Covers the persist step too, so the primary button stays inert between the
+  // upload finishing and the PATCH returning — a second click there would
+  // re-crop, re-upload and orphan a Storage object.
+  const [isPersisting, setIsPersisting] = useState(false);
 
-  const errorLabel = saveFailed
-    ? t("profilePhotoErrorUpload")
-    : picker.error === "type"
+  // A single error channel: a failed persist reuses the picker's `upload`
+  // error, so picking a new file clears it like any other. A separate flag
+  // would linger and mask the next file's type/size error.
+  const errorLabel =
+    picker.error === "type"
       ? t("profilePhotoErrorType")
       : picker.error === "size"
         ? t("profilePhotoErrorSize")
@@ -43,30 +48,25 @@ export const EditProfilePhotoOverlay = ({ user, onClose, onSaved }: Props) => {
           ? t("profilePhotoErrorUpload")
           : undefined;
 
-  const handleSave = async () => {
-    setSaveFailed(false);
-    const url = await picker.cropAndUpload();
-    if (!url) return; // `picker.error` already explains why
-    if (!(await updateProfile({ profilePhoto: url }))) {
-      setSaveFailed(true);
+  const persist = async (profilePhoto: string | null) => {
+    setIsPersisting(true);
+    const ok = await updateProfile({ profilePhoto });
+    setIsPersisting(false);
+    if (!ok) {
+      picker.setError("upload");
       return;
     }
     onSaved();
     onClose();
   };
 
-  const handleDelete = async () => {
-    setSaveFailed(false);
-    picker.setIsSaving(true);
-    const ok = await updateProfile({ profilePhoto: null });
-    picker.setIsSaving(false);
-    if (!ok) {
-      setSaveFailed(true);
-      return;
-    }
-    onSaved();
-    onClose();
+  const handleSave = async () => {
+    const url = await picker.cropAndUpload();
+    if (!url) return; // `picker.error` already explains why
+    await persist(url);
   };
+
+  const handleDelete = () => persist(null);
 
   return (
     <div className="bg-surface-50 fixed inset-0 z-50">
@@ -78,7 +78,7 @@ export const EditProfilePhotoOverlay = ({ user, onClose, onSaved }: Props) => {
         onCancel={onClose}
         cancelLabel={tCommon("cancelButton")}
         primaryLabel={picker.hasImage ? t("saveButton") : undefined}
-        primaryLoading={picker.isSaving}
+        primaryLoading={picker.isSaving || isPersisting}
         onPrimary={handleSave}
         secondaryLabel={user.profile_photo ? t("deleteButton") : undefined}
         onSecondary={user.profile_photo ? handleDelete : undefined}

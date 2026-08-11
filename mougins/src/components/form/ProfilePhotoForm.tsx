@@ -10,6 +10,8 @@ interface ProfilePhotoFormProps {
   defaultValue?: string;
   /** Fired with the uploaded photo's public URL once the crop is saved. */
   onChange: (profilePhoto: string) => void;
+  /** True while the parent persists the URL — blocks a second upload. */
+  isSubmitting?: boolean;
 }
 
 /**
@@ -24,6 +26,7 @@ interface ProfilePhotoFormProps {
 export const ProfilePhotoForm = ({
   defaultValue,
   onChange,
+  isSubmitting,
 }: ProfilePhotoFormProps) => {
   const t = useTranslations("form.profilePhoto");
   const tSettings = useTranslations("settings");
@@ -55,11 +58,14 @@ export const ProfilePhotoForm = ({
       <ProfilePhotoPicker picker={picker} />
 
       {picker.hasImage && (
+        // Loading covers the parent's persist too, so the button can't be
+        // clicked again between the upload finishing and the PATCH returning —
+        // which would re-upload and orphan a Storage object.
         <Button
           type="button"
           size="lg"
           className="w-full"
-          isLoading={picker.isSaving}
+          isLoading={picker.isSaving || isSubmitting}
           onClick={handleSave}
         >
           {t("save")}

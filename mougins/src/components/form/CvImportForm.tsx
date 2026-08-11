@@ -14,6 +14,8 @@ import type { CvExtraction } from "@/lib/validators/cv";
 interface CvImportFormProps {
   /** Fired with the extracted draft once the user confirms the summary. */
   onChange: (extraction: CvExtraction) => void;
+  /** True while the parent persists the confirmed draft — blocks a second confirm. */
+  isSubmitting?: boolean;
 }
 
 /** What the extraction yielded, for the confirmation screen. */
@@ -25,14 +27,24 @@ interface Summary {
 const isAcceptedType = (type: string) =>
   (CV_ACCEPTED_MIME_TYPES as readonly string[]).includes(type);
 
+/**
+ * Every collection the extraction can carry, so the confirmation screen shows
+ * exactly what the PATCH will write — a field missing here would be persisted
+ * without ever being shown, which defeats the point of the screen.
+ */
 function summarize(extraction: CvExtraction): Summary["counts"] {
   return (
     [
       ["experiences", extraction.professionalExperiences?.length ?? 0],
       ["education", extraction.educationalExperiences?.length ?? 0],
+      ["personal", extraction.personalExperiences?.length ?? 0],
       ["skills", extraction.skills?.length ?? 0],
       ["hobbies", extraction.hobbies?.length ?? 0],
-      ["links", (extraction.socialNetworks?.length ?? 0) + (extraction.projects?.length ?? 0)],
+      [
+        "links",
+        (extraction.socialNetworks?.length ?? 0) +
+          (extraction.projects?.length ?? 0),
+      ],
     ] as const
   )
     .filter(([, count]) => count > 0)
@@ -49,7 +61,10 @@ function summarize(extraction: CvExtraction): Summary["counts"] {
  * out. Choosing another file re-runs the import; the wizard's "skip" leaves the
  * profile untouched.
  */
-export const CvImportForm = ({ onChange }: CvImportFormProps) => {
+export const CvImportForm = ({
+  onChange,
+  isSubmitting,
+}: CvImportFormProps) => {
   const t = useTranslations("form.cvImport");
   const inputRef = useRef<HTMLInputElement>(null);
   const [isParsing, setIsParsing] = useState(false);
@@ -138,10 +153,13 @@ export const CvImportForm = ({ onChange }: CvImportFormProps) => {
             {t("chooseAnother")}
           </Button>
 
+          {/* `isLoading` swaps the button for static text, so a second click
+              can't advance the wizard twice and skip the next step. */}
           <Button
             type="button"
             size="lg"
             className="w-full"
+            isLoading={isSubmitting}
             onClick={() => onChange(summary.extraction)}
           >
             {t("confirm")}

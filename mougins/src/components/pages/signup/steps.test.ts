@@ -45,32 +45,52 @@ describe("SIGNUP_STEPS", () => {
 });
 
 describe("getResumeStep", () => {
-  it("never resumes onto an optional step", () => {
-    // An empty draft must land on fullName (step 2), not the CV step: a step
-    // that can't be filled would trap the user there on every reload.
-    expect(getResumeStep({})).toBe(stepIndexOf("fullName"));
+  // Regression guard: skipping optional steps when resuming made the CV import
+  // unreachable — every fresh user was sent straight past it.
+  it("starts a first-run user on the CV import", () => {
+    expect(getResumeStep({})).toBe(stepIndexOf("cv"));
   });
 
-  it("resumes at the first missing required field", () => {
+  it("still starts on the CV import when OAuth already supplied the name", () => {
+    // The DB trigger fills first/last name from Google, so their presence must
+    // not be mistaken for wizard progress.
     expect(getResumeStep({ firstName: "Ada", lastName: "Lovelace" })).toBe(
-      stepIndexOf("pseudo"),
+      stepIndexOf("cv"),
     );
+  });
+
+  it("resumes at the first missing required field once past the pseudo", () => {
     expect(getResumeStep({ ...full, dob: undefined })).toBe(stepIndexOf("date"));
     expect(getResumeStep({ ...full, gender: undefined })).toBe(
       stepIndexOf("gender"),
     );
   });
 
+  it("never sends a returning user back to the CV import", () => {
+    // It can't be "filled", so resuming onto it would put the user back there
+    // on every reload. It is a first-run entry point only.
+    for (const draft of [
+      { ...full, dob: undefined },
+      { ...full, gender: undefined },
+      full,
+    ]) {
+      expect(getResumeStep(draft)).not.toBe(stepIndexOf("cv"));
+    }
+  });
+
   it("lands on the last step once every required field is filled", () => {
+    // That step is `photo` — optional, but terminal: its footer completes
+    // onboarding, so there is nothing to be trapped by.
     expect(getResumeStep(full)).toBe(SIGNUP_TOTAL_STEPS);
+    expect(stepIndexOf("photo")).toBe(SIGNUP_TOTAL_STEPS);
   });
 
   it("ignores CV-only fields when choosing where to resume", () => {
     // A CV fills experiences and skills, but those are not wizard steps and
     // must not shift the resume point.
-    expect(getResumeStep({ skills: ["TypeScript"], bio: "Engineer" })).toBe(
-      stepIndexOf("fullName"),
-    );
+    expect(
+      getResumeStep({ ...full, skills: ["TypeScript"], bio: "Engineer" }),
+    ).toBe(SIGNUP_TOTAL_STEPS);
   });
 });
 

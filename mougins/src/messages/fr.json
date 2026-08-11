@@ -277,6 +277,7 @@
       "found": {
         "experiences": "{count, plural, one {# expérience} other {# expériences}}",
         "education": "{count, plural, one {# formation} other {# formations}}",
+        "personal": "{count, plural, one {# expérience personnelle} other {# expériences personnelles}}",
         "skills": "{count, plural, one {# compétence} other {# compétences}}",
         "hobbies": "{count, plural, one {# centre d'intérêt} other {# centres d'intérêt}}",
         "links": "{count, plural, one {# lien} other {# liens}}"

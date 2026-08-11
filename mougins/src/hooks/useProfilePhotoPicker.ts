@@ -100,7 +100,6 @@ export function useProfilePhotoPicker({
     onCropComplete,
     setImageFromFile,
     isSaving,
-    setIsSaving,
     error,
     setError,
     cropAndUpload,

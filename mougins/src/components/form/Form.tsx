@@ -240,12 +240,18 @@ const renderContent = (props: FormProps) => {
         />
       );
     case "cvImport":
-      return <CvImportForm onChange={props.onChange} />;
+      return (
+        <CvImportForm
+          onChange={props.onChange}
+          isSubmitting={props.primaryLoading}
+        />
+      );
     case "profilePhoto":
       return (
         <ProfilePhotoForm
           defaultValue={props.defaultValue}
           onChange={props.onChange}
+          isSubmitting={props.primaryLoading}
         />
       );
   }
