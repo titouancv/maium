@@ -11,9 +11,14 @@ import type { SuggestedUser } from "@/types";
 
 interface SuggestionCardProps {
   user: SuggestedUser;
+  /** When false the card is a plain link to the profile (public landing). */
+  showFollow?: boolean;
 }
 
-export const SuggestionCard = ({ user }: SuggestionCardProps) => {
+export const SuggestionCard = ({
+  user,
+  showFollow = true,
+}: SuggestionCardProps) => {
   const t = useTranslations("home");
   // Signed-out visitors see this card on the public home page; toggling follow
   // then redirects to signup instead of firing an unauthenticated request.
@@ -44,16 +49,18 @@ export const SuggestionCard = ({ user }: SuggestionCardProps) => {
           displayName={{ firstName: user.first_name, lastName: user.last_name }}
         />
       </Link>
-      <Button
-        variant={following ? "outline" : "primary"}
-        size="sm"
-        type="button"
-        className="w-full"
-        onClick={toggle}
-        disabled={isPending}
-      >
-        {following ? t("suggestions.following") : t("suggestions.follow")}
-      </Button>
+      {showFollow && (
+        <Button
+          variant={following ? "outline" : "primary"}
+          size="sm"
+          type="button"
+          className="w-full"
+          onClick={toggle}
+          disabled={isPending}
+        >
+          {following ? t("suggestions.following") : t("suggestions.follow")}
+        </Button>
+      )}
     </div>
   );
 };

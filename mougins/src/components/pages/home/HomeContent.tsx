@@ -7,7 +7,7 @@
 
 import { Suspense } from "react";
 import { useTranslations } from "next-intl";
-import { ROUTES } from "@/constants";
+import { APP_NAME, ROUTES } from "@/constants";
 import { Link } from "@/i18n/navigation";
 import { UserData, SuggestedUser } from "@/types";
 import type { HomeStats } from "@/lib/users";
@@ -40,6 +40,7 @@ export const HomeContent = ({
 
   // The greeting becomes the page title and the notifications card sits in the
   // header (where the back button would be); see PageLayout's node-title mode.
+  // Signed out, the page *is* the landing page, so it wears the brand name.
   const headerTitle = user ? (
     <>
       <GreetingSection firstName={user.first_name} />
@@ -50,7 +51,7 @@ export const HomeContent = ({
       )}
     </>
   ) : (
-    tNav("home")
+    APP_NAME
   );
 
   return (
@@ -58,13 +59,18 @@ export const HomeContent = ({
       <CurrentUserSync user={user} />
 
       {!user && (
-        <div className="flex w-full max-w-7xl flex-col gap-6">
-          <HeroSection />
+        <div className="flex w-full max-w-7xl flex-col gap-16">
+          <HeroSection variant="landing" />
           {suggestionsPromise && (
             <div className="flex flex-col gap-4">
-              <Title label={t("suggestions.popularTitle")} size="h2" />
+              <Title label={t("suggestions.networkTitle")} size="h2" />
+              {/* No follow button here: a visitor can't follow anyone yet, and
+                  the pitch above is the action we want them to take. */}
               <Suspense fallback={<SuggestionsListSkeleton />}>
-                <SuggestionsList suggestionsPromise={suggestionsPromise} />
+                <SuggestionsList
+                  suggestionsPromise={suggestionsPromise}
+                  showFollow={false}
+                />
               </Suspense>
             </div>
           )}

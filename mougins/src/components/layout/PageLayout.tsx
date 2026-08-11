@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
+import { APP_NAME } from "@/constants";
 import { Title, NavigationBar, BackButton } from "../ui";
 
 interface PageLayoutProps {
@@ -36,7 +37,7 @@ export const PageLayout = ({
     // overlay rendered over a still-mounted page leaves the tab name stuck on
     // the overlay's title after it closes (the page's effect never re-runs).
     const previous = document.title;
-    document.title = tabTitle.toLowerCase() + " • maium";
+    document.title = tabTitle.toLowerCase() + ` • ${APP_NAME}`;
     return () => {
       document.title = previous;
     };
