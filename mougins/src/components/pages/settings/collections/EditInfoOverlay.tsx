@@ -3,12 +3,12 @@
 import { useState } from "react";
 import { useTranslations } from "next-intl";
 import {
-  API,
   SIGNUP_FORM_ID,
   EXPERIENCE_NAMESPACE,
   GENDERS,
   type Gender,
 } from "@/constants";
+import { updateProfile } from "@/lib/users/updateProfile";
 import { Form } from "@/components/form";
 import type { FormProps } from "@/components/form";
 import type { UserData } from "@/types/user";
@@ -74,14 +74,7 @@ export const EditInfoOverlay = ({ field, user, onClose, onSaved }: Props) => {
   const save = async (payload: Record<string, unknown>) => {
     setIsSaving(true);
     try {
-      const res = await fetch(API.USERS_ME, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
-      if (!res.ok) {
-        return;
-      }
+      if (!(await updateProfile(payload))) return;
       onSaved();
       onClose();
     } finally {

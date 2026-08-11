@@ -86,8 +86,15 @@ do not reintroduce a `POST /api/users` create endpoint.)
   unfilled step (`getResumeStep` in [signup/steps.ts](src/components/pages/signup/steps.ts),
   the single source of truth for step order). No authenticated user → step 0 (OAuth button).
 - The wizard ([SignupContent](src/components/pages/signup/SignupContent.tsx)) holds the draft
-  in a single local state and PATCHes `/api/users/me` after **each** step, so a refresh
-  never loses progress.
+  in a single local state and PATCHes `/api/users/me` after **each** step (via
+  [updateProfile](src/lib/users/updateProfile.ts)), so a refresh never loses progress.
+- Steps: `cv` → `fullName` → `pseudo` → `date` → `gender` → `photo`. The CV import
+  leads because it pre-fills the full name **and** the deep profile (experiences,
+  education, skills) the wizard would otherwise never collect.
+- `cv` and `photo` are marked `optional` in `SIGNUP_STEPS`. Optional steps are
+  skipped by `getResumeStep` and ignored by `hasCompletedOnboarding` — they can't
+  be "filled", so counting them would trap a user who skips one in the wizard
+  forever (the home page bounces incomplete users back).
 - On finish: `PATCH /api/users/me` saves the last slice **and** sets
   `onboarding_completed = true`, then navigates to `/?welcome=1`.
   [HomeContent](src/components/pages/home/HomeContent.tsx) shows the welcome
