@@ -8,15 +8,22 @@ import type {
   ResumeVersion,
 } from "@/types/job";
 
-/** History of the current user's analyses, newest first (RLS-scoped). */
-export async function getAnalysisHistory(): Promise<AnalysisListItem[]> {
+/**
+ * History of the current user's analyses, newest first (RLS-scoped).
+ *
+ * `limit` caps the rows fetched — the home dashboard only previews the latest
+ * few, while the history page passes nothing and gets everything.
+ */
+export async function getAnalysisHistory(
+  limit?: number,
+): Promise<AnalysisListItem[]> {
   const supabase = await createClient();
   const {
     data: { user },
   } = await supabase.auth.getUser();
   if (!user) return [];
 
-  const { data } = await supabase
+  const query = supabase
     .from("analyses")
     .select(
       `id, job_id, matching_score, confidence_score, strengths, weaknesses,
@@ -26,6 +33,8 @@ export async function getAnalysisHistory(): Promise<AnalysisListItem[]> {
     )
     .eq("user_id", user.id)
     .order("created_at", { ascending: false });
+
+  const { data } = await (limit === undefined ? query : query.limit(limit));
 
   if (!data) return [];
 

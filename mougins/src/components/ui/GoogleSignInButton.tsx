@@ -5,8 +5,14 @@ import { useTranslations } from "next-intl";
 import { createBrowserClient } from "@/lib/supabase";
 import { Button } from "@/components/ui/Button";
 import { ROUTES } from "@/constants";
+import { cn } from "@/lib/utils";
 
-export const GoogleSignInButton = () => {
+interface GoogleSignInButtonProps {
+  /** Applied to the wrapper, so a caller can size it inside a row of CTAs. */
+  className?: string;
+}
+
+export const GoogleSignInButton = ({ className }: GoogleSignInButtonProps) => {
   const t = useTranslations("auth.signup.oauth");
   const [error, setError] = useState<string | null>(null);
 
@@ -29,12 +35,12 @@ export const GoogleSignInButton = () => {
   };
 
   return (
-    <div className="flex flex-col gap-1">
+    <div className={cn("flex flex-col gap-1", className)}>
       <Button
         type="button"
         variant="outline"
         size="lg"
-        className="gap-3"
+        className="w-full gap-3"
         onClick={handleSignIn}
       >
         <svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true">

@@ -2,25 +2,27 @@
 
 import { useMemo, useState } from "react";
 import { useTranslations } from "next-intl";
-import { API, ILLUSTRATIONS } from "@/constants";
+import { API } from "@/constants";
 import { profileToResumeJson } from "@/lib/resume/profileResume";
 // Import the overlay from its file (not the jobs barrel): pulling this client
 // tree through a barrel trips a Turbopack `export *` namespace-seal bug.
 import { ResumeEditorOverlay } from "@/components/pages/jobs/collections/ResumeEditorOverlay";
+import { Button } from "@/components/ui";
 import type { UserData } from "@/types";
-import { ActionCard } from "./ActionCard";
 
-interface DownloadCvCardProps {
+interface ProfileDownloadCvButtonProps {
   user: UserData;
 }
 
 /**
- * Home action that opens the resume editor seeded from the user's profile, then
- * lets them tweak it and download a CV PDF. No job analysis is involved — the
- * editor renders through the profile PDF route.
+ * Owner-only profile action: opens the resume editor seeded from the profile,
+ * then lets the owner tweak it and download a CV PDF. No job analysis is
+ * involved — the editor renders through the profile PDF route.
  */
-export const DownloadCvCard = ({ user }: DownloadCvCardProps) => {
-  const t = useTranslations("home");
+export const ProfileDownloadCvButton = ({
+  user,
+}: ProfileDownloadCvButtonProps) => {
+  const t = useTranslations("profile");
   const [open, setOpen] = useState(false);
 
   // Seed the editor straight from the already-fetched profile (no round-trip).
@@ -28,14 +30,14 @@ export const DownloadCvCard = ({ user }: DownloadCvCardProps) => {
 
   return (
     <>
-      <ActionCard
-        actionLabel={t("actions.downloadCvTitle")}
-        text={t("actions.downloadCvSubtitle")}
-        description={t("actions.downloadCvDescription")}
-        illustration={ILLUSTRATIONS.DOWNLOAD_RESUME}
+      <Button
+        variant="primary"
+        type="button"
+        className="w-full"
         onClick={() => setOpen(true)}
-        primary
-      />
+      >
+        {t("downloadCvButton")}
+      </Button>
       {open && (
         <ResumeEditorOverlay
           initialDraft={initialDraft}

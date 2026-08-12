@@ -1,7 +1,12 @@
 import { useTranslations } from "next-intl";
 import { ROUTES } from "@/constants";
 import { Link } from "@/i18n/navigation";
-import { Title, Button, GoogleSignInButton } from "@/components/ui";
+import {
+  Title,
+  Button,
+  GoogleSignInButton,
+  DataUsageNotice,
+} from "@/components/ui";
 
 /** The pitch: the three steps of an analysis, told from the visitor's side. */
 const WORKFLOW_STEPS = [1, 2, 3] as const;
@@ -37,32 +42,27 @@ export const HeroSection = ({ variant = "signup" }: HeroSectionProps) => {
           ))}
         </ol>
 
-        <div className="flex flex-col gap-3">
-          {variant === "landing" && (
-            <>
-              <Link href={ROUTES.ANALYZE}>
-                <Button variant="primary" size="lg" className="w-full">
-                  {t("heroCta")}
-                </Button>
-              </Link>
-              <p className="text-txt-muted text-center text-xs">
-                {t("heroSignInPrompt")}
-              </p>
-            </>
-          )}
+        {variant === "landing" ? (
+          // Both entries sit on one row: running an analysis and signing back
+          // in are two ways into the product, not an action and its footnote.
+          <div className="flex flex-col gap-3 sm:flex-row">
+            <Link href={ROUTES.ANALYZE} className="sm:flex-1">
+              <Button
+                variant="primary"
+                size="lg"
+                className="w-full whitespace-nowrap"
+              >
+                {t("heroCta")}
+              </Button>
+            </Link>
+            <GoogleSignInButton className="sm:flex-1" />
+          </div>
+        ) : (
           <GoogleSignInButton />
-        </div>
+        )}
 
-        <p className="text-txt-muted text-xs opacity-50">
-          {t("dataUsagePrefix")}{" "}
-          <Link
-            href={ROUTES.PRIVACY_POLICY}
-            className="underline underline-offset-2"
-          >
-            {t("privacyPolicyLink")}
-          </Link>
-          .
-        </p>
+        {/* The landing page shows this at the foot of the page instead. */}
+        {variant === "signup" && <DataUsageNotice />}
       </div>
     </div>
   );

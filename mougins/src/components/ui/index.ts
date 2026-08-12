@@ -19,6 +19,7 @@ export * from "./SearchButton";
 export * from "./Section";
 export * from "./UserCard";
 export * from "./GoogleSignInButton";
+export * from "./DataUsageNotice";
 export * from "./LoadingOverlay";
 export * from "./ProfilePhoto";
 export * from "./ProgressBar";

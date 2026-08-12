@@ -116,11 +116,9 @@
     "feature1": "I paste a job offer and the AI matches it against my profile.",
     "feature2": "I download my CV, rewritten for that exact offer, with its cover letter.",
     "feature3": "I apply with the right words, and land the interview.",
-    "heroCta": "Analyze an offer for free",
-    "heroSignInPrompt": "Already have an account? Sign in below.",
+    "heroCta": "Analyze for free",
     "dataUsagePrefix": "By signing in with Google, we access your name and email address to create your account. Your data is never sold with third parties. Read our",
     "privacyPolicyLink": "privacy policy",
-    "goToAnalysis": "Analyze a job posting",
     "greeting": {
       "morning": "Good morning, {name}",
       "afternoon": "Good afternoon, {name}",
@@ -136,16 +134,20 @@
       "actionProfileView": "viewed your profile"
     },
     "actions": {
-      "analyzeTitle": "Analyze a job posting",
-      "analyzeSubtitle": "Tailor your resume with AI",
-      "analyzeDescription": "Match each application to the offer and boost your chances of landing an interview.",
-      "downloadCvTitle": "Download my CV",
-      "downloadCvSubtitle": "Export your profile to PDF",
-      "downloadCvDescription": "Generate a polished resume from your profile information in one click."
+      "analyzeTitle": "Start an analysis",
+      "analyzeDescription": "Paste a job offer: the AI matches it against your profile, rewrites your resume for that offer and drafts the cover letter.",
+      "analyzeHistory": "See all my analyses"
+    },
+    "sections": {
+      "analyze": "Tailor your resume with AI",
+      "analyses": "Your latest analyses",
+      "network": "Grow your network",
+      "landingNetwork": "Grow your professional network"
+    },
+    "analyses": {
+      "empty": "No analyses yet — run one and it will show up here."
     },
     "suggestions": {
-      "title": "People to connect with",
-      "networkTitle": "Grow your professional network",
       "empty": "No suggestions for now — check back later.",
       "follow": "Follow",
       "following": "Following",
@@ -299,6 +301,7 @@
   },
   "profile": {
     "settingsButton": "Settings",
+    "downloadCvButton": "Download my CV",
     "qrTitle": "Share profile",
     "followButton": "Follow",
     "unfollowButton": "Unfollow",

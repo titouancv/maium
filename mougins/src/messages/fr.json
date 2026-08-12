@@ -116,11 +116,9 @@
     "feature1": "Je colle une offre et l'IA la confronte à mon profil.",
     "feature2": "Je télécharge mon CV reformulé pour cette offre, avec sa lettre de motivation.",
     "feature3": "Je postule avec les bons mots, et je décroche l'entretien.",
-    "heroCta": "Analyser une offre gratuitement",
-    "heroSignInPrompt": "Déjà un compte ? Connectez-vous ci-dessous.",
+    "heroCta": "Analyser gratuitement",
     "dataUsagePrefix": "En vous connectant avec Google, nous accédons à votre nom et adresse e-mail pour créer votre compte. Vos données ne sont jamais vendues avec des tiers. Consultez notre",
     "privacyPolicyLink": "politique de confidentialité",
-    "goToAnalysis": "Analyser une offre d'emploi",
     "greeting": {
       "morning": "Bonjour, {name}",
       "afternoon": "Bon après-midi, {name}",
@@ -136,16 +134,20 @@
       "actionProfileView": "a vu votre profil"
     },
     "actions": {
-      "analyzeTitle": "Analyser une offre",
-      "analyzeSubtitle": "Optimisez votre CV avec l'IA",
-      "analyzeDescription": "Adaptez chaque candidature à l'offre et augmentez vos chances de décrocher un entretien.",
-      "downloadCvTitle": "Télécharger mon CV",
-      "downloadCvSubtitle": "Exportez votre profil en PDF",
-      "downloadCvDescription": "Générez un CV soigné à partir des informations de votre profil en un clic."
+      "analyzeTitle": "Lancer une analyse",
+      "analyzeDescription": "Collez une offre : l'IA la confronte à votre profil, réécrit votre CV pour cette offre et rédige la lettre de motivation.",
+      "analyzeHistory": "Voir toutes mes analyses"
+    },
+    "sections": {
+      "analyze": "Optimisez votre CV avec l'IA",
+      "analyses": "Vos dernières analyses",
+      "network": "Développer votre réseau",
+      "landingNetwork": "Développez votre réseau professionnel"
+    },
+    "analyses": {
+      "empty": "Aucune analyse pour l'instant — lancez-en une pour la retrouver ici."
     },
     "suggestions": {
-      "title": "Personnes à suivre",
-      "networkTitle": "Développez votre réseau professionnel",
       "empty": "Aucune suggestion pour le moment — revenez plus tard.",
       "follow": "Suivre",
       "following": "Suivi",
@@ -299,6 +301,7 @@
   },
   "profile": {
     "settingsButton": "Paramètres",
+    "downloadCvButton": "Télécharger mon CV",
     "qrTitle": "Partager le profil",
     "followButton": "Suivre",
     "unfollowButton": "Se désabonner",
