@@ -3,8 +3,9 @@ import { getLocale } from "next-intl/server";
 import { HomeContent } from "@/components/pages/home";
 import { hasCompletedOnboarding } from "@/components/pages/signup/steps";
 import { redirect } from "@/i18n/navigation";
-import { ROUTES } from "@/constants";
+import { HOME_RECENT_ANALYSES_LIMIT, ROUTES } from "@/constants";
 import { getCurrentUserProfile } from "@/lib/auth/getCurrentUser";
+import { getAnalysisHistory } from "@/lib/jobs/server";
 import { getHomeStats, getSuggestedUsers } from "@/lib/users";
 
 export default async function HomePage() {
@@ -29,6 +30,9 @@ export default async function HomePage() {
   // Suggestions are streamed for signed-out visitors too: with a NULL caller the
   // RPC degenerates to "the most-followed profiles" (the popular-accounts list).
   const statsPromise = userData ? getHomeStats() : undefined;
+  const analysesPromise = userData
+    ? getAnalysisHistory(HOME_RECENT_ANALYSES_LIMIT)
+    : undefined;
   const suggestionsPromise = getSuggestedUsers();
 
   return (
@@ -36,6 +40,7 @@ export default async function HomePage() {
       <HomeContent
         user={userData}
         statsPromise={statsPromise}
+        analysesPromise={analysesPromise}
         suggestionsPromise={suggestionsPromise}
       />
     </Suspense>

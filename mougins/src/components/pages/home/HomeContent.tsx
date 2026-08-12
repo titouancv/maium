@@ -10,6 +10,7 @@ import { useTranslations } from "next-intl";
 import { APP_NAME, ROUTES } from "@/constants";
 import { Link } from "@/i18n/navigation";
 import { UserData, SuggestedUser } from "@/types";
+import type { AnalysisListItem } from "@/types/job";
 import type { HomeStats } from "@/lib/users";
 import { PageLayout } from "../../layout";
 import { HeroSection } from "../../ui/collections/HeroSection";
@@ -18,21 +19,25 @@ import { GreetingSection } from "./items/GreetingSection";
 import { AnalyzeCard } from "./items";
 import {
   NotificationsCenter,
+  RecentAnalysesList,
+  RecentAnalysesListSkeleton,
   SuggestionsList,
   SuggestionsListSkeleton,
   WelcomeCelebration,
 } from "./collections";
-import { Section, DataUsageNotice } from "@/components/ui";
+import { Button, Section, DataUsageNotice } from "@/components/ui";
 
 interface HomeContentProps {
   user: UserData | null;
   statsPromise?: Promise<HomeStats>;
+  analysesPromise?: Promise<AnalysisListItem[]>;
   suggestionsPromise?: Promise<SuggestedUser[]>;
 }
 
 export const HomeContent = ({
   user,
   statsPromise,
+  analysesPromise,
   suggestionsPromise,
 }: HomeContentProps) => {
   const tNav = useTranslations("nav");
@@ -81,12 +86,28 @@ export const HomeContent = ({
       {user && (
         <>
           {/* Sections are ordered by how central they are to the product: the
-              job analysis leads, the network follows. (The CV export lives on
-              the profile page, next to the data it exports.) */}
-          <div className="flex w-full max-w-7xl flex-col gap-16">
+              job analysis leads, its past runs follow, then the network. (The
+              CV export lives on the profile page, next to the data it
+              exports.) */}
+          <div className="flex w-full max-w-7xl flex-col gap-24 pt-24">
             <Section title={t("sections.analyze")} titleSize="h2">
               <AnalyzeCard />
             </Section>
+
+            {analysesPromise && (
+              <Section title={t("sections.analyses")} titleSize="h2">
+                <Suspense fallback={<RecentAnalysesListSkeleton />}>
+                  <RecentAnalysesList analysesPromise={analysesPromise} />
+                </Suspense>
+                {/* `self-start` so the link only covers the button and not the
+                    whole section width. */}
+                <Link href={ROUTES.JOBS_HISTORY} className="self-start pt-4">
+                  <Button variant="outline">
+                    {t("actions.analyzeHistory")}
+                  </Button>
+                </Link>
+              </Section>
+            )}
 
             {suggestionsPromise && (
               <Section title={t("sections.network")} titleSize="h2">

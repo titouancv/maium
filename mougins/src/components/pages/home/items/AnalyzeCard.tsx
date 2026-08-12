@@ -15,14 +15,9 @@ export const AnalyzeCard = () => {
   return (
     <ActionCard
       actionLabel={t("actions.analyzeTitle")}
-      text={t("actions.analyzeSubtitle")}
       description={t("actions.analyzeDescription")}
       href={ROUTES.JOBS}
       illustration={ILLUSTRATIONS.ANALYZE_JOBS}
-      secondary={{
-        label: t("actions.analyzeHistory"),
-        href: ROUTES.JOBS_HISTORY,
-      }}
       emphasis="hero"
       primary
     />

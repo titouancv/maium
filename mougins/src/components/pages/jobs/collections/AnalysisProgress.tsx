@@ -192,7 +192,7 @@ export function AnalysisProgress({
       if (handler) {
         handler(state.analysisId);
       } else {
-        router.push(`${ROUTES.JOBS_HISTORY}?analysis=${state.analysisId}`);
+        router.push(ROUTES.JOBS_HISTORY_ANALYSIS(state.analysisId));
       }
     }
   }, [state.status, state.analysisId, router]);

@@ -21,6 +21,8 @@ export const ROUTES = {
   ANALYZE: "/analyze",
   JOBS: "/jobs",
   JOBS_HISTORY: "/jobs/history",
+  /** History page with one analysis' detail overlay already open. */
+  JOBS_HISTORY_ANALYSIS: (id: string) => `/jobs/history?analysis=${id}`,
 } as const;
 
 export const API = {
@@ -171,6 +173,9 @@ export const CONVERSATIONS_REFETCH_DEBOUNCE_MS = 800;
 
 /** Debounce before refetching home stats after a Realtime "refresh" ping. */
 export const HOME_STATS_REFETCH_DEBOUNCE_MS = 800;
+
+/** How many recent analyses the home dashboard previews before the history. */
+export const HOME_RECENT_ANALYSES_LIMIT = 4;
 
 // --- Profile photos --------------------------------------------------------
 

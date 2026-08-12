@@ -135,14 +135,17 @@
     },
     "actions": {
       "analyzeTitle": "Lancer une analyse",
-      "analyzeSubtitle": "Optimisez votre CV avec l'IA",
       "analyzeDescription": "Collez une offre : l'IA la confronte à votre profil, réécrit votre CV pour cette offre et rédige la lettre de motivation.",
-      "analyzeHistory": "Mes analyses"
+      "analyzeHistory": "Voir toutes mes analyses"
     },
     "sections": {
-      "analyze": "Analyser une offre",
-      "network": "Votre réseau",
+      "analyze": "Optimisez votre CV avec l'IA",
+      "analyses": "Vos dernières analyses",
+      "network": "Développer votre réseau",
       "landingNetwork": "Développez votre réseau professionnel"
+    },
+    "analyses": {
+      "empty": "Aucune analyse pour l'instant — lancez-en une pour la retrouver ici."
     },
     "suggestions": {
       "empty": "Aucune suggestion pour le moment — revenez plus tard.",

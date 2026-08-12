@@ -135,14 +135,17 @@
     },
     "actions": {
       "analyzeTitle": "Start an analysis",
-      "analyzeSubtitle": "Tailor your resume with AI",
       "analyzeDescription": "Paste a job offer: the AI matches it against your profile, rewrites your resume for that offer and drafts the cover letter.",
-      "analyzeHistory": "My analyses"
+      "analyzeHistory": "See all my analyses"
     },
     "sections": {
-      "analyze": "Analyze a job posting",
-      "network": "Your network",
+      "analyze": "Tailor your resume with AI",
+      "analyses": "Your latest analyses",
+      "network": "Grow your network",
       "landingNetwork": "Grow your professional network"
+    },
+    "analyses": {
+      "empty": "No analyses yet — run one and it will show up here."
     },
     "suggestions": {
       "empty": "No suggestions for now — check back later.",
