@@ -95,9 +95,13 @@ best feature isn't hidden behind signup. The seams:
   [lib/jobs/usage.ts](src/lib/jobs/usage.ts). Refusals are **402**, distinct
   from the signed-in **429**, so the UI says "create an account" rather than
   "try again later".
-- On signup, [claimAnonSession](src/lib/auth/claimAnonSession.ts) writes the
-  visitor's CV onto the new profile and reassigns their rows. Best-effort — it
-  must never cost the user their sign-in.
+- On sign-in, [claimAnonSession](src/lib/auth/claimAnonSession.ts) reassigns the
+  visitor's rows to the account and copies their CV into the profile's **gaps**.
+  The same OAuth callback serves a returning user, so the import is skipped
+  entirely once `onboarding_completed` is true and otherwise only fills empty
+  fields — `writeProfile` replaces collections wholesale, so an unguarded claim
+  would wipe an existing profile. Best-effort — it must never cost the user
+  their sign-in.
 
 ### Signup Flows
 

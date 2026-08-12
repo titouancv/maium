@@ -35,14 +35,35 @@ const CV_EXTRACTION = {
   ],
 };
 
+/** A freshly created OAuth row: nothing but the identity Google supplied. */
+const EMPTY_PROFILE = {
+  onboarding_completed: false,
+  phone: null,
+  nationality: null,
+  location: null,
+  bio: null,
+  user_experiences: [],
+  user_skills: [],
+  user_projects: [],
+  user_social_networks: [],
+  user_hobbies: [],
+};
+
 /** Records the `update(...).eq(...)` calls made per table. */
-function mockDb(cvExtraction: unknown) {
+function mockDb(
+  cvExtraction: unknown,
+  profile: Record<string, unknown> | null = EMPTY_PROFILE,
+  profileError: unknown = null,
+) {
   const updates: { table: string; patch: Record<string, unknown>; anonId: string }[] = [];
 
   mockAdmin.mockReturnValue({
     from: (table: string) => ({
       select: () => ({
+        // The two reads diverge after `.eq(...)`: the profile ends there, the
+        // CV lookup keeps filtering.
         eq: () => ({
+          maybeSingle: async () => ({ data: profile, error: profileError }),
           not: () => ({
             order: () => ({
               limit: () => ({
@@ -105,6 +126,69 @@ describe("claimAnonSession", () => {
     const [, , patch] = mockWriteProfile.mock.calls[0];
     expect(patch).not.toHaveProperty("firstName");
     expect(patch).not.toHaveProperty("lastName");
+  });
+
+  // Signing back into an account that already has a profile must not turn a CV
+  // dropped into /analyze into a full overwrite of it.
+  it("leaves an onboarded account's profile untouched", async () => {
+    const updates = mockDb(CV_EXTRACTION, {
+      ...EMPTY_PROFILE,
+      onboarding_completed: true,
+    });
+    await claimAnonSession(USER_ID);
+
+    expect(mockWriteProfile).not.toHaveBeenCalled();
+    // The analysis they just ran is still theirs to keep.
+    expect(updates).toHaveLength(3);
+  });
+
+  it("fills only the gaps of a half-finished profile", async () => {
+    mockDb(CV_EXTRACTION, {
+      ...EMPTY_PROFILE,
+      bio: "Written by hand.",
+      user_skills: [{ name: "Go" }],
+    });
+    await claimAnonSession(USER_ID);
+
+    const [, , patch] = mockWriteProfile.mock.calls[0];
+    expect(patch).not.toHaveProperty("bio");
+    expect(patch).not.toHaveProperty("skills");
+    expect(patch.professionalExperiences).toHaveLength(1);
+  });
+
+  it("keeps experiences the account already has, per type", async () => {
+    mockDb(CV_EXTRACTION, {
+      ...EMPTY_PROFILE,
+      user_experiences: [{ type: "professional" }],
+    });
+    await claimAnonSession(USER_ID);
+
+    const [, , patch] = mockWriteProfile.mock.calls[0];
+    expect(patch).not.toHaveProperty("professionalExperiences");
+    expect(patch).toMatchObject({ skills: ["TypeScript"] });
+  });
+
+  it("writes nothing when every field is already filled", async () => {
+    const updates = mockDb(CV_EXTRACTION, {
+      ...EMPTY_PROFILE,
+      bio: "Written by hand.",
+      user_skills: [{ name: "Go" }],
+      user_experiences: [{ type: "professional" }],
+    });
+    await claimAnonSession(USER_ID);
+
+    expect(mockWriteProfile).not.toHaveBeenCalled();
+    expect(updates).toHaveLength(3);
+  });
+
+  // Fails closed: without a reliable picture of the account, touching it risks
+  // destroying data.
+  it("skips the import when the profile can't be read", async () => {
+    const updates = mockDb(CV_EXTRACTION, null, { message: "boom" });
+    await claimAnonSession(USER_ID);
+
+    expect(mockWriteProfile).not.toHaveBeenCalled();
+    expect(updates).toHaveLength(3);
   });
 
   it("reassigns every owned table and clears the expiry", async () => {
