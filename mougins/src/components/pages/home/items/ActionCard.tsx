@@ -52,6 +52,19 @@ export const ActionCard = ({
 
   return (
     <div className="flex h-full gap-4 md:gap-8">
+      {illustration && (
+        <Image
+          src={illustration}
+          alt=""
+          aria-hidden
+          width={1408}
+          height={768}
+          className={cn(
+            "mt-1 h-auto shrink-0 self-start rounded-sm object-contain",
+            isHero ? "w-28 md:w-80" : "w-22 md:w-54",
+          )}
+        />
+      )}
       <div className="flex h-full min-w-44 flex-col gap-4">
         {description && (
           <p className={isHero ? "max-w-lg" : "max-w-44"}>{description}</p>
@@ -63,19 +76,6 @@ export const ActionCard = ({
           {href ? <Link href={href}>{button}</Link> : button}
         </div>
       </div>
-      {illustration && (
-        <Image
-          src={illustration}
-          alt=""
-          aria-hidden
-          width={1408}
-          height={768}
-          className={cn(
-            "mt-1 ml-auto h-auto shrink-0 self-start rounded-sm object-contain",
-            isHero ? "w-28 md:w-80" : "w-22 md:w-54",
-          )}
-        />
-      )}
     </div>
   );
 };

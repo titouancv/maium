@@ -47,7 +47,11 @@ export const HeroSection = ({ variant = "signup" }: HeroSectionProps) => {
           // in are two ways into the product, not an action and its footnote.
           <div className="flex flex-col gap-3 sm:flex-row">
             <Link href={ROUTES.ANALYZE} className="sm:flex-1">
-              <Button variant="primary" size="lg" className="w-full">
+              <Button
+                variant="primary"
+                size="lg"
+                className="w-full whitespace-nowrap"
+              >
                 {t("heroCta")}
               </Button>
             </Link>

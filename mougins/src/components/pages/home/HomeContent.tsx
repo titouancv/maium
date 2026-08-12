@@ -64,7 +64,7 @@ export const HomeContent = ({
       <CurrentUserSync user={user} />
 
       {!user && (
-        <div className="flex w-full max-w-7xl flex-col gap-16">
+        <div className="flex w-full max-w-7xl flex-col gap-32 pt-16">
           <HeroSection variant="landing" />
           {suggestionsPromise && (
             <Section title={t("sections.landingNetwork")} titleSize="h2">
