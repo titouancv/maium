@@ -17,7 +17,7 @@ import type { HomeStats } from "@/lib/users";
  * the source of the numbers.
  *
  * Mirrors the messaging Realtime pattern, but scoped to its single reader
- * ([StatsRow]) via local state — no global store needed.
+ * ([NotificationsCenter]) via local state — no global store needed.
  */
 export function useHomeStats(streamed: HomeStats, userId?: string): HomeStats {
   const [stats, setStats] = useState(streamed);

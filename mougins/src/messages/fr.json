@@ -117,7 +117,6 @@
     "feature2": "Je télécharge mon CV reformulé pour cette offre, avec sa lettre de motivation.",
     "feature3": "Je postule avec les bons mots, et je décroche l'entretien.",
     "heroCta": "Analyser une offre gratuitement",
-    "heroSignInPrompt": "Déjà un compte ? Connectez-vous ci-dessous.",
     "dataUsagePrefix": "En vous connectant avec Google, nous accédons à votre nom et adresse e-mail pour créer votre compte. Vos données ne sont jamais vendues avec des tiers. Consultez notre",
     "privacyPolicyLink": "politique de confidentialité",
     "goToAnalysis": "Analyser une offre d'emploi",
@@ -136,16 +135,21 @@
       "actionProfileView": "a vu votre profil"
     },
     "actions": {
-      "analyzeTitle": "Analyser une offre",
+      "analyzeTitle": "Lancer une analyse",
       "analyzeSubtitle": "Optimisez votre CV avec l'IA",
-      "analyzeDescription": "Adaptez chaque candidature à l'offre et augmentez vos chances de décrocher un entretien.",
+      "analyzeDescription": "Collez une offre : l'IA la confronte à votre profil, réécrit votre CV pour cette offre et rédige la lettre de motivation.",
+      "analyzeHistory": "Mes analyses",
       "downloadCvTitle": "Télécharger mon CV",
       "downloadCvSubtitle": "Exportez votre profil en PDF",
       "downloadCvDescription": "Générez un CV soigné à partir des informations de votre profil en un clic."
     },
+    "sections": {
+      "analyze": "Analyser une offre",
+      "resume": "Votre CV",
+      "network": "Votre réseau",
+      "landingNetwork": "Développez votre réseau professionnel"
+    },
     "suggestions": {
-      "title": "Personnes à suivre",
-      "networkTitle": "Développez votre réseau professionnel",
       "empty": "Aucune suggestion pour le moment — revenez plus tard.",
       "follow": "Suivre",
       "following": "Suivi",

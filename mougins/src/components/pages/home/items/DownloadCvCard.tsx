@@ -17,7 +17,8 @@ interface DownloadCvCardProps {
 /**
  * Home action that opens the resume editor seeded from the user's profile, then
  * lets them tweak it and download a CV PDF. No job analysis is involved — the
- * editor renders through the profile PDF route.
+ * editor renders through the profile PDF route, which is why it sits *under*
+ * [AnalyzeCard] as a secondary action rather than beside it.
  */
 export const DownloadCvCard = ({ user }: DownloadCvCardProps) => {
   const t = useTranslations("home");
@@ -34,7 +35,6 @@ export const DownloadCvCard = ({ user }: DownloadCvCardProps) => {
         description={t("actions.downloadCvDescription")}
         illustration={ILLUSTRATIONS.DOWNLOAD_RESUME}
         onClick={() => setOpen(true)}
-        primary
       />
       {open && (
         <ResumeEditorOverlay

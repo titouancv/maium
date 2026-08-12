@@ -117,7 +117,6 @@
     "feature2": "I download my CV, rewritten for that exact offer, with its cover letter.",
     "feature3": "I apply with the right words, and land the interview.",
     "heroCta": "Analyze an offer for free",
-    "heroSignInPrompt": "Already have an account? Sign in below.",
     "dataUsagePrefix": "By signing in with Google, we access your name and email address to create your account. Your data is never sold with third parties. Read our",
     "privacyPolicyLink": "privacy policy",
     "goToAnalysis": "Analyze a job posting",
@@ -136,16 +135,21 @@
       "actionProfileView": "viewed your profile"
     },
     "actions": {
-      "analyzeTitle": "Analyze a job posting",
+      "analyzeTitle": "Start an analysis",
       "analyzeSubtitle": "Tailor your resume with AI",
-      "analyzeDescription": "Match each application to the offer and boost your chances of landing an interview.",
+      "analyzeDescription": "Paste a job offer: the AI matches it against your profile, rewrites your resume for that offer and drafts the cover letter.",
+      "analyzeHistory": "My analyses",
       "downloadCvTitle": "Download my CV",
       "downloadCvSubtitle": "Export your profile to PDF",
       "downloadCvDescription": "Generate a polished resume from your profile information in one click."
     },
+    "sections": {
+      "analyze": "Analyze a job posting",
+      "resume": "Your resume",
+      "network": "Your network",
+      "landingNetwork": "Grow your professional network"
+    },
     "suggestions": {
-      "title": "People to connect with",
-      "networkTitle": "Grow your professional network",
       "empty": "No suggestions for now — check back later.",
       "follow": "Follow",
       "following": "Following",
