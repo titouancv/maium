@@ -7,6 +7,8 @@ import { API, ROUTES } from "@/constants";
 import { Button } from "@/components/ui";
 import { useFollow } from "@/hooks";
 import type { FollowInfo } from "@/lib/users";
+import type { UserData } from "@/types";
+import { ProfileDownloadCvButton } from "./ProfileDownloadCvButton";
 import { ProfileQrOverlay } from "./collections";
 
 interface ProfileFollowActionsProps {
@@ -14,6 +16,8 @@ interface ProfileFollowActionsProps {
   isOwner: boolean;
   isAuthenticated: boolean;
   followInfo: FollowInfo;
+  /** The profile data, passed only to the owner — seeds the CV editor. */
+  user: UserData | null;
 }
 
 export const ProfileFollowActions = ({
@@ -21,9 +25,9 @@ export const ProfileFollowActions = ({
   isOwner,
   isAuthenticated,
   followInfo,
+  user,
 }: ProfileFollowActionsProps) => {
   const t = useTranslations("profile");
-  const tHome = useTranslations("home");
   const router = useRouter();
   const {
     following,
@@ -73,11 +77,7 @@ export const ProfileFollowActions = ({
       </div>
       {isOwner ? (
         <div className="flex flex-col gap-4">
-          <Link href={ROUTES.JOBS}>
-            <Button variant="primary" type="button" className="w-full">
-              {tHome("goToAnalysis")}
-            </Button>
-          </Link>
+          {user && <ProfileDownloadCvButton user={user} />}
           <Link href={ROUTES.SETTINGS}>
             <Button variant="outline" type="button" className="w-full">
               {t("settingsButton")}

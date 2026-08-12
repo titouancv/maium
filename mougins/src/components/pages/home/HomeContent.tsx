@@ -15,7 +15,7 @@ import { PageLayout } from "../../layout";
 import { HeroSection } from "../../ui/collections/HeroSection";
 import { CurrentUserSync } from "./CurrentUserSync";
 import { GreetingSection } from "./items/GreetingSection";
-import { AnalyzeCard, DownloadCvCard } from "./items";
+import { AnalyzeCard } from "./items";
 import {
   NotificationsCenter,
   SuggestionsList,
@@ -81,14 +81,11 @@ export const HomeContent = ({
       {user && (
         <>
           {/* Sections are ordered by how central they are to the product: the
-              job analysis leads, the CV export and the network follow. */}
+              job analysis leads, the network follows. (The CV export lives on
+              the profile page, next to the data it exports.) */}
           <div className="flex w-full max-w-7xl flex-col gap-16">
             <Section title={t("sections.analyze")} titleSize="h2">
               <AnalyzeCard />
-            </Section>
-
-            <Section title={t("sections.resume")} titleSize="h2">
-              <DownloadCvCard user={user} />
             </Section>
 
             {suggestionsPromise && (

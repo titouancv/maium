@@ -119,7 +119,6 @@
     "heroCta": "Analyze an offer for free",
     "dataUsagePrefix": "By signing in with Google, we access your name and email address to create your account. Your data is never sold with third parties. Read our",
     "privacyPolicyLink": "privacy policy",
-    "goToAnalysis": "Analyze a job posting",
     "greeting": {
       "morning": "Good morning, {name}",
       "afternoon": "Good afternoon, {name}",
@@ -138,14 +137,10 @@
       "analyzeTitle": "Start an analysis",
       "analyzeSubtitle": "Tailor your resume with AI",
       "analyzeDescription": "Paste a job offer: the AI matches it against your profile, rewrites your resume for that offer and drafts the cover letter.",
-      "analyzeHistory": "My analyses",
-      "downloadCvTitle": "Download my CV",
-      "downloadCvSubtitle": "Export your profile to PDF",
-      "downloadCvDescription": "Generate a polished resume from your profile information in one click."
+      "analyzeHistory": "My analyses"
     },
     "sections": {
       "analyze": "Analyze a job posting",
-      "resume": "Your resume",
       "network": "Your network",
       "landingNetwork": "Grow your professional network"
     },
@@ -303,6 +298,7 @@
   },
   "profile": {
     "settingsButton": "Settings",
+    "downloadCvButton": "Download my CV",
     "qrTitle": "Share profile",
     "followButton": "Follow",
     "unfollowButton": "Unfollow",

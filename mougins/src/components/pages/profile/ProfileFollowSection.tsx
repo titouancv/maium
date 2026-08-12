@@ -15,6 +15,9 @@ export async function ProfileFollowSection({ pseudo }: { pseudo: string }) {
       isOwner={bundle.isOwner}
       isAuthenticated={bundle.isAuthenticated}
       followInfo={followInfo}
+      // Only the owner gets the CV editor, so only their payload carries the
+      // profile data it is seeded from.
+      user={bundle.isOwner ? bundle.user : null}
     />
   );
 }

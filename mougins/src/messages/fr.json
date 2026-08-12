@@ -119,7 +119,6 @@
     "heroCta": "Analyser une offre gratuitement",
     "dataUsagePrefix": "En vous connectant avec Google, nous accédons à votre nom et adresse e-mail pour créer votre compte. Vos données ne sont jamais vendues avec des tiers. Consultez notre",
     "privacyPolicyLink": "politique de confidentialité",
-    "goToAnalysis": "Analyser une offre d'emploi",
     "greeting": {
       "morning": "Bonjour, {name}",
       "afternoon": "Bon après-midi, {name}",
@@ -138,14 +137,10 @@
       "analyzeTitle": "Lancer une analyse",
       "analyzeSubtitle": "Optimisez votre CV avec l'IA",
       "analyzeDescription": "Collez une offre : l'IA la confronte à votre profil, réécrit votre CV pour cette offre et rédige la lettre de motivation.",
-      "analyzeHistory": "Mes analyses",
-      "downloadCvTitle": "Télécharger mon CV",
-      "downloadCvSubtitle": "Exportez votre profil en PDF",
-      "downloadCvDescription": "Générez un CV soigné à partir des informations de votre profil en un clic."
+      "analyzeHistory": "Mes analyses"
     },
     "sections": {
       "analyze": "Analyser une offre",
-      "resume": "Votre CV",
       "network": "Votre réseau",
       "landingNetwork": "Développez votre réseau professionnel"
     },
@@ -303,6 +298,7 @@
   },
   "profile": {
     "settingsButton": "Paramètres",
+    "downloadCvButton": "Télécharger mon CV",
     "qrTitle": "Partager le profil",
     "followButton": "Suivre",
     "unfollowButton": "Se désabonner",
