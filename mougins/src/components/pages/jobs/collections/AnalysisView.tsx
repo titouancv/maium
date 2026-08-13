@@ -1,81 +1,117 @@
 "use client";
 
-import type { ReactNode } from "react";
+import { useRef, useState, type ReactNode } from "react";
 import { useTranslations } from "next-intl";
+import { cn } from "@/lib/utils";
+import { Text } from "@/components/ui";
+import { TabsVertical } from "@/components/ui/TabsVertical";
 import type { AnalysisListItem } from "@/types/job";
-import { Button, Text } from "@/components/ui";
-import { DownloadResumeButton } from "./DownloadResumeButton";
-import { CoverLetterButton } from "./CoverLetterButton";
+import { AnalysisOverview } from "./AnalysisOverview";
 import { PrepPointList } from "./PrepPointList";
 import { RecruiterQuestionList } from "./RecruiterQuestionList";
 
 interface AnalysisViewProps {
   analysis: AnalysisListItem;
+  statusBar?: ReactNode;
   tracking?: ReactNode;
   contacts?: ReactNode;
 }
 
+type AnalysisPanelKey = "overview" | "prep" | "contacts" | "tracking";
+
+interface AnalysisPanel {
+  key: AnalysisPanelKey;
+  aiGenerated: boolean;
+  content: ReactNode;
+}
+
 export function AnalysisView({
   analysis,
+  statusBar,
   tracking,
   contacts,
 }: AnalysisViewProps) {
   const t = useTranslations("jobs");
+  const [activeTab, setActiveTab] = useState(0);
+  const panelsRef = useRef<HTMLDivElement>(null);
+
+  const handleTabChange = (index: number) => {
+    setActiveTab(index);
+    panelsRef.current?.scrollIntoView({ block: "start", behavior: "smooth" });
+  };
+
+  const availablePanels: (AnalysisPanel | null)[] = [
+    {
+      key: "overview",
+      aiGenerated: true,
+      content: <AnalysisOverview analysis={analysis} />,
+    },
+    {
+      key: "prep",
+      aiGenerated: true,
+      content: (
+        <div className="flex flex-col gap-10">
+          <PrepPointList points={analysis.prep_points} />
+          <RecruiterQuestionList questions={analysis.recruiter_questions} />
+        </div>
+      ),
+    },
+    contacts
+      ? { key: "contacts", aiGenerated: false, content: contacts }
+      : null,
+    tracking
+      ? { key: "tracking", aiGenerated: false, content: tracking }
+      : null,
+  ];
+
+  const panels = availablePanels.filter(
+    (panel): panel is AnalysisPanel => panel !== null,
+  );
+
+  const activeIndex = Math.min(activeTab, panels.length - 1);
 
   return (
-    <div className="grid h-full w-full min-w-0 grid-cols-1 gap-6 md:grid-cols-3">
-      <div className="flex w-full min-w-0 flex-col gap-6">
-        <div className="flex items-end gap-2">
-          <span className="text-primary text-4xl font-bold">
-            {analysis.matching_score}
-          </span>
-          <span className="pb-0.5">{t("matchScore")}</span>
+    <div className="flex w-full min-w-0 flex-col gap-8">
+      <div ref={panelsRef} className="flex w-full min-w-0 scroll-mt-4 gap-12">
+        <div className="hidden shrink-0 md:block">
+          <div className="sticky top-0">
+            <TabsVertical
+              tabs={panels.map((panel) => t(`detail.tabs.${panel.key}`))}
+              activeTab={activeIndex}
+              onChange={handleTabChange}
+              layoutId="analysisTab"
+            />
+          </div>
         </div>
-        {analysis.confidence_score < 75 && (
-          <Text tone="primary" size="sm">
-            {t("detail.lowConfidenceWarning", {
-              score: analysis.confidence_score,
-            })}
+
+        <div className="flex w-full max-w-2xl min-w-0 flex-1 flex-col gap-16 md:gap-8">
+          {statusBar}
+          {panels.map((panel, index) => (
+            <div
+              key={panel.key}
+              className={cn(
+                "flex w-full min-w-0 flex-col gap-10",
+                index === activeIndex ? "md:flex" : "md:hidden",
+              )}
+            >
+              {panel.content}
+            </div>
+          ))}
+
+          <Text tone="muted" size="xs" className="text-center md:hidden">
+            {t("detail.aiDisclaimer")}
           </Text>
-        )}
-        <div className="flex flex-col gap-1">
-          {analysis.job?.location && (
-            <Text tone="muted" truncate>
-              {analysis.job.location}
+
+          {panels[activeIndex].aiGenerated && (
+            <Text
+              tone="muted"
+              size="xs"
+              className="hidden text-center md:block"
+            >
+              {t("detail.aiDisclaimer")}
             </Text>
           )}
-          {analysis.summary && (
-            <Text className="leading-relaxed">{analysis.summary}</Text>
-          )}
         </div>
-        {analysis.resume_id && (
-          <DownloadResumeButton resumeId={analysis.resume_id} />
-        )}
-        {analysis.cover_letter && (
-          <CoverLetterButton coverLetter={analysis.cover_letter} />
-        )}
-        {analysis.job?.source_url?.startsWith("http") && (
-          <a
-            href={analysis.job.source_url}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Button variant="outline" className="w-full">
-              {t("detail.viewJobPosting")}
-            </Button>
-          </a>
-        )}
-      </div>
-
-      <div className="flex min-h-0 min-w-0 flex-col gap-10 md:col-span-2 md:overflow-y-auto">
-        <PrepPointList points={analysis.prep_points} />
-        <RecruiterQuestionList questions={analysis.recruiter_questions} />
-        {contacts}
-        {tracking}
-        <Text tone="muted" size="xs" className="text-center">
-          {t("detail.aiDisclaimer")}
-        </Text>
-        <div className="h-24 shrink-0 md:h-32" />
       </div>
     </div>
   );

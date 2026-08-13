@@ -1,6 +1,9 @@
 import { Suspense } from "react";
 import { getAnalysisById, getAnalysisStatusEvents } from "@/lib/jobs/server";
-import { JobAnalysisDetailContent } from "@/components/pages/jobs";
+import {
+  CompanyContactsSkeleton,
+  JobAnalysisDetailContent,
+} from "@/components/pages/jobs";
 import { CompanyContactsLoader } from "@/components/pages/jobs/collections/CompanyContactsLoader";
 
 export default async function JobAnalysisPage({
@@ -16,7 +19,7 @@ export default async function JobAnalysisPage({
       analysisPromise={analysisPromise}
       eventsPromise={getAnalysisStatusEvents(analysisId)}
       contacts={
-        <Suspense fallback={null}>
+        <Suspense fallback={<CompanyContactsSkeleton />}>
           <CompanyContactsLoader analysisPromise={analysisPromise} />
         </Suspense>
       }

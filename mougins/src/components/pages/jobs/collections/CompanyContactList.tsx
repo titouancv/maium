@@ -24,7 +24,7 @@ export function CompanyContactList({
       {contacts.length === 0 ? (
         <EmptyState label={t("detail.contacts.empty", { company })} />
       ) : (
-        <ul className="flex flex-col">
+        <ul className="grid grid-cols-1 gap-x-12 md:grid-cols-2">
           {contacts.map((contact) => (
             <CompanyContactItem key={contact.pseudo} contact={contact} />
           ))}

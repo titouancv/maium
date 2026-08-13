@@ -9,6 +9,10 @@ import type { AnalysisListItem } from "@/types/job";
 import { AnalyzeCvStep } from "./collections/AnalyzeCvStep";
 import { AnalyzeJobStep } from "./collections/AnalyzeJobStep";
 import { AnonQuotaGate } from "./collections/AnonQuotaGate";
+import {
+  AnalysisHeading,
+  analysisHeadingLabel,
+} from "@/components/pages/jobs/collections/AnalysisHeading";
 import { AnalysisView } from "@/components/pages/jobs/collections/AnalysisView";
 
 type Stage =
@@ -50,14 +54,17 @@ export function AnalyzeContent() {
   };
 
   if (current.name === "result") {
-    const heading =
-      [current.analysis.job?.company, current.analysis.job?.title]
-        .filter(Boolean)
-        .join(" • ") || tJobs("untitledJob");
+    const heading = analysisHeadingLabel(
+      current.analysis,
+      tJobs("untitledJob"),
+    );
 
     return (
-      <PageLayout title={heading} fullHeight>
-        <div className="flex h-full w-full max-w-7xl flex-col gap-8">
+      <PageLayout
+        title={<AnalysisHeading analysis={current.analysis} />}
+        documentTitle={heading}
+      >
+        <div className="flex w-full max-w-7xl min-w-0 flex-col gap-8">
           <AnalysisView analysis={current.analysis} />
         </div>
       </PageLayout>

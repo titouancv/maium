@@ -2,12 +2,16 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
-import { useRouter } from "@/i18n/navigation";
 import { ANALYSIS_NOTES_SAVE_DEBOUNCE_MS } from "@/constants";
-import { DateInput, InfoMessage, Section, TextArea, Text } from "@/components/ui";
-import { Tabs } from "@/components/ui/Tabs";
+import {
+  DateInput,
+  InfoMessage,
+  Section,
+  TextArea,
+  Text,
+} from "@/components/ui";
 import { updateAnalysisTrackingRequest } from "@/lib/jobs/updateTracking";
-import { APPLICATION_STATUSES, type AnalysisListItem } from "@/types/job";
+import { type AnalysisListItem } from "@/types/job";
 
 interface ApplicationTrackerProps {
   analysis: AnalysisListItem;
@@ -23,9 +27,7 @@ function toIsoDate(value: number | null): string | null {
 
 export function ApplicationTracker({ analysis }: ApplicationTrackerProps) {
   const t = useTranslations("jobs");
-  const router = useRouter();
 
-  const [status, setStatus] = useState(analysis.status);
   const [appliedAt, setAppliedAt] = useState(toTimestamp(analysis.applied_at));
   const [interviewAt, setInterviewAt] = useState(
     toTimestamp(analysis.interview_at),
@@ -33,16 +35,12 @@ export function ApplicationTracker({ analysis }: ApplicationTrackerProps) {
   const [notes, setNotes] = useState(analysis.notes ?? "");
   const [failed, setFailed] = useState(false);
 
-  const save = async (patch: Parameters<typeof updateAnalysisTrackingRequest>[1]) => {
+  const save = async (
+    patch: Parameters<typeof updateAnalysisTrackingRequest>[1],
+  ) => {
     const ok = await updateAnalysisTrackingRequest(analysis.id, patch);
     setFailed(!ok);
     return ok;
-  };
-
-  const handleStatusChange = async (index: number) => {
-    const next = APPLICATION_STATUSES[index];
-    setStatus(next);
-    if (await save({ status: next })) router.refresh();
   };
 
   const savedNotesRef = useRef(analysis.notes ?? "");
@@ -60,13 +58,6 @@ export function ApplicationTracker({ analysis }: ApplicationTrackerProps) {
 
   return (
     <Section title={t("detail.tracking.title")}>
-      <Tabs
-        tabs={APPLICATION_STATUSES.map((value) => t(`status.${value}`))}
-        activeTab={APPLICATION_STATUSES.indexOf(status)}
-        onChange={handleStatusChange}
-        layoutId="applicationStatus"
-      />
-
       <div className="flex flex-col gap-4 sm:flex-row sm:gap-8">
         <div className="flex flex-col gap-1">
           <Text tone="muted" size="sm">

@@ -107,6 +107,8 @@ export const ANALYSIS_NOTES_CHAR_LIMIT = 4000;
 
 export const ANALYSIS_NOTES_SAVE_DEBOUNCE_MS = 800;
 
+export const ANALYSIS_LOW_CONFIDENCE_SCORE = 75;
+
 export const COMPANY_CONTACTS_LIMIT = 8;
 
 export const PROMPT_VERSION = "v1";

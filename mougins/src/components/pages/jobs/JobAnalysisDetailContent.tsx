@@ -2,9 +2,11 @@
 
 import { Suspense, type ReactNode } from "react";
 import { useTranslations } from "next-intl";
+import { BackButton } from "@/components/ui";
 import { PageLayout } from "../../layout";
 import { AnalysisLoader } from "./collections/AnalysisLoader";
-import { AnalysisDetailSkeleton } from "./JobsSkeleton";
+import { AnalysisHeadingLoader } from "./collections/AnalysisHeadingLoader";
+import { AnalysisDetailSkeleton, AnalysisHeadingSkeleton } from "./JobsSkeleton";
 import type { AnalysisListItem, AnalysisStatusEvent } from "@/types/job";
 
 interface JobAnalysisDetailContentProps {
@@ -22,8 +24,21 @@ export function JobAnalysisDetailContent({
   const tCommon = useTranslations("common");
 
   return (
-    <PageLayout title={t("title")} backLabel={tCommon("backButton")} fullHeight>
-      <div className="flex h-full w-full max-w-7xl flex-col gap-8">
+    <PageLayout
+      title={
+        <>
+          <Suspense fallback={<AnalysisHeadingSkeleton />}>
+            <AnalysisHeadingLoader analysisPromise={analysisPromise} />
+          </Suspense>
+          <div className="shrink-0">
+            <BackButton label={tCommon("backButton")} />
+          </div>
+        </>
+      }
+      documentTitle={t("title")}
+      showNavigationBar={false}
+    >
+      <div className="flex w-full max-w-7xl min-w-0 flex-col gap-8">
         <Suspense fallback={<AnalysisDetailSkeleton />}>
           <AnalysisLoader
             analysisPromise={analysisPromise}

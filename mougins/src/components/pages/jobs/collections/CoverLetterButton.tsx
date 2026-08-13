@@ -9,9 +9,10 @@ import { useNotificationStore } from "@/stores/useNotificationStore";
 
 interface Props {
   coverLetter: string;
+  className?: string;
 }
 
-export function CoverLetterButton({ coverLetter }: Props) {
+export function CoverLetterButton({ coverLetter, className }: Props) {
   const t = useTranslations("jobs");
   const notify = useNotificationStore((s) => s.notify);
   const [open, setOpen] = useState(false);
@@ -28,7 +29,7 @@ export function CoverLetterButton({ coverLetter }: Props) {
     <>
       <Button
         variant="outline"
-        className="w-full"
+        className={className}
         onClick={() => setOpen(true)}
       >
         {t("detail.coverLetter")}

@@ -7,9 +7,10 @@ import { ResumeEditorOverlay } from "./ResumeEditorOverlay";
 
 interface Props {
   resumeId: string;
+  className?: string;
 }
 
-export function DownloadResumeButton({ resumeId }: Props) {
+export function DownloadResumeButton({ resumeId, className }: Props) {
   const t = useTranslations("jobs");
   const [open, setOpen] = useState(false);
 
@@ -17,7 +18,7 @@ export function DownloadResumeButton({ resumeId }: Props) {
     <>
       <Button
         variant="primary"
-        className="w-full"
+        className={className}
         onClick={() => setOpen(true)}
       >
         {t("detail.editAndDownload")}

@@ -42,6 +42,13 @@
     },
     "detail": {
       "close": "Fermer",
+      "tabs": {
+        "overview": "Vue d'ensemble",
+        "prep": "Entretien",
+        "contacts": "Contacts",
+        "tracking": "Suivi"
+      },
+      "documents": "Documents",
       "lowConfidenceWarning": "⚠️ Le score de confiance est de {score}, les résultats peuvent être moins précis.",
       "viewJobPosting": "Voir l'offre d'emploi",
       "aiDisclaimer": "Cette analyse a été générée par IA et peut contenir des erreurs.",
@@ -92,6 +99,7 @@
         "title": "Personnes à contacter",
         "subtitle": "Des membres qui ont travaillé chez {company}.",
         "empty": "Personne sur maium n'a encore travaillé chez {company}.",
+        "noCompany": "Aucune entreprise n'a pu être identifiée sur cette offre.",
         "contact": "Contacter",
         "currentRole": "{role} · depuis {startYear}",
         "pastRole": "{role} · {startYear}–{endYear}"
@@ -103,6 +111,7 @@
         "notes": "Notes",
         "notesPlaceholder": "Qui tu as eu, ce qui s'est dit, ce qu'il faut relancer…",
         "saveError": "Enregistrement impossible. Ta dernière modification n'a pas été prise en compte.",
+        "timeline": "Historique",
         "analysed": "Analysée"
       }
     },
