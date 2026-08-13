@@ -13,6 +13,9 @@ import {
 // namespace-seal bug at build time (see also AnalyzeJob/JobsSkeleton).
 import { Button } from "@/components/ui/Button";
 import { Title } from "@/components/ui/Title";
+import { Text } from "@/components/ui/Text";
+import { InfoMessage } from "@/components/ui/InfoMessage";
+import { FilePicker, type FilePickerHandle } from "@/components/ui/FilePicker";
 import type { CvExtraction } from "@/lib/validators/cv";
 
 interface AnalyzeCvStepProps {
@@ -25,15 +28,11 @@ const isAcceptedType = (type: string) =>
 /** First step of the public funnel: turn a CV into a profile to match against. */
 export function AnalyzeCvStep({ onParsed }: AnalyzeCvStepProps) {
   const t = useTranslations("analyze.cv");
-  const inputRef = useRef<HTMLInputElement>(null);
+  const fileRef = useRef<FilePickerHandle>(null);
   const [isParsing, setIsParsing] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const handleFile = async (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    event.target.value = ""; // allow re-picking the same file
-    if (!file) return;
-
+  const handleFile = async (file: File) => {
     if (!isAcceptedType(file.type)) {
       setError(t("errorType"));
       return;
@@ -66,7 +65,9 @@ export function AnalyzeCvStep({ onParsed }: AnalyzeCvStepProps) {
     <div className="flex flex-col gap-6">
       <div className="flex flex-col gap-2">
         <Title label={t("title")} size="h2" />
-        <p className="text-txt-muted text-sm">{t("description")}</p>
+        <Text tone="muted" size="sm">
+          {t("description")}
+        </Text>
       </div>
 
       <Button
@@ -74,21 +75,21 @@ export function AnalyzeCvStep({ onParsed }: AnalyzeCvStepProps) {
         size="lg"
         className="w-full"
         isLoading={isParsing}
-        onClick={() => inputRef.current?.click()}
+        onClick={() => fileRef.current?.open()}
       >
         {isParsing ? t("parsing") : t("choose")}
       </Button>
 
-      {error && <p className="text-error text-sm">{error}</p>}
+      <InfoMessage message={error} />
 
-      <p className="text-txt-muted text-xs">{t("privacyNote")}</p>
+      <Text tone="muted" size="xs">
+        {t("privacyNote")}
+      </Text>
 
-      <input
-        ref={inputRef}
-        type="file"
+      <FilePicker
+        ref={fileRef}
         accept={CV_ACCEPT_ATTRIBUTE}
-        onChange={handleFile}
-        className="hidden"
+        onPick={handleFile}
       />
     </div>
   );

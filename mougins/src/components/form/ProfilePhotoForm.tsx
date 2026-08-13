@@ -5,6 +5,8 @@ import { ProfilePhotoPicker } from "@/components/ui/ProfilePhotoPicker";
 import { useProfilePhotoPicker } from "@/hooks/useProfilePhotoPicker";
 import { useCurrentUserStore } from "@/stores/useCurrentUserStore";
 import { Button } from "@/components/ui/Button";
+import { Text } from "@/components/ui/Text";
+import { InfoMessage } from "@/components/ui/InfoMessage";
 
 interface ProfilePhotoFormProps {
   defaultValue?: string;
@@ -53,7 +55,9 @@ export const ProfilePhotoForm = ({
 
   return (
     <div className="flex min-h-0 flex-1 flex-col gap-6">
-      <p className="text-txt-muted text-sm">{t("description")}</p>
+      <Text tone="muted" size="sm">
+        {t("description")}
+      </Text>
 
       <ProfilePhotoPicker picker={picker} />
 
@@ -72,7 +76,7 @@ export const ProfilePhotoForm = ({
         </Button>
       )}
 
-      {errorLabel && <p className="text-error text-sm">{errorLabel}</p>}
+      <InfoMessage message={errorLabel} />
     </div>
   );
 };

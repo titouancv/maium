@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import { APP_NAME } from "@/constants";
 import { Title, StepCounter } from "@/components/ui";
 import { Button } from "@/components/ui/Button";
+import { InfoMessage } from "@/components/ui/InfoMessage";
 import { FormBaseProps } from "../form/Form";
 
 interface FormLayoutProps extends Omit<FormBaseProps, "title"> {
@@ -66,7 +67,7 @@ export const FormLayout = ({
         {/* Buttons — inline on mobile and desktop */}
         {primaryLabel && (formId || onPrimary) && (
           <div className="shrink-0 px-4 pb-8 md:pb-[100px]">
-            {error && <p className="text-error mb-2 text-sm">{error}</p>}
+            <InfoMessage message={error} className="mb-2" />
             <div className="flex gap-2">
               {onSecondary && (
                 <Button

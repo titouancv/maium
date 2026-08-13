@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { FormLayout } from "@/components/layout";
+import { Overlay } from "@/components/ui/Overlay";
 import { ProfilePhotoPicker } from "@/components/ui/ProfilePhotoPicker";
 import { useCurrentUserStore } from "@/stores/useCurrentUserStore";
 import { useProfilePhotoPicker } from "@/hooks/useProfilePhotoPicker";
@@ -69,7 +70,7 @@ export const EditProfilePhotoOverlay = ({ user, onClose, onSaved }: Props) => {
   const handleDelete = () => persist(null);
 
   return (
-    <div className="bg-surface-50 fixed inset-0 z-50">
+    <Overlay onClose={onClose}>
       <FormLayout
         title={t("editProfilePhoto")}
         step={1}
@@ -86,6 +87,6 @@ export const EditProfilePhotoOverlay = ({ user, onClose, onSaved }: Props) => {
       >
         <ProfilePhotoPicker picker={picker} />
       </FormLayout>
-    </div>
+    </Overlay>
   );
 };

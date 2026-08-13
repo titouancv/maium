@@ -1,7 +1,7 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import { Skeleton } from "@/components/ui";
+import { EmptyState, Skeleton } from "@/components/ui";
 import type { HomeNotification } from "@/lib/users";
 import { NotificationRow } from "../items";
 
@@ -34,9 +34,7 @@ export const NotificationsList = ({
   }
 
   if (notifications.length === 0) {
-    return (
-      <p className="text-txt-muted py-8 text-center text-sm">{t("empty")}</p>
-    );
+    return <EmptyState label={t("empty")} align="center" />;
   }
 
   return (

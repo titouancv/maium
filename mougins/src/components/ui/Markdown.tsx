@@ -1,6 +1,8 @@
 import ReactMarkdown, { type Components } from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { cn } from "@/lib/utils";
+import { AccentBar } from "./AccentBar";
+import { Rail } from "./Rail";
 
 // Map markdown nodes onto the app's semantic theme tokens (never default
 // Tailwind colors), so story content respects light/dark themes.
@@ -10,7 +12,7 @@ const COMPONENTS: Components = {
       <div className="flex justify-start">
         <h2 className="text-txt text-2xl font-extrabold" {...props} />
       </div>
-      <div className="h-1 w-22 rounded-full bg-current"></div>
+      <AccentBar />
     </div>
   ),
   h2: (props) => (
@@ -18,7 +20,7 @@ const COMPONENTS: Components = {
       <div className="flex justify-start">
         <h3 className="text-txt text-xl font-extrabold" {...props} />
       </div>
-      <div className="h-1 w-22 rounded-full bg-current"></div>
+      <AccentBar />
     </div>
   ),
   h3: (props) => (
@@ -26,7 +28,7 @@ const COMPONENTS: Components = {
       <div className="flex justify-start">
         <h4 className="text-txt text-lg font-extrabold" {...props} />
       </div>
-      <div className="h-1 w-22 rounded-full bg-current"></div>
+      <AccentBar />
     </div>
   ),
   p: (props) => <p className="text-txt my-3 leading-relaxed" {...props} />,
@@ -49,23 +51,17 @@ const COMPONENTS: Components = {
   li: (props) => <li className="leading-relaxed" {...props} />,
   blockquote: (props) => (
     <div className="my-3 flex items-stretch gap-4">
-      <div className="bg-primary w-1 shrink-0 self-stretch rounded-full"></div>
+      <Rail className="bg-primary" />
       <blockquote className="text-txt italic [&>p]:my-0" {...props} />
     </div>
   ),
-  code: (props) => (
-    <code
-      className="bg-surface-200 text-txt rounded px-1 py-0.5 text-sm"
-      {...props}
-    />
-  ),
+  // No panel behind code and no rule for `hr`: everything on the page sits at
+  // the same level, so code is set apart by its face, not by a box.
+  code: (props) => <code className="text-txt font-mono text-sm" {...props} />,
   pre: (props) => (
-    <pre
-      className="bg-surface-200 text-txt my-3 overflow-x-auto rounded-lg p-3 text-sm"
-      {...props}
-    />
+    <pre className="text-txt my-3 overflow-x-auto font-mono text-sm" {...props} />
   ),
-  hr: () => <hr className="border-brd-200 my-4" />,
+  hr: () => <div className="h-8" />,
 };
 
 interface MarkdownProps {

@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { TabsVertical } from "@/components/ui/TabsVertical";
+import { Text } from "@/components/ui/Text";
 
 export interface SelectOption<T extends string> {
   value: T;
@@ -43,7 +44,9 @@ export function SelectForm<T extends string>({
           onChange={handleChange}
         />
         {active?.description && (
-          <p className="text-txt-muted text-sm">{active.description}</p>
+          <Text tone="muted" size="sm">
+            {active.description}
+          </Text>
         )}
       </div>
       {footer}

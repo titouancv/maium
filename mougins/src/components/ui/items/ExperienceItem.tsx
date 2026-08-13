@@ -1,8 +1,10 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState } from "react";
 import Image from "next/image";
 import { Button } from "@/components/ui/Button";
+import { ExpandableText } from "@/components/ui/ExpandableText";
+import { Rail } from "@/components/ui/Rail";
 import type { Experience } from "@/types/experience";
 import { useTranslations } from "next-intl";
 import { faviconUrl } from "@/lib/utils";
@@ -52,19 +54,11 @@ export const ExperienceItem = ({
 
   const favicon = website ? faviconUrl(website) : null;
   const [now] = useState(() => Date.now());
-  const [expanded, setExpanded] = useState(false);
-  const [isClamped, setIsClamped] = useState(false);
-  const descRef = useRef<HTMLParagraphElement>(null);
-
-  useEffect(() => {
-    const el = descRef.current;
-    if (el) setIsClamped(el.scrollHeight > el.clientHeight);
-  }, [description]);
 
   return (
     <div>
       <div className="flex items-center gap-4">
-        <div className="my-1 w-1 self-stretch rounded-full bg-current"></div>
+        <Rail className="my-1" />
         <div className="grid w-full grid-cols-[1fr_auto] items-center gap-3">
           <a
             className={`group flex min-w-0 flex-col ${website ? "cursor-pointer" : "cursor-default"}`}
@@ -135,23 +129,7 @@ export const ExperienceItem = ({
       </div>
       {onEdit === undefined && description && (
         <div className="pt-2 pl-5">
-          <p
-            ref={descRef}
-            className={`text-txt text-sm whitespace-pre-line ${!expanded ? "line-clamp-5" : ""}`}
-          >
-            {description}
-          </p>
-          {(isClamped || expanded) && (
-            <Button
-              type="button"
-              variant="ghost"
-              size="none"
-              className="mt-1 h-auto py-0.5 text-sm"
-              onClick={() => setExpanded((prev) => !prev)}
-            >
-              {expanded ? t("seeLessButton") : t("seeMoreButton")}
-            </Button>
-          )}
+          <ExpandableText>{description}</ExpandableText>
         </div>
       )}
     </div>

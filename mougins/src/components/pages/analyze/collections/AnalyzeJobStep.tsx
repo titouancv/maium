@@ -17,6 +17,7 @@ import { TextInput } from "@/components/ui/TextInput";
 import { TextArea } from "@/components/ui/TextArea";
 import { Tabs } from "@/components/ui/Tabs";
 import { Title } from "@/components/ui/Title";
+import { Text } from "@/components/ui/Text";
 import { AnalysisProgress } from "@/components/pages/jobs/collections/AnalysisProgress";
 import type { CvExtraction } from "@/lib/validators/cv";
 
@@ -93,7 +94,9 @@ export function AnalyzeJobStep({
     <div className="flex flex-col gap-6">
       <div className="flex flex-col gap-2">
         <Title label={t("title")} size="h2" />
-        <p className="text-txt-muted text-sm">{t("description")}</p>
+        <Text tone="muted" size="sm">
+          {t("description")}
+        </Text>
       </div>
 
       <div className="flex w-full justify-end">

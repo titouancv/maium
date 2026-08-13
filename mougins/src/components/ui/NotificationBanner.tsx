@@ -7,6 +7,7 @@ import { Link } from "@/i18n/navigation";
 import { NOTIFICATION_VARIANTS } from "@/constants";
 import { cn } from "@/lib/utils";
 import { useNotificationStore } from "@/stores/useNotificationStore";
+import { Icon } from "./icons";
 
 /** How long a notification stays before it auto-dismisses. */
 const AUTO_DISMISS_MS = 5000;
@@ -75,19 +76,7 @@ export function NotificationBanner() {
               aria-label={t("dismissNotification")}
               className="shrink-0 rounded-full p-1 transition-opacity hover:cursor-pointer hover:opacity-70 active:scale-95"
             >
-              <svg
-                width="16"
-                height="16"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <line x1="18" y1="6" x2="6" y2="18" />
-                <line x1="6" y1="6" x2="18" y2="18" />
-              </svg>
+              <Icon name="close" strokeWidth={2.5} />
             </button>
           </div>
         </motion.div>

@@ -5,7 +5,7 @@ import { useTranslations } from "next-intl";
 import { useRouter } from "@/i18n/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { ANALYSIS_POLL_INTERVAL_MS, API, ROUTES } from "@/constants";
-import { ProgressBar } from "@/components/ui";
+import { InfoMessage, ProgressBar } from "@/components/ui";
 import type { AnalysisStatus, AnalysisStep } from "@/types/job";
 
 interface AnalysisProgressProps {
@@ -202,11 +202,7 @@ export function AnalysisProgress({
       state.error === "INSUFFICIENT_JOB_DATA"
         ? t("error.insufficientData")
         : t("error.unknown");
-    return (
-      <div className="bg-error/10 text-error rounded-xl p-4 text-sm">
-        {errorMessage}
-      </div>
-    );
+    return <InfoMessage message={errorMessage} />;
   }
 
   return (

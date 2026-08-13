@@ -26,6 +26,8 @@ import type { ConversationMember, Message, OptimisticMessage } from "@/types";
 import { MessageBubble } from "../items/MessageBubble";
 import { TextArea } from "@/components/ui/TextArea";
 import { Button } from "@/components/ui/Button";
+import { EmptyState } from "@/components/ui/EmptyState";
+import { Text } from "@/components/ui/Text";
 
 function DateSeparator({ label }: { label: string }) {
   return (
@@ -55,6 +57,7 @@ export function MessageList({
   otherLastReadAt,
 }: MessageListProps) {
   const t = useTranslations("messaging");
+  const tCommon = useTranslations("common");
   const locale = useLocale();
   const [messages, setMessages] =
     useState<OptimisticMessage[]>(initialMessages);
@@ -481,14 +484,17 @@ export function MessageList({
         onScroll={handleScroll}
         className="flex-1 overflow-y-auto pt-4 pb-12"
       >
+        {/* A word, not a spinner — see the "Loading states" rule in CLAUDE.md. */}
         {loadingOlder && (
           <div className="flex justify-center py-2">
-            <div className="border-txt-muted h-5 w-5 animate-spin rounded-full border-2 border-t-transparent" />
+            <Text tone="muted" size="sm">
+              {tCommon("loading")}
+            </Text>
           </div>
         )}
         {messages.length === 0 ? (
           <div className="flex h-full items-center justify-center">
-            <p className="text-txt-muted text-sm">{t("emptyConversation")}</p>
+            <EmptyState label={t("emptyConversation")} />
           </div>
         ) : (
           messages.map((msg, index) => {

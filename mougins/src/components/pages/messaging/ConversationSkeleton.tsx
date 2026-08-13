@@ -4,6 +4,7 @@ import { useTranslations } from "next-intl";
 import { Skeleton } from "@/components/ui/Skeleton";
 import { TextArea } from "@/components/ui/TextArea";
 import { Button } from "@/components/ui/Button";
+import { Rail } from "@/components/ui/Rail";
 
 // Mirrors the real message rows: a left vertical bar + a name and a few text
 // lines. `showSender` matches the grouping rule (name only on the first of a
@@ -37,7 +38,7 @@ export const MessagesSkeleton = () => {
             <div className="flex max-w-[95%] flex-col items-start gap-1">
               {row.showSender && <Skeleton className="h-5 w-28 rounded-sm" />}
               <div className="flex w-full gap-2">
-                <div className="bg-surface-200 my-1 w-1 self-stretch rounded-full" />
+                <Rail className="bg-surface-200 my-1" />
                 <div className="flex min-w-0 flex-1 flex-col gap-1.5 py-1">
                   {row.lines.map((width, j) => (
                     <Skeleton key={j} className={`h-4 ${width} rounded-sm`} />

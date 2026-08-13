@@ -6,6 +6,7 @@ import { useTranslations } from "next-intl";
 // pulling this client tree through the barrel trips a Turbopack
 // `export *` namespace-seal bug at build time (see AnalyzeJob).
 import { Button } from "@/components/ui/Button";
+import { Overlay } from "@/components/ui/Overlay";
 import { Form } from "@/components/form";
 import { useNotificationStore } from "@/stores/useNotificationStore";
 
@@ -44,7 +45,7 @@ export function CoverLetterButton({ coverLetter }: Props) {
         {t("detail.coverLetter")}
       </Button>
       {open && (
-        <div className="bg-surface-50 fixed inset-0 z-50">
+        <Overlay onClose={() => setOpen(false)}>
           <Form
             type="longText"
             title={t("detail.coverLetter")}
@@ -60,7 +61,7 @@ export function CoverLetterButton({ coverLetter }: Props) {
             primaryLabel={t("detail.copyCoverLetter")}
             onPrimary={copy}
           />
-        </div>
+        </Overlay>
       )}
     </>
   );

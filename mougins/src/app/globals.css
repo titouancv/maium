@@ -299,6 +299,16 @@
   );
 }
 
+/* Scrolls sideways without drawing a bar — see `ScrollRow` and `Tabs`. */
+@utility hide-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
 /* ============================================================
    BASE
    ============================================================ */

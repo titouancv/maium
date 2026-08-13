@@ -10,6 +10,9 @@ import { FormLayout } from "@/components/layout/FormLayout";
 // pulling this client tree through the barrel trips a Turbopack
 // `export *` namespace-seal bug at build time (see AnalyzeJob).
 import { ProgressBar } from "@/components/ui/ProgressBar";
+import { Overlay } from "@/components/ui/Overlay";
+import { InfoMessage } from "@/components/ui/InfoMessage";
+import { Text } from "@/components/ui/Text";
 import {
   RESUME_TEMPLATES,
   type ResumeJson,
@@ -135,9 +138,11 @@ export function ResumeEditorOverlay({
 
   if (!draft) {
     return (
-      <div className="bg-surface-50 fixed inset-0 z-50 flex items-center justify-center">
-        <span className="text-txt-muted">{t("detail.loadingResume")}</span>
-      </div>
+      <Overlay onClose={onClose} center>
+        <Text as="span" tone="muted">
+          {t("detail.loadingResume")}
+        </Text>
+      </Overlay>
     );
   }
 
@@ -207,14 +212,14 @@ export function ResumeEditorOverlay({
 
   if (step !== TEMPLATE_STEP) {
     return (
-      <div className="bg-surface-50 fixed inset-0 z-50">
+      <Overlay onClose={onClose}>
         <Form {...getFormProps()} />
-      </div>
+      </Overlay>
     );
   }
 
   return (
-    <div className="bg-surface-50 fixed inset-0 z-50">
+    <Overlay onClose={onClose}>
       <FormLayout
         title={t("detail.chooseTemplateTitle")}
         step={TOTAL_STEPS}
@@ -238,20 +243,18 @@ export function ResumeEditorOverlay({
                 activeTab={templateIndex}
                 onChange={setTemplateIndex}
               />
-              <p className="text-txt-muted text-sm">
+              <Text tone="muted" size="sm">
                 {t(
                   `detail.templateDescription.${RESUME_TEMPLATES[templateIndex]}`,
                 )}
-              </p>
+              </Text>
             </>
           )}
-          {phase === "error" && (
-            <span className="text-error text-sm">
-              {t("detail.downloadError")}
-            </span>
-          )}
+          <InfoMessage
+            message={phase === "error" ? t("detail.downloadError") : null}
+          />
         </div>
       </FormLayout>
-    </div>
+    </Overlay>
   );
 }

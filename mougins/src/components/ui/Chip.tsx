@@ -3,6 +3,7 @@
 import { useTranslations } from "next-intl";
 import { cn } from "@/lib/utils";
 import { UI_VARIANTS, UIVariant } from "@/constants";
+import { Icon } from "./icons";
 
 export interface ChipProps {
   label: string;
@@ -34,18 +35,7 @@ export function Chip({
           className="ml-0.5 inline-flex h-4 w-4 items-center justify-center rounded-full text-current opacity-60 transition-opacity hover:opacity-100"
           aria-label={t("removeAriaLabel", { label })}
         >
-          <svg
-            width="8"
-            height="8"
-            viewBox="0 0 8 8"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="1.5"
-            strokeLinecap="round"
-          >
-            <line x1="1" y1="1" x2="7" y2="7" />
-            <line x1="7" y1="1" x2="1" y2="7" />
-          </svg>
+          <Icon name="close" size={10} strokeWidth={2.5} />
         </button>
       )}
     </span>

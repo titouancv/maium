@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/Button";
+import { Overlay } from "@/components/ui/Overlay";
 import { HobbyList } from "@/components/ui";
 import { HobbySubForm } from "./sub-form/HobbySubForm";
 import type { HobbyData } from "@/types/user";
@@ -69,7 +70,7 @@ export const HobbiesForm = ({ defaultValue, onChange }: HobbiesFormProps) => {
         </div>
       )}
       {editor.isEditing && (
-        <div className="bg-surface-50 fixed inset-0 z-50">
+        <Overlay onClose={editor.close}>
           <HobbySubForm
             initialData={
               typeof editor.editingIndex === "number"
@@ -80,7 +81,7 @@ export const HobbiesForm = ({ defaultValue, onChange }: HobbiesFormProps) => {
             onCancel={editor.close}
             onDelete={editor.isEditingExisting ? handleDelete : undefined}
           />
-        </div>
+        </Overlay>
       )}
     </>
   );

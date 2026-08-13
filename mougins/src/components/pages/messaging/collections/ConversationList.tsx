@@ -5,6 +5,7 @@ import { useTranslations } from "next-intl";
 import type { Conversation } from "@/types";
 import { useCurrentUserStore } from "@/stores/useCurrentUserStore";
 import { useMessagingStore } from "@/stores/useMessagingStore";
+import { Text } from "@/components/ui/Text";
 import { ConversationItem } from "../items/ConversationItem";
 
 interface ConversationListProps {
@@ -38,10 +39,12 @@ export function ConversationList({
   if (items.length === 0) {
     return (
       <div className="flex flex-col items-center gap-2 px-4 py-12">
-        <p className="text-txt text-sm font-medium">{t("noConversations")}</p>
-        <p className="text-txt-muted text-center text-xs">
+        <Text size="sm" className="font-medium">
+          {t("noConversations")}
+        </Text>
+        <Text tone="muted" size="xs" className="text-center">
           {t("noConversationsHint")}
-        </p>
+        </Text>
       </div>
     );
   }

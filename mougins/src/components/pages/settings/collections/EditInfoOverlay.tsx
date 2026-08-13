@@ -9,6 +9,7 @@ import {
   type Gender,
 } from "@/constants";
 import { updateProfile } from "@/lib/users/updateProfile";
+import { Overlay } from "@/components/ui/Overlay";
 import { Form } from "@/components/form";
 import type { FormProps } from "@/components/form";
 import type { UserData } from "@/types/user";
@@ -251,8 +252,8 @@ export const EditInfoOverlay = ({ field, user, onClose, onSaved }: Props) => {
   };
 
   return (
-    <div className="bg-surface-50 fixed inset-0 z-50">
+    <Overlay onClose={onClose}>
       <Form {...getFormProps()} />
-    </div>
+    </Overlay>
   );
 };

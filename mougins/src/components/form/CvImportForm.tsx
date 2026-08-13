@@ -9,6 +9,9 @@ import {
   CV_MAX_BYTES,
 } from "@/constants";
 import { Button } from "@/components/ui/Button";
+import { Text } from "@/components/ui/Text";
+import { InfoMessage } from "@/components/ui/InfoMessage";
+import { FilePicker, type FilePickerHandle } from "@/components/ui/FilePicker";
 import type { CvExtraction } from "@/lib/validators/cv";
 
 interface CvImportFormProps {
@@ -66,16 +69,12 @@ export const CvImportForm = ({
   isSubmitting,
 }: CvImportFormProps) => {
   const t = useTranslations("form.cvImport");
-  const inputRef = useRef<HTMLInputElement>(null);
+  const fileRef = useRef<FilePickerHandle>(null);
   const [isParsing, setIsParsing] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [summary, setSummary] = useState<Summary | null>(null);
 
-  const handleFile = async (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    event.target.value = ""; // allow re-picking the same file
-    if (!file) return;
-
+  const handleFile = async (file: File) => {
     if (!isAcceptedType(file.type)) {
       setError(t("errorType"));
       return;
@@ -116,15 +115,20 @@ export const CvImportForm = ({
 
   return (
     <div className="flex min-h-0 flex-1 flex-col gap-6">
-      <p className="text-txt-muted text-sm">{t("description")}</p>
+      <Text tone="muted" size="sm">
+        {t("description")}
+      </Text>
 
       {summary ? (
         <div className="flex flex-col gap-6">
-          <div className="border-brd-200 flex flex-col gap-3 rounded-sm border p-4">
-            <p className="text-sm font-extrabold">{t("foundTitle")}</p>
+          {/* No box around the summary — it reads as part of the page. */}
+          <div className="flex flex-col gap-3">
+            <Text size="sm" className="font-extrabold">
+              {t("foundTitle")}
+            </Text>
             <ul className="flex flex-col gap-1">
               {summary.extraction.firstName && (
-                <li className="text-txt-muted text-sm">
+                <Text as="li" tone="muted" size="sm">
                   {t("foundName", {
                     name: [
                       summary.extraction.firstName,
@@ -133,12 +137,12 @@ export const CvImportForm = ({
                       .filter(Boolean)
                       .join(" "),
                   })}
-                </li>
+                </Text>
               )}
               {summary.counts.map(({ key, count }) => (
-                <li key={key} className="text-txt-muted text-sm">
+                <Text as="li" tone="muted" size="sm" key={key}>
                   {t(`found.${key}`, { count })}
-                </li>
+                </Text>
               ))}
             </ul>
           </div>
@@ -148,7 +152,7 @@ export const CvImportForm = ({
             type="button"
             size="md"
             className="w-full"
-            onClick={() => inputRef.current?.click()}
+            onClick={() => fileRef.current?.open()}
           >
             {t("chooseAnother")}
           </Button>
@@ -172,20 +176,18 @@ export const CvImportForm = ({
           size="lg"
           className="w-full"
           isLoading={isParsing}
-          onClick={() => inputRef.current?.click()}
+          onClick={() => fileRef.current?.open()}
         >
           {isParsing ? t("parsing") : t("choose")}
         </Button>
       )}
 
-      {error && <p className="text-error text-sm">{error}</p>}
+      <InfoMessage message={error} />
 
-      <input
-        ref={inputRef}
-        type="file"
+      <FilePicker
+        ref={fileRef}
         accept={CV_ACCEPT_ATTRIBUTE}
-        onChange={handleFile}
-        className="hidden"
+        onPick={handleFile}
       />
     </div>
   );

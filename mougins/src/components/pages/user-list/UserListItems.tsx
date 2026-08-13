@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation";
-import { UserCard } from "@/components/ui";
+import { EmptyState, UserCard } from "@/components/ui";
 import type { UserSummary } from "@/types";
 
 interface UserListItemsProps {
@@ -17,7 +17,7 @@ export async function UserListItems({
   if (users === null) notFound();
 
   if (users.length === 0) {
-    return <p className="text-txt-muted text-sm">{emptyMessage}</p>;
+    return <EmptyState label={emptyMessage} />;
   }
 
   return (
