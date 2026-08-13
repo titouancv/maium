@@ -10,7 +10,7 @@ export function AnalysisDetailSkeleton() {
       <Skeleton className="h-9 w-full max-w-md rounded-full" />
       <div className="flex w-full gap-12">
         <Skeleton className="hidden h-44 w-36 shrink-0 rounded-2xl md:block" />
-        <div className="flex w-full max-w-2xl min-w-0 flex-1 flex-col gap-8">
+        <div className="flex w-full min-w-0 flex-1 flex-col gap-8">
           <div className="flex w-full flex-col gap-6 md:flex-row md:gap-12">
             <div className="flex flex-col gap-3">
               <Skeleton className="h-12 w-40" />

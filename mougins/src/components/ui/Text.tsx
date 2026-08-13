@@ -40,6 +40,7 @@ export function Text({
         SIZES[size],
         truncate && "min-w-0 truncate",
         className,
+        "max-w-3xl",
       )}
       {...props}
     >

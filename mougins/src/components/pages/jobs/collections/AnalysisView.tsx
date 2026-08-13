@@ -84,8 +84,8 @@ export function AnalysisView({
           </div>
         </div>
 
-        <div className="flex w-full max-w-2xl min-w-0 flex-1 flex-col gap-8 md:min-h-[calc(100dvh-12rem)]">
-          <div className="flex w-full justify-center md:justify-start">
+        <div className="flex w-full min-w-0 flex-1 flex-col gap-8 md:min-h-[calc(100dvh-12rem)]">
+          <div className="flex w-full justify-center md:justify-end">
             {statusBar}
           </div>
           {panels.map((panel, index) => (
