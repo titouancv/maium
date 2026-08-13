@@ -43,3 +43,11 @@ export const INFO_COLORS: Record<InfoType, string> = {
   success: "text-primary",
   info: "text-txt",
 };
+
+export const APPLICATION_STATUS_TONES = {
+  not_started: "text-txt-muted",
+  applied: "text-secondary-400",
+  interview: "text-primary",
+  rejected: "text-error",
+  accepted: "text-primary",
+} as const;

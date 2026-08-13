@@ -103,6 +103,37 @@ best feature isn't hidden behind signup. The seams:
   would wipe an existing profile. Best-effort — it must never cost the user
   their sign-in.
 
+### The analysis page
+
+`/jobs/<analysisId>` is the product's destination page: the analysis is no longer
+an overlay over the history. Four seams are worth knowing.
+
+- **Prep points replaced the diagnosis.** The matching call no longer returns
+  `strengths` / `weaknesses` / `missing_skills` / `recommendations`; those
+  columns are gone. It returns `prep_points` (an action, its rationale, a `kind`
+  and a search query) plus `recruiter_questions`. A list of gaps told the user
+  nothing to *do* — every item on the page is now something they can act on.
+- **The model never emits a URL.** It returns a `resource_query` +
+  `resource_kind`, and [prepResourceUrl](src/lib/jobs/resources.ts) turns that
+  into a YouTube or Google search link. An LLM asked for a real URL invents dead
+  ones; a search query cannot be wrong in that way. Never let the schema carry a
+  `url` field.
+- **Contacts come from the profile graph, not a contacts table.** `jobs.company`
+  is matched against `user_experiences.organization` through the
+  `normalize_company()` SQL function (case, punctuation and legal suffixes
+  stripped). `user_experiences` is RLS own-row-only, so the read goes through the
+  `SECURITY DEFINER` RPC `get_company_contacts`, which returns only fields
+  already public on a profile and excludes the caller.
+- **Tracking is signed-in only.** `analyses.status` / `applied_at` /
+  `interview_at` / `notes` are written with the RLS-scoped user client, never the
+  admin client — an anonymous run has no account to track against and its rows
+  expire. `analysis_status_events` is append-only, written by an `AFTER UPDATE OF
+  status` trigger (same shape as `follower_events`), so the timeline survives
+  edits. The anonymous `/analyze` result therefore renders
+  [AnalysisView](src/components/pages/jobs/collections/AnalysisView.tsx) inline
+  with no `tracking` / `contacts` slot — `/jobs` is a protected prefix, so a
+  signed-out visitor can never reach the real page.
+
 ### Signup Flows
 
 There is a single signup path: **Google OAuth**. (Email/password was removed —
@@ -153,6 +184,7 @@ OAuth flow: Google → Supabase → `/auth/callback` → `exchangeCodeForSession
 | `POST` | `/api/cv/parse` | OCR an uploaded CV into a profile draft (auth optional) |
 | `POST` | `/api/analyze-job` | Run the job analysis pipeline (auth optional) |
 | `GET` | `/api/analysis/:id` | Analysis job status (owner-scoped) |
+| `PATCH` | `/api/analysis/:id` | Update application tracking (status, dates, notes) |
 | `GET` | `/api/analysis/:id/result` | Get a finished analysis (owner-scoped) |
 | `GET` | `/api/history` | List the user's past job analyses |
 | `GET/DELETE` | `/api/resume/:id` | Get / delete an optimized resume |

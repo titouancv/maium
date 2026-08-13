@@ -9,7 +9,7 @@ import type { AnalysisListItem } from "@/types/job";
 import { AnalyzeCvStep } from "./collections/AnalyzeCvStep";
 import { AnalyzeJobStep } from "./collections/AnalyzeJobStep";
 import { AnonQuotaGate } from "./collections/AnonQuotaGate";
-import { AnalysisDetailOverlay } from "@/components/pages/jobs/collections/AnalysisDetailOverlay";
+import { AnalysisView } from "@/components/pages/jobs/collections/AnalysisView";
 
 type Stage =
   | { name: "cv" }
@@ -29,6 +29,7 @@ function useFreeRunSpent(): boolean {
 
 export function AnalyzeContent() {
   const t = useTranslations("analyze");
+  const tJobs = useTranslations("jobs");
 
   const [stage, setStage] = useState<Stage | null>(null);
 
@@ -49,11 +50,17 @@ export function AnalyzeContent() {
   };
 
   if (current.name === "result") {
+    const heading =
+      [current.analysis.job?.company, current.analysis.job?.title]
+        .filter(Boolean)
+        .join(" • ") || tJobs("untitledJob");
+
     return (
-      <AnalysisDetailOverlay
-        analysis={current.analysis}
-        onClose={() => setStage({ name: "gate" })}
-      />
+      <PageLayout title={heading} fullHeight>
+        <div className="flex h-full w-full max-w-7xl flex-col gap-8">
+          <AnalysisView analysis={current.analysis} />
+        </div>
+      </PageLayout>
     );
   }
 

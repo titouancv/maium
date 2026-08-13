@@ -1,12 +1,50 @@
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
+import type { UpdateAnalysisTracking } from "@/lib/validators/job";
 import { getRequester, ownsRow, type OwnedRow } from "./access";
 import type {
   AnalysisJob,
   AnalysisListItem,
+  AnalysisStatusEvent,
   OptimizedResume,
+  PrepPoint,
   ResumeVersion,
 } from "@/types/job";
+
+const ANALYSIS_SELECT = `id, job_id, matching_score, confidence_score,
+  prep_points, recruiter_questions, summary, cover_letter, status, applied_at,
+  interview_at, notes, created_at,
+  job:job_id ( title, company, location, source_url ),
+  resume:optimized_resumes!analysis_id ( id, is_active, deleted_at )`;
+
+interface AnalysisRowResume {
+  id: string;
+  is_active: boolean;
+  deleted_at: string | null;
+}
+
+function mapAnalysisRow(row: Record<string, unknown>): AnalysisListItem {
+  const resumes = (row.resume as AnalysisRowResume[]) ?? [];
+  const activeResume = resumes.find((r) => r.is_active && !r.deleted_at);
+
+  return {
+    id: row.id as string,
+    job_id: row.job_id as string,
+    matching_score: Number(row.matching_score),
+    confidence_score: Number(row.confidence_score),
+    prep_points: (row.prep_points as PrepPoint[]) ?? [],
+    recruiter_questions: (row.recruiter_questions as string[]) ?? [],
+    summary: row.summary as string | null,
+    cover_letter: row.cover_letter as string | null,
+    status: row.status as AnalysisListItem["status"],
+    applied_at: row.applied_at as string | null,
+    interview_at: row.interview_at as string | null,
+    notes: row.notes as string | null,
+    created_at: row.created_at as string,
+    job: row.job as AnalysisListItem["job"],
+    resume_id: activeResume?.id ?? null,
+  };
+}
 
 export async function getAnalysisHistory(
   limit?: number,
@@ -19,12 +57,7 @@ export async function getAnalysisHistory(
 
   const query = supabase
     .from("analyses")
-    .select(
-      `id, job_id, matching_score, confidence_score, strengths, weaknesses,
-       missing_skills, recommendations, summary, cover_letter, created_at,
-       job:job_id ( title, company, location, source_url ),
-       resume:optimized_resumes!analysis_id ( id, is_active, deleted_at )`,
-    )
+    .select(ANALYSIS_SELECT)
     .eq("user_id", user.id)
     .order("created_at", { ascending: false });
 
@@ -32,25 +65,7 @@ export async function getAnalysisHistory(
 
   if (!data) return [];
 
-  return data.map((a) => {
-    const resumes = (a.resume as { id: string; is_active: boolean; deleted_at: string | null }[]) ?? [];
-    const activeResume = resumes.find((r) => r.is_active && !r.deleted_at);
-    return {
-      id: a.id,
-      job_id: a.job_id,
-      matching_score: Number(a.matching_score),
-      confidence_score: Number(a.confidence_score),
-      strengths: (a.strengths as string[]) ?? [],
-      weaknesses: (a.weaknesses as string[]) ?? [],
-      missing_skills: (a.missing_skills as string[]) ?? [],
-      recommendations: (a.recommendations as string[]) ?? [],
-      summary: a.summary,
-      cover_letter: a.cover_letter,
-      created_at: a.created_at,
-      job: a.job as unknown as AnalysisListItem["job"],
-      resume_id: activeResume?.id ?? null,
-    };
-  });
+  return data.map(mapAnalysisRow);
 }
 
 export async function getAnalysisById(
@@ -59,38 +74,48 @@ export async function getAnalysisById(
   const admin = createAdminClient();
   const { data } = await admin
     .from("analyses")
-    .select(
-      `id, user_id, anon_id, job_id, matching_score, confidence_score, strengths,
-       weaknesses, missing_skills, recommendations, summary, cover_letter, created_at,
-       job:job_id ( title, company, location, source_url ),
-       resume:optimized_resumes!analysis_id ( id, is_active, deleted_at )`,
-    )
+    .select(`user_id, anon_id, ${ANALYSIS_SELECT}`)
     .eq("id", id)
     .single();
 
   if (!data) return null;
   if (!ownsRow(data as OwnedRow, await getRequester())) return null;
 
-  const resumes =
-    (data.resume as { id: string; is_active: boolean; deleted_at: string | null }[]) ??
-    [];
-  const activeResume = resumes.find((r) => r.is_active && !r.deleted_at);
+  return mapAnalysisRow(data);
+}
 
-  return {
-    id: data.id,
-    job_id: data.job_id,
-    matching_score: Number(data.matching_score),
-    confidence_score: Number(data.confidence_score),
-    strengths: (data.strengths as string[]) ?? [],
-    weaknesses: (data.weaknesses as string[]) ?? [],
-    missing_skills: (data.missing_skills as string[]) ?? [],
-    recommendations: (data.recommendations as string[]) ?? [],
-    summary: data.summary,
-    cover_letter: data.cover_letter,
-    created_at: data.created_at,
-    job: data.job as unknown as AnalysisListItem["job"],
-    resume_id: activeResume?.id ?? null,
-  };
+export async function getAnalysisStatusEvents(
+  analysisId: string,
+): Promise<AnalysisStatusEvent[]> {
+  const supabase = await createClient();
+  const { data } = await supabase
+    .from("analysis_status_events")
+    .select("id, status, created_at")
+    .eq("analysis_id", analysisId)
+    .order("created_at", { ascending: false });
+
+  return (data as AnalysisStatusEvent[]) ?? [];
+}
+
+export async function updateAnalysisTracking(
+  analysisId: string,
+  patch: UpdateAnalysisTracking,
+): Promise<boolean> {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return false;
+
+  const { data } = await supabase
+    .from("analyses")
+    .update(patch)
+    .eq("id", analysisId)
+    .eq("user_id", user.id)
+    .select("id")
+    .maybeSingle();
+
+  return Boolean(data);
 }
 
 export async function getAnalysisJobById(

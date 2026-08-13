@@ -1,5 +1,5 @@
 import { createAdminClient } from "@/lib/supabase/admin";
-import { embed } from "@/lib/mistral";
+import { DEFAULT_CHAT_MODEL, embed } from "@/lib/mistral";
 import { PROMPT_VERSION } from "@/constants";
 import type { AnalysisStep } from "@/types/job";
 import type { CvExtraction } from "@/lib/validators/cv";
@@ -13,7 +13,7 @@ import { cosineSimilarity, getMatchingExplanation } from "./matching";
 import { optimizeResume } from "./optimizeResume";
 import { generateCoverLetter } from "./coverLetter";
 
-const CHAT_MODEL = process.env.MISTRAL_CHAT_MODEL ?? "mistral-large-latest";
+const CHAT_MODEL = process.env.MISTRAL_CHAT_MODEL || DEFAULT_CHAT_MODEL;
 
 function parseEmbedding(value: unknown): number[] {
   if (Array.isArray(value)) return value as number[];
@@ -113,10 +113,8 @@ export async function runAnalysisPipeline(analysisJobId: string): Promise<void> 
         job_id: job.id,
         matching_score: breakdown.final,
         confidence_score: Math.round(breakdown.semantic * 100),
-        strengths: explanation.strengths,
-        weaknesses: explanation.weaknesses,
-        missing_skills: explanation.missing_skills,
-        recommendations: explanation.recommendations,
+        prep_points: explanation.prep_points,
+        recruiter_questions: explanation.recruiter_questions,
         summary: explanation.summary,
         cover_letter: coverLetter || null,
         model: CHAT_MODEL,

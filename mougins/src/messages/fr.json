@@ -42,12 +42,7 @@
     },
     "detail": {
       "close": "Fermer",
-      "confidence": "Confiance",
       "lowConfidenceWarning": "⚠️ Le score de confiance est de {score}, les résultats peuvent être moins précis.",
-      "strengths": "Points forts",
-      "weaknesses": "Points faibles",
-      "missingSkills": "Compétences manquantes",
-      "recommendations": "Recommandations",
       "viewJobPosting": "Voir l'offre d'emploi",
       "aiDisclaimer": "Cette analyse a été générée par IA et peut contenir des erreurs.",
       "template": {
@@ -74,8 +69,52 @@
       "coverLetter": "Lettre de motivation",
       "coverLetterPlaceholder": "Ta lettre de motivation…",
       "copyCoverLetter": "Copier dans le presse-papiers",
-      "coverLetterCopied": "Lettre de motivation copiée"
-    }
+      "coverLetterCopied": "Lettre de motivation copiée",
+      "prep": {
+        "title": "À préparer pour l'entretien",
+        "subtitle": "Ce qu'il faut travailler avant de les rencontrer, et où l'apprendre.",
+        "empty": "Aucun point de préparation pour cette offre.",
+        "kind": {
+          "technical": "Technique",
+          "soft": "Soft skills",
+          "company": "L'entreprise"
+        },
+        "resource": {
+          "video": "Voir une vidéo sur le sujet",
+          "article": "Lire un article sur le sujet"
+        }
+      },
+      "recruiterQuestions": {
+        "title": "Questions à poser au recruteur",
+        "subtitle": "À poser en fin d'entretien pour montrer que tu as préparé."
+      },
+      "contacts": {
+        "title": "Personnes à contacter",
+        "subtitle": "Des membres qui ont travaillé chez {company}.",
+        "empty": "Personne sur maium n'a encore travaillé chez {company}.",
+        "contact": "Contacter",
+        "currentRole": "{role} · depuis {startYear}",
+        "pastRole": "{role} · {startYear}–{endYear}"
+      },
+      "tracking": {
+        "title": "Suivi de candidature",
+        "appliedAt": "Candidature envoyée le",
+        "interviewAt": "Entretien le",
+        "notes": "Notes",
+        "notesPlaceholder": "Qui tu as eu, ce qui s'est dit, ce qu'il faut relancer…",
+        "saveError": "Enregistrement impossible. Ta dernière modification n'a pas été prise en compte.",
+        "analysed": "Analysée"
+      }
+    },
+    "status": {
+      "not_started": "Pas commencé",
+      "applied": "Postulé",
+      "interview": "Entretien",
+      "rejected": "Refusé",
+      "accepted": "Accepté"
+    },
+    "historyFilterAll": "Toutes",
+    "historyFilterEmpty": "Aucune analyse avec ce statut."
   },
   "search": {
     "placeholder": "Rechercher des utilisateurs...",
