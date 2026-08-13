@@ -1,0 +1,23 @@
+import {
+  AnalysisDetailSkeleton,
+  AnalysisHeadingSkeleton,
+} from "@/components/pages/jobs";
+
+export default function JobAnalysisLoading() {
+  return (
+    <div className="relative flex h-dvh flex-col md:h-screen md:items-center">
+      <div className="flex h-full w-full flex-col gap-6 md:h-screen md:gap-8">
+        <div className="flex shrink-0 justify-center px-4">
+          <div className="flex w-full max-w-7xl items-center justify-between pt-6 md:pt-12">
+            <AnalysisHeadingSkeleton />
+          </div>
+        </div>
+        <div className="flex min-h-0 w-full flex-1 flex-col items-center overflow-y-auto px-4">
+          <div className="flex w-full max-w-7xl flex-col gap-8">
+            <AnalysisDetailSkeleton />
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}

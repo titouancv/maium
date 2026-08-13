@@ -1,4 +1,10 @@
 import { z } from "zod";
+import { ANALYSIS_NOTES_CHAR_LIMIT, ANALYSIS_SNOOZE_DAYS } from "@/constants";
+import {
+  APPLICATION_STATUSES,
+  PREP_POINT_KINDS,
+  PREP_RESOURCE_KINDS,
+} from "@/types/job";
 import { CvExtractionSchema } from "./cv";
 
 export const AnalyzeJobUrlSchema = z.object({
@@ -50,6 +56,38 @@ export const ResumeJsonInputSchema = z.object({
   skills: z.array(z.string()).default([]),
 });
 
+function toPlainString(value: unknown): string {
+  if (typeof value === "string") return value;
+  if (value && typeof value === "object") {
+    for (const nested of Object.values(value as Record<string, unknown>)) {
+      if (typeof nested === "string" && nested.trim()) return nested;
+    }
+  }
+  return "";
+}
+
+function toEnumToken(value: unknown): unknown {
+  return typeof value === "string" ? value.trim().toLowerCase() : value;
+}
+
+const LlmString = z.preprocess(toPlainString, z.string());
+
+export const PrepPointSchema = z.preprocess(
+  (value) =>
+    typeof value === "string"
+      ? { title: value, detail: value, resource_query: value }
+      : value,
+  z.object({
+    title: LlmString,
+    detail: LlmString,
+    kind: z.preprocess(toEnumToken, z.enum(PREP_POINT_KINDS)).catch("technical"),
+    resource_query: LlmString,
+    resource_kind: z
+      .preprocess(toEnumToken, z.enum(PREP_RESOURCE_KINDS))
+      .catch("video"),
+  }),
+);
+
 export const MatchingExplanationSchema = z.object({
   scores: z.object({
     hard_skills: z.number().min(0).max(1).default(0),
@@ -57,13 +95,27 @@ export const MatchingExplanationSchema = z.object({
     semantic: z.number().min(0).max(1).default(0),
     bonus: z.number().min(0).max(1).default(0),
   }),
-  strengths: z.array(z.string()).default([]),
-  weaknesses: z.array(z.string()).default([]),
-  missing_skills: z.array(z.string()).default([]),
-  recommendations: z.array(z.string()).default([]),
-  summary: z.string().default(""),
+  prep_points: z.array(PrepPointSchema).catch([]),
+  recruiter_questions: z
+    .array(LlmString)
+    .catch([])
+    .transform((questions) =>
+      questions.map((question) => question.trim()).filter(Boolean),
+    ),
+  summary: LlmString.catch(""),
 });
 export type MatchingExplanation = z.infer<typeof MatchingExplanationSchema>;
+
+export const UpdateAnalysisTrackingSchema = z
+  .object({
+    status: z.enum(APPLICATION_STATUSES).optional(),
+    snooze_days: z.literal(ANALYSIS_SNOOZE_DAYS).nullable().optional(),
+    notes: z.string().max(ANALYSIS_NOTES_CHAR_LIMIT).nullable().optional(),
+  })
+  .refine((patch) => Object.keys(patch).length > 0);
+export type UpdateAnalysisTracking = z.infer<
+  typeof UpdateAnalysisTrackingSchema
+>;
 
 export const OptimizedResumeSchema = z.object({
   summary: z.string().default(""),

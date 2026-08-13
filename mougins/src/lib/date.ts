@@ -34,12 +34,25 @@ export function formatTime(dateStr: string, locale: string): string {
   });
 }
 
-export function formatLongDate(dateStr: string, locale: string): string {
+export function formatLongDate(
+  dateStr: string | Date,
+  locale: string,
+): string {
   return new Date(dateStr).toLocaleDateString(locale, {
     day: "2-digit",
     month: "long",
     year: "numeric",
   });
+}
+
+export function addDays(dateStr: string, days: number): Date {
+  const date = new Date(dateStr);
+  date.setDate(date.getDate() + days);
+  return date;
+}
+
+export function isPast(date: Date): boolean {
+  return date.getTime() <= Date.now();
 }
 
 export function experienceDurationParts(

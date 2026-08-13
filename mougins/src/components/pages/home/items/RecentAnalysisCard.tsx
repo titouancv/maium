@@ -20,7 +20,7 @@ export const RecentAnalysisCard = ({ analysis }: RecentAnalysisCardProps) => {
 
   return (
     <Link
-      href={ROUTES.JOBS_HISTORY_ANALYSIS(analysis.id)}
+      href={ROUTES.JOB_ANALYSIS(analysis.id)}
       className="group flex h-full w-56 shrink-0 flex-col gap-2 sm:w-64"
     >
       <div className="flex items-start justify-between gap-3">

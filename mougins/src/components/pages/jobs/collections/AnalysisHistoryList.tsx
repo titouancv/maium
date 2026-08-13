@@ -1,59 +1,58 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState } from "react";
 import { useTranslations } from "next-intl";
-import { useSearchParams } from "next/navigation";
-import { useRouter } from "@/i18n/navigation";
-import { ROUTES } from "@/constants";
 import { EmptyState } from "@/components/ui/EmptyState";
-import type { AnalysisListItem } from "@/types/job";
+import { Selector } from "@/components/ui/Selector";
+import { APPLICATION_STATUS_COLORS } from "@/constants/ui";
+import { APPLICATION_STATUSES, type AnalysisListItem } from "@/types/job";
 import { AnalysisHistoryItem } from "../items/AnalysisHistoryItem";
-import { AnalysisDetailOverlay } from "./AnalysisDetailOverlay";
 
 interface AnalysisHistoryListProps {
   history: AnalysisListItem[];
 }
 
+const FILTERS = [null, ...APPLICATION_STATUSES] as const;
+
 export function AnalysisHistoryList({ history }: AnalysisHistoryListProps) {
   const t = useTranslations("jobs");
-  const router = useRouter();
-  const searchParams = useSearchParams();
-  const openId = searchParams.get("analysis");
+  const [filterIndex, setFilterIndex] = useState(0);
 
-  const [selected, setSelected] = useState<AnalysisListItem | null>(() =>
-    openId ? (history.find((a) => a.id === openId) ?? null) : null,
-  );
+  const activeStatus = FILTERS[filterIndex];
+  const visible = activeStatus
+    ? history.filter((analysis) => analysis.status === activeStatus)
+    : history;
 
-  const cleanedUrl = useRef(false);
-  useEffect(() => {
-    if (openId && !cleanedUrl.current) {
-      cleanedUrl.current = true;
-      router.replace(ROUTES.JOBS_HISTORY);
-    }
-  }, [openId, router]);
+  if (history.length === 0) {
+    return (
+      <div className="flex h-full flex-col">
+        <EmptyState label={t("historyEmpty")} />
+      </div>
+    );
+  }
 
   return (
-    <div className="flex h-full flex-col">
-      {history.length === 0 ? (
-        <EmptyState label={t("historyEmpty")} />
+    <div className="flex h-full min-h-0 flex-col gap-6">
+      <div className="flex w-full justify-center md:justify-end">
+        <Selector
+          values={FILTERS.map((status) => ({
+            label: status ? t(`status.${status}`) : t("historyFilterAll"),
+            color: status ? APPLICATION_STATUS_COLORS[status] : undefined,
+          }))}
+          activeIndex={filterIndex}
+          onChange={setFilterIndex}
+        />
+      </div>
+
+      {visible.length === 0 ? (
+        <EmptyState label={t("historyFilterEmpty")} />
       ) : (
-        <div className="flex min-h-0 flex-col gap-3 md:overflow-y-auto">
-          {history.map((analysis) => (
-            <AnalysisHistoryItem
-              key={analysis.id}
-              analysis={analysis}
-              onClick={() => setSelected(analysis)}
-            />
+        <div className="flex min-h-0 flex-col gap-4 md:overflow-y-auto">
+          {visible.map((analysis) => (
+            <AnalysisHistoryItem key={analysis.id} analysis={analysis} />
           ))}
           <div className="h-24 shrink-0 md:h-[250px]" />
         </div>
-      )}
-
-      {selected && (
-        <AnalysisDetailOverlay
-          analysis={selected}
-          onClose={() => setSelected(null)}
-        />
       )}
     </div>
   );

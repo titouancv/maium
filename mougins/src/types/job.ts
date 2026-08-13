@@ -1,3 +1,5 @@
+import type { ANALYSIS_SNOOZE_DAYS, Gender } from "@/constants";
+
 export const ANALYSIS_STATUSES = [
   "queued",
   "processing",
@@ -16,6 +18,48 @@ export const ANALYSIS_STEPS = [
   "GENERATING_EMBEDDINGS",
 ] as const;
 export type AnalysisStep = (typeof ANALYSIS_STEPS)[number];
+
+export const PREP_POINT_KINDS = ["technical", "soft", "company"] as const;
+export type PrepPointKind = (typeof PREP_POINT_KINDS)[number];
+
+export const PREP_RESOURCE_KINDS = ["video", "article"] as const;
+export type PrepResourceKind = (typeof PREP_RESOURCE_KINDS)[number];
+
+export const APPLICATION_STATUSES = [
+  "not_started",
+  "applied",
+  "interview",
+  "accepted",
+  "rejected",
+] as const;
+export type ApplicationStatus = (typeof APPLICATION_STATUSES)[number];
+
+export const SETTLED_APPLICATION_STATUSES = [
+  "accepted",
+  "rejected",
+] as const satisfies readonly ApplicationStatus[];
+
+export type SnoozeDelay = (typeof ANALYSIS_SNOOZE_DAYS)[number];
+
+export interface PrepPoint {
+  title: string;
+  detail: string;
+  kind: PrepPointKind;
+  resource_query: string;
+  resource_kind: PrepResourceKind;
+}
+
+export interface CompanyContact {
+  pseudo: string;
+  first_name: string;
+  last_name: string;
+  location: string | null;
+  profile_photo: string | null;
+  gender: Gender | null;
+  role: string;
+  start_period: number;
+  end_period: number | null;
+}
 
 export interface JobData {
   id: string;
@@ -49,12 +93,14 @@ export interface AnalysisData {
   job_id: string;
   matching_score: number;
   confidence_score: number;
-  strengths: string[];
-  weaknesses: string[];
-  missing_skills: string[];
-  recommendations: string[];
+  prep_points: PrepPoint[];
+  recruiter_questions: string[];
   summary: string | null;
   cover_letter: string | null;
+  status: ApplicationStatus;
+  status_changed_at: string | null;
+  snooze_days: number | null;
+  notes: string | null;
   created_at: string;
 }
 

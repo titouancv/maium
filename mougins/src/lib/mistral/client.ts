@@ -3,7 +3,9 @@ import { z } from "zod";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { EMBEDDING_DIM } from "@/constants";
 
-const CHAT_MODEL = process.env.MISTRAL_CHAT_MODEL || "mistral-small-latest";
+export const DEFAULT_CHAT_MODEL = "mistral-small-latest";
+
+const CHAT_MODEL = process.env.MISTRAL_CHAT_MODEL || DEFAULT_CHAT_MODEL;
 const EMBED_MODEL = process.env.MISTRAL_EMBED_MODEL || "mistral-embed";
 const OCR_MODEL = process.env.MISTRAL_OCR_MODEL || "mistral-ocr-latest";
 

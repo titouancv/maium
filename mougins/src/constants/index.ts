@@ -19,7 +19,7 @@ export const ROUTES = {
   ANALYZE: "/analyze",
   JOBS: "/jobs",
   JOBS_HISTORY: "/jobs/history",
-  JOBS_HISTORY_ANALYSIS: (id: string) => `/jobs/history?analysis=${id}`,
+  JOB_ANALYSIS: (id: string) => `/jobs/${id}`,
 } as const;
 
 export const API = {
@@ -53,6 +53,8 @@ export const API = {
 export const EXTERNAL_API = {
   PHOTON_GEOCODE: "https://photon.komoot.io/api/",
   FAVICON: "https://www.google.com/s2/favicons",
+  YOUTUBE_SEARCH: "https://www.youtube.com/results",
+  GOOGLE_SEARCH: "https://www.google.com/search",
 } as const;
 
 export const DAY_MS = 24 * 60 * 60 * 1000;
@@ -100,6 +102,14 @@ export const ANON_USED_MAX_AGE_S = 365 * 24 * 60 * 60;
 export const ANON_ANALYSES_PER_IP_PER_DAY = 3;
 
 export const ANALYSIS_POLL_INTERVAL_MS = 1500;
+
+export const ANALYSIS_NOTES_CHAR_LIMIT = 4000;
+
+export const ANALYSIS_LOW_CONFIDENCE_SCORE = 75;
+
+export const ANALYSIS_SNOOZE_DAYS = [7, 14, 30] as const;
+
+export const COMPANY_CONTACTS_LIMIT = 8;
 
 export const PROMPT_VERSION = "v1";
 

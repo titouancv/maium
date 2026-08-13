@@ -5,5 +5,7 @@ export * from "./optimizeResume";
 export * from "./coverLetter";
 export * from "./profile";
 export * from "./pipeline";
+export * from "./resources";
 export * from "./server";
+export * from "./contacts";
 export * from "./usage";

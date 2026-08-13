@@ -103,6 +103,57 @@ best feature isn't hidden behind signup. The seams:
   would wipe an existing profile. Best-effort — it must never cost the user
   their sign-in.
 
+### The analysis page
+
+`/jobs/<analysisId>` is the product's destination page: the analysis is no longer
+an overlay over the history. Four seams are worth knowing.
+
+- **Prep points replaced the diagnosis.** The matching call no longer returns
+  `strengths` / `weaknesses` / `missing_skills` / `recommendations`; those
+  columns are gone. It returns `prep_points` (an action, its rationale, a `kind`
+  and a search query) plus `recruiter_questions`. A list of gaps told the user
+  nothing to *do* — every item on the page is now something they can act on.
+- **The model never emits a URL.** It returns a `resource_query` +
+  `resource_kind`, and [prepResourceUrl](src/lib/jobs/resources.ts) turns that
+  into a YouTube or Google search link. An LLM asked for a real URL invents dead
+  ones; a search query cannot be wrong in that way. Never let the schema carry a
+  `url` field.
+- **Contacts come from the profile graph, not a contacts table.** `jobs.company`
+  is matched against `user_experiences.organization` through the
+  `normalize_company()` SQL function (case, punctuation and legal suffixes
+  stripped). `user_experiences` is RLS own-row-only, so the read goes through the
+  `SECURITY DEFINER` RPC `get_company_contacts`, which returns only fields
+  already public on a profile and excludes the caller.
+- **Tracking is signed-in only.** `analyses.status` / `notes` are written with the
+  RLS-scoped user client, never the admin client — an anonymous run has no
+  account to track against and its rows expire. The user never types a date:
+  `status_changed_at` is stamped by a `BEFORE UPDATE OF status` trigger and read
+  back as a single line ("Postulé le 12 mai 2026"), which is why there is no
+  status history and no date input — the status *is* the date. The anonymous
+  `/analyze` result therefore renders
+  [AnalysisView](src/components/pages/jobs/collections/AnalysisView.tsx) inline
+  with no `tracking` / `contacts` slot — `/jobs` is a protected prefix, so a
+  signed-out visitor can never reach the real page.
+- **The snooze reminder is swept at read time, not scheduled.** `analyses.snooze_days`
+  (NULL = off) asks for a nudge when an application sits at the same status too
+  long. There is no cron: `sweep_stale_analysis_notifications(p_user_id)` runs at
+  the top of `getNotifications()` / `getUnreadNotificationsCount()`
+  ([lib/users/notifications.ts](src/lib/users/notifications.ts)) and materialises
+  the due rows. It fires **once per staleness episode** — the DELETE drops any
+  snooze row older than the analysis's current `status_changed_at`, so a status
+  change both clears the pending nudge and re-arms the next one; the INSERT
+  `ON CONFLICT DO NOTHING` is what keeps a repeat sweep from bumping it. Settled
+  applications (`rejected` / `accepted`) are excluded — a closed application has
+  nothing to chase. The function is **SECURITY INVOKER on purpose**: `notifications`
+  is deny-all RLS, so it only writes through the service-role client and degrades
+  to a no-op if it is ever called as `authenticated`.
+- A snooze notification is the first with **no actor**: `notifications.actor_id`
+  is now nullable and paired with `analysis_id`, guarded by two CHECKs
+  (`actor_id` required unless `analysis_snooze`; `analysis_id` present iff
+  `analysis_snooze`). `HomeNotification.actor` is therefore nullable — a consumer
+  must branch on `kind` before reading it (see
+  [NotificationRow](src/components/pages/home/items/NotificationRow.tsx)).
+
 ### Signup Flows
 
 There is a single signup path: **Google OAuth**. (Email/password was removed —
@@ -153,6 +204,7 @@ OAuth flow: Google → Supabase → `/auth/callback` → `exchangeCodeForSession
 | `POST` | `/api/cv/parse` | OCR an uploaded CV into a profile draft (auth optional) |
 | `POST` | `/api/analyze-job` | Run the job analysis pipeline (auth optional) |
 | `GET` | `/api/analysis/:id` | Analysis job status (owner-scoped) |
+| `PATCH` | `/api/analysis/:id` | Update application tracking (status, dates, notes) |
 | `GET` | `/api/analysis/:id/result` | Get a finished analysis (owner-scoped) |
 | `GET` | `/api/history` | List the user's past job analyses |
 | `GET/DELETE` | `/api/resume/:id` | Get / delete an optimized resume |
@@ -538,7 +590,7 @@ Concretely, when building or editing a component:
 The few backgrounds that remain are **functional, not decorative**, and are the
 complete list — do not add to it: input fields (`TextInput`, `TextArea`, and the
 hover/focus tint on `DateInput` / `PhoneInput`), the [Skeleton](src/components/ui/Skeleton.tsx)
-placeholder, the pill behind `Tabs`, `Button`'s own variants, the photo frame in
+placeholder, the pill behind `Tabs` and `Selector`, `Button`'s own variants, the photo frame in
 `ProfilePhotoPicker`, the white QR card (scannability), and `Overlay`'s
 `bg-surface-50` (it must hide the page underneath).
 
@@ -574,7 +626,7 @@ never invented twice. Import from `@/components/ui`.
 | `Text` | Body copy. `tone` = default \| muted \| primary, `size` = xs \| sm \| base \| lg, `as` = p \| span \| div \| li, plus `truncate`. Replaces every `text-txt-muted text-sm` pair. |
 | `InfoMessage` | Any error, confirmation or hint. Renders nothing when `message` is empty, so pass a possibly-undefined error straight through — no `&&` guard. |
 | `EmptyState` | What a list renders instead of its rows. `align="center"` when it owns the region. |
-| `Icon` | Every icon, from a fixed set (`arrowRight`, `bell`, `chevronRight`, `close`, `search`). **Add a path to `ui/icons/Icon.tsx` rather than inlining an `<svg>`.** `GoogleMark` is the one brand-coloured exception. |
+| `Icon` | Every icon, from a fixed set (`arrowRight`, `bell`, `check`, `chevronLeft`, `chevronRight`, `close`, `externalLink`, `search`). **Add a path to `ui/icons/Icon.tsx` rather than inlining an `<svg>`.** `GoogleMark` is the one brand-coloured exception. |
 | `AccentBar` | The short bar under a heading. |
 | `Rail` | The vertical bar that marks a row (experience, hobby, message, quote). Pass `bg-primary` to mark it as the user's own. |
 | `ScrollRow` | A row that scrolls sideways with the scrollbar hidden. |
@@ -582,6 +634,7 @@ never invented twice. Import from `@/components/ui`.
 | `ExpandableText` | Long copy clamped to N lines with a see more / see less toggle. |
 | `Title` · `Section` · `Markdown` | Headings and long-form content. |
 | `Button` · `Chip` · `ChipList` · `Tabs` · `TabsVertical` · `MenuList` · `SlideToEnter` | Actions and choices. |
+| `Selector` | One value at a time out of an **ordered** list: chevrons step through it, the neighbours peek in at the edges under a fade. Each value carries its own colour along the secondary → primary scale (`scaleColor` in [constants/ui.ts](src/constants/ui.ts)); pass an explicit `color` per value to reuse a canonical scale such as `APPLICATION_STATUS_COLORS`. Use `Tabs` instead when every option must be visible at once. |
 | `TextInput` · `TextArea` · `DateInput` · `PhoneInput` · `SearchInput` · `LocationInput` | Fields (see `form/` for whole steps). |
 | `Skeleton` · `ProgressBar` · `NumberRoller` | Loading and numbers. |
 | `UserCard` · `ProfilePhoto` · `ProfilePhotoPicker` | People. |

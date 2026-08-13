@@ -4,6 +4,7 @@ export * from "./Chip";
 export * from "./ChipList";
 export * from "./LocationInput";
 export * from "./SearchInput";
+export * from "./Selector";
 export * from "./Skeleton";
 export * from "./Tabs";
 export * from "./TextInput";
