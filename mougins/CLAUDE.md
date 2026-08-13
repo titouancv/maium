@@ -134,6 +134,25 @@ an overlay over the history. Four seams are worth knowing.
   [AnalysisView](src/components/pages/jobs/collections/AnalysisView.tsx) inline
   with no `tracking` / `contacts` slot — `/jobs` is a protected prefix, so a
   signed-out visitor can never reach the real page.
+- **The snooze reminder is swept at read time, not scheduled.** `analyses.snooze_days`
+  (NULL = off) asks for a nudge when an application sits at the same status too
+  long. There is no cron: `sweep_stale_analysis_notifications(p_user_id)` runs at
+  the top of `getNotifications()` / `getUnreadNotificationsCount()`
+  ([lib/users/notifications.ts](src/lib/users/notifications.ts)) and materialises
+  the due rows. It fires **once per staleness episode** — the DELETE drops any
+  snooze row older than the analysis's current `status_changed_at`, so a status
+  change both clears the pending nudge and re-arms the next one; the INSERT
+  `ON CONFLICT DO NOTHING` is what keeps a repeat sweep from bumping it. Settled
+  applications (`rejected` / `accepted`) are excluded — a closed application has
+  nothing to chase. The function is **SECURITY INVOKER on purpose**: `notifications`
+  is deny-all RLS, so it only writes through the service-role client and degrades
+  to a no-op if it is ever called as `authenticated`.
+- A snooze notification is the first with **no actor**: `notifications.actor_id`
+  is now nullable and paired with `analysis_id`, guarded by two CHECKs
+  (`actor_id` required unless `analysis_snooze`; `analysis_id` present iff
+  `analysis_snooze`). `HomeNotification.actor` is therefore nullable — a consumer
+  must branch on `kind` before reading it (see
+  [NotificationRow](src/components/pages/home/items/NotificationRow.tsx)).
 
 ### Signup Flows
 

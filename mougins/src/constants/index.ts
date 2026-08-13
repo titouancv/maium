@@ -107,6 +107,8 @@ export const ANALYSIS_NOTES_CHAR_LIMIT = 4000;
 
 export const ANALYSIS_LOW_CONFIDENCE_SCORE = 75;
 
+export const ANALYSIS_SNOOZE_DAYS = [7, 14, 30] as const;
+
 export const COMPANY_CONTACTS_LIMIT = 8;
 
 export const PROMPT_VERSION = "v1";

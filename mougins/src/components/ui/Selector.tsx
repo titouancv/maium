@@ -87,13 +87,13 @@ export function Selector({ values, activeIndex, onChange }: SelectorProps) {
   }, [values, activeIndex, width, x]);
 
   return (
-    <div className="bg-inverse-50 text-txt-inverse flex w-max max-w-full items-center gap-1 rounded-full p-1">
+    <div className="flex w-max max-w-full items-center gap-1 rounded-full">
       <button
         type="button"
         aria-label={t("previousOption")}
         disabled={activeIndex <= 0}
         onClick={() => onChange(activeIndex - 1)}
-        className="enabled:hover:text-primary flex size-7 shrink-0 items-center justify-center rounded-full transition-colors duration-300 disabled:opacity-30"
+        className="enabled:hover:text-primary flex size-7 shrink-0 items-center justify-center rounded-full transition-colors duration-300 enabled:cursor-pointer disabled:opacity-30"
       >
         <Icon name="chevronLeft" />
       </button>
@@ -145,7 +145,7 @@ export function Selector({ values, activeIndex, onChange }: SelectorProps) {
         aria-label={t("nextOption")}
         disabled={activeIndex >= values.length - 1}
         onClick={() => onChange(activeIndex + 1)}
-        className="enabled:hover:text-primary flex size-7 shrink-0 items-center justify-center rounded-full transition-colors duration-300 disabled:opacity-30"
+        className="enabled:hover:text-primary flex size-7 shrink-0 items-center justify-center rounded-full transition-colors duration-300 enabled:cursor-pointer disabled:opacity-30"
       >
         <Icon name="chevronRight" />
       </button>

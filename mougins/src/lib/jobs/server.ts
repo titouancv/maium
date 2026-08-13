@@ -12,7 +12,7 @@ import type {
 
 const ANALYSIS_SELECT = `id, job_id, matching_score, confidence_score,
   prep_points, recruiter_questions, summary, cover_letter, status,
-  status_changed_at, notes, created_at,
+  status_changed_at, snooze_days, notes, created_at,
   job:job_id ( title, company, location, source_url ),
   resume:optimized_resumes!analysis_id ( id, is_active, deleted_at )`;
 
@@ -37,6 +37,7 @@ function mapAnalysisRow(row: Record<string, unknown>): AnalysisListItem {
     cover_letter: row.cover_letter as string | null,
     status: row.status as AnalysisListItem["status"],
     status_changed_at: row.status_changed_at as string | null,
+    snooze_days: row.snooze_days as number | null,
     notes: row.notes as string | null,
     created_at: row.created_at as string,
     job: row.job as AnalysisListItem["job"],
@@ -92,13 +93,14 @@ export async function updateAnalysisTracking(
   } = await supabase.auth.getUser();
   if (!user) return false;
 
-  const { data } = await supabase
+  const { data, error } = await supabase
     .from("analyses")
     .update(patch)
     .eq("id", analysisId)
     .eq("user_id", user.id)
     .select("id")
     .maybeSingle();
+  if (error) throw error;
 
   return Boolean(data);
 }

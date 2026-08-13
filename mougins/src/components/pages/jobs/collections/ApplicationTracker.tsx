@@ -2,21 +2,32 @@
 
 import { useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
-import { ANALYSIS_NOTES_CHAR_LIMIT } from "@/constants";
+import { ANALYSIS_NOTES_CHAR_LIMIT, ANALYSIS_SNOOZE_DAYS } from "@/constants";
 import {
   Button,
   ExpandableText,
   InfoMessage,
   Section,
+  Selector,
   TextArea,
   Text,
 } from "@/components/ui";
-import { formatLongDate } from "@/lib/date";
+import { addDays, formatLongDate, isPast } from "@/lib/date";
 import { updateAnalysisTrackingRequest } from "@/lib/jobs/updateTracking";
-import { type AnalysisListItem } from "@/types/job";
+import {
+  SETTLED_APPLICATION_STATUSES,
+  type AnalysisListItem,
+  type SnoozeDelay,
+} from "@/types/job";
 
 interface ApplicationTrackerProps {
   analysis: AnalysisListItem;
+}
+
+const SNOOZE_OPTIONS = [null, ...ANALYSIS_SNOOZE_DAYS] as const;
+
+function toSnoozeDelay(days: number | null): SnoozeDelay | null {
+  return ANALYSIS_SNOOZE_DAYS.find((option) => option === days) ?? null;
 }
 
 export function ApplicationTracker({ analysis }: ApplicationTrackerProps) {
@@ -29,6 +40,13 @@ export function ApplicationTracker({ analysis }: ApplicationTrackerProps) {
   const [isEditing, setIsEditing] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [failed, setFailed] = useState(false);
+  const [snoozeDays, setSnoozeDays] = useState(
+    toSnoozeDelay(analysis.snooze_days),
+  );
+
+  const isSettled = SETTLED_APPLICATION_STATUSES.some(
+    (status) => status === analysis.status,
+  );
 
   const trackedSince =
     analysis.status === "not_started" || !analysis.status_changed_at
@@ -39,6 +57,23 @@ export function ApplicationTracker({ analysis }: ApplicationTrackerProps) {
           }),
           date: analysis.status_changed_at,
         };
+
+  const snoozeDate =
+    snoozeDays === null ? null : addDays(trackedSince.date, snoozeDays);
+  const isSnoozeOverdue = snoozeDate !== null && isPast(snoozeDate);
+
+  const changeSnooze = async (index: number) => {
+    const next = SNOOZE_OPTIONS[index];
+    const previous = snoozeDays;
+    setSnoozeDays(next);
+    setFailed(false);
+    const ok = await updateAnalysisTrackingRequest(analysis.id, {
+      snooze_days: next,
+    });
+    if (ok) return;
+    setSnoozeDays(previous);
+    setFailed(true);
+  };
 
   const startEditing = () => {
     setDraft(notes);
@@ -66,6 +101,38 @@ export function ApplicationTracker({ analysis }: ApplicationTrackerProps) {
           {trackedSince.label}
         </Text>
         <Text tone="primary">{formatLongDate(trackedSince.date, locale)}</Text>
+      </div>
+
+      <div className="flex max-w-3xl flex-col gap-2">
+        <Text className="font-extrabold" size="lg">
+          {t("detail.tracking.snooze")}
+        </Text>
+        {isSettled ? (
+          <Text tone="muted" size="sm">
+            {t("detail.tracking.snoozeSettled")}
+          </Text>
+        ) : (
+          <>
+            <Selector
+              values={SNOOZE_OPTIONS.map((days) =>
+                days === null
+                  ? t("detail.tracking.snoozeOff")
+                  : t("detail.tracking.snoozeDays", { days }),
+              )}
+              activeIndex={SNOOZE_OPTIONS.indexOf(snoozeDays)}
+              onChange={changeSnooze}
+            />
+            <Text tone="muted" size="sm">
+              {snoozeDate === null
+                ? t("detail.tracking.snoozeOffHint")
+                : isSnoozeOverdue
+                  ? t("detail.tracking.snoozeOverdueHint")
+                  : t("detail.tracking.snoozeHint", {
+                      date: formatLongDate(snoozeDate, locale),
+                    })}
+            </Text>
+          </>
+        )}
       </div>
 
       <div className="flex max-w-3xl flex-col gap-1">

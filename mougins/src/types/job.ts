@@ -1,4 +1,4 @@
-import type { Gender } from "@/constants";
+import type { ANALYSIS_SNOOZE_DAYS, Gender } from "@/constants";
 
 export const ANALYSIS_STATUSES = [
   "queued",
@@ -33,6 +33,13 @@ export const APPLICATION_STATUSES = [
   "accepted",
 ] as const;
 export type ApplicationStatus = (typeof APPLICATION_STATUSES)[number];
+
+export const SETTLED_APPLICATION_STATUSES = [
+  "rejected",
+  "accepted",
+] as const satisfies readonly ApplicationStatus[];
+
+export type SnoozeDelay = (typeof ANALYSIS_SNOOZE_DAYS)[number];
 
 export interface PrepPoint {
   title: string;
@@ -92,6 +99,7 @@ export interface AnalysisData {
   cover_letter: string | null;
   status: ApplicationStatus;
   status_changed_at: string | null;
+  snooze_days: number | null;
   notes: string | null;
   created_at: string;
 }

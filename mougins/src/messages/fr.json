@@ -111,7 +111,14 @@
         "notes": "Notes",
         "notesPlaceholder": "Qui tu as eu, ce qui s'est dit, ce qu'il faut relancer…",
         "notesSave": "Enregistrer",
-        "saveError": "Enregistrement impossible. Ta dernière modification n'a pas été prise en compte."
+        "saveError": "Enregistrement impossible. Ta dernière modification n'a pas été prise en compte.",
+        "snooze": "Relance",
+        "snoozeOff": "Jamais",
+        "snoozeDays": "{days} jours",
+        "snoozeOffHint": "Aucune relance pour cette candidature.",
+        "snoozeHint": "On vous prévient le {date} si cette candidature est toujours à son statut actuel.",
+        "snoozeOverdueHint": "Cette candidature a déjà dépassé ce délai — la relance vous attend dans vos notifications.",
+        "snoozeSettled": "Cette candidature est close — pas besoin de relance."
       }
     },
     "status": {
@@ -180,7 +187,8 @@
       "empty": "Aucune notification pour le moment",
       "actionFollow": "vous suit",
       "actionMessage": "vous a envoyé un message",
-      "actionProfileView": "a vu votre profil"
+      "actionProfileView": "a vu votre profil",
+      "actionAnalysisSnooze": "Aucune nouvelle sur cette candidature"
     },
     "actions": {
       "analyzeTitle": "Lancer une analyse",

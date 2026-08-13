@@ -2,13 +2,24 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import { getAuthUser } from "@/lib/auth/getCurrentUser";
 import type { UserSummary } from "@/types/user";
 
-export type NotificationKind = "follow" | "message" | "profile_view";
+export type NotificationKind =
+  | "follow"
+  | "message"
+  | "profile_view"
+  | "analysis_snooze";
+
+export interface NotificationAnalysis {
+  id: string;
+  title: string | null;
+  company: string | null;
+}
 
 export interface HomeNotification {
   id: number;
   kind: NotificationKind;
-  actor: UserSummary;
+  actor: UserSummary | null;
   conversationId: string | null;
+  analysis: NotificationAnalysis | null;
   createdAt: string;
   readAt: string | null;
 }
@@ -19,6 +30,11 @@ const HIDDEN_KINDS: NotificationKind[] = ["profile_view"];
 
 type ActorRow = UserSummary & { id: string };
 
+interface AnalysisRow {
+  id: string;
+  job: { title: string | null; company: string | null } | null;
+}
+
 interface NotificationRow {
   id: number;
   kind: NotificationKind;
@@ -26,6 +42,16 @@ interface NotificationRow {
   created_at: string;
   read_at: string | null;
   actor: ActorRow | null;
+  analysis: AnalysisRow | null;
+}
+
+type AdminClient = ReturnType<typeof createAdminClient>;
+
+async function sweepStaleAnalyses(
+  admin: AdminClient,
+  userId: string,
+): Promise<void> {
+  await admin.rpc("sweep_stale_analysis_notifications", { p_user_id: userId });
 }
 
 function toSummary(actor: ActorRow, isFollowing?: boolean): UserSummary {
@@ -47,11 +73,14 @@ export async function getNotifications(
   if (!authUser) return [];
 
   const admin = createAdminClient();
+  await sweepStaleAnalyses(admin, authUser.id);
+
   const { data, error } = await admin
     .from("notifications")
     .select(
       `id, kind, conversation_id, created_at, read_at,
-       actor:actor_id ( id, pseudo, first_name, last_name, location, profile_photo, gender )`,
+       actor:actor_id ( id, pseudo, first_name, last_name, location, profile_photo, gender ),
+       analysis:analysis_id ( id, job:job_id ( title, company ) )`,
     )
     .eq("user_id", authUser.id)
     .not("kind", "in", `(${HIDDEN_KINDS.join(",")})`)
@@ -76,25 +105,33 @@ export async function getNotifications(
     );
   }
 
-  return rows.flatMap((row) =>
-    row.actor
-      ? [
-          {
-            id: row.id,
-            kind: row.kind,
-            actor: toSummary(
+  return rows.flatMap((row) => {
+    const target = row.kind === "analysis_snooze" ? row.analysis : row.actor;
+    if (!target) return [];
+
+    return [
+      {
+        id: row.id,
+        kind: row.kind,
+        actor: row.actor
+          ? toSummary(
               row.actor,
-              row.kind === "follow"
-                ? followedSet.has(row.actor.id)
-                : undefined,
-            ),
-            conversationId: row.conversation_id,
-            createdAt: row.created_at,
-            readAt: row.read_at,
-          },
-        ]
-      : [],
-  );
+              row.kind === "follow" ? followedSet.has(row.actor.id) : undefined,
+            )
+          : null,
+        conversationId: row.conversation_id,
+        analysis: row.analysis
+          ? {
+              id: row.analysis.id,
+              title: row.analysis.job?.title ?? null,
+              company: row.analysis.job?.company ?? null,
+            }
+          : null,
+        createdAt: row.created_at,
+        readAt: row.read_at,
+      },
+    ];
+  });
 }
 
 export async function getUnreadNotificationsCount(): Promise<number> {
@@ -102,6 +139,8 @@ export async function getUnreadNotificationsCount(): Promise<number> {
   if (!authUser) return 0;
 
   const admin = createAdminClient();
+  await sweepStaleAnalyses(admin, authUser.id);
+
   const { count, error } = await admin
     .from("notifications")
     .select("id", { count: "exact", head: true })

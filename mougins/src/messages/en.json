@@ -111,7 +111,14 @@
         "notes": "Notes",
         "notesPlaceholder": "Who you spoke to, what was said, what to follow up on…",
         "notesSave": "Save",
-        "saveError": "Could not save. Your last change was not recorded."
+        "saveError": "Could not save. Your last change was not recorded.",
+        "snooze": "Reminder",
+        "snoozeOff": "Off",
+        "snoozeDays": "{days} days",
+        "snoozeOffHint": "No reminder for this application.",
+        "snoozeHint": "We'll notify you on {date} if this application is still at its current status.",
+        "snoozeOverdueHint": "This application has already passed that delay — the reminder is waiting in your notifications.",
+        "snoozeSettled": "This application is closed — no reminder needed."
       }
     },
     "status": {
@@ -180,7 +187,8 @@
       "empty": "No notifications yet",
       "actionFollow": "started following you",
       "actionMessage": "sent you a message",
-      "actionProfileView": "viewed your profile"
+      "actionProfileView": "viewed your profile",
+      "actionAnalysisSnooze": "No news on this application"
     },
     "actions": {
       "analyzeTitle": "Start an analysis",

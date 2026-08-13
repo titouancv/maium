@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { ANALYSIS_NOTES_CHAR_LIMIT } from "@/constants";
+import { ANALYSIS_NOTES_CHAR_LIMIT, ANALYSIS_SNOOZE_DAYS } from "@/constants";
 import {
   APPLICATION_STATUSES,
   PREP_POINT_KINDS,
@@ -109,6 +109,7 @@ export type MatchingExplanation = z.infer<typeof MatchingExplanationSchema>;
 export const UpdateAnalysisTrackingSchema = z
   .object({
     status: z.enum(APPLICATION_STATUSES).optional(),
+    snooze_days: z.literal(ANALYSIS_SNOOZE_DAYS).nullable().optional(),
     notes: z.string().max(ANALYSIS_NOTES_CHAR_LIMIT).nullable().optional(),
   })
   .refine((patch) => Object.keys(patch).length > 0);
