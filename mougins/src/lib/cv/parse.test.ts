@@ -6,7 +6,6 @@ import {
   CvExtractionSchema,
 } from "@/lib/validators/cv";
 
-/** A raw model response with everything empty, to be overridden per test. */
 const raw = (overrides: Record<string, unknown> = {}) =>
   CvExtractionRawSchema.parse(overrides);
 
@@ -129,8 +128,6 @@ describe("normalizeCvExtraction", () => {
     ]);
   });
 
-  // The anonymous /analyze flow posts an extraction back to the server, where
-  // it is re-validated with CvExtractionSchema. Normalized output must pass.
   it("produces output that CvExtractionSchema accepts", () => {
     const result = normalizeCvExtraction(
       raw({
@@ -150,8 +147,6 @@ describe("normalizeCvExtraction", () => {
     expect(CvExtractionSchema.safeParse(result).success).toBe(true);
   });
 
-  // Deterministic half of the prompt-injection defence: a CV that talks the
-  // model into emitting hundreds of entries must not get them through.
   it("caps runaway arrays at CV_LIMITS", () => {
     const result = normalizeCvExtraction(
       raw({
@@ -177,8 +172,6 @@ describe("normalizeCvExtraction", () => {
     expect(result.socialNetworks).toHaveLength(CV_LIMITS.urls);
     expect(result.hobbies).toHaveLength(CV_LIMITS.hobbies);
     expect(result.professionalExperiences).toHaveLength(CV_LIMITS.experiences);
-    // The caps must keep the result inside what the schema accepts, since the
-    // anonymous /analyze flow re-validates it server-side.
     expect(CvExtractionSchema.safeParse(result).success).toBe(true);
   });
 
@@ -209,8 +202,6 @@ describe("normalizeCvExtraction", () => {
     expect(CvExtractionSchema.safeParse(result).success).toBe(true);
   });
 
-  // Models emit `null` for "absent" regardless of what the prompt asks for.
-  // Anything that throws here becomes a 500 on a perfectly good OCR.
   it("accepts null for every field the model may omit", () => {
     const parsed = CvExtractionRawSchema.safeParse({
       firstName: null,
@@ -255,7 +246,6 @@ describe("normalizeCvExtraction", () => {
         { organization: "Kept", role: "Dev", startPeriod: "2020-01" },
       ],
     });
-    // The two malformed entries are dropped, not fatal.
     const result = normalizeCvExtraction(parsed);
     expect(result.professionalExperiences).toHaveLength(1);
     expect(result.professionalExperiences![0].organization).toBe("Kept");

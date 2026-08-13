@@ -1,6 +1,5 @@
 import { Skeleton } from "@/components/ui/Skeleton";
 
-/** User list placeholder (the page frame renders around it). */
 export const UserListSkeleton = ({ rows = 6 }: { rows?: number }) => (
   <ul className="flex flex-col">
     {Array.from({ length: rows }).map((_, i) => (

@@ -36,7 +36,6 @@ export function NavigationBar() {
         <Tabs tabs={tabs} />
         <SearchButton onClick={() => setIsSearchOpen(true)} />
       </div>
-      {/* `Overlay` portals to `document.body` itself, so no portal here. */}
       <AnimatePresence>
         {isSearchOpen && (
           <SearchOverlay onClose={() => setIsSearchOpen(false)} />

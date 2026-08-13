@@ -10,7 +10,6 @@ interface NotificationsListProps {
   loading: boolean;
 }
 
-/** Notifications list: loading skeletons, empty state, or the rows. */
 export const NotificationsList = ({
   notifications,
   loading,

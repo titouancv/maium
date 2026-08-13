@@ -24,10 +24,6 @@ export interface TextProps extends React.HTMLAttributes<HTMLElement> {
   truncate?: boolean;
 }
 
-/**
- * Body copy. Exists so `text-txt-muted text-sm` — by far the app's most
- * repeated pair of classes — has one spelling instead of twenty.
- */
 export function Text({
   as: Tag = "p",
   tone = "default",

@@ -32,14 +32,8 @@ const JOB_EXTRACTION_SYSTEM = [
   "Use empty strings/arrays for anything not present. Do not fabricate.",
 ].join(" ");
 
-/**
- * Extracts a job posting from raw pasted text, storing it in the shared `jobs`
- * table. Uses a hash of the text for deduplication so identical pastes reuse
- * the same row. `source_url` is set to `"text:<hash>"` (not a real URL).
- */
 export async function extractJobFromText(
   rawText: string,
-  /** Tags the `llm_logs` audit rows; null for a signed-out run. */
   userId: string | null,
 ): Promise<JobData> {
   const admin = createAdminClient();
@@ -107,14 +101,8 @@ export async function extractJobFromText(
   return toJobData(inserted);
 }
 
-/**
- * Extracts a job posting from a URL into the shared `jobs` table, deduplicated
- * by normalized-URL hash. If the job already exists it is returned as-is
- * (extraction is the expensive part and the posting is immutable enough).
- */
 export async function extractJob(
   rawUrl: string,
-  /** Tags the `llm_logs` audit rows; null for a signed-out run. */
   userId: string | null,
 ): Promise<JobData> {
   const admin = createAdminClient();

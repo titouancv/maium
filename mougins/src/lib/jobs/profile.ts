@@ -7,11 +7,6 @@ import {
 import type { CvExtraction } from "@/lib/validators/cv";
 import type { CandidateProfile } from "@/types/job";
 
-/**
- * Assembles the normalized candidate profile for a user, reusing the same
- * relational select + mapper as the public profile page. Uses the admin client
- * because the pipeline runs in a background task without the user's cookies.
- */
 export async function getCandidateProfile(
   userId: string,
 ): Promise<CandidateProfile> {
@@ -47,15 +42,6 @@ export async function getCandidateProfile(
   };
 }
 
-/**
- * The same profile, assembled from a parsed CV instead of a `users` row — the
- * signed-out path, where there is no account to read.
- *
- * A pure mapping, deliberately symmetric with {@link getCandidateProfile}: the
- * pipeline downstream can't tell the two apart. `CvExtraction` is stored rather
- * than `CandidateProfile` because the same JSON also fills the account at
- * signup, and only the extraction shape matches `PATCH /api/users/me`.
- */
 export function cvExtractionToCandidateProfile(
   extraction: CvExtraction,
 ): CandidateProfile {
@@ -77,7 +63,6 @@ export function cvExtractionToCandidateProfile(
   };
 }
 
-/** Flattens a candidate profile into a single string for embedding. */
 export function profileToText(profile: CandidateProfile): string {
   const lines: string[] = [];
   if (profile.bio) lines.push(profile.bio);

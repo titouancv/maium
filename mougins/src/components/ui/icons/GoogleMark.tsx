@@ -1,8 +1,3 @@
-/**
- * Google's logo. Kept apart from [Icon]: it is a brand mark, so it keeps its
- * fixed four colours instead of inheriting `currentColor`, and it is the one
- * place in the app where raw hex values are correct.
- */
 export function GoogleMark({ size = 18 }: { size?: number }) {
   return (
     <svg

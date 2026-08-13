@@ -13,14 +13,9 @@ export interface ProfileBundle {
   user: UserData;
   isOwner: boolean;
   isAuthenticated: boolean;
-  /** Signup timestamp, used to derive the "Nth on maium" join rank. */
   createdAt: string;
 }
 
-/**
- * Round-trip 1: the profile row + the viewer's auth/profile (in parallel).
- * Cached per request so the header, body and follow section share one fetch.
- */
 export const getProfileBundle = cache(
   async (pseudo: string): Promise<ProfileBundle | null> => {
     const admin = createAdminClient();
@@ -51,11 +46,6 @@ export const getProfileBundle = cache(
   },
 );
 
-/**
- * The profile's 1-indexed signup position ("Nth on maium"): how many users
- * had signed up by the time this one did. Depends on the cached
- * {@link getProfileBundle}, so it streams in behind its own Suspense boundary.
- */
 export const getProfileRank = cache(
   async (pseudo: string): Promise<number | null> => {
     const bundle = await getProfileBundle(pseudo);
@@ -77,11 +67,6 @@ export interface FollowInfo {
   isFollowing: boolean;
 }
 
-/**
- * Round-trip 2: follow counts + whether the viewer follows this profile.
- * Depends on the profile id from {@link getProfileBundle}, so it streams in
- * separately behind its own Suspense boundary.
- */
 export const getFollowInfo = cache(
   async (pseudo: string): Promise<FollowInfo> => {
     const bundle = await getProfileBundle(pseudo);

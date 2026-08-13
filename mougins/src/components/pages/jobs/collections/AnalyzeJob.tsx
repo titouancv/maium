@@ -10,9 +10,6 @@ import {
   AnalyzeJobTextSchema,
   type AnalyzeJobInput,
 } from "@/lib/validators/job";
-// Import UI primitives from their files, not the `@/components/ui` barrel:
-// pulling this new client tree through the barrel trips a Turbopack
-// `export *` namespace-seal bug at build time (see also JobsSkeleton/loading).
 import { Button } from "@/components/ui/Button";
 import { TextInput } from "@/components/ui/TextInput";
 import { TextArea } from "@/components/ui/TextArea";
@@ -65,8 +62,6 @@ export function AnalyzeJob() {
   const urlErrors = urlForm.formState.errors;
   const textErrors = textForm.formState.errors;
 
-  // The AI needs a sufficiently filled profile to produce an accurate match.
-  // Below the threshold, gate the analysis behind a "complete your profile" prompt.
   if (user && !hasEnoughProfileForAnalysis(user)) {
     return (
       <div className="flex h-full flex-col items-center justify-center gap-6">

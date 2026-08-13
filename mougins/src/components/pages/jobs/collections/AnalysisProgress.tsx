@@ -11,17 +11,7 @@ import type { AnalysisStatus, AnalysisStep } from "@/types/job";
 interface AnalysisProgressProps {
   analysisJobId: string;
   onDone: () => void;
-  /**
-   * Signed-out run: follow progress by polling instead of Realtime.
-   * A signed-out visitor's `analysis_jobs` row carries a NULL `user_id`, which
-   * no RLS policy matches, so Realtime would never deliver an update. The
-   * status endpoint authorizes on the `anon_id` cookie instead.
-   */
   anonymous?: boolean;
-  /**
-   * Where to go when the analysis completes. Defaults to the signed-in history
-   * page, which a signed-out visitor can't reach.
-   */
   onCompleted?: (analysisId: string) => void;
 }
 
@@ -33,12 +23,6 @@ interface ProgressState {
   analysisId: string | null;
 }
 
-
-/**
- * Follows a running analysis live. Seeds from a one-shot status fetch, then
- * subscribes to `analysis_jobs` UPDATE rows over Realtime. On completion,
- * redirects to the history page and auto-opens the finished analysis overlay.
- */
 export function AnalysisProgress({
   analysisJobId,
   onDone,
@@ -55,17 +39,12 @@ export function AnalysisProgress({
     analysisId: null,
   });
 
-  // Animated display value (float). Slowly creeps forward between real updates.
   const [displayProgress, setDisplayProgress] = useState(0);
   const stateRef = useRef(state);
   useEffect(() => {
     stateRef.current = state;
   }, [state]);
 
-  // 60 fps animation via requestAnimationFrame.
-  //   • Behind real progress → proportional catch-up (τ ≈ 0.33s), min 5 %/s
-  //   • At or ahead → exponential deceleration toward progress+5, min 0.08 %/s
-  //   dt is capped at 100 ms to avoid a big jump when the tab regains focus.
   useEffect(() => {
     let rafId: number;
     let lastTime: number | null = null;
@@ -122,7 +101,6 @@ export function AnalysisProgress({
         })
         .catch(() => null);
 
-    // Seed current state in case the job advanced before we subscribed.
     readStatus();
 
     if (anonymous) {

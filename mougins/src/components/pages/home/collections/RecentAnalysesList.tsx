@@ -10,7 +10,6 @@ interface RecentAnalysesListProps {
   analysesPromise: Promise<AnalysisListItem[]>;
 }
 
-/** Unwraps the streamed recent analyses inside a Suspense boundary. */
 export const RecentAnalysesList = ({
   analysesPromise,
 }: RecentAnalysesListProps) => {

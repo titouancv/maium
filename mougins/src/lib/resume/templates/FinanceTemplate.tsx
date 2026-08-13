@@ -10,9 +10,6 @@ import {
 import type { ResumePdfData } from "../types";
 import { formatDuration, formatPeriod } from "../experiencePeriod";
 
-// Sober corporate palette (Goldman Sachs / JP Morgan style): no skill bars,
-// no icons, no timeline. Strictly black & white, set in the built-in
-// Times-Roman serif font (no external font file needed).
 const FONT_FAMILY = "Times-Roman";
 const BLACK = "#000000";
 const PRIMARY = BLACK;
@@ -43,8 +40,6 @@ const styles = StyleSheet.create({
     borderBottomColor: PRIMARY,
     marginLeft: 8,
   },
-  // Section title: label + a short rounded accent bar underneath, mirroring the
-  // app's <Title> component (the `h-1 w-22 rounded-full bg-current` bar).
   sectionTitleWrap: {
     flexDirection: "row",
     alignItems: "center",

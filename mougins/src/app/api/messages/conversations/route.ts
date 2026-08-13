@@ -8,8 +8,6 @@ export async function GET() {
     const auth = await requireApiUser();
     if (auth instanceof NextResponse) return auth;
 
-    // Single source of truth: same shape (members, last_message, sorting,
-    // empty-conversation filtering) as the server-rendered list.
     const conversations = await getConversations();
     return NextResponse.json({ conversations });
   } catch (error) {
@@ -49,7 +47,6 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Check if a direct conversation already exists between these two users
     const { data: existing } = await supabase
       .from("conversation_members")
       .select("conversation_id, conversations!inner(is_group)")
@@ -78,8 +75,6 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    // Create new conversation using admin client to bypass SELECT RLS
-    // (the SELECT policy requires membership, which doesn't exist yet at insert time)
     const { data: conversation, error: convError } = await admin
       .from("conversations")
       .insert({ is_group: false })

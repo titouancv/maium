@@ -8,9 +8,7 @@ import { HobbyList, SocialNetworkItem, UrlItem } from "@/components/ui";
 
 interface ProfileContentProps {
   user: UserData;
-  /** Streamed follow counts + follow/message/settings buttons (round-trip 2). */
   followSlot: React.ReactNode;
-  /** Streamed "Nth on maium" join rank (round-trip 2). */
   rankSlot: React.ReactNode;
 }
 
@@ -21,9 +19,6 @@ export const ProfileContent = ({
 }: ProfileContentProps) => {
   const t = useTranslations("profile");
 
-  // Name overlay shows on the mobile avatar only (desktop has the @pseudo
-  // below). Hidden via CSS (`hideNameOnDesktop`), not a JS viewport branch, so
-  // SSR and the client render the same HTML and don't trip hydration.
   const displayName = {
     firstName: user.first_name,
     lastName: user.last_name,

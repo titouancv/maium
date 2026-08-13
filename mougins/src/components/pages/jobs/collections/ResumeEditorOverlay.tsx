@@ -6,9 +6,6 @@ import { API, EXPERIENCE_NAMESPACE } from "@/constants";
 import { Form } from "@/components/form";
 import type { FormProps } from "@/components/form";
 import { FormLayout } from "@/components/layout/FormLayout";
-// Import UI primitives from their files, not the `@/components/ui` barrel:
-// pulling this client tree through the barrel trips a Turbopack
-// `export *` namespace-seal bug at build time (see AnalyzeJob).
 import { ProgressBar } from "@/components/ui/ProgressBar";
 import { Overlay } from "@/components/ui/Overlay";
 import { InfoMessage } from "@/components/ui/InfoMessage";
@@ -22,28 +19,17 @@ import type { Experience } from "@/types/experience";
 import { TabsVertical } from "@/components/ui/TabsVertical";
 
 interface Props {
-  /**
-   * Job-analysis source: the editor loads the optimized `resume_json` from this
-   * resume and (by default) posts the edited draft back to its PDF route.
-   */
   resumeId?: string;
-  /**
-   * Profile source: seed the editor with this draft instead of fetching one.
-   * Pair it with `pdfEndpoint` to point the render at the right route.
-   */
   initialDraft?: ResumeJson;
-  /** PDF endpoint the edited draft is POSTed to. Defaults to the `resumeId` route. */
   pdfEndpoint?: string;
   onClose: () => void;
 }
 
-/** Edit steps (summary → experiences → education → skills) + template choice. */
 const TOTAL_STEPS = 5;
 const TEMPLATE_STEP = 4;
 
 type Phase = "idle" | "generating" | "error";
 
-/** Maps the editor's `Experience[]` back into the stored resume_json shape. */
 function toResumeEntries(items: Experience[]): ResumeJson["experiences"] {
   return items.map((e) => ({
     organization: e.organization,
@@ -64,15 +50,12 @@ export function ResumeEditorOverlay({
   const t = useTranslations("jobs");
   const tCommon = useTranslations("common");
 
-  // Profile source seeds the draft up front (lazy init); job source fetches it.
   const [draft, setDraft] = useState<ResumeJson | null>(initialDraft ?? null);
   const [step, setStep] = useState(0);
   const [templateIndex, setTemplateIndex] = useState(0);
   const [phase, setPhase] = useState<Phase>("idle");
   const [progress, setProgress] = useState(0);
 
-  // Load the optimized resume_json that the AI generated (job-analysis source
-  // only — the profile source is already seeded via `initialDraft`).
   useEffect(() => {
     if (initialDraft || !resumeId) return;
     let active = true;
@@ -89,8 +72,6 @@ export function ResumeEditorOverlay({
     };
   }, [resumeId, initialDraft]);
 
-  // No real progress events for a single render call — creep toward 90 % while
-  // the request is in flight, then jump to 100 % on completion.
   useEffect(() => {
     if (phase !== "generating") return;
     const interval = setInterval(() => {
@@ -107,8 +88,6 @@ export function ResumeEditorOverlay({
     setPhase("generating");
     setProgress(8);
     try {
-      // Edits are sent in the body and used to render the PDF on the fly — they
-      // are never persisted to the database.
       const res = await fetch(endpoint, {
         method: "POST",
         headers: { "Content-Type": "application/json" },

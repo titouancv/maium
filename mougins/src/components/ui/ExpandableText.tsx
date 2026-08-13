@@ -5,7 +5,6 @@ import { useTranslations } from "next-intl";
 import { cn } from "@/lib/utils";
 import { Button } from "./Button";
 
-/** Literal classes — Tailwind can't generate `line-clamp-${n}` from a variable. */
 const CLAMPS = {
   3: "line-clamp-3",
   5: "line-clamp-5",
@@ -14,15 +13,10 @@ const CLAMPS = {
 
 interface ExpandableTextProps {
   children: string;
-  /** Lines shown while collapsed. */
   lines?: keyof typeof CLAMPS;
   className?: string;
 }
 
-/**
- * Long copy clamped to a few lines, with a see more / see less toggle that only
- * appears when the text actually overflows.
- */
 export function ExpandableText({
   children,
   lines = 5,

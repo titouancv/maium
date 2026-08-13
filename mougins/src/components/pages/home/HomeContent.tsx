@@ -1,8 +1,3 @@
-// Stays a Client Component on purpose: as a Server Component it pulls the home
-// `collections` barrel (which re-exports client components via `export *`)
-// across the server/client boundary, tripping a Turbopack `export *`
-// namespace-seal bug. The welcome/celebration and store-sync logic still live in
-// dedicated client islands ([WelcomeCelebration], [CurrentUserSync]).
 "use client";
 
 import { Suspense } from "react";
@@ -43,9 +38,6 @@ export const HomeContent = ({
   const tNav = useTranslations("nav");
   const t = useTranslations("home");
 
-  // The greeting becomes the page title and the notifications card sits in the
-  // header (where the back button would be); see PageLayout's node-title mode.
-  // Signed out, the page *is* the landing page, so it wears the brand name.
   const headerTitle = user ? (
     <>
       <GreetingSection firstName={user.first_name} />
@@ -68,8 +60,6 @@ export const HomeContent = ({
           <HeroSection variant="landing" />
           {suggestionsPromise && (
             <Section title={t("sections.landingNetwork")} titleSize="h2">
-              {/* No follow button here: a visitor can't follow anyone yet, and
-                  the pitch above is the action we want them to take. */}
               <Suspense fallback={<SuggestionsListSkeleton />}>
                 <SuggestionsList
                   suggestionsPromise={suggestionsPromise}
@@ -85,10 +75,6 @@ export const HomeContent = ({
 
       {user && (
         <>
-          {/* Sections are ordered by how central they are to the product: the
-              job analysis leads, its past runs follow, then the network. (The
-              CV export lives on the profile page, next to the data it
-              exports.) */}
           <div className="flex w-full max-w-7xl flex-col gap-24 pt-24">
             <Section title={t("sections.analyze")} titleSize="h2">
               <AnalyzeCard />
@@ -99,8 +85,6 @@ export const HomeContent = ({
                 <Suspense fallback={<RecentAnalysesListSkeleton />}>
                   <RecentAnalysesList analysesPromise={analysesPromise} />
                 </Suspense>
-                {/* `self-start` so the link only covers the button and not the
-                    whole section width. */}
                 <Link href={ROUTES.JOBS_HISTORY} className="self-start pt-4">
                   <Button variant="outline">
                     {t("actions.analyzeHistory")}

@@ -8,15 +8,9 @@ import {
   DataUsageNotice,
 } from "@/components/ui";
 
-/** The pitch: the three steps of an analysis, told from the visitor's side. */
 const WORKFLOW_STEPS = [1, 2, 3] as const;
 
 interface HeroSectionProps {
-  /**
-   * `landing` (public home) leads with the free AI analysis and keeps signing
-   * in as the secondary action. `signup` (wizard step 0) drops that CTA — the
-   * visitor already chose to create an account.
-   */
   variant?: "landing" | "signup";
 }
 
@@ -43,8 +37,6 @@ export const HeroSection = ({ variant = "signup" }: HeroSectionProps) => {
         </ol>
 
         {variant === "landing" ? (
-          // Both entries sit on one row: running an analysis and signing back
-          // in are two ways into the product, not an action and its footnote.
           <div className="flex flex-col gap-3 sm:flex-row">
             <Link href={ROUTES.ANALYZE} className="sm:flex-1">
               <Button
@@ -61,7 +53,6 @@ export const HeroSection = ({ variant = "signup" }: HeroSectionProps) => {
           <GoogleSignInButton />
         )}
 
-        {/* The landing page shows this at the foot of the page instead. */}
         {variant === "signup" && <DataUsageNotice />}
       </div>
     </div>

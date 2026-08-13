@@ -3,12 +3,10 @@ import { EmptyState, UserCard } from "@/components/ui";
 import type { UserSummary } from "@/types";
 
 interface UserListItemsProps {
-  /** Resolves to `null` when the target user does not exist. */
   usersPromise: Promise<UserSummary[] | null>;
   emptyMessage: string;
 }
 
-/** Streamed follower/following list; calls notFound() for a missing user. */
 export async function UserListItems({
   usersPromise,
   emptyMessage,

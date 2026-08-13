@@ -6,10 +6,8 @@ import { ROUTES } from "./constants";
 
 const handleI18nRouting = createIntlMiddleware(routing);
 
-/** Path prefixes (locale-stripped) that require an authenticated user. */
 const PROTECTED_PREFIXES = [ROUTES.MESSAGES, ROUTES.JOBS] as const;
 
-/** Strip an optional leading `/fr` locale segment (`en` is unprefixed). */
 function stripLocale(pathname: string): { locale: string; path: string } {
   const [, first, ...rest] = pathname.split("/");
   if (routing.locales.includes(first as (typeof routing.locales)[number])) {
@@ -38,9 +36,6 @@ export default async function proxy(request: NextRequest) {
     }
   );
 
-  // Refresh session — always use getUser(), never getSession(), for security.
-  // Also reused below to gate protected routes, so each page can render
-  // immediately without re-awaiting an auth round-trip of its own.
   const {
     data: { user },
   } = await supabase.auth.getUser();

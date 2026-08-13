@@ -7,11 +7,6 @@ interface NotificationCardProps {
   onClick: () => void;
 }
 
-/**
- * The home dashboard's single "Notifications" card. Shows the unread count and
- * opens the notifications overlay on click. Replaces the old per-metric stat
- * cards (followers / unread / profile views); mirrors their look.
- */
 export const NotificationCard = ({
   count,
   label,

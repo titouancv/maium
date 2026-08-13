@@ -8,7 +8,6 @@ interface UserListContentProps {
   children: React.ReactNode;
 }
 
-/** Frame for follower/following lists; the list itself streams in as children. */
 export function UserListContent({ title, children }: UserListContentProps) {
   const t = useTranslations("common");
 

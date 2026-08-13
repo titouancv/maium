@@ -2,7 +2,6 @@ import type { Gender } from "@/constants";
 import type { Experience } from "@/types/experience";
 import type { UserData, Hobby, UserSummary } from "@/types/user";
 
-/** Narrow a (current) user down to the public summary embedded in feeds/cards. */
 export function userToSummary(
   user: Pick<
     UserData,
@@ -107,7 +106,6 @@ export function mapUserFromDb(raw: DbUserRaw): UserData {
   };
 }
 
-/** Subset select string to embed all child tables (for use in .select()). */
 export const USER_PROFILE_SELECT = `
   user_experiences(type, organization, role, start_period, end_period, description, website, location, position),
   user_skills(name, position),

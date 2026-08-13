@@ -482,6 +482,33 @@ Every visible string uses `t()`. Both `en.json` and `fr.json` must be updated in
 
 ---
 
+## Comments
+
+**Never write a comment.** The codebase contains none, and none may be
+reintroduced — not when adding code, not when editing it. Code documents itself
+through names; a comment is a name that wasn't found.
+
+- ❌ `//` and `/* */` in TS/TSX, JSDoc `/** */`, `{/* */}` in JSX, `/* */` in
+  CSS, `--` banners in new SQL, section separators, `TODO` / `FIXME` markers,
+  and commented-out code (delete it — git remembers).
+- ✅ The **only** comments allowed are machine-read directives, because the
+  tooling needs them: `eslint-disable*`, `@ts-expect-error`, `prettier-ignore`,
+  `/// <reference>`. Nothing else.
+
+When the urge to explain arises, do one of these instead:
+
+1. **Rename.** `prependPrevHeightRef` beats `prevHeight` + a comment.
+2. **Extract.** Pull the block into a named function or a named `const` — the
+   name carries what the comment would have said.
+3. **Document it here.** Cross-cutting *why* (an invariant, a security seam, a
+   browser quirk) belongs in this file, where it is read once and stays true —
+   not scattered next to the code, where it silently rots.
+
+Existing SQL migrations in `supabase/migrations/` keep their comments: they are
+applied, immutable history. New migrations follow the rule above.
+
+---
+
 ## Styles (Tailwind CSS)
 
 - Mobile-first: base classes for mobile, breakpoints (`sm:`, `md:`, `lg:`) for larger screens.
@@ -584,8 +611,9 @@ Types: `feat`, `fix`, `refactor`, `chore`, `docs`, `test`, `i18n`
 4. `"use client"` only when hooks, events, or browser APIs are needed.
 5. Absolute imports via `@/` alias.
 6. No `console.log` in committed code.
-7. Every folder has an `index.ts` for centralized exports.
-8. Reach for an existing `ui/` component before writing markup — and never build
+7. **No comments** — only machine-read directives (see **Comments**).
+8. Every folder has an `index.ts` for centralized exports.
+9. Reach for an existing `ui/` component before writing markup — and never build
    a tooltip or a spinner (see **Styles**).
-9. No component gets its own border or background; everything sits at the same
-   level (see **Styles**).
+10. No component gets its own border or background; everything sits at the same
+    level (see **Styles**).

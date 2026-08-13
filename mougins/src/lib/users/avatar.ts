@@ -5,7 +5,6 @@ import {
   PROFILE_PHOTO_OUTPUT_WIDTH,
 } from "@/constants";
 
-/** Pixel crop rectangle as reported by react-easy-crop's `onCropComplete`. */
 export interface CropArea {
   x: number;
   y: number;
@@ -23,13 +22,6 @@ function loadImage(src: string): Promise<HTMLImageElement> {
   });
 }
 
-/**
- * Draw the selected crop rectangle onto a 5:7 canvas and export it as a WebP
- * blob, re-encoding any accepted input format (PNG, JPEG, …) to a single,
- * size-bounded output. WebP is used (over JPEG) so transparent PNGs keep their
- * alpha channel instead of getting a black background. Throws if the canvas
- * context or export is unavailable.
- */
 export async function cropImageToBlob(
   imageSrc: string,
   crop: CropArea,
@@ -68,12 +60,6 @@ export async function cropImageToBlob(
   });
 }
 
-/**
- * Upload a cropped profile photo to the user's own folder in the
- * `profile-photos` bucket (RLS scopes writes to `<uid>/…`) and return its public
- * URL. A fixed filename + cache-busting query keeps a single object per user
- * while still forcing `next/image` to refetch after a change.
- */
 export async function uploadProfilePhoto(
   blob: Blob,
   userId: string,

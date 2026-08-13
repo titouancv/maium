@@ -10,21 +10,10 @@ import { InfoMessage } from "@/components/ui/InfoMessage";
 
 interface ProfilePhotoFormProps {
   defaultValue?: string;
-  /** Fired with the uploaded photo's public URL once the crop is saved. */
   onChange: (profilePhoto: string) => void;
-  /** True while the parent persists the URL — blocks a second upload. */
   isSubmitting?: boolean;
 }
 
-/**
- * Signup step for the profile photo. Shares [useProfilePhotoPicker] and
- * [ProfilePhotoPicker] with the settings overlay, so cropping, validation and
- * upload behave identically in both places.
- *
- * The upload button lives here rather than in the wizard's footer because the
- * footer's primary action is "skip" — the step is optional, and a user with no
- * photo should be able to move on without touching a file picker.
- */
 export const ProfilePhotoForm = ({
   defaultValue,
   onChange,
@@ -62,9 +51,6 @@ export const ProfilePhotoForm = ({
       <ProfilePhotoPicker picker={picker} />
 
       {picker.hasImage && (
-        // Loading covers the parent's persist too, so the button can't be
-        // clicked again between the upload finishing and the PATCH returning —
-        // which would re-upload and orphan a Storage object.
         <Button
           type="button"
           size="lg"

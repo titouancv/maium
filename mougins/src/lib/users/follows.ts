@@ -28,10 +28,6 @@ function toRows(
     .filter((user): user is SummaryRow => Boolean(user));
 }
 
-/**
- * Annotate each user with whether the current viewer follows them, so the list
- * can render an accurate follow/unfollow button. Strips the internal id.
- */
 async function withFollowState(rows: SummaryRow[]): Promise<UserSummary[]> {
   const viewer = await getAuthUser();
   let followedSet = new Set<string>();
@@ -58,7 +54,6 @@ async function withFollowState(rows: SummaryRow[]): Promise<UserSummary[]> {
   }));
 }
 
-/** Users following `pseudo`. Returns `null` when the user does not exist. */
 export async function getFollowers(
   pseudo: string,
 ): Promise<UserSummary[] | null> {
@@ -77,7 +72,6 @@ export async function getFollowers(
   );
 }
 
-/** Users that `pseudo` follows. Returns `null` when the user does not exist. */
 export async function getFollowing(
   pseudo: string,
 ): Promise<UserSummary[] | null> {

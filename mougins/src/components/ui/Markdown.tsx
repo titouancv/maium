@@ -4,8 +4,6 @@ import { cn } from "@/lib/utils";
 import { AccentBar } from "./AccentBar";
 import { Rail } from "./Rail";
 
-// Map markdown nodes onto the app's semantic theme tokens (never default
-// Tailwind colors), so story content respects light/dark themes.
 const COMPONENTS: Components = {
   h1: (props) => (
     <div className="flex flex-col gap-1 pb-2">
@@ -55,8 +53,6 @@ const COMPONENTS: Components = {
       <blockquote className="text-txt italic [&>p]:my-0" {...props} />
     </div>
   ),
-  // No panel behind code and no rule for `hr`: everything on the page sits at
-  // the same level, so code is set apart by its face, not by a box.
   code: (props) => <code className="text-txt font-mono text-sm" {...props} />,
   pre: (props) => (
     <pre className="text-txt my-3 overflow-x-auto font-mono text-sm" {...props} />
@@ -69,7 +65,6 @@ interface MarkdownProps {
   className?: string;
 }
 
-/** Renders GFM markdown with theme-aware styling. */
 export function Markdown({ children, className }: MarkdownProps) {
   return (
     <div className={cn("break-words", className)}>

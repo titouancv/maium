@@ -5,13 +5,7 @@ import { APP_NAME } from "@/constants";
 import { Title, NavigationBar, BackButton } from "../ui";
 
 interface PageLayoutProps {
-  /**
-   * Header title. Pass a string for the default underlined `Title`, or a node
-   * to stream the header (e.g. a `<Suspense>` boundary) — when a node is
-   * provided it owns the full header row and `backLabel` is ignored.
-   */
   title: React.ReactNode;
-  /** Tab title; falls back to `title` when it is a string. */
   documentTitle?: string;
   onBack?: () => void;
   backLabel?: string;
@@ -33,9 +27,6 @@ export const PageLayout = ({
 
   useEffect(() => {
     if (!tabTitle) return;
-    // Capture the current title so it can be restored on unmount — otherwise an
-    // overlay rendered over a still-mounted page leaves the tab name stuck on
-    // the overlay's title after it closes (the page's effect never re-runs).
     const previous = document.title;
     document.title = tabTitle.toLowerCase() + ` • ${APP_NAME}`;
     return () => {
@@ -46,7 +37,6 @@ export const PageLayout = ({
   return (
     <div className="relative flex h-dvh flex-col md:h-screen md:items-center">
       <div className="flex h-full w-full flex-col gap-6 md:h-screen md:gap-8">
-        {/* Header */}
         <div className="flex shrink-0 justify-center px-4">
           <div className="flex w-full max-w-7xl shrink-0 items-center justify-between pt-6 md:pt-12">
             {typeof title === "string" ? (
@@ -59,8 +49,6 @@ export const PageLayout = ({
             )}
           </div>
         </div>
-
-        {/* Content */}
 
         <div className="flex min-h-0 w-full flex-1 flex-col items-center overflow-y-auto px-4">
           {children}

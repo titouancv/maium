@@ -15,13 +15,10 @@ import { FilePicker, type FilePickerHandle } from "@/components/ui/FilePicker";
 import type { CvExtraction } from "@/lib/validators/cv";
 
 interface CvImportFormProps {
-  /** Fired with the extracted draft once the user confirms the summary. */
   onChange: (extraction: CvExtraction) => void;
-  /** True while the parent persists the confirmed draft — blocks a second confirm. */
   isSubmitting?: boolean;
 }
 
-/** What the extraction yielded, for the confirmation screen. */
 interface Summary {
   extraction: CvExtraction;
   counts: { key: string; count: number }[];
@@ -30,11 +27,6 @@ interface Summary {
 const isAcceptedType = (type: string) =>
   (CV_ACCEPTED_MIME_TYPES as readonly string[]).includes(type);
 
-/**
- * Every collection the extraction can carry, so the confirmation screen shows
- * exactly what the PATCH will write — a field missing here would be persisted
- * without ever being shown, which defeats the point of the screen.
- */
 function summarize(extraction: CvExtraction): Summary["counts"] {
   return (
     [
@@ -54,16 +46,6 @@ function summarize(extraction: CvExtraction): Summary["counts"] {
     .map(([key, count]) => ({ key, count }));
 }
 
-/**
- * Signup step that imports a CV: pick a PDF/image, OCR it through
- * `POST /api/cv/parse`, then show what was found before anything is written.
- *
- * The confirmation screen is not decoration. `PATCH /api/users/me` replaces
- * each collection wholesale, and the extraction comes from a language model —
- * the user must see what is about to land on their profile and be able to back
- * out. Choosing another file re-runs the import; the wizard's "skip" leaves the
- * profile untouched.
- */
 export const CvImportForm = ({
   onChange,
   isSubmitting,
@@ -99,8 +81,6 @@ export const CvImportForm = ({
 
       const { profile } = (await res.json()) as { profile: CvExtraction };
       const counts = summarize(profile);
-      // Nothing usable came back: say so rather than showing an empty summary
-      // and letting the user "confirm" a no-op.
       if (counts.length === 0 && !profile.firstName && !profile.bio) {
         setError(t("errorEmpty"));
         return;
@@ -121,7 +101,6 @@ export const CvImportForm = ({
 
       {summary ? (
         <div className="flex flex-col gap-6">
-          {/* No box around the summary — it reads as part of the page. */}
           <div className="flex flex-col gap-3">
             <Text size="sm" className="font-extrabold">
               {t("foundTitle")}
@@ -157,8 +136,6 @@ export const CvImportForm = ({
             {t("chooseAnother")}
           </Button>
 
-          {/* `isLoading` swaps the button for static text, so a second click
-              can't advance the wizard twice and skip the next step. */}
           <Button
             type="button"
             size="lg"

@@ -45,15 +45,11 @@ describe("SIGNUP_STEPS", () => {
 });
 
 describe("getResumeStep", () => {
-  // Regression guard: skipping optional steps when resuming made the CV import
-  // unreachable — every fresh user was sent straight past it.
   it("starts a first-run user on the CV import", () => {
     expect(getResumeStep({})).toBe(stepIndexOf("cv"));
   });
 
   it("still starts on the CV import when OAuth already supplied the name", () => {
-    // The DB trigger fills first/last name from Google, so their presence must
-    // not be mistaken for wizard progress.
     expect(getResumeStep({ firstName: "Ada", lastName: "Lovelace" })).toBe(
       stepIndexOf("cv"),
     );
@@ -67,8 +63,6 @@ describe("getResumeStep", () => {
   });
 
   it("never sends a returning user back to the CV import", () => {
-    // It can't be "filled", so resuming onto it would put the user back there
-    // on every reload. It is a first-run entry point only.
     for (const draft of [
       { ...full, dob: undefined },
       { ...full, gender: undefined },
@@ -79,15 +73,11 @@ describe("getResumeStep", () => {
   });
 
   it("lands on the last step once every required field is filled", () => {
-    // That step is `photo` — optional, but terminal: its footer completes
-    // onboarding, so there is nothing to be trapped by.
     expect(getResumeStep(full)).toBe(SIGNUP_TOTAL_STEPS);
     expect(stepIndexOf("photo")).toBe(SIGNUP_TOTAL_STEPS);
   });
 
   it("ignores CV-only fields when choosing where to resume", () => {
-    // A CV fills experiences and skills, but those are not wizard steps and
-    // must not shift the resume point.
     expect(
       getResumeStep({ ...full, skills: ["TypeScript"], bio: "Engineer" }),
     ).toBe(SIGNUP_TOTAL_STEPS);
@@ -106,8 +96,6 @@ describe("hasCompletedOnboarding", () => {
     expect(hasCompletedOnboarding(user({ first_name: "" }))).toBe(false);
   });
 
-  // Regression guard: if the optional steps ever counted, the home page would
-  // bounce every photo-less user back into the wizard, forever.
   it("does not require the optional steps", () => {
     expect(hasCompletedOnboarding(user({ profile_photo: null }))).toBe(true);
   });

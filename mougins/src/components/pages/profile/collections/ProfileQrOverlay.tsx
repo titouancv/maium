@@ -12,11 +12,6 @@ interface ProfileQrOverlayProps {
   onClose: () => void;
 }
 
-/**
- * Profile overlay showing only a QR code that points to the public profile URL,
- * so it can be scanned to open the account. The QR is rendered client-side from
- * the current origin and kept on a white card to stay scannable in both themes.
- */
 export const ProfileQrOverlay = ({ pseudo, onClose }: ProfileQrOverlayProps) => {
   const t = useTranslations("profile");
   const tCommon = useTranslations("common");

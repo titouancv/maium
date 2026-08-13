@@ -4,10 +4,6 @@ import React, { forwardRef, useCallback, useLayoutEffect, useRef, useState } fro
 import { cn } from "@/lib/utils";
 import { InfoMessage } from "./InfoMessage";
 
-// Format: +XX XXX XXX XXXX (12 digits max)
-// Cursor positions in display string after n digits typed
-// Display: `+XX XXX XXX XXXX`
-//           0123456789012345
 const MAX_DIGITS = 12;
 const CURSOR_POS = [1, 2, 3, 5, 6, 7, 9, 10, 11, 13, 14, 15, 16];
 

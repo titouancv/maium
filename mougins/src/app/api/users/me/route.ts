@@ -4,14 +4,6 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import { UpdateUserSchema } from "@/lib/validators/user";
 import { UNIQUE_VIOLATION, writeProfile } from "@/lib/users/writeProfile";
 
-/**
- * Update the current user's profile. Every field is optional; collections are
- * **replaced** rather than merged.
- *
- * The write itself lives in `writeProfile`, shared with the signup claim that
- * copies an anonymous visitor's CV onto their new account — both must behave
- * identically.
- */
 export async function PATCH(request: NextRequest) {
   try {
     const auth = await requireApiUser();
@@ -26,7 +18,6 @@ export async function PATCH(request: NextRequest) {
     }
 
     try {
-      // The RLS-scoped client: the user may only write their own row.
       await writeProfile(supabase, user.id, parsed.data);
     } catch (error) {
       if ((error as { code?: string })?.code === UNIQUE_VIOLATION) {

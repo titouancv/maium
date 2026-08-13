@@ -7,14 +7,8 @@ import {
 } from "@/lib/resume";
 import { ResumeJsonInputSchema } from "@/lib/validators/job";
 
-// react-pdf renders in Node (not Edge); pin the runtime explicitly.
 export const runtime = "nodejs";
 
-/**
- * Renders the stored resume as a PDF. Open to whoever owns the resume, signed
- * in or not — `buildResumePdfData` resolves ownership (via `getResumeById`) and
- * returns `null` otherwise, which becomes the same 404 as a missing id.
- */
 export async function GET(
   req: NextRequest,
   { params }: { params: Promise<{ id: string }> },
@@ -31,10 +25,6 @@ export async function GET(
   return pdfResponse(pdf, data.fullName);
 }
 
-/**
- * Renders the PDF from a user-edited `resume_json` carried in the body. The
- * edits are used for this render only — nothing is written to the database.
- */
 export async function POST(
   req: NextRequest,
   { params }: { params: Promise<{ id: string }> },

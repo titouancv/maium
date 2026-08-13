@@ -12,11 +12,6 @@ interface NotificationsOverlayProps {
   onClose: () => void;
 }
 
-/**
- * Full-screen notifications overlay: an [Overlay] wrapping a [PageLayout]
- * (titled header + Back button, no navigation bar). The list is fetched lazily
- * by [NotificationsCenter] when the overlay opens.
- */
 export const NotificationsOverlay = ({
   notifications,
   loading,

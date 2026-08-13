@@ -29,9 +29,6 @@ export const FormLayout = ({
   children,
 }: FormLayoutProps) => {
   useEffect(() => {
-    // Capture the current title so it can be restored on unmount — otherwise an
-    // overlay rendered over a still-mounted page leaves the tab name stuck on
-    // the overlay's title after it closes (the page's effect never re-runs).
     const previous = document.title;
     document.title = title.toLowerCase() + ` • ${APP_NAME}`;
     return () => {
@@ -42,7 +39,6 @@ export const FormLayout = ({
   return (
     <div className="flex h-dvh flex-col md:h-screen md:items-center md:justify-center">
       <div className="flex h-full w-full flex-col md:h-screen md:max-w-xl">
-        {/* Header */}
         <div className="flex shrink-0 items-center justify-between px-4 pt-6 md:pt-12">
           <Title label={title} size="h1" />
           {isCancelable ? (
@@ -59,12 +55,10 @@ export const FormLayout = ({
           )}
         </div>
 
-        {/* Content */}
         <div className="flex min-h-0 flex-1 flex-col overflow-y-auto px-4 pt-10 pb-4">
           {children}
         </div>
 
-        {/* Buttons — inline on mobile and desktop */}
         {primaryLabel && (formId || onPrimary) && (
           <div className="shrink-0 px-4 pb-8 md:pb-[100px]">
             <InfoMessage message={error} className="mb-2" />

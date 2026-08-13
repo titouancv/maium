@@ -8,13 +8,8 @@ import {
 } from "@/lib/resume";
 import { ResumeJsonInputSchema } from "@/lib/validators/job";
 
-// react-pdf renders in Node (not Edge); pin the runtime explicitly.
 export const runtime = "nodejs";
 
-/**
- * Renders a CV PDF built purely from the authenticated user's profile — no job
- * analysis required. The template can be picked via `?template=`.
- */
 export async function GET(req: NextRequest) {
   const auth = await requireApiUser();
   if (auth instanceof NextResponse) return auth;
@@ -30,12 +25,6 @@ export async function GET(req: NextRequest) {
   return pdfResponse(pdf, data.fullName);
 }
 
-/**
- * Renders the profile CV from a user-edited `resume_json` carried in the body
- * (the resume editor's draft). The header (name, contact, social links) is
- * still taken from the profile; the edits are used for this render only and are
- * never persisted.
- */
 export async function POST(req: NextRequest) {
   const auth = await requireApiUser();
   if (auth instanceof NextResponse) return auth;

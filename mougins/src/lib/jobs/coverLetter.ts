@@ -2,15 +2,7 @@ import { chatJSON } from "@/lib/mistral";
 import { CoverLetterSchema } from "@/lib/validators/job";
 import type { CandidateProfile, JobData } from "@/types/job";
 
-/**
- * Writes a cover letter tailored to a job from the candidate's profile. Same
- * hard constraint as the resume optimizer: the model may only draw on facts the
- * candidate actually provided — it must never invent experience, skills or
- * achievements. The letter is written in the job posting's language so it can be
- * sent to the employer as-is.
- */
 export async function generateCoverLetter(params: {
-  /** Tags the `llm_logs` audit rows; null for a signed-out run. */
   userId: string | null;
   job: JobData;
   profile: CandidateProfile;

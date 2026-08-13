@@ -47,11 +47,9 @@ interface ModeConfig {
   buildDisplay: (digits: string) => string;
 }
 
-// Cursor position in display string after n digits typed
 const MODE_CONFIGS: Record<DateMode, ModeConfig> = {
   "DD-MM-YYYY": {
     maxDigits: 8,
-    // "DD - MM - YYYY" → D=0,D=1,' '=2,'-'=3,' '=4,M=5,M=6,' '=7,'-'=8,' '=9,Y=10..13
     cursorPos: [0, 1, 2, 6, 7, 11, 12, 13, 14],
     fromISO: (iso) => {
       if (!iso || iso.length < 10) return "";
@@ -68,7 +66,6 @@ const MODE_CONFIGS: Record<DateMode, ModeConfig> = {
   },
   "MM-YYYY": {
     maxDigits: 6,
-    // "MM - YYYY" → M=0,M=1,' '=2,'-'=3,' '=4,Y=5..8
     cursorPos: [0, 1, 2, 6, 7, 8, 9],
     fromISO: (iso) => {
       if (!iso || iso.length < 7) return "";
@@ -85,7 +82,6 @@ const MODE_CONFIGS: Record<DateMode, ModeConfig> = {
   },
   YYYY: {
     maxDigits: 4,
-    // "YYYY" → Y=0..3
     cursorPos: [0, 1, 2, 3, 4],
     fromISO: (iso) => {
       if (!iso || iso.length < 4) return "";

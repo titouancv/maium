@@ -7,8 +7,6 @@ const CHAT_MODEL = process.env.MISTRAL_CHAT_MODEL || "mistral-small-latest";
 const EMBED_MODEL = process.env.MISTRAL_EMBED_MODEL || "mistral-embed";
 const OCR_MODEL = process.env.MISTRAL_OCR_MODEL || "mistral-ocr-latest";
 
-// Rough public pricing ($/1M tokens) used only for the cost_estimate audit
-// column — not billing-grade, just an order of magnitude for observability.
 const COST_PER_1M = { input: 2, output: 6 } as const;
 
 let client: Mistral | null = null;
@@ -50,14 +48,9 @@ async function logUsage(params: {
       status: params.status,
     });
   } catch {
-    // Audit logging must never break the pipeline.
   }
 }
 
-/**
- * Calls Mistral in JSON mode, validates the response against `schema`, and
- * records an `llm_logs` audit row. `operation` and `userId` are for auditing.
- */
 export async function chatJSON<T>(params: {
   operation: string;
   userId: string | null;
@@ -100,7 +93,6 @@ export async function chatJSON<T>(params: {
   }
 }
 
-/** Embeds a single text into a `mistral-embed` vector. */
 export async function embed(params: {
   operation: string;
   userId: string | null;
@@ -124,25 +116,11 @@ export async function embed(params: {
 
   const vector = result.data?.[0]?.embedding ?? [];
   if (vector.length !== EMBEDDING_DIM) {
-    // Non-fatal: callers still store whatever dimension came back, but a
-    // mismatch means the column type and the model drifted apart.
     return vector;
   }
   return vector;
 }
 
-/**
- * Runs Mistral OCR over a document and returns its pages as a single markdown
- * string (pages joined by a blank line), plus an `llm_logs` audit row.
- *
- * The document is passed inline as a data URI, so nothing is uploaded to
- * Mistral's Files API and nothing is persisted on our side — callers hold the
- * bytes only for the duration of the request. PDFs go through `document_url`,
- * images through `image_url` (the two chunk shapes the OCR endpoint accepts).
- *
- * OCR is billed per page rather than per token, so the usage row records zero
- * tokens; it is kept for the latency / error-rate signal.
- */
 export async function ocrDocument(params: {
   operation: string;
   userId: string | null;

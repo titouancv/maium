@@ -7,7 +7,6 @@ import { ProfileRank } from "./ProfileRank";
 import { ProfileFollowSkeleton } from "./ProfileSkeleton";
 import { ProfileViewTracker } from "./ProfileViewTracker";
 
-/** Streamed profile body (round-trip 1) with the follow section nested (round-trip 2). */
 export async function ProfileBody({ pseudo }: { pseudo: string }) {
   const bundle = await getProfileBundle(pseudo);
   if (!bundle) notFound();

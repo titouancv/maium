@@ -9,24 +9,12 @@ import { cn } from "@/lib/utils";
 import { useNotificationStore } from "@/stores/useNotificationStore";
 import { Icon } from "./icons";
 
-/** How long a notification stays before it auto-dismisses. */
 const AUTO_DISMISS_MS = 5000;
-/**
- * Minimum number of message copies. The actual count is derived from the
- * message + viewport width (see {@link Marquee}) so the strip always spans the
- * screen; it must stay a multiple of 4 so the `-25%` scroll loops seamlessly.
- */
 const MIN_MARQUEE_COPIES = 4;
 
-/** Shared classes for the scrolling message strip. */
 const marqueeClasses =
   "min-w-0 flex-1 overflow-hidden font-extrabold uppercase";
 
-/**
- * Global alert band shown at the top of {@link PageLayout}. Reads the current
- * notification from {@link useNotificationStore}; trigger one from anywhere via
- * `useNotificationStore.getState().notify("…")`.
- */
 export function NotificationBanner() {
   const t = useTranslations("common");
   const notification = useNotificationStore((s) => s.notification);
@@ -93,9 +81,6 @@ function Marquee({ message }: { message: string }) {
     const recompute = () => {
       const unitWidth = unitRef.current?.getBoundingClientRect().width ?? 0;
       if (!unitWidth) return;
-      // The strip scrolls left by 25%, so only 75% of it is ever on-screen:
-      // size it so that 75% still spans the viewport, then round up to a
-      // multiple of 4 to keep the loop seamless.
       const needed = window.innerWidth / 0.75 / unitWidth;
       setCopies(Math.max(MIN_MARQUEE_COPIES, Math.ceil(needed / 4) * 4));
     };

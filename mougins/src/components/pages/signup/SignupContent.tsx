@@ -39,8 +39,6 @@ export const SignupContent = ({
   const tForm = useTranslations("form");
   const tGender = useTranslations("gender");
 
-  // Persist a slice of the draft to the user row. Each wizard step saves
-  // incrementally so a refresh/resume never loses progress.
   const patchProfile = async (body: Record<string, unknown>) => {
     setIsLoading(true);
     setError(null);
@@ -57,14 +55,11 @@ export const SignupContent = ({
     setStep((s) => s + 1);
   };
 
-  /** Move on without writing anything — used by the two optional steps. */
   const skipStep = () => {
     setError(null);
     setStep((s) => s + 1);
   };
 
-  // Last step: mark onboarding complete and hand off to the home page, which
-  // shows the welcome celebration (?welcome=1).
   const finish = async () => {
     const ok = await patchProfile({ onboardingCompleted: true });
     if (ok) router.push(`${ROUTES.HOME}?welcome=1`);
@@ -78,11 +73,6 @@ export const SignupContent = ({
     error: error ?? undefined,
   };
 
-  /**
-   * The CV import fills the same fields the later steps ask for, so its result
-   * is saved in one PATCH and merged into the draft — `fullName` then opens
-   * pre-filled and the deep profile (experiences, skills) is already stored.
-   */
   const applyCvExtraction = (extraction: CvExtraction) =>
     nextStep(extraction as Partial<SignupDraft>);
 
@@ -97,7 +87,6 @@ export const SignupContent = ({
         return {
           ...base,
           type: "cvImport",
-          // Optional step: the footer moves on without writing anything.
           primaryLabel: tCommon("skipButton"),
           onPrimary: skipStep,
           onChange: applyCvExtraction,
@@ -147,7 +136,6 @@ export const SignupContent = ({
         return {
           ...base,
           type: "profilePhoto",
-          // Optional and last: the footer completes onboarding without a photo.
           primaryLabel: tCommon("skipButton"),
           onPrimary: finish,
           defaultValue: draft.profilePhoto,

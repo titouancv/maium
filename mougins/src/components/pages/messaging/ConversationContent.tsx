@@ -37,17 +37,11 @@ export function ConversationContent({
   messagesPromise,
 }: ConversationContentProps) {
   const t = useTranslations("messaging");
-  // Hydrated at the layout level, so already set on client navigations.
   const currentUserId = useCurrentUserStore((s) => s.user?.id ?? "");
-  // Seeded by the conversations list (via the shared store) so the header can
-  // paint instantly; falls back to the streamed title on a hard load/deep link.
   const seeded = useMessagingStore((s) =>
     s.conversations.find((c) => c.id === conversationId),
   );
 
-  // When the list seeded this conversation, the title is a plain string and
-  // PageLayout renders the back button for us. Otherwise the title node owns
-  // the row and streams the name in (e.g. on a hard load / deep link).
   const title = seeded ? (
     getDisplayName(seeded, currentUserId)
   ) : (
@@ -92,8 +86,6 @@ function StreamedTitle({
   currentUserId: string;
 }) {
   const conversation = use(conversationPromise);
-  // Membership / existence is enforced in MessageListLoader (which also
-  // streams); here we just render whatever name we can.
   const label = conversation
     ? getDisplayName(conversation, currentUserId)
     : "Conversation";

@@ -26,8 +26,6 @@ function hasUnreadMessage(
   const lastMessage = conversation.last_message;
   if (!lastMessage || lastMessage.sender_id === currentUserId) return false;
   const me = conversation.members.find((m) => m.id === currentUserId);
-  // Use whichever read marker is most recent: the server's last_read_at or the
-  // in-session one written when we opened the conversation locally.
   const serverReadAt = me?.last_read_at ?? undefined;
   const lastReadAt =
     !serverReadAt || (localReadAt && localReadAt > serverReadAt)

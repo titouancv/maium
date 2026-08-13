@@ -5,13 +5,6 @@ import { GoogleSignInButton } from "@/components/ui/GoogleSignInButton";
 import { Title } from "@/components/ui/Title";
 import { Text } from "@/components/ui/Text";
 
-/**
- * Shown once the free run is spent — on return, or on a `402` from the API.
- *
- * The pitch leans on what signing up actually recovers: the CV is already
- * parsed and the finished analysis is waiting, so creating an account is three
- * questions rather than starting over (see `claimAnonSession`).
- */
 export function AnonQuotaGate() {
   const t = useTranslations("analyze.gate");
 

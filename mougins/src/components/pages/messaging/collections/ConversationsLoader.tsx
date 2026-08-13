@@ -8,7 +8,6 @@ interface ConversationsLoaderProps {
   conversationsPromise: Promise<Conversation[]>;
 }
 
-/** Unwraps the streamed conversations promise inside a Suspense boundary. */
 export function ConversationsLoader({
   conversationsPromise,
 }: ConversationsLoaderProps) {

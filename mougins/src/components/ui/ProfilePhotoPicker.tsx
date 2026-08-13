@@ -9,17 +9,9 @@ import { FilePicker, type FilePickerHandle } from "@/components/ui/FilePicker";
 import type { useProfilePhotoPicker } from "@/hooks/useProfilePhotoPicker";
 
 interface ProfilePhotoPickerProps {
-  /** The whole return value of [useProfilePhotoPicker], which owns the state. */
   picker: ReturnType<typeof useProfilePhotoPicker>;
 }
 
-/**
- * Visual half of the profile-photo flow: an empty 5:7 frame that opens the file
- * picker, or the picked image in an interactive cropper with a zoom slider.
- *
- * Presentational only — [useProfilePhotoPicker] holds the state and performs
- * the upload, so the settings overlay and the signup step share both.
- */
 export const ProfilePhotoPicker = ({ picker }: ProfilePhotoPickerProps) => {
   const t = useTranslations("settings");
   const fileRef = useRef<FilePickerHandle>(null);

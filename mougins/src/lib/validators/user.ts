@@ -77,5 +77,4 @@ export const UpdateUserSchema = z
     message: "At least one field must be provided",
   });
 
-/** A validated profile patch, as accepted by `writeProfile`. */
 export type UpdateUserInput = z.infer<typeof UpdateUserSchema>;

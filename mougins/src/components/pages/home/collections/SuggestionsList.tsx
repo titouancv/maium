@@ -8,7 +8,6 @@ import { SuggestionCard } from "../items";
 
 interface SuggestionsListProps {
   suggestionsPromise: Promise<SuggestedUser[]>;
-  /** Hidden on the public landing, where following isn't the point yet. */
   showFollow?: boolean;
 }
 

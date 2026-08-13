@@ -9,13 +9,6 @@ interface WelcomeCelebrationProps {
   firstName: string;
 }
 
-/**
- * The onboarding celebration. The signup wizard hands off to the home page with
- * `?welcome=1` once onboarding is complete; that param is the single trigger for
- * the overlay (the `onboarding_completed` flag is already persisted). Entering
- * drops the param, fires confetti and fades the overlay out. Renders nothing
- * when the param is absent.
- */
 export function WelcomeCelebration({ firstName }: WelcomeCelebrationProps) {
   const searchParams = useSearchParams();
   const welcome = searchParams.get("welcome") === "1";
@@ -25,7 +18,6 @@ export function WelcomeCelebration({ firstName }: WelcomeCelebrationProps) {
   if (!mounted) return null;
 
   const handleEnter = () => {
-    // Drop ?welcome=1 so a refresh doesn't replay the celebration.
     window.history.replaceState(null, "", window.location.pathname);
     setVisible(false);
     import("canvas-confetti").then(({ default: confetti }) => {

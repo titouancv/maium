@@ -1,10 +1,3 @@
-/**
- * Shared date/time formatting helpers.
- * Display helpers take the active locale so output follows the user's language;
- * timestamp helpers operate in UTC to keep stored dates stable across timezones.
- */
-
-/** Format a UTC timestamp as `DD/MM/YYYY` (used for dates of birth). */
 export function formatTimestampToDate(ts: number): string {
   const d = new Date(ts);
   const dd = String(d.getUTCDate()).padStart(2, "0");
@@ -12,11 +5,6 @@ export function formatTimestampToDate(ts: number): string {
   return `${dd}/${mm}/${d.getUTCFullYear()}`;
 }
 
-/**
- * Whether someone born at `dobTs` (UTC-midnight epoch ms, as produced by the
- * date inputs and stored on `users.dob`) is at least `years` old today.
- * Computed in UTC to stay consistent with how dates of birth are stored.
- */
 export function isAtLeastYearsOld(dobTs: number, years: number): boolean {
   const now = new Date();
   const cutoff = Date.UTC(
@@ -27,15 +15,6 @@ export function isAtLeastYearsOld(dobTs: number, years: number): boolean {
   return dobTs <= cutoff;
 }
 
-/**
- * Parse a `YYYY-MM` or `YYYY` partial date into a UTC-midnight epoch ms, the
- * form experience periods are stored in (`user_experiences.start_period`).
- * Returns `null` for anything else.
- *
- * Used for LLM-extracted dates: models emit partial calendar dates reliably but
- * epoch timestamps badly, so they are asked for `YYYY-MM` and converted here.
- * A bare `YYYY` lands on January 1st.
- */
 export function parsePartialDateToTimestamp(value: string): number | null {
   const match = /^(\d{4})(?:-(\d{2}))?$/.exec(value.trim());
   if (!match) return null;
@@ -43,13 +22,11 @@ export function parsePartialDateToTimestamp(value: string): number | null {
   const year = Number(match[1]);
   const month = match[2] === undefined ? 1 : Number(match[2]);
   if (month < 1 || month > 12) return null;
-  // Guard against absurd years (OCR noise) rather than storing them.
   if (year < 1900 || year > new Date().getUTCFullYear() + 10) return null;
 
   return Date.UTC(year, month - 1, 1);
 }
 
-/** Format an ISO date string as a locale-aware `HH:MM` time. */
 export function formatTime(dateStr: string, locale: string): string {
   return new Date(dateStr).toLocaleTimeString(locale, {
     hour: "2-digit",
@@ -57,7 +34,6 @@ export function formatTime(dateStr: string, locale: string): string {
   });
 }
 
-/** Format an ISO date string as a locale-aware long date (e.g. `02 June 2026`). */
 export function formatLongDate(dateStr: string, locale: string): string {
   return new Date(dateStr).toLocaleDateString(locale, {
     day: "2-digit",
@@ -66,11 +42,6 @@ export function formatLongDate(dateStr: string, locale: string): string {
   });
 }
 
-/**
- * Whole years/months spanned between two epoch-ms dates, computed in UTC.
- * Shared by the in-app experience UI and the PDF resume templates so the
- * duration math (and its quirks) live in exactly one place.
- */
 export function experienceDurationParts(
   startDate: number,
   endDate?: number,
@@ -85,7 +56,6 @@ export function experienceDurationParts(
   return { years, months };
 }
 
-/** Start (and optional end) UTC year for an experience period. */
 export function experiencePeriodYears(
   startDate: number,
   endDate?: number,
@@ -95,10 +65,6 @@ export function experiencePeriodYears(
   return { startYear, endYear: new Date(endDate).getUTCFullYear() };
 }
 
-/**
- * Locale-aware relative time from an epoch-ms timestamp to now, picking the
- * largest sensible unit (e.g. `2h ago` / `il y a 2 h`, `yesterday` / `hier`).
- */
 export function formatRelativeTime(ts: number, locale: string): string {
   const rtf = new Intl.RelativeTimeFormat(locale, { numeric: "auto" });
   const diffSec = Math.round((ts - Date.now()) / 1000); // negative in the past
@@ -117,7 +83,6 @@ export function formatRelativeTime(ts: number, locale: string): string {
   return rtf.format(diffSec, "second");
 }
 
-/** Whether two ISO date strings fall on the same calendar day (local time). */
 export function isSameDay(a: string, b: string): boolean {
   const da = new Date(a);
   const db = new Date(b);

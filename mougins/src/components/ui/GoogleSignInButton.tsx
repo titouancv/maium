@@ -10,7 +10,6 @@ import { ROUTES } from "@/constants";
 import { cn } from "@/lib/utils";
 
 interface GoogleSignInButtonProps {
-  /** Applied to the wrapper, so a caller can size it inside a row of CTAs. */
   className?: string;
 }
 

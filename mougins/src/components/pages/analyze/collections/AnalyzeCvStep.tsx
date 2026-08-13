@@ -8,9 +8,6 @@ import {
   CV_ACCEPTED_MIME_TYPES,
   CV_MAX_BYTES,
 } from "@/constants";
-// Import UI primitives from their files, not the `@/components/ui` barrel:
-// pulling a new client tree through the barrel trips a Turbopack `export *`
-// namespace-seal bug at build time (see also AnalyzeJob/JobsSkeleton).
 import { Button } from "@/components/ui/Button";
 import { Title } from "@/components/ui/Title";
 import { Text } from "@/components/ui/Text";
@@ -25,7 +22,6 @@ interface AnalyzeCvStepProps {
 const isAcceptedType = (type: string) =>
   (CV_ACCEPTED_MIME_TYPES as readonly string[]).includes(type);
 
-/** First step of the public funnel: turn a CV into a profile to match against. */
 export function AnalyzeCvStep({ onParsed }: AnalyzeCvStepProps) {
   const t = useTranslations("analyze.cv");
   const fileRef = useRef<FilePickerHandle>(null);

@@ -5,34 +5,15 @@ import { createPortal } from "react-dom";
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 
-/**
- * Ids of every mounted overlay, deepest last. Escape only reaches the last one:
- * a sub-form opened from inside another overlay (e.g. HobbiesForm's editor
- * inside EditInfoOverlay) must close itself, not the whole stack.
- */
 const stack: string[] = [];
 
 interface OverlayProps {
-  /**
-   * Closes the overlay. Wired to Escape; the layout inside still owns its own
-   * back/cancel button. Omit it for an overlay that can't be dismissed.
-   */
   onClose?: () => void;
-  /** Centers the children instead of letting them own the whole viewport. */
   center?: boolean;
   className?: string;
   children: React.ReactNode;
 }
 
-/**
- * The app's single full-screen overlay: a portalled `fixed inset-0` surface
- * that fades in, closes on Escape, and paints `bg-surface-50` so the page
- * underneath doesn't show through.
- *
- * It carries no chrome of its own — put a [PageLayout], [FormLayout] or
- * [SearchLayout] inside for the header and buttons. Wrap it in framer-motion's
- * `AnimatePresence` to get the fade on the way out too.
- */
 export function Overlay({
   onClose,
   center = false,
@@ -40,7 +21,6 @@ export function Overlay({
   children,
 }: OverlayProps) {
   const id = useId();
-  // `createPortal` needs the DOM, so the server pass renders nothing.
   const mounted = useSyncExternalStore(
     () => () => {},
     () => true,

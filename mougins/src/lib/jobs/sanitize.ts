@@ -1,26 +1,14 @@
 import { JOB_TEXT_CHAR_LIMIT } from "@/constants";
 
-/**
- * Strips a raw HTML document down to plain text safe to hand to an LLM.
- *
- * This is the anti prompt-injection boundary: scripts, styles, comments and
- * hidden text are removed so an attacker-controlled page cannot smuggle
- * instructions into the model. The cleaned text is always passed as a `user`
- * message — never concatenated into the system prompt.
- */
 export function htmlToPlainText(html: string): string {
   const text = html
-    // Drop entire elements whose content is never user-visible.
     .replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, " ")
     .replace(/<style\b[^>]*>[\s\S]*?<\/style>/gi, " ")
     .replace(/<noscript\b[^>]*>[\s\S]*?<\/noscript>/gi, " ")
     .replace(/<template\b[^>]*>[\s\S]*?<\/template>/gi, " ")
     .replace(/<svg\b[^>]*>[\s\S]*?<\/svg>/gi, " ")
-    // HTML comments (can hide injected instructions).
     .replace(/<!--[\s\S]*?-->/g, " ")
-    // Elements explicitly hidden from users.
     .replace(/<[^>]+(?:hidden|aria-hidden=["']true["']|display\s*:\s*none)[^>]*>/gi, " ")
-    // Remaining tags.
     .replace(/<[^>]+>/g, " ");
 
   return decodeEntities(text)
@@ -42,10 +30,6 @@ function decodeEntities(text: string): string {
     .replace(/&#x27;/gi, "'");
 }
 
-/**
- * Normalizes a job URL for deduplication: lowercases host, drops the hash,
- * tracking query params and trailing slash. Returns the canonical URL.
- */
 export function normalizeUrl(rawUrl: string): string {
   const url = new URL(rawUrl);
   url.hash = "";
@@ -59,7 +43,6 @@ export function normalizeUrl(rawUrl: string): string {
   return normalized;
 }
 
-/** Fetches a URL and returns its sanitized plain-text content. */
 export async function fetchJobText(url: string): Promise<string> {
   const res = await fetch(url, {
     headers: { "User-Agent": "MaiumBot/1.0 (+https://maium.app)" },

@@ -1,10 +1,5 @@
 import { cn } from "@/lib/utils";
 
-/**
- * Every icon the app draws. Adding one here — rather than inlining an `<svg>`
- * at the call site — is what keeps the set coherent: same 24×24 box, same
- * stroke, same `currentColor`.
- */
 const PATHS = {
   arrowRight: <path d="M5 12h14M13 6l6 6-6 6" />,
   bell: (
@@ -27,18 +22,11 @@ export type IconName = keyof typeof PATHS;
 
 export interface IconProps {
   name: IconName;
-  /** Rendered box in px. */
   size?: number;
-  /** Heavier strokes read better at small sizes (nav, chips). */
   strokeWidth?: number;
   className?: string;
 }
 
-/**
- * Stroke icon drawn in `currentColor`, so it takes the colour of the text or
- * button around it. Always `aria-hidden` — icons here are decorative, and the
- * control that holds one carries the label.
- */
 export function Icon({
   name,
   size = 16,
