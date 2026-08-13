@@ -33,14 +33,16 @@ export function AnalysisHistoryList({ history }: AnalysisHistoryListProps) {
 
   return (
     <div className="flex h-full min-h-0 flex-col gap-6">
-      <Selector
-        values={FILTERS.map((status) => ({
-          label: status ? t(`status.${status}`) : t("historyFilterAll"),
-          color: status ? APPLICATION_STATUS_COLORS[status] : undefined,
-        }))}
-        activeIndex={filterIndex}
-        onChange={setFilterIndex}
-      />
+      <div className="flex w-full justify-center md:justify-end">
+        <Selector
+          values={FILTERS.map((status) => ({
+            label: status ? t(`status.${status}`) : t("historyFilterAll"),
+            color: status ? APPLICATION_STATUS_COLORS[status] : undefined,
+          }))}
+          activeIndex={filterIndex}
+          onChange={setFilterIndex}
+        />
+      </div>
 
       {visible.length === 0 ? (
         <EmptyState label={t("historyFilterEmpty")} />
