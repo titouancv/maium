@@ -3,7 +3,8 @@
 import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { EmptyState } from "@/components/ui/EmptyState";
-import { Tabs } from "@/components/ui/Tabs";
+import { Selector } from "@/components/ui/Selector";
+import { APPLICATION_STATUS_COLORS } from "@/constants/ui";
 import { APPLICATION_STATUSES, type AnalysisListItem } from "@/types/job";
 import { AnalysisHistoryItem } from "../items/AnalysisHistoryItem";
 
@@ -32,13 +33,13 @@ export function AnalysisHistoryList({ history }: AnalysisHistoryListProps) {
 
   return (
     <div className="flex h-full min-h-0 flex-col gap-6">
-      <Tabs
-        tabs={FILTERS.map((status) =>
-          status ? t(`status.${status}`) : t("historyFilterAll"),
-        )}
-        activeTab={filterIndex}
+      <Selector
+        values={FILTERS.map((status) => ({
+          label: status ? t(`status.${status}`) : t("historyFilterAll"),
+          color: status ? APPLICATION_STATUS_COLORS[status] : undefined,
+        }))}
+        activeIndex={filterIndex}
         onChange={setFilterIndex}
-        layoutId="historyStatusFilter"
       />
 
       {visible.length === 0 ? (

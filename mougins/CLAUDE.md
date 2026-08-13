@@ -570,7 +570,7 @@ Concretely, when building or editing a component:
 The few backgrounds that remain are **functional, not decorative**, and are the
 complete list — do not add to it: input fields (`TextInput`, `TextArea`, and the
 hover/focus tint on `DateInput` / `PhoneInput`), the [Skeleton](src/components/ui/Skeleton.tsx)
-placeholder, the pill behind `Tabs`, `Button`'s own variants, the photo frame in
+placeholder, the pill behind `Tabs` and `Selector`, `Button`'s own variants, the photo frame in
 `ProfilePhotoPicker`, the white QR card (scannability), and `Overlay`'s
 `bg-surface-50` (it must hide the page underneath).
 
@@ -606,7 +606,7 @@ never invented twice. Import from `@/components/ui`.
 | `Text` | Body copy. `tone` = default \| muted \| primary, `size` = xs \| sm \| base \| lg, `as` = p \| span \| div \| li, plus `truncate`. Replaces every `text-txt-muted text-sm` pair. |
 | `InfoMessage` | Any error, confirmation or hint. Renders nothing when `message` is empty, so pass a possibly-undefined error straight through — no `&&` guard. |
 | `EmptyState` | What a list renders instead of its rows. `align="center"` when it owns the region. |
-| `Icon` | Every icon, from a fixed set (`arrowRight`, `bell`, `chevronRight`, `close`, `search`). **Add a path to `ui/icons/Icon.tsx` rather than inlining an `<svg>`.** `GoogleMark` is the one brand-coloured exception. |
+| `Icon` | Every icon, from a fixed set (`arrowRight`, `bell`, `check`, `chevronLeft`, `chevronRight`, `close`, `externalLink`, `search`). **Add a path to `ui/icons/Icon.tsx` rather than inlining an `<svg>`.** `GoogleMark` is the one brand-coloured exception. |
 | `AccentBar` | The short bar under a heading. |
 | `Rail` | The vertical bar that marks a row (experience, hobby, message, quote). Pass `bg-primary` to mark it as the user's own. |
 | `ScrollRow` | A row that scrolls sideways with the scrollbar hidden. |
@@ -614,6 +614,7 @@ never invented twice. Import from `@/components/ui`.
 | `ExpandableText` | Long copy clamped to N lines with a see more / see less toggle. |
 | `Title` · `Section` · `Markdown` | Headings and long-form content. |
 | `Button` · `Chip` · `ChipList` · `Tabs` · `TabsVertical` · `MenuList` · `SlideToEnter` | Actions and choices. |
+| `Selector` | One value at a time out of an **ordered** list: chevrons step through it, the neighbours peek in at the edges under a fade. Each value carries its own colour along the secondary → primary scale (`scaleColor` in [constants/ui.ts](src/constants/ui.ts)); pass an explicit `color` per value to reuse a canonical scale such as `APPLICATION_STATUS_COLORS`. Use `Tabs` instead when every option must be visible at once. |
 | `TextInput` · `TextArea` · `DateInput` · `PhoneInput` · `SearchInput` · `LocationInput` | Fields (see `form/` for whole steps). |
 | `Skeleton` · `ProgressBar` · `NumberRoller` | Loading and numbers. |
 | `UserCard` · `ProfilePhoto` · `ProfilePhotoPicker` | People. |

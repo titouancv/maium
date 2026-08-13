@@ -153,7 +153,9 @@
     "seeMoreButton": "See more",
     "seeLessButton": "See less",
     "dismissNotification": "Dismiss notification",
-    "skipButton": "Skip"
+    "skipButton": "Skip",
+    "previousOption": "Previous",
+    "nextOption": "Next"
   },
   "home": {
     "name": "Full name",

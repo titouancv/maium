@@ -6,7 +6,7 @@ import { useTranslations } from "next-intl";
 import { Section } from "@/components/ui";
 import type { AnalysisListItem, AnalysisStatusEvent } from "@/types/job";
 import { AnalysisView } from "./AnalysisView";
-import { ApplicationStatusTabs } from "./ApplicationStatusTabs";
+import { ApplicationStatusSelector } from "./ApplicationStatusSelector";
 import { ApplicationTracker } from "./ApplicationTracker";
 import { StatusTimeline } from "./StatusTimeline";
 
@@ -32,7 +32,7 @@ export function AnalysisLoader({
       <AnalysisView
         analysis={analysis}
         contacts={contacts}
-        statusBar={<ApplicationStatusTabs analysis={analysis} />}
+        statusBar={<ApplicationStatusSelector analysis={analysis} />}
         tracking={
           <div className="grid w-full min-w-0 grid-cols-1 gap-10 md:grid-cols-3">
             <div className="min-w-0 md:col-span-2">

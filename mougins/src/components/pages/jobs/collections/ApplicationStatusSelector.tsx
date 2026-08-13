@@ -3,18 +3,18 @@
 import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { useRouter } from "@/i18n/navigation";
-import { InfoMessage } from "@/components/ui";
-import { Tabs } from "@/components/ui/Tabs";
+import { InfoMessage, Selector } from "@/components/ui";
+import { APPLICATION_STATUS_COLORS } from "@/constants/ui";
 import { updateAnalysisTrackingRequest } from "@/lib/jobs/updateTracking";
 import { APPLICATION_STATUSES, type AnalysisListItem } from "@/types/job";
 
-interface ApplicationStatusTabsProps {
+interface ApplicationStatusSelectorProps {
   analysis: AnalysisListItem;
 }
 
-export function ApplicationStatusTabs({
+export function ApplicationStatusSelector({
   analysis,
-}: ApplicationStatusTabsProps) {
+}: ApplicationStatusSelectorProps) {
   const t = useTranslations("jobs");
   const router = useRouter();
 
@@ -34,11 +34,13 @@ export function ApplicationStatusTabs({
   return (
     <div className="flex min-w-0 flex-col gap-2">
       <div className="flex min-w-0 md:self-start">
-        <Tabs
-          tabs={APPLICATION_STATUSES.map((value) => t(`status.${value}`))}
-          activeTab={APPLICATION_STATUSES.indexOf(status)}
+        <Selector
+          values={APPLICATION_STATUSES.map((value) => ({
+            label: t(`status.${value}`),
+            color: APPLICATION_STATUS_COLORS[value],
+          }))}
+          activeIndex={APPLICATION_STATUSES.indexOf(status)}
           onChange={handleStatusChange}
-          layoutId="applicationStatus"
         />
       </div>
       <InfoMessage message={failed ? t("detail.tracking.saveError") : null} />

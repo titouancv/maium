@@ -4,7 +4,7 @@ import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { ROUTES } from "@/constants";
 import { Rail, Text } from "@/components/ui";
-import { APPLICATION_STATUS_TONES } from "@/constants/ui";
+import { APPLICATION_STATUS_COLORS } from "@/constants/ui";
 import type { AnalysisListItem } from "@/types/job";
 
 interface AnalysisHistoryItemProps {
@@ -13,6 +13,7 @@ interface AnalysisHistoryItemProps {
 
 export function AnalysisHistoryItem({ analysis }: AnalysisHistoryItemProps) {
   const t = useTranslations("jobs");
+  const statusColor = { color: APPLICATION_STATUS_COLORS[analysis.status] };
 
   return (
     <Link
@@ -20,7 +21,7 @@ export function AnalysisHistoryItem({ analysis }: AnalysisHistoryItemProps) {
       className="group flex w-full items-start justify-between gap-4 text-left"
     >
       <div className="flex min-w-0 gap-3">
-        <Rail className={APPLICATION_STATUS_TONES[analysis.status]} />
+        <Rail style={statusColor} />
         <div className="flex min-w-0 flex-col gap-0.5">
           <p className="text-txt group-hover:text-primary truncate">
             {analysis.job?.title || t("untitledJob")}
@@ -30,11 +31,7 @@ export function AnalysisHistoryItem({ analysis }: AnalysisHistoryItemProps) {
               .filter(Boolean)
               .join(" • ")}
           </p>
-          <Text
-            tone="muted"
-            size="xs"
-            className={APPLICATION_STATUS_TONES[analysis.status]}
-          >
+          <Text size="xs" style={statusColor}>
             {t(`status.${analysis.status}`)}
           </Text>
           {analysis.summary && (

@@ -3,7 +3,7 @@ export * from "./AnalysisHeadingLoader";
 export * from "./AnalysisLoader";
 export * from "./AnalysisOverview";
 export * from "./AnalysisView";
-export * from "./ApplicationStatusTabs";
+export * from "./ApplicationStatusSelector";
 export * from "./ApplicationTracker";
 export * from "./CompanyContactList";
 export * from "./CompanyContactsLoader";

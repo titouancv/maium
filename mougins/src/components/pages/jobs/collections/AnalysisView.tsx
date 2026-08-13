@@ -72,9 +72,9 @@ export function AnalysisView({
 
   return (
     <div className="flex w-full min-w-0 flex-col gap-8">
-      <div ref={panelsRef} className="flex w-full min-w-0 scroll-mt-4 gap-12">
+      <div ref={panelsRef} className="flex w-full min-w-0 scroll-mt-18 gap-12">
         <div className="hidden shrink-0 md:block">
-          <div className="sticky top-0">
+          <div className="sticky top-18">
             <TabsVertical
               tabs={panels.map((panel) => t(`detail.tabs.${panel.key}`))}
               activeTab={activeIndex}
@@ -84,8 +84,10 @@ export function AnalysisView({
           </div>
         </div>
 
-        <div className="flex w-full max-w-2xl min-w-0 flex-1 flex-col gap-16 md:gap-8">
-          {statusBar}
+        <div className="flex w-full max-w-2xl min-w-0 flex-1 flex-col gap-8 md:min-h-[calc(100dvh-12rem)]">
+          <div className="flex w-full justify-center md:justify-start">
+            {statusBar}
+          </div>
           {panels.map((panel, index) => (
             <div
               key={panel.key}

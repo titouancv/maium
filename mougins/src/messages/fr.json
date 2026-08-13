@@ -153,7 +153,9 @@
     "seeMoreButton": "Voir plus",
     "seeLessButton": "Voir moins",
     "dismissNotification": "Fermer la notification",
-    "skipButton": "Passer"
+    "skipButton": "Passer",
+    "previousOption": "Précédent",
+    "nextOption": "Suivant"
   },
   "home": {
     "name": "Nom complet",
