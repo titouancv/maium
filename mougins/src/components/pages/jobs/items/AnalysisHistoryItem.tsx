@@ -21,7 +21,7 @@ export function AnalysisHistoryItem({ analysis }: AnalysisHistoryItemProps) {
     >
       <div className="flex min-w-0 gap-3">
         <Rail className={APPLICATION_STATUS_TONES[analysis.status]} />
-        <div className="flex min-w-0 flex-col gap-1">
+        <div className="flex min-w-0 flex-col gap-0.5">
           <p className="text-txt group-hover:text-primary truncate">
             {analysis.job?.title || t("untitledJob")}
           </p>
@@ -38,9 +38,7 @@ export function AnalysisHistoryItem({ analysis }: AnalysisHistoryItemProps) {
             {t(`status.${analysis.status}`)}
           </Text>
           {analysis.summary && (
-            <p className="text-txt-muted mt-1 line-clamp-2">
-              {analysis.summary}
-            </p>
+            <p className="mt-1 line-clamp-2">{analysis.summary}</p>
           )}
         </div>
       </div>

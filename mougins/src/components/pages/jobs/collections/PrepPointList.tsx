@@ -28,12 +28,15 @@ export function PrepPointList({ points }: PrepPointListProps) {
         <div className="flex flex-col gap-6">
           {groups.map((group) => (
             <div key={group.kind} className="flex flex-col gap-3">
-              <Text tone="primary" size="sm" className="font-extrabold uppercase">
+              <Text size="lg" tone="primary" className="font-extrabold">
                 {t(`detail.prep.kind.${group.kind}`)}
               </Text>
               <ul className="flex flex-col gap-4">
                 {group.points.map((point, index) => (
-                  <PrepPointItem key={`${point.title}-${index}`} point={point} />
+                  <PrepPointItem
+                    key={`${point.title}-${index}`}
+                    point={point}
+                  />
                 ))}
               </ul>
             </div>

@@ -20,7 +20,7 @@ export function PrepPointItem({ point }: PrepPointItemProps) {
       <div className="flex min-w-0 flex-col gap-1">
         <Text className="font-extrabold">{point.title}</Text>
         {point.detail && (
-          <Text tone="muted" size="sm" className="leading-relaxed">
+          <Text size="sm" className="leading-relaxed">
             {point.detail}
           </Text>
         )}
