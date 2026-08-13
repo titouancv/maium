@@ -106,13 +106,12 @@
       },
       "tracking": {
         "title": "Suivi de candidature",
-        "appliedAt": "Candidature envoyée le",
-        "interviewAt": "Entretien le",
+        "analysed": "Analysée le",
+        "statusOn": "{status} le",
         "notes": "Notes",
         "notesPlaceholder": "Qui tu as eu, ce qui s'est dit, ce qu'il faut relancer…",
-        "saveError": "Enregistrement impossible. Ta dernière modification n'a pas été prise en compte.",
-        "timeline": "Historique",
-        "analysed": "Analysée"
+        "notesSave": "Enregistrer",
+        "saveError": "Enregistrement impossible. Ta dernière modification n'a pas été prise en compte."
       }
     },
     "status": {

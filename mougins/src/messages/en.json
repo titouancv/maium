@@ -106,13 +106,12 @@
       },
       "tracking": {
         "title": "Application tracking",
-        "appliedAt": "Applied on",
-        "interviewAt": "Interview on",
+        "analysed": "Analysed on",
+        "statusOn": "{status} on",
         "notes": "Notes",
         "notesPlaceholder": "Who you spoke to, what was said, what to follow up on…",
-        "saveError": "Could not save. Your last change was not recorded.",
-        "timeline": "History",
-        "analysed": "Analysed"
+        "notesSave": "Save",
+        "saveError": "Could not save. Your last change was not recorded."
       }
     },
     "status": {

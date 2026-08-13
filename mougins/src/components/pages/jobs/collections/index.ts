@@ -12,7 +12,6 @@ export * from "./CoverLetterButton";
 export * from "./PrepPointList";
 export * from "./RecruiterQuestionList";
 export * from "./ResumeEditorOverlay";
-export * from "./StatusTimeline";
 export * from "./AnalysisHistoryList";
 export * from "./AnalysisProgress";
 export * from "./HistoryLoader";

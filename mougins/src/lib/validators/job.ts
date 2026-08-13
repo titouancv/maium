@@ -109,8 +109,6 @@ export type MatchingExplanation = z.infer<typeof MatchingExplanationSchema>;
 export const UpdateAnalysisTrackingSchema = z
   .object({
     status: z.enum(APPLICATION_STATUSES).optional(),
-    applied_at: z.iso.datetime().nullable().optional(),
-    interview_at: z.iso.datetime().nullable().optional(),
     notes: z.string().max(ANALYSIS_NOTES_CHAR_LIMIT).nullable().optional(),
   })
   .refine((patch) => Object.keys(patch).length > 0);

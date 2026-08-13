@@ -1,15 +1,17 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import { useTranslations } from "next-intl";
-import { ANALYSIS_NOTES_SAVE_DEBOUNCE_MS } from "@/constants";
+import { useState } from "react";
+import { useLocale, useTranslations } from "next-intl";
+import { ANALYSIS_NOTES_CHAR_LIMIT } from "@/constants";
 import {
-  DateInput,
+  Button,
+  ExpandableText,
   InfoMessage,
   Section,
   TextArea,
   Text,
 } from "@/components/ui";
+import { formatLongDate } from "@/lib/date";
 import { updateAnalysisTrackingRequest } from "@/lib/jobs/updateTracking";
 import { type AnalysisListItem } from "@/types/job";
 
@@ -17,83 +19,108 @@ interface ApplicationTrackerProps {
   analysis: AnalysisListItem;
 }
 
-function toTimestamp(value: string | null): number | null {
-  return value ? new Date(value).getTime() : null;
-}
-
-function toIsoDate(value: number | null): string | null {
-  return value === null ? null : new Date(value).toISOString();
-}
-
 export function ApplicationTracker({ analysis }: ApplicationTrackerProps) {
   const t = useTranslations("jobs");
+  const tCommon = useTranslations("common");
+  const locale = useLocale();
 
-  const [appliedAt, setAppliedAt] = useState(toTimestamp(analysis.applied_at));
-  const [interviewAt, setInterviewAt] = useState(
-    toTimestamp(analysis.interview_at),
-  );
   const [notes, setNotes] = useState(analysis.notes ?? "");
+  const [draft, setDraft] = useState(analysis.notes ?? "");
+  const [isEditing, setIsEditing] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
   const [failed, setFailed] = useState(false);
 
-  const save = async (
-    patch: Parameters<typeof updateAnalysisTrackingRequest>[1],
-  ) => {
-    const ok = await updateAnalysisTrackingRequest(analysis.id, patch);
-    setFailed(!ok);
-    return ok;
+  const trackedSince =
+    analysis.status === "not_started" || !analysis.status_changed_at
+      ? { label: t("detail.tracking.analysed"), date: analysis.created_at }
+      : {
+          label: t("detail.tracking.statusOn", {
+            status: t(`status.${analysis.status}`),
+          }),
+          date: analysis.status_changed_at,
+        };
+
+  const startEditing = () => {
+    setDraft(notes);
+    setFailed(false);
+    setIsEditing(true);
   };
 
-  const savedNotesRef = useRef(analysis.notes ?? "");
-  useEffect(() => {
-    if (notes === savedNotesRef.current) return;
-    const timer = setTimeout(async () => {
-      savedNotesRef.current = notes;
-      const ok = await updateAnalysisTrackingRequest(analysis.id, {
-        notes: notes || null,
-      });
-      setFailed(!ok);
-    }, ANALYSIS_NOTES_SAVE_DEBOUNCE_MS);
-    return () => clearTimeout(timer);
-  }, [notes, analysis.id]);
+  const saveNotes = async () => {
+    const trimmed = draft.trim();
+    setIsSaving(true);
+    const ok = await updateAnalysisTrackingRequest(analysis.id, {
+      notes: trimmed || null,
+    });
+    setIsSaving(false);
+    setFailed(!ok);
+    if (!ok) return;
+    setNotes(trimmed);
+    setIsEditing(false);
+  };
 
   return (
     <Section title={t("detail.tracking.title")}>
-      <div className="flex flex-col gap-4 sm:flex-row sm:gap-8">
-        <div className="flex flex-col gap-1">
-          <Text tone="muted" size="sm">
-            {t("detail.tracking.appliedAt")}
-          </Text>
-          <DateInput
-            value={appliedAt}
-            onChange={(value) => {
-              setAppliedAt(value);
-              save({ applied_at: toIsoDate(value) });
-            }}
-          />
-        </div>
-        <div className="flex flex-col gap-1">
-          <Text tone="muted" size="sm">
-            {t("detail.tracking.interviewAt")}
-          </Text>
-          <DateInput
-            value={interviewAt}
-            onChange={(value) => {
-              setInterviewAt(value);
-              save({ interview_at: toIsoDate(value) });
-            }}
-          />
-        </div>
+      <div className="flex flex-col">
+        <Text className="font-extrabold" size="lg">
+          {trackedSince.label}
+        </Text>
+        <Text tone="primary">{formatLongDate(trackedSince.date, locale)}</Text>
       </div>
 
-      <div className="flex flex-col gap-1">
-        <Text tone="muted" size="sm">
-          {t("detail.tracking.notes")}
-        </Text>
-        <TextArea
-          value={notes}
-          onChange={(event) => setNotes(event.target.value)}
-          placeholder={t("detail.tracking.notesPlaceholder")}
-        />
+      <div className="flex max-w-3xl flex-col gap-1">
+        <div className="grid grid-cols-[1fr_auto] items-center gap-3 pb-2">
+          <Text className="font-extrabold" size="lg">
+            {t("detail.tracking.notes")}
+          </Text>
+          {!isEditing && (
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              className="shrink-0"
+              onClick={startEditing}
+            >
+              {notes ? tCommon("editButton") : tCommon("addButton")}
+            </Button>
+          )}
+        </div>
+
+        {isEditing ? (
+          <div className="flex flex-col gap-1">
+            <TextArea
+              value={draft}
+              onChange={(event) => setDraft(event.target.value)}
+              placeholder={t("detail.tracking.notesPlaceholder")}
+              maxLength={ANALYSIS_NOTES_CHAR_LIMIT}
+              autoFocus
+            />
+            <div className="flex items-center gap-2">
+              <Button
+                type="button"
+                size="sm"
+                isLoading={isSaving}
+                onClick={saveNotes}
+              >
+                {t("detail.tracking.notesSave")}
+              </Button>
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={() => setIsEditing(false)}
+              >
+                {tCommon("cancelButton")}
+              </Button>
+            </div>
+          </div>
+        ) : notes ? (
+          <ExpandableText>{notes}</ExpandableText>
+        ) : (
+          <Text tone="muted" size="sm">
+            {t("detail.tracking.notesPlaceholder")}
+          </Text>
+        )}
       </div>
 
       <InfoMessage message={failed ? t("detail.tracking.saveError") : null} />

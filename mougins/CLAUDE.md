@@ -124,12 +124,13 @@ an overlay over the history. Four seams are worth knowing.
   stripped). `user_experiences` is RLS own-row-only, so the read goes through the
   `SECURITY DEFINER` RPC `get_company_contacts`, which returns only fields
   already public on a profile and excludes the caller.
-- **Tracking is signed-in only.** `analyses.status` / `applied_at` /
-  `interview_at` / `notes` are written with the RLS-scoped user client, never the
-  admin client — an anonymous run has no account to track against and its rows
-  expire. `analysis_status_events` is append-only, written by an `AFTER UPDATE OF
-  status` trigger (same shape as `follower_events`), so the timeline survives
-  edits. The anonymous `/analyze` result therefore renders
+- **Tracking is signed-in only.** `analyses.status` / `notes` are written with the
+  RLS-scoped user client, never the admin client — an anonymous run has no
+  account to track against and its rows expire. The user never types a date:
+  `status_changed_at` is stamped by a `BEFORE UPDATE OF status` trigger and read
+  back as a single line ("Postulé le 12 mai 2026"), which is why there is no
+  status history and no date input — the status *is* the date. The anonymous
+  `/analyze` result therefore renders
   [AnalysisView](src/components/pages/jobs/collections/AnalysisView.tsx) inline
   with no `tracking` / `contacts` slot — `/jobs` is a protected prefix, so a
   signed-out visitor can never reach the real page.

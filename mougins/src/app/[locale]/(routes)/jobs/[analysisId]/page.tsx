@@ -1,5 +1,5 @@
 import { Suspense } from "react";
-import { getAnalysisById, getAnalysisStatusEvents } from "@/lib/jobs/server";
+import { getAnalysisById } from "@/lib/jobs/server";
 import {
   CompanyContactsSkeleton,
   JobAnalysisDetailContent,
@@ -17,7 +17,6 @@ export default async function JobAnalysisPage({
   return (
     <JobAnalysisDetailContent
       analysisPromise={analysisPromise}
-      eventsPromise={getAnalysisStatusEvents(analysisId)}
       contacts={
         <Suspense fallback={<CompanyContactsSkeleton />}>
           <CompanyContactsLoader analysisPromise={analysisPromise} />

@@ -7,17 +7,15 @@ import { PageLayout } from "../../layout";
 import { AnalysisLoader } from "./collections/AnalysisLoader";
 import { AnalysisHeadingLoader } from "./collections/AnalysisHeadingLoader";
 import { AnalysisDetailSkeleton, AnalysisHeadingSkeleton } from "./JobsSkeleton";
-import type { AnalysisListItem, AnalysisStatusEvent } from "@/types/job";
+import type { AnalysisListItem } from "@/types/job";
 
 interface JobAnalysisDetailContentProps {
   analysisPromise: Promise<AnalysisListItem | null>;
-  eventsPromise: Promise<AnalysisStatusEvent[]>;
   contacts: ReactNode;
 }
 
 export function JobAnalysisDetailContent({
   analysisPromise,
-  eventsPromise,
   contacts,
 }: JobAnalysisDetailContentProps) {
   const t = useTranslations("jobs");
@@ -40,11 +38,7 @@ export function JobAnalysisDetailContent({
     >
       <div className="flex w-full max-w-7xl min-w-0 flex-col gap-8">
         <Suspense fallback={<AnalysisDetailSkeleton />}>
-          <AnalysisLoader
-            analysisPromise={analysisPromise}
-            eventsPromise={eventsPromise}
-            contacts={contacts}
-          />
+          <AnalysisLoader analysisPromise={analysisPromise} contacts={contacts} />
         </Suspense>
       </div>
     </PageLayout>

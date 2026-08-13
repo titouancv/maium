@@ -5,15 +5,14 @@ import { getRequester, ownsRow, type OwnedRow } from "./access";
 import type {
   AnalysisJob,
   AnalysisListItem,
-  AnalysisStatusEvent,
   OptimizedResume,
   PrepPoint,
   ResumeVersion,
 } from "@/types/job";
 
 const ANALYSIS_SELECT = `id, job_id, matching_score, confidence_score,
-  prep_points, recruiter_questions, summary, cover_letter, status, applied_at,
-  interview_at, notes, created_at,
+  prep_points, recruiter_questions, summary, cover_letter, status,
+  status_changed_at, notes, created_at,
   job:job_id ( title, company, location, source_url ),
   resume:optimized_resumes!analysis_id ( id, is_active, deleted_at )`;
 
@@ -37,8 +36,7 @@ function mapAnalysisRow(row: Record<string, unknown>): AnalysisListItem {
     summary: row.summary as string | null,
     cover_letter: row.cover_letter as string | null,
     status: row.status as AnalysisListItem["status"],
-    applied_at: row.applied_at as string | null,
-    interview_at: row.interview_at as string | null,
+    status_changed_at: row.status_changed_at as string | null,
     notes: row.notes as string | null,
     created_at: row.created_at as string,
     job: row.job as AnalysisListItem["job"],
@@ -82,19 +80,6 @@ export async function getAnalysisById(
   if (!ownsRow(data as OwnedRow, await getRequester())) return null;
 
   return mapAnalysisRow(data);
-}
-
-export async function getAnalysisStatusEvents(
-  analysisId: string,
-): Promise<AnalysisStatusEvent[]> {
-  const supabase = await createClient();
-  const { data } = await supabase
-    .from("analysis_status_events")
-    .select("id, status, created_at")
-    .eq("analysis_id", analysisId)
-    .order("created_at", { ascending: false });
-
-  return (data as AnalysisStatusEvent[]) ?? [];
 }
 
 export async function updateAnalysisTracking(

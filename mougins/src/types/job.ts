@@ -42,12 +42,6 @@ export interface PrepPoint {
   resource_kind: PrepResourceKind;
 }
 
-export interface AnalysisStatusEvent {
-  id: string;
-  status: ApplicationStatus;
-  created_at: string;
-}
-
 export interface CompanyContact {
   pseudo: string;
   first_name: string;
@@ -97,8 +91,7 @@ export interface AnalysisData {
   summary: string | null;
   cover_letter: string | null;
   status: ApplicationStatus;
-  applied_at: string | null;
-  interview_at: string | null;
+  status_changed_at: string | null;
   notes: string | null;
   created_at: string;
 }
