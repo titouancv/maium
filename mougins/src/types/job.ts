@@ -29,14 +29,14 @@ export const APPLICATION_STATUSES = [
   "not_started",
   "applied",
   "interview",
-  "rejected",
   "accepted",
+  "rejected",
 ] as const;
 export type ApplicationStatus = (typeof APPLICATION_STATUSES)[number];
 
 export const SETTLED_APPLICATION_STATUSES = [
-  "rejected",
   "accepted",
+  "rejected",
 ] as const satisfies readonly ApplicationStatus[];
 
 export type SnoozeDelay = (typeof ANALYSIS_SNOOZE_DAYS)[number];

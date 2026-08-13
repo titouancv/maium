@@ -107,7 +107,12 @@
       "tracking": {
         "title": "Suivi de candidature",
         "analysed": "Analysée le",
-        "statusOn": "{status} le",
+        "statusOn": {
+          "applied": "Postulé le",
+          "interview": "En cours depuis le",
+          "accepted": "Accepté le",
+          "rejected": "Refusé le"
+        },
         "notes": "Notes",
         "notesPlaceholder": "Qui tu as eu, ce qui s'est dit, ce qu'il faut relancer…",
         "notesSave": "Enregistrer",
@@ -124,9 +129,9 @@
     "status": {
       "not_started": "Pas commencé",
       "applied": "Postulé",
-      "interview": "Entretien",
-      "rejected": "Refusé",
-      "accepted": "Accepté"
+      "interview": "En cours",
+      "accepted": "Accepté",
+      "rejected": "Refusé"
     },
     "historyFilterAll": "Toutes",
     "historyFilterEmpty": "Aucune analyse avec ce statut."

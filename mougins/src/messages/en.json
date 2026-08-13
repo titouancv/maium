@@ -107,7 +107,12 @@
       "tracking": {
         "title": "Application tracking",
         "analysed": "Analysed on",
-        "statusOn": "{status} on",
+        "statusOn": {
+          "applied": "Applied on",
+          "interview": "In progress since",
+          "accepted": "Accepted on",
+          "rejected": "Rejected on"
+        },
         "notes": "Notes",
         "notesPlaceholder": "Who you spoke to, what was said, what to follow up on…",
         "notesSave": "Save",
@@ -124,9 +129,9 @@
     "status": {
       "not_started": "Not started",
       "applied": "Applied",
-      "interview": "Interview",
-      "rejected": "Rejected",
-      "accepted": "Accepted"
+      "interview": "In progress",
+      "accepted": "Accepted",
+      "rejected": "Rejected"
     },
     "historyFilterAll": "All",
     "historyFilterEmpty": "No analysis with this status."

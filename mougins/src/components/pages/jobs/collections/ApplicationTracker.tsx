@@ -52,9 +52,7 @@ export function ApplicationTracker({ analysis }: ApplicationTrackerProps) {
     analysis.status === "not_started" || !analysis.status_changed_at
       ? { label: t("detail.tracking.analysed"), date: analysis.created_at }
       : {
-          label: t("detail.tracking.statusOn", {
-            status: t(`status.${analysis.status}`),
-          }),
+          label: t(`detail.tracking.statusOn.${analysis.status}`),
           date: analysis.status_changed_at,
         };
 
