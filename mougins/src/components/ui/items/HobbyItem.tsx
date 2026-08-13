@@ -1,4 +1,4 @@
-import { Button } from "@/components/ui";
+import { Button, Rail, Text } from "@/components/ui";
 import type { HobbyData } from "@/types/user";
 import { useTranslations } from "next-intl";
 
@@ -11,14 +11,14 @@ export const HobbyItem = ({ hobby, onClick }: Props) => {
   const t = useTranslations("common");
   return (
     <div className="flex items-center gap-4">
-      <div className="h-10 w-1 rounded-full bg-current"></div>
+      <Rail className="h-10" />
       <div className="grid w-full grid-cols-[1fr_auto] items-center gap-3">
         <div className="flex min-w-0 flex-col">
-          <p className="text-txt">{hobby.title}</p>
+          <Text>{hobby.title}</Text>
           {hobby.description && (
-            <p className="text-txt-muted truncate text-sm">
+            <Text tone="muted" size="sm" truncate>
               {hobby.description}
-            </p>
+            </Text>
           )}
         </div>
         {onClick && (

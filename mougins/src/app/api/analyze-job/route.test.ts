@@ -1,7 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { NextRequest } from "next/server";
 
-/** In-memory cookie jar, so the anonymous quota can be driven per test. */
 const cookieJar = new Map<string, string>();
 
 vi.mock("next/headers", () => ({
@@ -41,7 +40,6 @@ const mockCreateAdmin = vi.mocked(createAdminClient);
 const mockRateLimit = vi.mocked(isUnderRateLimit);
 const mockAnonQuota = vi.mocked(isAnonUnderQuota);
 
-/** A minimal extraction that satisfies `CvExtractionSchema`. */
 const CV_EXTRACTION = {
   firstName: "Ada",
   skills: ["TypeScript"],
@@ -59,7 +57,6 @@ function makeRequest(body: unknown, headers: Record<string, string> = {}) {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      // Anonymous callers need an attributable IP; the proxy sets this.
       "x-forwarded-for": "203.0.113.7",
       ...headers,
     },
@@ -136,7 +133,6 @@ describe("POST /api/analyze-job", () => {
     expect(json).toEqual({ analysisId: "analysis-2", status: "queued" });
   });
 
-  // A signed-out visitor gets one free run. The endpoint used to 401 them.
   describe("signed out", () => {
     it("runs the analysis when a parsed CV is supplied", async () => {
       mockAuth(null);
@@ -165,15 +161,12 @@ describe("POST /api/analyze-job", () => {
         makeRequest({
           mode: "url",
           jobUrl: "https://example.com/job",
-          // `skills` must be strings — the body crossed a trust boundary and
-          // is re-validated rather than believed.
           cvExtraction: { ...CV_EXTRACTION, skills: [{ evil: true }] },
         }),
       );
       expect(res.status).toBe(400);
     });
 
-    // 402, not 429: the UI shows "create an account", not "try again later".
     it("returns 402 once the free run has been spent", async () => {
       mockAuth(null);
       cookieJar.set(ANON_USED_COOKIE, "1");

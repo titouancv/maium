@@ -16,17 +16,13 @@ interface UserCardProps {
   location?: string | null;
   subtitle?: string | null;
   subtitleClassName?: string;
-  /** Uploaded photo URL; falls back to a default derived from `pseudo`. */
   profilePhoto?: string | null;
-  /** Biases the default-photo pick when no `profilePhoto` is set. */
   gender?: Gender | null;
   href?: string;
   className?: string;
   onClick?: () => void;
   disabled?: boolean;
-  /** Show an optional follow/unfollow button at the end of the row. */
   showFollow?: boolean;
-  /** Initial following state for the optional follow button. */
   initialFollowing?: boolean;
 }
 
@@ -113,7 +109,6 @@ export function UserCard({
     <Link
       href={href ?? ROUTES.PROFILE(pseudo)}
       className={defaultClassName}
-      // Seed the profile name so the target page can paint its title instantly.
       onClick={() =>
         useProfilePreviewStore
           .getState()
@@ -124,9 +119,6 @@ export function UserCard({
     </Link>
   );
 
-  // The follow button is interactive, so it must sit beside the link/button
-  // trigger (never nested inside it) to keep the markup valid. Hidden on the
-  // current user's own card — you can't follow yourself.
   if (showFollow && !isSelf) {
     return (
       <div className="flex w-full items-center gap-2">

@@ -26,6 +26,8 @@ import type { ConversationMember, Message, OptimisticMessage } from "@/types";
 import { MessageBubble } from "../items/MessageBubble";
 import { TextArea } from "@/components/ui/TextArea";
 import { Button } from "@/components/ui/Button";
+import { EmptyState } from "@/components/ui/EmptyState";
+import { Text } from "@/components/ui/Text";
 
 function DateSeparator({ label }: { label: string }) {
   return (
@@ -55,6 +57,7 @@ export function MessageList({
   otherLastReadAt,
 }: MessageListProps) {
   const t = useTranslations("messaging");
+  const tCommon = useTranslations("common");
   const locale = useLocale();
   const [messages, setMessages] =
     useState<OptimisticMessage[]>(initialMessages);
@@ -88,27 +91,16 @@ export function MessageList({
   const channelRef = useRef<RealtimeChannel | null>(null);
   const typingTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const lastTypingSentRef = useRef(0);
-  // Guards against concurrent older-page fetches.
   const loadingOlderRef = useRef(false);
-  // scrollHeight captured just before prepending an older page, so we can keep
-  // the viewport anchored on the same message after the DOM grows upward.
   const prependPrevHeightRef = useRef<number | null>(null);
-  // Last appended (bottom) message id — used to auto-scroll only on new
-  // incoming/sent messages, never when older messages are prepended on top.
   const lastBottomIdRef = useRef<string | undefined>(undefined);
-  // The first paint must jump straight to the bottom (no animation); later
-  // messages animate in smoothly.
   const didInitialScrollRef = useRef(false);
 
-  // Persist our read position and tell the other member instantly (broadcast).
   const markRead = useCallback(() => {
     const readAt = new Date().toISOString();
     fetch(API.MESSAGES_CONVERSATION_READ(conversationId), {
       method: "PATCH",
     }).catch(() => {});
-    // Mirror it into the shared store so the conversations list — a separate,
-    // Router-cached route — drops the unread marker as soon as we come back,
-    // without waiting on a server refresh.
     useMessagingStore.getState().markRead(conversationId, readAt);
     channelRef.current?.send({
       type: "broadcast",
@@ -117,12 +109,6 @@ export function MessageList({
     });
   }, [conversationId, currentUserId]);
 
-  // Keep input above the keyboard on mobile by tracking visual viewport height.
-  // We must also pin the page scroll to the top: when the keyboard opens, iOS
-  // scrolls the layout viewport up by the keyboard height, which — on top of the
-  // shrunk container — pushes the input twice too high. Anchoring scroll to 0
-  // (and reacting to viewport scroll, not just resize) keeps it just above the
-  // keyboard.
   useEffect(() => {
     const viewport = window.visualViewport;
     if (!viewport) return;
@@ -157,11 +143,6 @@ export function MessageList({
     }
   }, [input]);
 
-  // Auto-scroll to the bottom only when a new message lands at the bottom
-  // (mount, sent, or received) — not when an older page is prepended on top.
-  // The first paint jumps instantly (before the browser paints, via layout
-  // effect) so the conversation opens pinned to the latest message; subsequent
-  // messages animate smoothly.
   useLayoutEffect(() => {
     const bottomId = messages[messages.length - 1]?.id;
     if (!bottomId || bottomId === lastBottomIdRef.current) return;
@@ -172,8 +153,6 @@ export function MessageList({
     didInitialScrollRef.current = true;
   }, [messages]);
 
-  // After an older page is prepended, restore the scroll position so the
-  // viewport stays anchored on the message the user was looking at.
   useLayoutEffect(() => {
     const prevHeight = prependPrevHeightRef.current;
     if (prevHeight == null || !listRef.current) return;
@@ -181,7 +160,6 @@ export function MessageList({
     prependPrevHeightRef.current = null;
   }, [messages]);
 
-  // Fetch the previous page of messages when the user scrolls near the top.
   const loadOlder = useCallback(async () => {
     if (loadingOlderRef.current || !hasMore) return;
     const oldest = messages[0];
@@ -210,7 +188,6 @@ export function MessageList({
       }
       setHasMore(more);
     } catch {
-      // Keep hasMore true so a later scroll can retry.
     } finally {
       loadingOlderRef.current = false;
       setLoadingOlder(false);
@@ -222,11 +199,6 @@ export function MessageList({
     if (list && list.scrollTop < 100) loadOlder();
   }, [loadOlder]);
 
-  // The initial messages come from the streamed server data, which may be
-  // served from the Router Cache and miss messages that arrived (e.g. shown by
-  // the conversations list's Realtime) after this route was prefetched.
-  // Realtime only delivers messages from subscribe-time forward, so fetch the
-  // latest page once on mount and merge anything we don't already have.
   useEffect(() => {
     let cancelled = false;
     (async () => {
@@ -248,16 +220,13 @@ export function MessageList({
             a.created_at.localeCompare(b.created_at),
           );
         });
-      } catch {
-        // Best-effort reconcile; Realtime still covers messages from here on.
-      }
+      } catch {}
     })();
     return () => {
       cancelled = true;
     };
   }, [conversationId]);
 
-  // Realtime: new messages (postgres_changes) + typing & read (broadcast).
   useEffect(() => {
     const supabase = createClient();
     const channel = supabase
@@ -272,14 +241,9 @@ export function MessageList({
         },
         (payload) => {
           const newMsg = payload.new as Message;
-          // Skip if it's our own optimistic message (will be replaced)
           if (newMsg.sender_id === currentUserId) return;
           setMessages((prev) => {
             if (prev.some((m) => m.id === newMsg.id)) return prev;
-            // The Realtime payload carries only the row columns, not the joined
-            // sender. Reuse the sender from an existing message by the same
-            // author (covers groups), falling back to the known other member —
-            // otherwise the name never renders on live-received messages.
             const sender =
               prev.find((m) => m.sender_id === newMsg.sender_id && m.sender)
                 ?.sender ??
@@ -292,9 +256,6 @@ export function MessageList({
                 : null);
             return [...prev, { ...newMsg, sender }];
           });
-          // The list's preview/order/unread state is kept live by the
-          // layout-level Realtime subscription (MessagingRealtime), so here we
-          // only mark the open conversation read while it's visible.
           if (document.visibilityState === "visible") markRead();
         },
       )
@@ -334,7 +295,6 @@ export function MessageList({
     };
   }, [conversationId, currentUserId, markRead, otherMember]);
 
-  // Mark read again when the tab/window regains focus while open.
   useEffect(() => {
     const onVisible = () => {
       if (document.visibilityState === "visible") markRead();
@@ -403,9 +363,6 @@ export function MessageList({
           m.id === optimisticId ? { ...message, optimistic: false } : m,
         ),
       );
-      // Bump the shared store so the list reflects this send instantly. The
-      // layout Realtime subscription would also catch it, but with round-trip
-      // latency; this keeps the list correct the moment we navigate back.
       useMessagingStore.getState().applyMessage(conversationId, {
         content: message.content,
         created_at: message.created_at,
@@ -443,7 +400,6 @@ export function MessageList({
     groupFirsts.push(grouped ? prevFirst : messages[i]);
   }
 
-  // Index of the last message we sent that the other member has read → "Seen".
   let lastSeenIndex = -1;
   if (otherReadAt) {
     for (let i = messages.length - 1; i >= 0; i--) {
@@ -470,12 +426,10 @@ export function MessageList({
       ref={containerRef}
       className="flex h-full w-full flex-col overflow-hidden"
     >
-      {/* Online / typing status */}
       <div className="text-txt-muted flex h-5 w-full shrink-0 items-center justify-center pt-2 pb-4 text-sm font-extrabold">
         <div>{statusLabel && <>{statusLabel}</>}</div>
       </div>
 
-      {/* Message list */}
       <div
         ref={listRef}
         onScroll={handleScroll}
@@ -483,12 +437,14 @@ export function MessageList({
       >
         {loadingOlder && (
           <div className="flex justify-center py-2">
-            <div className="border-txt-muted h-5 w-5 animate-spin rounded-full border-2 border-t-transparent" />
+            <Text tone="muted" size="sm">
+              {tCommon("loading")}
+            </Text>
           </div>
         )}
         {messages.length === 0 ? (
           <div className="flex h-full items-center justify-center">
-            <p className="text-txt-muted text-sm">{t("emptyConversation")}</p>
+            <EmptyState label={t("emptyConversation")} />
           </div>
         ) : (
           messages.map((msg, index) => {
@@ -519,7 +475,6 @@ export function MessageList({
         <div ref={bottomRef} />
       </div>
 
-      {/* Input */}
       <div className="shrink-0 pt-2 pb-8">
         <div className="flex items-start gap-2">
           <div className="min-w-0 flex-1">

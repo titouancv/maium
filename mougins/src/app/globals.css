@@ -1,11 +1,6 @@
 @import "tailwindcss";
 
-/* ============================================================
-   RAMPS
-   ============================================================ */
-
 :root {
-  /* primary — #ff4500 */
   --primary-50: #fff2ee;
   --primary-100: #ffd5c4;
   --primary-200: #ffb099;
@@ -24,7 +19,6 @@
   --secondary-800: #660f42;
   --secondary-900: #40002a;
 
-  /* light (light mode) — #f1f1ef → #373530 */
   --light-50: #f4f3ee;
   --light-100: #e8e6df;
   --light-200: #d5d1c8;
@@ -34,7 +28,6 @@
   --light-800: #3d3a34;
   --light-900: #201e1a;
 
-  /* Deep dark (dark mode) */
   --dark-50: #f8fafc;
   --dark-100: #f1f5f9;
   --dark-200: #cbd5e1;
@@ -44,7 +37,6 @@
   --dark-800: #0f172a;
   --dark-900: #020617;
 
-  /* Error — rouge framboise (inchangé) */
   --error-50: #fcedef;
   --error-100: #f5b8bf;
   --error-200: #eb808c;
@@ -53,10 +45,6 @@
   --error-800: #7d1220;
   --error-900: #470810;
 }
-
-/* ============================================================
-   SEMANTIC TOKENS — LIGHT MODE
-   ============================================================ */
 
 :root {
   --color-surface-50: var(--light-50);
@@ -90,10 +78,6 @@
 
   --font-nohemi: "Nohemi", sans-serif;
 }
-
-/* ============================================================
-   SEMANTIC TOKENS — DARK MODE
-   ============================================================ */
 
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme]) {
@@ -129,10 +113,6 @@
     --font-cabinet-grotesk: "CabinetGrotesk", sans-serif;
   }
 }
-
-/* ============================================================
-   EXPLICIT THEME OVERRIDES
-   ============================================================ */
 
 :root[data-theme="dark"] {
   --color-surface-50: var(--dark-900);
@@ -196,10 +176,6 @@
   --color-txt-inverse: var(--color-surface-50);
 }
 
-/* ============================================================
-   TAILWIND THEME
-   ============================================================ */
-
 @theme inline {
   --color-surface-50: var(--color-surface-50);
   --color-surface-100: var(--color-surface-100);
@@ -232,7 +208,6 @@
 
   --font-cabinet-grotesk: var(--font-cabinet-grotesk);
 
-  /* primary */
   --color-primary: var(--primary-600);
   --color-on-primary: var(--primary-50);
 
@@ -245,7 +220,6 @@
   --color-primary-800: var(--primary-800);
   --color-primary-900: var(--primary-900);
 
-  /* secondary */
   --color-secondary: var(--secondary-400);
   --color-on-secondary: var(--secondary-50);
 
@@ -258,7 +232,6 @@
   --color-secondary-800: var(--secondary-800);
   --color-secondary-900: var(--secondary-900);
 
-  /* light (light mode) */
   --color-light-50: var(--light-50);
   --color-light-100: var(--light-100);
   --color-light-200: var(--light-200);
@@ -268,7 +241,6 @@
   --color-light-800: var(--light-800);
   --color-light-900: var(--light-900);
 
-  /* dark (dark mode) */
   --color-dark-50: var(--dark-50);
   --color-dark-100: var(--dark-100);
   --color-dark-200: var(--dark-200);
@@ -278,7 +250,6 @@
   --color-dark-800: var(--dark-800);
   --color-dark-900: var(--dark-900);
 
-  /* Error */
   --color-error: var(--error-400);
   --color-on-error: var(--error-50);
 
@@ -299,9 +270,14 @@
   );
 }
 
-/* ============================================================
-   BASE
-   ============================================================ */
+@utility hide-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
 
 html,
 body {

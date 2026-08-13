@@ -42,7 +42,6 @@ describe("renderResumePdf", () => {
   it.each(RESUME_TEMPLATES)("renders a non-empty PDF for the %s template", async (template) => {
     const buffer = await renderResumePdf(SAMPLE, template);
     expect(buffer.length).toBeGreaterThan(0);
-    // PDF files start with the "%PDF" magic bytes.
     expect(buffer.subarray(0, 4).toString("latin1")).toBe("%PDF");
   });
 });

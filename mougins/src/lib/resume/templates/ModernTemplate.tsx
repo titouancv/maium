@@ -11,9 +11,6 @@ import type { ResumePdfData } from "../types";
 import { formatDuration, formatPeriod } from "../experiencePeriod";
 import { RESUME_FONT_FAMILY } from "../fonts";
 
-// Two-column layout for Product / Tech / Startup / Freelance profiles:
-// a tinted sidebar (skills, education) next to the experience column.
-// Colors mirror the app's light-mode semantic tokens (see globals.css).
 const PRIMARY = "#ff4500"; // --primary-600
 const ON_PRIMARY = "#fff2ee"; // --primary-50 (text on primary)
 const SURFACE_50 = "#f4f3ee"; // --color-surface-50 (page bg)
@@ -53,8 +50,6 @@ const styles = StyleSheet.create({
     width: "30%",
   },
   main: { flexDirection: "column", flex: 1, paddingLeft: 10 },
-  // Section title: label + a short rounded accent bar underneath, mirroring the
-  // app's <Title> component (the `h-1 w-22 rounded-full bg-current` bar).
   sectionTitleWrap: { marginBottom: 8, marginTop: 4 },
   sectionTitle: {
     fontSize: 14,
@@ -77,10 +72,7 @@ const styles = StyleSheet.create({
   maiumLink: { fontSize: 9, color: PRIMARY, textDecoration: "none" },
   maiumQr: { width: 64, height: 64, marginTop: 6 },
   expBlock: { marginBottom: 12 },
-  // Header row (bar + title/location/period); the description sits below it so
-  // the bar only spans the header height, like ExperienceItem's `self-stretch`.
   expHeader: { flexDirection: "row" },
-  // Vertical rounded accent bar, mirroring ExperienceItem's `bg-current` rail.
   expBar: {
     width: 3,
     borderRadius: 2,
@@ -89,14 +81,11 @@ const styles = StyleSheet.create({
     marginRight: 10,
   },
   expContent: { flex: 1 },
-  // Title line: "organization, role" on one line (role faded, like text-txt/80).
   expTitle: { fontSize: 12, marginBottom: 2 },
   expOrg: { color: INK },
   expRole: { color: "rgba(15, 23, 42, 0.8)" },
-  // Location + "duration • period" meta lines, like ExperienceItem.
   expMeta: { fontSize: 8, color: MUTED, lineHeight: 1.2 },
   expPeriodOngoing: { fontSize: 8, color: PRIMARY, lineHeight: 1.2 },
-  // Indented to align under the header text (bar width + gap), like pl-5.
   expDescription: { fontSize: 9, color: INK, marginTop: 3, marginLeft: 13 },
 });
 

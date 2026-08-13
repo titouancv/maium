@@ -10,33 +10,23 @@ import {
   AnalyzeJobTextSchema,
   type AnalyzeJobInput,
 } from "@/lib/validators/job";
-// Import UI primitives from their files, not the `@/components/ui` barrel —
-// see the note in AnalyzeCvStep.
 import { Button } from "@/components/ui/Button";
 import { TextInput } from "@/components/ui/TextInput";
 import { TextArea } from "@/components/ui/TextArea";
 import { Tabs } from "@/components/ui/Tabs";
 import { Title } from "@/components/ui/Title";
+import { Text } from "@/components/ui/Text";
 import { AnalysisProgress } from "@/components/pages/jobs/collections/AnalysisProgress";
 import type { CvExtraction } from "@/lib/validators/cv";
 
 interface AnalyzeJobStepProps {
-  /** The CV parsed in the previous step, posted alongside the offer. */
   extraction: CvExtraction;
-  /** The free run is spent — the caller shows the sign-up screen. */
   onQuotaExhausted: () => void;
   onCompleted: (analysisId: string) => void;
 }
 
 type Mode = "url" | "text";
 
-/**
- * Second step of the public funnel: the job offer, then live progress.
- *
- * Mirrors the signed-in [AnalyzeJob] form, but posts `cvExtraction` with the
- * offer (there is no stored profile to match against) and follows the run by
- * polling, since Realtime can't reach a signed-out visitor's row.
- */
 export function AnalyzeJobStep({
   extraction,
   onQuotaExhausted,
@@ -69,8 +59,6 @@ export function AnalyzeJobStep({
       body: JSON.stringify({ ...values, cvExtraction: extraction }),
     });
 
-    // 402 is the quota, distinct from a 429 rate limit: the answer is "create
-    // an account", not "try again later".
     if (res.status === 402) {
       onQuotaExhausted();
       return;
@@ -93,7 +81,9 @@ export function AnalyzeJobStep({
     <div className="flex flex-col gap-6">
       <div className="flex flex-col gap-2">
         <Title label={t("title")} size="h2" />
-        <p className="text-txt-muted text-sm">{t("description")}</p>
+        <Text tone="muted" size="sm">
+          {t("description")}
+        </Text>
       </div>
 
       <div className="flex w-full justify-end">

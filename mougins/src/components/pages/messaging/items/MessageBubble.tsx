@@ -1,7 +1,7 @@
 import type { OptimisticMessage } from "@/types";
 import { formatTime } from "@/lib/date";
 import { cn } from "@/lib/utils";
-import { UserCard } from "@/components/ui";
+import { Rail, Text, UserCard } from "@/components/ui";
 
 interface MessageBubbleProps {
   message: OptimisticMessage;
@@ -33,15 +33,13 @@ export function MessageBubble({
                 isOwn ? "text-primary" : "text-txt",
               )}
             />
-            <p className="text-txt-muted shrink-0 text-xs">
+            <Text tone="muted" size="xs" className="shrink-0">
               {formatTime(message.created_at, locale)}
-            </p>
+            </Text>
           </div>
         )}
         <div className="flex w-full gap-2">
-          <div
-            className={`my-1 w-1 self-stretch rounded-full ${isOwn ? "bg-primary" : "bg-current"}`}
-          ></div>
+          <Rail className={cn("my-1", isOwn && "bg-primary")} />
           <div
             className={`min-w-0 flex-1 leading-relaxed break-words ${message.optimistic ? "opacity-70" : ""}`}
           >

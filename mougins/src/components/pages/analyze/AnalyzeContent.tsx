@@ -11,21 +11,12 @@ import { AnalyzeJobStep } from "./collections/AnalyzeJobStep";
 import { AnonQuotaGate } from "./collections/AnonQuotaGate";
 import { AnalysisDetailOverlay } from "@/components/pages/jobs/collections/AnalysisDetailOverlay";
 
-/** Where the visitor is in the funnel. */
 type Stage =
   | { name: "cv" }
   | { name: "job"; extraction: CvExtraction }
   | { name: "result"; analysis: AnalysisListItem }
   | { name: "gate" };
 
-/**
- * Whether this browser has already spent its free run, read through
- * `useSyncExternalStore` so the server renders the neutral answer and the
- * client corrects it on hydration — no `setState` in an effect.
- *
- * The value can't change under us during a session (only this component writes
- * it, and it then drives its own state), so the subscribe callback is a no-op.
- */
 const NOOP_SUBSCRIBE = () => () => {};
 
 function useFreeRunSpent(): boolean {
@@ -36,24 +27,11 @@ function useFreeRunSpent(): boolean {
   );
 }
 
-/**
- * Public analysis funnel: drop a CV, paste an offer, get the full result —
- * analysis, optimized resume and cover letter — without an account, once.
- *
- * The parsed CV lives in component state and is posted with the offer; only the
- * server persists it (on the `analysis_jobs` row, which later fills the account
- * if the visitor signs up). The uploaded file itself is never stored.
- */
 export function AnalyzeContent() {
   const t = useTranslations("analyze");
 
-  // `null` until the visitor moves: the starting screen is derived, so a
-  // returning visitor lands on the gate without a render of the CV step.
   const [stage, setStage] = useState<Stage | null>(null);
 
-  // Mirror of the httpOnly quota cookie. Purely so a returning visitor sees the
-  // sign-up screen instead of uploading a CV that will be refused — the server
-  // is the authority, and clearing this grants nothing.
   const freeRunSpent = useFreeRunSpent();
   const current: Stage =
     stage ?? (freeRunSpent ? { name: "gate" } : { name: "cv" });

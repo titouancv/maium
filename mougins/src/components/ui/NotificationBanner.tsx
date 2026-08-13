@@ -7,25 +7,14 @@ import { Link } from "@/i18n/navigation";
 import { NOTIFICATION_VARIANTS } from "@/constants";
 import { cn } from "@/lib/utils";
 import { useNotificationStore } from "@/stores/useNotificationStore";
+import { Icon } from "./icons";
 
-/** How long a notification stays before it auto-dismisses. */
 const AUTO_DISMISS_MS = 5000;
-/**
- * Minimum number of message copies. The actual count is derived from the
- * message + viewport width (see {@link Marquee}) so the strip always spans the
- * screen; it must stay a multiple of 4 so the `-25%` scroll loops seamlessly.
- */
 const MIN_MARQUEE_COPIES = 4;
 
-/** Shared classes for the scrolling message strip. */
 const marqueeClasses =
   "min-w-0 flex-1 overflow-hidden font-extrabold uppercase";
 
-/**
- * Global alert band shown at the top of {@link PageLayout}. Reads the current
- * notification from {@link useNotificationStore}; trigger one from anywhere via
- * `useNotificationStore.getState().notify("…")`.
- */
 export function NotificationBanner() {
   const t = useTranslations("common");
   const notification = useNotificationStore((s) => s.notification);
@@ -75,19 +64,7 @@ export function NotificationBanner() {
               aria-label={t("dismissNotification")}
               className="shrink-0 rounded-full p-1 transition-opacity hover:cursor-pointer hover:opacity-70 active:scale-95"
             >
-              <svg
-                width="16"
-                height="16"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <line x1="18" y1="6" x2="6" y2="18" />
-                <line x1="6" y1="6" x2="18" y2="18" />
-              </svg>
+              <Icon name="close" strokeWidth={2.5} />
             </button>
           </div>
         </motion.div>
@@ -104,9 +81,6 @@ function Marquee({ message }: { message: string }) {
     const recompute = () => {
       const unitWidth = unitRef.current?.getBoundingClientRect().width ?? 0;
       if (!unitWidth) return;
-      // The strip scrolls left by 25%, so only 75% of it is ever on-screen:
-      // size it so that 75% still spans the viewport, then round up to a
-      // multiple of 4 to keep the loop seamless.
       const needed = window.innerWidth / 0.75 / unitWidth;
       setCopies(Math.max(MIN_MARQUEE_COPIES, Math.ceil(needed / 4) * 4));
     };

@@ -11,7 +11,6 @@ import type { SuggestedUser } from "@/types";
 
 interface SuggestionCardProps {
   user: SuggestedUser;
-  /** When false the card is a plain link to the profile (public landing). */
   showFollow?: boolean;
 }
 
@@ -20,8 +19,6 @@ export const SuggestionCard = ({
   showFollow = true,
 }: SuggestionCardProps) => {
   const t = useTranslations("home");
-  // Signed-out visitors see this card on the public home page; toggling follow
-  // then redirects to signup instead of firing an unauthenticated request.
   const isAuthenticated = useCurrentUserStore((s) => !!s.user?.id);
   const { following, toggle, isPending } = useFollow({
     pseudo: user.pseudo,

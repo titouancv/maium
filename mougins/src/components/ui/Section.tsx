@@ -3,7 +3,6 @@ import { Title, type TitleSize } from "@/components/ui";
 
 interface SectionProps {
   title: string;
-  /** Heading level of the section title. Home's top-level sections use `h2`. */
   titleSize?: TitleSize;
   children: React.ReactNode;
   className?: string;

@@ -13,7 +13,6 @@ export default async function FollowingPage({ params }: Props) {
   const { pseudo } = await params;
   const t = await getTranslations("profile");
 
-  // Not awaited: streams into the list's Suspense boundary.
   const usersPromise = getFollowing(pseudo);
 
   return (

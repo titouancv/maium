@@ -16,7 +16,7 @@ export const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
           ref={ref}
           className={cn(
             "bg-surface-100 inset-shadow-dark-900/40 dark:inset-shadow-dark-900 h-12 w-full rounded-xl p-1 inset-shadow-sm transition-all outline-none placeholder:uppercase",
-            infoType === "error" ? "text-error bg-error/10" : "text-txt",
+            infoType === "error" ? "text-error" : "text-txt",
             className,
           )}
           {...props}

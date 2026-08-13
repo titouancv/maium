@@ -19,7 +19,7 @@ export const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(
         <div
           className={cn(
             "bg-surface-100 inset-shadow-dark-900/40 dark:inset-shadow-dark-900 flex h-full w-full flex-col gap-1.5 rounded-xl p-2 inset-shadow-sm outline-none",
-            infoType === "error" ? "text-error bg-error/10" : "text-txt",
+            infoType === "error" ? "text-error" : "text-txt",
             className,
           )}
         >

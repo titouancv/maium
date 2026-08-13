@@ -2,6 +2,7 @@
 
 import { use } from "react";
 import { useTranslations } from "next-intl";
+import { EmptyState, ScrollRow } from "@/components/ui";
 import type { AnalysisListItem } from "@/types/job";
 import { RecentAnalysisCard } from "../items";
 
@@ -9,7 +10,6 @@ interface RecentAnalysesListProps {
   analysesPromise: Promise<AnalysisListItem[]>;
 }
 
-/** Unwraps the streamed recent analyses inside a Suspense boundary. */
 export const RecentAnalysesList = ({
   analysesPromise,
 }: RecentAnalysesListProps) => {
@@ -17,14 +17,14 @@ export const RecentAnalysesList = ({
   const analyses = use(analysesPromise);
 
   if (analyses.length === 0) {
-    return <p className="text-txt-muted text-sm">{t("analyses.empty")}</p>;
+    return <EmptyState label={t("analyses.empty")} />;
   }
 
   return (
-    <div className="flex items-stretch gap-6 overflow-x-auto">
+    <ScrollRow stretch>
       {analyses.map((analysis) => (
         <RecentAnalysisCard key={analysis.id} analysis={analysis} />
       ))}
-    </div>
+    </ScrollRow>
   );
 };

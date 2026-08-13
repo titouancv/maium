@@ -13,26 +13,13 @@ interface ProfilePhotoProps {
   src?: string | null;
   sizes?: string;
   className?: string;
-  /** Biases the default-photo pick: `male` → even photos, `female` → odd. */
   gender: Gender | null;
-  /**
-   * Hide the name overlay from the `md` breakpoint up (CSS-only, so SSR and the
-   * client render the same HTML — used by the profile avatar, where the @pseudo
-   * shows below on desktop). Mobile-first: the overlay still shows on small
-   * screens.
-   */
   hideNameOnDesktop?: boolean;
 
   isFramed?: boolean;
   isFrameMuted?: boolean;
 }
 
-/**
- * Pick a default profile photo deterministically from `pseudo`. When a binary
- * `gender` is given, the pick is constrained to one half of the bundled photos:
- * even-numbered for `male`, odd-numbered for `female`. Any other value (incl.
- * `other`/unset) picks freely across all photos.
- */
 const defaultPhotoIndex = (pseudo: string, gender: Gender | null) => {
   if (gender === "male" || gender === "female") {
     const half = DEFAULT_PROFILE_PHOTO_COUNT / 2;
@@ -42,11 +29,6 @@ const defaultPhotoIndex = (pseudo: string, gender: Gender | null) => {
   return (pseudo.length % DEFAULT_PROFILE_PHOTO_COUNT) + 1;
 };
 
-/**
- * User avatar in a 5:7 portrait frame. When no `src` is provided, it shows
- * one of the bundled default photos, picked deterministically from `pseudo`
- * (and biased by `gender` when provided).
- */
 export const ProfilePhoto = ({
   pseudo,
   displayName,

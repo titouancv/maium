@@ -2,11 +2,6 @@ import { NextRequest, NextResponse } from "next/server";
 import { requireApiUser } from "@/lib/auth";
 import { getResumeById } from "@/lib/jobs/server";
 
-/**
- * An optimized resume. Readable by its owner, signed in or not —
- * `getResumeById` does the ownership check, so a non-owner sees the same 404
- * as a missing id. Deleting still requires an account (see DELETE below).
- */
 export async function GET(
   _req: NextRequest,
   { params }: { params: Promise<{ id: string }> },
@@ -29,7 +24,6 @@ export async function DELETE(
   const { supabase } = auth;
 
   const { id } = await params;
-  // RLS scopes the update to the owner; soft delete only.
   const { error } = await supabase
     .from("optimized_resumes")
     .update({ deleted_at: new Date().toISOString(), is_active: false })

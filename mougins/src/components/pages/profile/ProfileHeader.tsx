@@ -3,7 +3,6 @@ import { getTranslations } from "next-intl/server";
 import { Title, BackButton } from "@/components/ui";
 import { getProfileBundle } from "@/lib/users";
 
-/** Streamed profile name (used when no preview was seeded on click). */
 export async function ProfileName({ pseudo }: { pseudo: string }) {
   const bundle = await getProfileBundle(pseudo);
   if (!bundle) notFound();
@@ -18,7 +17,6 @@ export async function ProfileName({ pseudo }: { pseudo: string }) {
   );
 }
 
-/** Streamed back button — shown for non-owners only (needs server auth). */
 export async function ProfileBackButton({ pseudo }: { pseudo: string }) {
   const [bundle, tCommon] = await Promise.all([
     getProfileBundle(pseudo),

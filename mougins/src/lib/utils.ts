@@ -15,19 +15,16 @@ const ORDINAL_SUFFIX_EN: Record<Intl.LDMLPluralRule, string> = {
   other: "th",
 };
 
-/** Format a 1-indexed position as a locale-aware ordinal (e.g. "42nd", "42e"). */
 export function formatOrdinal(n: number, locale: string): string {
   if (locale.startsWith("fr")) return n === 1 ? `${n}er` : `${n}e`;
   const rule = new Intl.PluralRules("en-US", { type: "ordinal" }).select(n);
   return `${n}${ORDINAL_SUFFIX_EN[rule]}`;
 }
 
-/** Normalize a pseudo to the allowed format: lowercase letters and dots only. */
 export function sanitizePseudo(value: string): string {
   return value.toLowerCase().replace(/[^a-z.]/g, "");
 }
 
-/** Whether `value` is a valid http(s) URL (matches the `z.url()` server schema). */
 export function isValidUrl(value: string): boolean {
   try {
     const { protocol } = new URL(value);
@@ -41,8 +38,6 @@ export function faviconUrl(domainOrUrl: string, size = 32): string {
   let domain = domainOrUrl;
   try {
     domain = new URL(domainOrUrl).hostname;
-  } catch {
-    // already a bare domain
-  }
+  } catch {}
   return `${EXTERNAL_API.FAVICON}?domain=${domain}&sz=${size}`;
 }

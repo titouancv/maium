@@ -7,11 +7,6 @@ interface DataUsageNoticeProps {
   className?: string;
 }
 
-/**
- * What Google hands us on sign-in, and where the privacy policy lives. Shared
- * because it follows the Google button around: inside the hero on the signup
- * wizard, and pinned to the foot of the page on the public landing.
- */
 export const DataUsageNotice = ({ className }: DataUsageNoticeProps) => {
   const t = useTranslations("home");
 

@@ -13,7 +13,6 @@ const TEMPLATES: Record<
   modern: ModernTemplate,
 };
 
-/** Returns the template renderer for a layout type (defaults to finance). */
 export function getTemplate(type: ResumeTemplate) {
   return TEMPLATES[type] ?? FinanceTemplate;
 }

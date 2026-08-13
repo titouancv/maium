@@ -5,18 +5,13 @@ import QRCode from "qrcode";
 import { useTranslations } from "next-intl";
 import { ROUTES } from "@/constants";
 import { PageLayout } from "@/components/layout";
-import { Skeleton } from "@/components/ui";
+import { Overlay, Skeleton } from "@/components/ui";
 
 interface ProfileQrOverlayProps {
   pseudo: string;
   onClose: () => void;
 }
 
-/**
- * Profile overlay showing only a QR code that points to the public profile URL,
- * so it can be scanned to open the account. The QR is rendered client-side from
- * the current origin and kept on a white card to stay scannable in both themes.
- */
 export const ProfileQrOverlay = ({ pseudo, onClose }: ProfileQrOverlayProps) => {
   const t = useTranslations("profile");
   const tCommon = useTranslations("common");
@@ -29,16 +24,8 @@ export const ProfileQrOverlay = ({ pseudo, onClose }: ProfileQrOverlayProps) => 
       .catch(() => setQrDataUrl(null));
   }, [pseudo]);
 
-  useEffect(() => {
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onClose();
-    };
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
-  }, [onClose]);
-
   return (
-    <div className="bg-surface-50 fixed inset-0 z-50">
+    <Overlay onClose={onClose}>
       <PageLayout
         title={t("qrTitle")}
         onBack={onClose}
@@ -60,6 +47,6 @@ export const ProfileQrOverlay = ({ pseudo, onClose }: ProfileQrOverlayProps) => 
           </div>
         </div>
       </PageLayout>
-    </div>
+    </Overlay>
   );
 };

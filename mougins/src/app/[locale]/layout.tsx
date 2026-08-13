@@ -27,9 +27,6 @@ export default async function RootLayout({
   children: React.ReactNode;
   params: Promise<{ locale: string }>;
 }>) {
-  // Start user fetch eagerly — runs in parallel with the awaits below.
-  // Cached via React cache() so the page calling getCurrentUserProfile()
-  // reuses this same in-flight promise instead of refetching.
   const userPromise = getCurrentUserProfile();
 
   const { locale } = await params;

@@ -22,8 +22,6 @@ export default async function SignupPage() {
   let initialStep = 0;
   let initialDraft: SignupDraft = {};
 
-  // No authenticated user → show the OAuth entry point (step 0). Otherwise the
-  // DB trigger has created a partial row; resume the wizard from the first gap.
   if (userData) {
     initialDraft = {
       firstName: userData.first_name || undefined,

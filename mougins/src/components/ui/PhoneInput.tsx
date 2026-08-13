@@ -2,11 +2,8 @@
 
 import React, { forwardRef, useCallback, useLayoutEffect, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
+import { InfoMessage } from "./InfoMessage";
 
-// Format: +XX XXX XXX XXXX (12 digits max)
-// Cursor positions in display string after n digits typed
-// Display: `+XX XXX XXX XXXX`
-//           0123456789012345
 const MAX_DIGITS = 12;
 const CURSOR_POS = [1, 2, 3, 5, 6, 7, 9, 10, 11, 13, 14, 15, 16];
 
@@ -113,11 +110,11 @@ export const PhoneInput = forwardRef<HTMLInputElement, PhoneInputProps>(
           className={cn(
             "h-12 w-full rounded-xl p-1 outline-none transition-all",
             error
-              ? "text-error bg-error/10"
+              ? "text-error"
               : "text-txt hover:bg-surface-100 focus:bg-surface-100",
           )}
         />
-        {error && <span className="text-error pl-1 text-xs">{error}</span>}
+        <InfoMessage message={error} size="xs" className="pl-1" />
       </div>
     );
   },

@@ -3,6 +3,7 @@
 import { useForm, useFieldArray, useWatch } from "react-hook-form";
 import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/Button";
+import { Overlay } from "@/components/ui/Overlay";
 import { ExperienceSubForm, emptySubValues } from "./sub-form";
 import type { SubValues } from "./sub-form";
 import type { Experience, ExperienceFormItems } from "@/types/experience";
@@ -146,7 +147,7 @@ export const ExperiencesForm = ({
         </div>
       )}
       {subFormInitialValues !== null && (
-        <div className="bg-surface-50 fixed inset-0 z-50">
+        <Overlay onClose={editor.close}>
           <ExperienceSubForm
             namespace={namespace}
             dateMode={dateMode}
@@ -156,7 +157,7 @@ export const ExperiencesForm = ({
             onCancel={editor.close}
             onDelete={handleDelete}
           />
-        </div>
+        </Overlay>
       )}
     </>
   );

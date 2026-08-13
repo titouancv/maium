@@ -16,7 +16,6 @@ interface ProfileFollowActionsProps {
   isOwner: boolean;
   isAuthenticated: boolean;
   followInfo: FollowInfo;
-  /** The profile data, passed only to the owner — seeds the CV editor. */
   user: UserData | null;
 }
 

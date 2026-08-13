@@ -2,12 +2,12 @@
 
 import { use } from "react";
 import { useTranslations } from "next-intl";
+import { EmptyState, ScrollRow } from "@/components/ui";
 import type { SuggestedUser } from "@/types";
 import { SuggestionCard } from "../items";
 
 interface SuggestionsListProps {
   suggestionsPromise: Promise<SuggestedUser[]>;
-  /** Hidden on the public landing, where following isn't the point yet. */
   showFollow?: boolean;
 }
 
@@ -19,20 +19,18 @@ export const SuggestionsList = ({
   const suggestions = use(suggestionsPromise);
 
   return (
-    <div className="flex gap-6 overflow-x-auto">
+    <ScrollRow>
       {suggestions.length === 0 ? (
-        <p className="text-txt-muted text-sm">{t("suggestions.empty")}</p>
+        <EmptyState label={t("suggestions.empty")} />
       ) : (
-        <>
-          {suggestions.map((user) => (
-            <SuggestionCard
-              key={user.pseudo}
-              user={user}
-              showFollow={showFollow}
-            />
-          ))}
-        </>
+        suggestions.map((user) => (
+          <SuggestionCard
+            key={user.pseudo}
+            user={user}
+            showFollow={showFollow}
+          />
+        ))
       )}
-    </div>
+    </ScrollRow>
   );
 };

@@ -2,11 +2,15 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
-import { motion, AnimatePresence } from "framer-motion";
+import { AnimatePresence } from "framer-motion";
 import { useRouter } from "@/i18n/navigation";
 import { API, ROUTES } from "@/constants";
 import { SearchLayout } from "@/components/layout";
-import { SearchInput, UserCard } from "@/components/ui";
+import { InfoMessage } from "./InfoMessage";
+import { Overlay } from "./Overlay";
+import { SearchInput } from "./SearchInput";
+import { UserCard } from "./UserCard";
+import { Text } from "./Text";
 import type { UserSummary } from "@/types";
 
 interface SearchOverlayProps {
@@ -26,14 +30,6 @@ export function SearchOverlay({ onClose, onSelect }: SearchOverlayProps) {
   useEffect(() => {
     inputRef.current?.focus();
   }, []);
-
-  useEffect(() => {
-    const handler = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onClose();
-    };
-    document.addEventListener("keydown", handler);
-    return () => document.removeEventListener("keydown", handler);
-  }, [onClose]);
 
   useEffect(() => {
     if (debounceRef.current) clearTimeout(debounceRef.current);
@@ -71,13 +67,7 @@ export function SearchOverlay({ onClose, onSelect }: SearchOverlayProps) {
     !isLoading && query.trim().length >= 2 && results.length === 0;
 
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      transition={{ duration: 0.15 }}
-      className="fixed inset-0 z-50"
-    >
+    <Overlay onClose={onClose}>
       <div className="relative z-10">
         <SearchLayout
           onCancel={onClose}
@@ -96,33 +86,33 @@ export function SearchOverlay({ onClose, onSelect }: SearchOverlayProps) {
           }
         >
           <AnimatePresence>
-            {(isLoading || results.length > 0) && (
-              <>
-                {isLoading && results.length === 0 ? (
-                  <p className="text-sm">{t("searching")}</p>
-                ) : (
-                  <ul>
-                    {results.map((user) => (
-                      <li key={user.pseudo}>
-                        <UserCard
-                          {...user}
-                          profilePhoto={user.profile_photo}
-                          onClick={() => handleSelect(user.pseudo)}
-                          showFollow={!onSelect}
-                          initialFollowing={user.is_following ?? false}
-                        />
-                      </li>
-                    ))}
-                  </ul>
-                )}
-              </>
+            {isLoading && results.length === 0 && (
+              <Text key="searching" size="sm">
+                {t("searching")}
+              </Text>
             )}
-            {showNoResults && (
-              <p className="text-error text-sm">{t("noResults")}</p>
+            {results.length > 0 && (
+              <ul key="results">
+                {results.map((user) => (
+                  <li key={user.pseudo}>
+                    <UserCard
+                      {...user}
+                      profilePhoto={user.profile_photo}
+                      onClick={() => handleSelect(user.pseudo)}
+                      showFollow={!onSelect}
+                      initialFollowing={user.is_following ?? false}
+                    />
+                  </li>
+                ))}
+              </ul>
             )}
+            <InfoMessage
+              key="no-results"
+              message={showNoResults ? t("noResults") : null}
+            />
           </AnimatePresence>
         </SearchLayout>
       </div>
-    </motion.div>
+    </Overlay>
   );
 }

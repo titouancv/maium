@@ -2,11 +2,6 @@ import { createClient } from "@/lib/supabase/server";
 import { MESSAGES_PAGE_SIZE } from "@/constants";
 import type { Conversation, ConversationMember, Message } from "@/types";
 
-// --- Raw row shapes -------------------------------------------------------
-// Without generated Supabase types, nested selects are typed loosely, so we
-// describe the rows we ask for and cast once at the query boundary instead of
-// sprinkling `as unknown as` across the mapping code.
-
 interface MemberUserRow {
   id: string;
   pseudo: string;
@@ -98,10 +93,6 @@ export async function getConversations(): Promise<Conversation[]> {
 
   const conversationIds = memberships.map((m) => m.conversation_id);
 
-  // Single indexed query: the newest message lives on the conversation row
-  // (maintained by a trigger), so there's no need to scan every message.
-  // `last_message_at is null` filters out conversations with no message yet,
-  // and the order gives most-recently-active first.
   const { data } = await supabase
     .from("conversations")
     .select(CONVERSATION_SELECT)
@@ -139,12 +130,6 @@ export async function getConversationById(
   return mapConversation(row);
 }
 
-/**
- * Fetches a page of messages, newest first internally but returned oldest →
- * newest. Pass `before` (the `created_at` of the oldest message already loaded)
- * to fetch the previous page for upward infinite scroll. The `id` tiebreak
- * keeps ordering deterministic when two messages share a `created_at`.
- */
 export async function getMessages(
   conversationId: string,
   options: { limit?: number; before?: string } = {},

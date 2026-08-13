@@ -13,22 +13,8 @@ import { isAnonUnderQuota, isUnderRateLimit, incrementUsage } from "@/lib/jobs/u
 import { runAnalysisPipeline } from "@/lib/jobs/pipeline";
 import { ANON_SESSION_MAX_AGE_S } from "@/constants";
 
-// The pipeline runs in `after()`; give it room (Vercel Pro allows up to 300s).
-// Beyond this, move the pipeline to an Edge Function + pg_cron worker.
 export const maxDuration = 300;
 
-/**
- * Queues a job analysis.
- *
- * Works **with or without an account**. A signed-in caller is matched against
- * their stored profile and rate-limited per hour. A signed-out one gets a
- * single free run: they must supply the CV they parsed at `/api/cv/parse`,
- * which is stored on the row (standing in for the profile, and later used to
- * fill the account they create), and the result expires unless claimed.
- *
- * Quota refusals return **402**, distinct from the signed-in **429**, so the UI
- * can show "create an account" rather than "try again later".
- */
 export async function POST(req: NextRequest) {
   const supabase = await createClient();
   const {
@@ -69,7 +55,6 @@ export async function POST(req: NextRequest) {
 
   await owner.onQueued();
 
-  // Run the pipeline after the response is sent.
   after(() => runAnalysisPipeline(job.id));
 
   return NextResponse.json(
@@ -102,17 +87,12 @@ async function resolveAnonOwner(
     { status: 402 },
   );
 
-  // Cheapest check first: the marker cookie survives the session cookie.
   if (await hasUsedFreeAnalysis()) return quotaExhausted;
 
-  // Without an account there is no profile to match against, so the parsed CV
-  // is required rather than optional.
   if (!cvExtraction) {
     return NextResponse.json({ error: "Missing cvExtraction" }, { status: 400 });
   }
 
-  // No attributable IP means the per-IP backstop can't be enforced, and the
-  // cookie alone is too easy to drop.
   const clientIp = getClientIp(req);
   if (!clientIp) {
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });

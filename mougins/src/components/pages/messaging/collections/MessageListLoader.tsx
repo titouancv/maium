@@ -12,11 +12,6 @@ interface MessageListLoaderProps {
   currentUserId: string;
 }
 
-/**
- * Unwraps the streamed conversation + messages inside a Suspense boundary.
- * The conversation also carries the authoritative membership check: when the
- * viewer is not a member (or it does not exist) it resolves to null → 404.
- */
 export function MessageListLoader({
   conversationId,
   conversationPromise,

@@ -2,9 +2,6 @@
 
 import { useState } from "react";
 import { useTranslations } from "next-intl";
-// Import UI primitives from their files, not the `@/components/ui` barrel:
-// pulling this client tree through the barrel trips a Turbopack
-// `export *` namespace-seal bug at build time (see AnalyzeJob).
 import { Button } from "@/components/ui/Button";
 import { ResumeEditorOverlay } from "./ResumeEditorOverlay";
 

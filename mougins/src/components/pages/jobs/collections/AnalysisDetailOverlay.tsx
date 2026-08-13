@@ -2,7 +2,7 @@
 
 import { useTranslations } from "next-intl";
 import type { AnalysisListItem } from "@/types/job";
-import { Button, ChipList, Section } from "@/components/ui";
+import { Button, ChipList, Overlay, Section, Text } from "@/components/ui";
 import { PageLayout } from "@/components/layout/PageLayout";
 import { DownloadResumeButton } from "./DownloadResumeButton";
 import { CoverLetterButton } from "./CoverLetterButton";
@@ -17,7 +17,7 @@ export function AnalysisDetailOverlay({ analysis, onClose }: Props) {
   const tCommon = useTranslations("common");
 
   return (
-    <div className="bg-surface-50 fixed inset-0 z-50 flex flex-col">
+    <Overlay onClose={onClose} className="flex flex-col">
       <PageLayout
         onBack={onClose}
         backLabel={tCommon("backButton")}
@@ -39,22 +39,20 @@ export function AnalysisDetailOverlay({ analysis, onClose }: Props) {
                 <span className="pb-0.5">{t("matchScore")}</span>
               </div>
               {analysis.confidence_score < 75 && (
-                <div className="bg-secondary-600 text-on-primary flex rounded-sm px-2 py-1 text-sm">
-                  <span>
-                    {t("detail.lowConfidenceWarning", {
-                      score: analysis.confidence_score,
-                    })}
-                  </span>
-                </div>
+                <Text tone="primary" size="sm">
+                  {t("detail.lowConfidenceWarning", {
+                    score: analysis.confidence_score,
+                  })}
+                </Text>
               )}
               <div className="flex flex-col gap-1">
                 {analysis.job?.location && (
-                  <p className="text-txt-muted truncate">
+                  <Text tone="muted" truncate>
                     {analysis.job?.location}
-                  </p>
+                  </Text>
                 )}
                 {analysis.summary && (
-                  <p className="text-txt leading-relaxed">{analysis.summary}</p>
+                  <Text className="leading-relaxed">{analysis.summary}</Text>
                 )}
               </div>
               {analysis.resume_id && (
@@ -110,14 +108,14 @@ export function AnalysisDetailOverlay({ analysis, onClose }: Props) {
                   </div>
                 </Section>
               )}
-              <p className="text-txt-muted text-center text-xs">
+              <Text tone="muted" size="xs" className="text-center">
                 {t("detail.aiDisclaimer")}
-              </p>
+              </Text>
               <div className="h-24 shrink-0 md:h-32" />
             </div>
           </div>
         </div>
       </PageLayout>
-    </div>
+    </Overlay>
   );
 }

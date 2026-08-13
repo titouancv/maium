@@ -8,15 +8,9 @@ interface UseFollowOptions {
   pseudo: string;
   initialFollowing: boolean;
   initialCount?: number;
-  /** When false, toggling redirects to signup instead of calling the API. */
   isAuthenticated?: boolean;
 }
 
-/**
- * Optimistic follow/unfollow toggle shared by the profile actions and the home
- * suggestions. Flips local state immediately, calls `POST`/`DELETE`
- * `/api/users/follow`, and rolls back if the request fails.
- */
 export function useFollow({
   pseudo,
   initialFollowing,

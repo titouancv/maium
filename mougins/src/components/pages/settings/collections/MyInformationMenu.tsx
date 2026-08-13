@@ -13,7 +13,6 @@ interface MyInformationMenuProps {
   userPromise: Promise<UserData | null>;
 }
 
-/** Unwraps the streamed user promise and renders the editable data menus. */
 export const MyInformationMenu = ({ userPromise }: MyInformationMenuProps) => {
   const user = use(userPromise);
   const t = useTranslations("settings");

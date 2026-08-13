@@ -8,7 +8,6 @@ interface HistoryLoaderProps {
   historyPromise: Promise<AnalysisListItem[]>;
 }
 
-/** Unwraps the streamed analysis history inside a Suspense boundary. */
 export function HistoryLoader({ historyPromise }: HistoryLoaderProps) {
   const history = use(historyPromise);
   return <AnalysisHistoryList history={history} />;

@@ -7,11 +7,6 @@ import { usePresenceStore } from "@/stores/usePresenceStore";
 
 const PRESENCE_CHANNEL = "presence:online";
 
-/**
- * Joins a global presence channel while the user has the app open and mirrors
- * the set of online user ids into [usePresenceStore]. Mounted once at the
- * layout level, next to UserHydration.
- */
 export function PresenceTracker() {
   const userId = useCurrentUserStore((s) => s.user?.id);
 

@@ -2,7 +2,6 @@ import { getLocale, getTranslations } from "next-intl/server";
 import { getProfileRank } from "@/lib/users";
 import { formatOrdinal } from "@/lib/utils";
 
-/** Streamed "Nth on maium" join rank (round-trip 2). */
 export async function ProfileRank({ pseudo }: { pseudo: string }) {
   const rank = await getProfileRank(pseudo);
   if (!rank) return null;

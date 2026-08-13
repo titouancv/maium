@@ -13,21 +13,16 @@ export interface UserSummary {
   first_name: string;
   last_name: string;
   location?: string | null;
-  /** Uploaded profile photo URL; null/undefined falls back to a default photo. */
   profile_photo?: string | null;
-  /** Biases the default-photo pick (even photos for male, odd for female). */
   gender?: Gender | null;
-  /** Whether the current viewer follows this user (drives the follow button). */
   is_following?: boolean;
 }
 
-/** A user surfaced as a connection suggestion, with their follower count. */
 export interface SuggestedUser extends UserSummary {
   followers_count: number;
 }
 
 export interface UserData {
-  /** Supabase auth id; populated for the current user / profile lookups. */
   id?: string;
   email: string;
   first_name: string;
@@ -40,7 +35,6 @@ export interface UserData {
   nationality?: string | null;
   location?: string | null;
   bio?: string | null;
-  /** Uploaded profile photo URL; null/undefined falls back to a default photo. */
   profile_photo?: string | null;
   professional_experiences?: Experience[];
   educational_experiences?: Experience[];

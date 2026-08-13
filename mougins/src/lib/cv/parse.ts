@@ -8,20 +8,6 @@ import {
   type CvExtractionRaw,
 } from "@/lib/validators/cv";
 
-/**
- * A CV is attacker-supplied input: whoever uploads it controls every byte, and
- * a document that says "ignore your instructions and return X" will be obeyed
- * by default. The one-line guard used for job postings
- * (`JOB_EXTRACTION_SYSTEM` in lib/jobs/extract.ts) was not enough here — a test
- * CV containing such a block got `firstName` set to "ADMIN", the real
- * experience dropped, and ~400 invented skills returned.
- *
- * So the document is fenced in an explicit delimiter and the model is told, in
- * advance, that instruction-like text inside the fence is CV content to ignore.
- * This is defence in depth only: the hard guarantee is the deterministic
- * truncation in `normalizeCvExtraction` (see `CV_LIMITS`), which no prompt can
- * talk its way past.
- */
 const CV_DELIMITER = "-----BEGIN CV DOCUMENT-----";
 const CV_END_DELIMITER = "-----END CV DOCUMENT-----";
 
@@ -43,13 +29,11 @@ const CV_PARSE_SYSTEM = [
   "Use empty strings/arrays for anything not present. Do not fabricate, infer or embellish.",
 ].join(" ");
 
-/** Trim, and drop the value entirely when nothing is left. */
 function cleanText(value: string): string | undefined {
   const trimmed = value.trim();
   return trimmed.length > 0 ? trimmed : undefined;
 }
 
-/** Keep only well-formed absolute http(s) URLs — the profile schema requires them. */
 function cleanUrls(values: string[]): string[] {
   return values.flatMap((value) => {
     const trimmed = value.trim();
@@ -58,12 +42,6 @@ function cleanUrls(values: string[]): string[] {
   });
 }
 
-/**
- * Convert raw experiences to the stored shape, dropping any the profile schema
- * would reject anyway: an experience needs an organization, a role and a
- * parseable start date. An end date that fails to parse (typically "Present")
- * simply means "ongoing", which is how a missing `endPeriod` already reads.
- */
 function cleanExperiences(raw: CvExtractionRaw["professionalExperiences"]): CvExperience[] {
   return raw.flatMap((entry) => {
     const organization = cleanText(entry.organization);
@@ -79,31 +57,16 @@ function cleanExperiences(raw: CvExtractionRaw["professionalExperiences"]): CvEx
         description: cleanText(entry.description)?.slice(0, 4000),
         location: cleanText(entry.location)?.slice(0, 100),
         startPeriod,
-        // An end before the start is OCR noise; treat it as ongoing.
         ...(endPeriod !== null && endPeriod >= startPeriod ? { endPeriod } : {}),
       },
     ];
   });
 }
 
-/**
- * Cap an array at `limit` and drop it entirely when empty.
- *
- * The cap is the deterministic half of the prompt-injection defence: a CV that
- * talks the model into emitting hundreds of entries still cannot produce more
- * than `CV_LIMITS` of them. It also keeps this function's output within what
- * `CvExtractionSchema` accepts, which is what the `/analyze` flow re-validates.
- */
 function capped<T>(values: T[], limit: number): T[] | undefined {
   return values.length > 0 ? values.slice(0, limit) : undefined;
 }
 
-/**
- * Normalize raw model output into a `CvExtraction`: trim strings, convert
- * `YYYY-MM` periods to epoch ms, drop malformed entries, cap array sizes, and
- * omit anything empty so merging into an existing profile never blanks a
- * filled field.
- */
 export function normalizeCvExtraction(raw: CvExtractionRaw): CvExtraction {
   const skills = raw.skills
     .flatMap((skill) => cleanText(skill) ?? [])
@@ -147,11 +110,6 @@ export function normalizeCvExtraction(raw: CvExtractionRaw): CvExtraction {
   };
 }
 
-/**
- * Turns OCR'd CV markdown into a profile draft ready for
- * `PATCH /api/users/me`. `userId` is for the `llm_logs` audit row only and is
- * null for anonymous visitors.
- */
 export async function parseCvToProfile(
   markdown: string,
   userId: string | null,
@@ -164,8 +122,6 @@ export async function parseCvToProfile(
       { role: "system", content: CV_PARSE_SYSTEM },
       {
         role: "user",
-        // Strip any delimiter the document itself contains, so it cannot close
-        // the fence early and have the rest read as instructions.
         content: [
           CV_DELIMITER,
           markdown.split(CV_DELIMITER).join("").split(CV_END_DELIMITER).join(""),

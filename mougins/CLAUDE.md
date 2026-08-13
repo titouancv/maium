@@ -332,10 +332,11 @@ Rules:
 
 ### Shared folders
 
-- **`ui/`** — reusable presentational components. Shared `List`/`Item` components
-  used by more than one page (or by forms) live in `ui/collections/` and
-  `ui/items/` respectively. Shared overlays consumed by infra/ui
-  (`LoadingOverlay`, `SearchOverlay`) live at `ui/` root. Import via `@/components/ui`.
+- **`ui/`** — reusable presentational components (catalogued under **UI
+  Components** below). Shared `List`/`Item` components used by more than one page
+  (or by forms) live in `ui/collections/` and `ui/items/` respectively; icons in
+  `ui/icons/`. Shared overlays consumed by infra/ui (`LoadingOverlay`,
+  `SearchOverlay`) live at `ui/` root. Import via `@/components/ui`.
 - **`form/`** — form components and `form/sub-form/` building blocks.
 - **`layout/`** — layout wrappers (`PageLayout`, `FormLayout`, `SearchLayout`).
 - Root-level infra (`Providers.tsx`, `ThemeApplier.tsx`, `UserHydration.tsx`,
@@ -481,12 +482,116 @@ Every visible string uses `t()`. Both `en.json` and `fr.json` must be updated in
 
 ---
 
+## Comments
+
+**Never write a comment.** The codebase contains none, and none may be
+reintroduced — not when adding code, not when editing it. Code documents itself
+through names; a comment is a name that wasn't found.
+
+- ❌ `//` and `/* */` in TS/TSX, JSDoc `/** */`, `{/* */}` in JSX, `/* */` in
+  CSS, `--` banners in new SQL, section separators, `TODO` / `FIXME` markers,
+  and commented-out code (delete it — git remembers).
+- ✅ The **only** comments allowed are machine-read directives, because the
+  tooling needs them: `eslint-disable*`, `@ts-expect-error`, `prettier-ignore`,
+  `/// <reference>`. Nothing else.
+
+When the urge to explain arises, do one of these instead:
+
+1. **Rename.** `prependPrevHeightRef` beats `prevHeight` + a comment.
+2. **Extract.** Pull the block into a named function or a named `const` — the
+   name carries what the comment would have said.
+3. **Document it here.** Cross-cutting *why* (an invariant, a security seam, a
+   browser quirk) belongs in this file, where it is read once and stays true —
+   not scattered next to the code, where it silently rots.
+
+Existing SQL migrations in `supabase/migrations/` keep their comments: they are
+applied, immutable history. New migrations follow the rule above.
+
+---
+
 ## Styles (Tailwind CSS)
 
 - Mobile-first: base classes for mobile, breakpoints (`sm:`, `md:`, `lg:`) for larger screens.
 - Use semantic color tokens (`bg-surface-50`, `text-txt`, `text-txt-muted`, `border-brd-200`) — never default Tailwind colors like `bg-white`.
 - Conditional classes: `cn()` from `@/lib/utils` (clsx + tailwind-merge).
 - Variant styles: keyed `Record` maps of class strings (see `UI_VARIANTS` in [constants/ui.ts](src/constants/ui.ts)).
+
+### Everything sits at the same level
+
+**No component draws a border or a background of its own.** There are no cards,
+no panels, no boxes, no tinted callouts, no dividers. Every block of the page
+sits on `bg-surface-50` at the same depth, and separation comes from **spacing,
+type, and the [Rail](src/components/ui/Rail.tsx) / [AccentBar](src/components/ui/AccentBar.tsx)
+bars** — never from a container.
+
+Concretely, when building or editing a component:
+
+- ❌ `border`, `border-t/b/l/r`, `<hr>`, `divide-*` — use a gap instead.
+- ❌ `bg-surface-100/200`, `bg-error/10`, `bg-secondary-600`, `shadow` on a
+  container — a block never gets its own ground.
+- ❌ a "card" wrapper around a summary, a warning or a stat.
+- ✅ state and emphasis are carried by **text colour**: `text-error`,
+  `text-primary`, `text-txt-muted` (via [InfoMessage](src/components/ui/InfoMessage.tsx)
+  and [Text](src/components/ui/Text.tsx)).
+- ✅ a row is marked by a `Rail`, a heading by an `AccentBar`.
+
+The few backgrounds that remain are **functional, not decorative**, and are the
+complete list — do not add to it: input fields (`TextInput`, `TextArea`, and the
+hover/focus tint on `DateInput` / `PhoneInput`), the [Skeleton](src/components/ui/Skeleton.tsx)
+placeholder, the pill behind `Tabs`, `Button`'s own variants, the photo frame in
+`ProfilePhotoPicker`, the white QR card (scannability), and `Overlay`'s
+`bg-surface-50` (it must hide the page underneath).
+
+### Loading states: a word, never a spinner
+
+**Never build a spinner** — no `animate-spin`, no rotating ring, no dots, no
+shimmer invented on the spot. Say it in words instead:
+
+- A button that is working: `<Button isLoading>` (it swaps itself for text).
+- A step with real progress: [ProgressBar](src/components/ui/ProgressBar.tsx).
+- A list or region that is fetching: the translated word — `t("loading")` from
+  the `common` namespace — inside a `<Text tone="muted" size="sm">`.
+- A shell that will be replaced by content: [Skeleton](src/components/ui/Skeleton.tsx).
+
+### No tooltips
+
+**Never build a tooltip** — no hover card, no `title=` attribute used as one, no
+popover explaining a control. If something needs explaining, the explanation is
+visible on the page: a `<Text tone="muted" size="sm">` under the control, or a
+clearer label. Icon-only controls carry an `aria-label` for assistive tech, not
+a visual tooltip.
+
+---
+
+## UI Components (`src/components/ui`)
+
+Check this list before writing any markup — these exist so the same thing is
+never invented twice. Import from `@/components/ui`.
+
+| Component | Use it for |
+|---|---|
+| `Overlay` | **Every** full-screen overlay. Portals to `body`, fades in, closes on Escape (topmost only, so nested sub-forms work), paints `bg-surface-50`. Put a `PageLayout` / `FormLayout` / `SearchLayout` inside; wrap in `AnimatePresence` for the exit fade. Never hand-roll `fixed inset-0 z-50`. |
+| `Text` | Body copy. `tone` = default \| muted \| primary, `size` = xs \| sm \| base \| lg, `as` = p \| span \| div \| li, plus `truncate`. Replaces every `text-txt-muted text-sm` pair. |
+| `InfoMessage` | Any error, confirmation or hint. Renders nothing when `message` is empty, so pass a possibly-undefined error straight through — no `&&` guard. |
+| `EmptyState` | What a list renders instead of its rows. `align="center"` when it owns the region. |
+| `Icon` | Every icon, from a fixed set (`arrowRight`, `bell`, `chevronRight`, `close`, `search`). **Add a path to `ui/icons/Icon.tsx` rather than inlining an `<svg>`.** `GoogleMark` is the one brand-coloured exception. |
+| `AccentBar` | The short bar under a heading. |
+| `Rail` | The vertical bar that marks a row (experience, hobby, message, quote). Pass `bg-primary` to mark it as the user's own. |
+| `ScrollRow` | A row that scrolls sideways with the scrollbar hidden. |
+| `FilePicker` | The hidden `<input type="file">` behind a `Button`. Hold a ref, call `open()`. |
+| `ExpandableText` | Long copy clamped to N lines with a see more / see less toggle. |
+| `Title` · `Section` · `Markdown` | Headings and long-form content. |
+| `Button` · `Chip` · `ChipList` · `Tabs` · `TabsVertical` · `MenuList` · `SlideToEnter` | Actions and choices. |
+| `TextInput` · `TextArea` · `DateInput` · `PhoneInput` · `SearchInput` · `LocationInput` | Fields (see `form/` for whole steps). |
+| `Skeleton` · `ProgressBar` · `NumberRoller` | Loading and numbers. |
+| `UserCard` · `ProfilePhoto` · `ProfilePhotoPicker` | People. |
+
+**Not in this project, and not to be created:** tooltip, spinner, card, panel,
+divider, badge, accordion, modal-with-a-backdrop-card. For a transient message
+use `useNotificationStore` + `NotificationBanner`, which already exist.
+
+If a genuinely new primitive is needed, add it to `ui/`, export it from the
+barrel, and add a row here — don't inline it at the call site.
 
 ---
 
@@ -506,4 +611,9 @@ Types: `feat`, `fix`, `refactor`, `chore`, `docs`, `test`, `i18n`
 4. `"use client"` only when hooks, events, or browser APIs are needed.
 5. Absolute imports via `@/` alias.
 6. No `console.log` in committed code.
-7. Every folder has an `index.ts` for centralized exports.
+7. **No comments** — only machine-read directives (see **Comments**).
+8. Every folder has an `index.ts` for centralized exports.
+9. Reach for an existing `ui/` component before writing markup — and never build
+   a tooltip or a spinner (see **Styles**).
+10. No component gets its own border or background; everything sits at the same
+    level (see **Styles**).

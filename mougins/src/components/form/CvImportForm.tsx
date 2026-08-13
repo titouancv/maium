@@ -9,16 +9,16 @@ import {
   CV_MAX_BYTES,
 } from "@/constants";
 import { Button } from "@/components/ui/Button";
+import { Text } from "@/components/ui/Text";
+import { InfoMessage } from "@/components/ui/InfoMessage";
+import { FilePicker, type FilePickerHandle } from "@/components/ui/FilePicker";
 import type { CvExtraction } from "@/lib/validators/cv";
 
 interface CvImportFormProps {
-  /** Fired with the extracted draft once the user confirms the summary. */
   onChange: (extraction: CvExtraction) => void;
-  /** True while the parent persists the confirmed draft — blocks a second confirm. */
   isSubmitting?: boolean;
 }
 
-/** What the extraction yielded, for the confirmation screen. */
 interface Summary {
   extraction: CvExtraction;
   counts: { key: string; count: number }[];
@@ -27,11 +27,6 @@ interface Summary {
 const isAcceptedType = (type: string) =>
   (CV_ACCEPTED_MIME_TYPES as readonly string[]).includes(type);
 
-/**
- * Every collection the extraction can carry, so the confirmation screen shows
- * exactly what the PATCH will write — a field missing here would be persisted
- * without ever being shown, which defeats the point of the screen.
- */
 function summarize(extraction: CvExtraction): Summary["counts"] {
   return (
     [
@@ -51,31 +46,17 @@ function summarize(extraction: CvExtraction): Summary["counts"] {
     .map(([key, count]) => ({ key, count }));
 }
 
-/**
- * Signup step that imports a CV: pick a PDF/image, OCR it through
- * `POST /api/cv/parse`, then show what was found before anything is written.
- *
- * The confirmation screen is not decoration. `PATCH /api/users/me` replaces
- * each collection wholesale, and the extraction comes from a language model —
- * the user must see what is about to land on their profile and be able to back
- * out. Choosing another file re-runs the import; the wizard's "skip" leaves the
- * profile untouched.
- */
 export const CvImportForm = ({
   onChange,
   isSubmitting,
 }: CvImportFormProps) => {
   const t = useTranslations("form.cvImport");
-  const inputRef = useRef<HTMLInputElement>(null);
+  const fileRef = useRef<FilePickerHandle>(null);
   const [isParsing, setIsParsing] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [summary, setSummary] = useState<Summary | null>(null);
 
-  const handleFile = async (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    event.target.value = ""; // allow re-picking the same file
-    if (!file) return;
-
+  const handleFile = async (file: File) => {
     if (!isAcceptedType(file.type)) {
       setError(t("errorType"));
       return;
@@ -100,8 +81,6 @@ export const CvImportForm = ({
 
       const { profile } = (await res.json()) as { profile: CvExtraction };
       const counts = summarize(profile);
-      // Nothing usable came back: say so rather than showing an empty summary
-      // and letting the user "confirm" a no-op.
       if (counts.length === 0 && !profile.firstName && !profile.bio) {
         setError(t("errorEmpty"));
         return;
@@ -116,15 +95,19 @@ export const CvImportForm = ({
 
   return (
     <div className="flex min-h-0 flex-1 flex-col gap-6">
-      <p className="text-txt-muted text-sm">{t("description")}</p>
+      <Text tone="muted" size="sm">
+        {t("description")}
+      </Text>
 
       {summary ? (
         <div className="flex flex-col gap-6">
-          <div className="border-brd-200 flex flex-col gap-3 rounded-sm border p-4">
-            <p className="text-sm font-extrabold">{t("foundTitle")}</p>
+          <div className="flex flex-col gap-3">
+            <Text size="sm" className="font-extrabold">
+              {t("foundTitle")}
+            </Text>
             <ul className="flex flex-col gap-1">
               {summary.extraction.firstName && (
-                <li className="text-txt-muted text-sm">
+                <Text as="li" tone="muted" size="sm">
                   {t("foundName", {
                     name: [
                       summary.extraction.firstName,
@@ -133,12 +116,12 @@ export const CvImportForm = ({
                       .filter(Boolean)
                       .join(" "),
                   })}
-                </li>
+                </Text>
               )}
               {summary.counts.map(({ key, count }) => (
-                <li key={key} className="text-txt-muted text-sm">
+                <Text as="li" tone="muted" size="sm" key={key}>
                   {t(`found.${key}`, { count })}
-                </li>
+                </Text>
               ))}
             </ul>
           </div>
@@ -148,13 +131,11 @@ export const CvImportForm = ({
             type="button"
             size="md"
             className="w-full"
-            onClick={() => inputRef.current?.click()}
+            onClick={() => fileRef.current?.open()}
           >
             {t("chooseAnother")}
           </Button>
 
-          {/* `isLoading` swaps the button for static text, so a second click
-              can't advance the wizard twice and skip the next step. */}
           <Button
             type="button"
             size="lg"
@@ -172,20 +153,18 @@ export const CvImportForm = ({
           size="lg"
           className="w-full"
           isLoading={isParsing}
-          onClick={() => inputRef.current?.click()}
+          onClick={() => fileRef.current?.open()}
         >
           {isParsing ? t("parsing") : t("choose")}
         </Button>
       )}
 
-      {error && <p className="text-error text-sm">{error}</p>}
+      <InfoMessage message={error} />
 
-      <input
-        ref={inputRef}
-        type="file"
+      <FilePicker
+        ref={fileRef}
         accept={CV_ACCEPT_ATTRIBUTE}
-        onChange={handleFile}
-        className="hidden"
+        onPick={handleFile}
       />
     </div>
   );

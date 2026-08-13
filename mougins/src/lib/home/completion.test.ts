@@ -41,7 +41,6 @@ describe("getProfileCompletion", () => {
   });
 
   it("counts a partially filled profile proportionally", () => {
-    // 2 of 7 tracked fields filled → ~29%.
     const result = getProfileCompletion({
       ...baseUser,
       bio: "hi",
@@ -52,7 +51,6 @@ describe("getProfileCompletion", () => {
   });
 
   it("treats a profile at or above the 75% threshold as complete", () => {
-    // 6 of 7 tracked fields filled → ~86% ≥ 75% → complete.
     const almostFull: UserData = {
       ...baseUser,
       bio: "Pioneer of computing",
@@ -68,7 +66,6 @@ describe("getProfileCompletion", () => {
   });
 
   it("stays incomplete just below the 75% threshold", () => {
-    // 5 of 7 tracked fields filled → ~71% < 75% → not complete.
     const result = getProfileCompletion({
       ...baseUser,
       bio: "Pioneer of computing",

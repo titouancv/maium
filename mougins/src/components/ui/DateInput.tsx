@@ -2,6 +2,7 @@
 
 import React, { forwardRef, useCallback, useLayoutEffect, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
+import { InfoMessage } from "./InfoMessage";
 
 export type DateMode = "DD-MM-YYYY" | "MM-YYYY" | "YYYY";
 
@@ -46,11 +47,9 @@ interface ModeConfig {
   buildDisplay: (digits: string) => string;
 }
 
-// Cursor position in display string after n digits typed
 const MODE_CONFIGS: Record<DateMode, ModeConfig> = {
   "DD-MM-YYYY": {
     maxDigits: 8,
-    // "DD - MM - YYYY" → D=0,D=1,' '=2,'-'=3,' '=4,M=5,M=6,' '=7,'-'=8,' '=9,Y=10..13
     cursorPos: [0, 1, 2, 6, 7, 11, 12, 13, 14],
     fromISO: (iso) => {
       if (!iso || iso.length < 10) return "";
@@ -67,7 +66,6 @@ const MODE_CONFIGS: Record<DateMode, ModeConfig> = {
   },
   "MM-YYYY": {
     maxDigits: 6,
-    // "MM - YYYY" → M=0,M=1,' '=2,'-'=3,' '=4,Y=5..8
     cursorPos: [0, 1, 2, 6, 7, 8, 9],
     fromISO: (iso) => {
       if (!iso || iso.length < 7) return "";
@@ -84,7 +82,6 @@ const MODE_CONFIGS: Record<DateMode, ModeConfig> = {
   },
   YYYY: {
     maxDigits: 4,
-    // "YYYY" → Y=0..3
     cursorPos: [0, 1, 2, 3, 4],
     fromISO: (iso) => {
       if (!iso || iso.length < 4) return "";
@@ -184,11 +181,11 @@ export const DateInput = forwardRef<HTMLInputElement, DateInputProps>(
           className={cn(
             "h-12 w-full rounded-xl p-1 outline-none transition-all",
             error
-              ? "text-error bg-error/10"
+              ? "text-error"
               : "text-txt hover:bg-surface-100 focus:bg-surface-100",
           )}
         />
-        {error && <span className="text-error pl-1 text-xs">{error}</span>}
+        <InfoMessage message={error} size="xs" className="pl-1" />
       </div>
     );
   },

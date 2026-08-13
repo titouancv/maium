@@ -35,7 +35,6 @@ const CV_EXTRACTION = {
   ],
 };
 
-/** A freshly created OAuth row: nothing but the identity Google supplied. */
 const EMPTY_PROFILE = {
   onboarding_completed: false,
   phone: null,
@@ -49,7 +48,6 @@ const EMPTY_PROFILE = {
   user_hobbies: [],
 };
 
-/** Records the `update(...).eq(...)` calls made per table. */
 function mockDb(
   cvExtraction: unknown,
   profile: Record<string, unknown> | null = EMPTY_PROFILE,
@@ -60,8 +58,6 @@ function mockDb(
   mockAdmin.mockReturnValue({
     from: (table: string) => ({
       select: () => ({
-        // The two reads diverge after `.eq(...)`: the profile ends there, the
-        // CV lookup keeps filtering.
         eq: () => ({
           maybeSingle: async () => ({ data: profile, error: profileError }),
           not: () => ({
@@ -117,8 +113,6 @@ describe("claimAnonSession", () => {
     expect(patch.professionalExperiences).toHaveLength(1);
   });
 
-  // Google supplied these on the row the signup trigger created, and is the
-  // more reliable source — the CV's version must not overwrite them.
   it("does not carry over the CV's first and last name", async () => {
     mockDb(CV_EXTRACTION);
     await claimAnonSession(USER_ID);
@@ -128,8 +122,6 @@ describe("claimAnonSession", () => {
     expect(patch).not.toHaveProperty("lastName");
   });
 
-  // Signing back into an account that already has a profile must not turn a CV
-  // dropped into /analyze into a full overwrite of it.
   it("leaves an onboarded account's profile untouched", async () => {
     const updates = mockDb(CV_EXTRACTION, {
       ...EMPTY_PROFILE,
@@ -138,7 +130,6 @@ describe("claimAnonSession", () => {
     await claimAnonSession(USER_ID);
 
     expect(mockWriteProfile).not.toHaveBeenCalled();
-    // The analysis they just ran is still theirs to keep.
     expect(updates).toHaveLength(3);
   });
 
@@ -181,8 +172,6 @@ describe("claimAnonSession", () => {
     expect(updates).toHaveLength(3);
   });
 
-  // Fails closed: without a reliable picture of the account, touching it risks
-  // destroying data.
   it("skips the import when the profile can't be read", async () => {
     const updates = mockDb(CV_EXTRACTION, null, { message: "boom" });
     await claimAnonSession(USER_ID);
@@ -225,14 +214,12 @@ describe("claimAnonSession", () => {
   });
 
   it("re-validates the stored CV instead of trusting it", async () => {
-    // It was written from a request body and is about to become profile data.
     const updates = mockDb({ skills: [{ evil: true }] });
     await claimAnonSession(USER_ID);
     expect(mockWriteProfile).not.toHaveBeenCalled();
     expect(updates).toHaveLength(3);
   });
 
-  // It runs inside the OAuth callback: a failure must never cost the sign-in.
   it("swallows errors rather than breaking sign-in", async () => {
     mockAdmin.mockImplementation(() => {
       throw new Error("database is down");

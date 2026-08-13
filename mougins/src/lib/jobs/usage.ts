@@ -5,20 +5,6 @@ import {
   DAY_MS,
 } from "@/constants";
 
-/**
- * Whether a signed-out visitor may run an analysis.
- *
- * Two barriers, both server-side and evaluated before any paid call:
- *
- *  1. `anon_id` — one free run per browser. The `maium_anon_used` cookie is the
- *     nominal check (see lib/auth/anonSession); this catches the case where
- *     that cookie is gone but the session one survives.
- *  2. IP — the backstop for clearing cookies entirely. Deliberately above 1 so
- *     a shared office or CGNAT address isn't locked out by one colleague.
- *
- * Signing in is what actually lifts the limit, which is the whole conversion
- * argument, so this stays strict.
- */
 export async function isAnonUnderQuota(params: {
   anonId: string;
   clientIp: string;
@@ -40,10 +26,6 @@ export async function isAnonUnderQuota(params: {
   return (ipCount ?? 0) < ANON_ANALYSES_PER_IP_PER_DAY;
 }
 
-/**
- * Rate-limit: true when the user is under the per-hour analysis cap. Counts
- * `analysis_jobs` created in the last rolling hour via the admin client.
- */
 export async function isUnderRateLimit(userId: string): Promise<boolean> {
   const admin = createAdminClient();
   const since = new Date(Date.now() - 60 * 60 * 1000).toISOString();
@@ -55,7 +37,6 @@ export async function isUnderRateLimit(userId: string): Promise<boolean> {
   return (count ?? 0) < ANALYSES_PER_HOUR;
 }
 
-/** Increments the user's monthly usage counter (best-effort, server-side). */
 export async function incrementUsage(userId: string): Promise<void> {
   const admin = createAdminClient();
   const periodStart = new Date();

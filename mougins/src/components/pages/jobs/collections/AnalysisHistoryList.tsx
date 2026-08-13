@@ -5,6 +5,7 @@ import { useTranslations } from "next-intl";
 import { useSearchParams } from "next/navigation";
 import { useRouter } from "@/i18n/navigation";
 import { ROUTES } from "@/constants";
+import { EmptyState } from "@/components/ui/EmptyState";
 import type { AnalysisListItem } from "@/types/job";
 import { AnalysisHistoryItem } from "../items/AnalysisHistoryItem";
 import { AnalysisDetailOverlay } from "./AnalysisDetailOverlay";
@@ -34,7 +35,7 @@ export function AnalysisHistoryList({ history }: AnalysisHistoryListProps) {
   return (
     <div className="flex h-full flex-col">
       {history.length === 0 ? (
-        <p className="text-txt-muted">{t("historyEmpty")}</p>
+        <EmptyState label={t("historyEmpty")} />
       ) : (
         <div className="flex min-h-0 flex-col gap-3 md:overflow-y-auto">
           {history.map((analysis) => (

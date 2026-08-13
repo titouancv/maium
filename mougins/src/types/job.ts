@@ -6,7 +6,6 @@ export const ANALYSIS_STATUSES = [
 ] as const;
 export type AnalysisStatus = (typeof ANALYSIS_STATUSES)[number];
 
-/** Available CV layouts the user can download. */
 export const RESUME_TEMPLATES = ["finance", "modern"] as const;
 export type ResumeTemplate = (typeof RESUME_TEMPLATES)[number];
 
@@ -18,7 +17,6 @@ export const ANALYSIS_STEPS = [
 ] as const;
 export type AnalysisStep = (typeof ANALYSIS_STEPS)[number];
 
-/** A job posting extracted from a URL (shared across users). */
 export interface JobData {
   id: string;
   source_url: string;
@@ -33,7 +31,6 @@ export interface JobData {
   seniority: string | null;
 }
 
-/** Workflow state row the UI subscribes to over Realtime. */
 export interface AnalysisJob {
   id: string;
   user_id: string;
@@ -47,7 +44,6 @@ export interface AnalysisJob {
   created_at: string;
 }
 
-/** Result of the hybrid matching step. */
 export interface AnalysisData {
   id: string;
   job_id: string;
@@ -58,15 +54,12 @@ export interface AnalysisData {
   missing_skills: string[];
   recommendations: string[];
   summary: string | null;
-  /** AI-generated cover letter for this job, if generation succeeded. */
   cover_letter: string | null;
   created_at: string;
 }
 
-/** An analysis row joined with its job, for history listing. */
 export interface AnalysisListItem extends AnalysisData {
   job: Pick<JobData, "title" | "company" | "location" | "source_url"> | null;
-  /** Id of the active optimized resume generated for this analysis, if any. */
   resume_id: string | null;
 }
 
@@ -89,7 +82,6 @@ export interface ResumeVersion {
   created_at: string;
 }
 
-/** ATS-optimized resume content. Mistral may only rephrase/reorder facts. */
 export interface ResumeJson {
   summary: string;
   experiences: Array<{
@@ -111,7 +103,6 @@ export interface ResumeJson {
   skills: string[];
 }
 
-/** Normalized candidate profile fed to the matching / optimization steps. */
 export interface CandidateProfile {
   bio: string;
   experiences: Array<{

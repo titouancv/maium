@@ -10,17 +10,12 @@ interface NotificationRowProps {
   notification: HomeNotification;
 }
 
-/** i18n key (under `home.notifications`) per notification kind. */
 const ACTION_KEY = {
   follow: "actionFollow",
   message: "actionMessage",
   profile_view: "actionProfileView",
 } as const;
 
-/**
- * One notification row: the actor's [UserCard] with an action + relative-time
- * subtitle, linking to the conversation (`message`) or the actor's profile.
- */
 export const NotificationRow = ({ notification }: NotificationRowProps) => {
   const t = useTranslations("home.notifications");
   const locale = useLocale();

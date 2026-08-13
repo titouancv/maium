@@ -18,8 +18,6 @@ export const createClient = async () => {
               cookieStore.set(name, value, options)
             );
           } catch {
-            // setAll called from a Server Component — cookies are read-only.
-            // Middleware handles session refresh in that case.
           }
         },
       },

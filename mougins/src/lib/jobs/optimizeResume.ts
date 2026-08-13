@@ -3,7 +3,6 @@ import { chatJSON } from "@/lib/mistral";
 import { OptimizedResumeSchema } from "@/lib/validators/job";
 import type { CandidateProfile, JobData, ResumeJson } from "@/types/job";
 
-/** Optimized entry as returned by the model (description rewritten, facts referenced by index). */
 type OptimizedEntry = {
   source_index: number;
   organization: string;
@@ -13,14 +12,6 @@ type OptimizedEntry = {
 type ResumeEntry = ResumeJson["experiences"][number];
 type SourceEntry = CandidateProfile["experiences"][number];
 
-/**
- * Reconciles the model's optimized entries with the candidate's source entries:
- * each optimized entry keeps its rewritten wording but pulls immutable facts
- * (dates, location) from its `source_index`, and any source entry the model
- * dropped is re-appended with its original (possibly empty) description, so the
- * resume always lists every experience/education — including the un-improved
- * ones that have no description.
- */
 function mergeOptimizedEntries(
   optimized: OptimizedEntry[],
   sources: SourceEntry[],
@@ -57,16 +48,8 @@ function mergeOptimizedEntries(
   return merged;
 }
 
-/**
- * Generates an ATS-optimized resume tailored to a job and persists it
- * (`optimized_resumes` + its first `resume_versions` row). Hard constraint:
- * the model may only rephrase, reorder and surface existing facts — never
- * invent, add or alter experience.
- */
 export async function optimizeResume(params: {
-  /** Tags the `llm_logs` audit rows; null for a signed-out run. */
   userId: string | null;
-  /** Ownership + retention columns, copied from the driving `analysis_jobs` row. */
   owner: { user_id: string | null; anon_id: string | null; expires_at: string | null };
   job: JobData;
   profile: CandidateProfile;
@@ -122,11 +105,6 @@ export async function optimizeResume(params: {
     ],
   });
 
-  // Merge the model's optimized wording with the immutable facts (dates,
-  // location) read from the matching candidate entry via source_index, then
-  // re-append any candidate entry the model omitted (e.g. experiences with no
-  // description it couldn't optimize) so the resume keeps the full history —
-  // even the un-improved entries the user wants on their CV.
   const experiences = mergeOptimizedEntries(
     output.experiences,
     params.profile.experiences,

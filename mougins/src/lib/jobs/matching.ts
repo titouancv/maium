@@ -12,7 +12,6 @@ const WEIGHTS = {
   bonus: 0.15,
 } as const;
 
-/** Cosine similarity between two equal-length vectors, in [-1, 1]. */
 export function cosineSimilarity(a: number[], b: number[]): number {
   if (a.length === 0 || a.length !== b.length) return 0;
   let dot = 0;
@@ -32,16 +31,10 @@ export interface ScoreBreakdown {
   seniority: number;
   semantic: number;
   bonus: number;
-  /** Weighted final score, 0-100. */
   final: number;
 }
 
-/**
- * Asks Mistral to score each match dimension (0-1) and explain the match.
- * The final score is the weighted sum of the LLM-provided dimension scores.
- */
 export async function getMatchingExplanation(params: {
-  /** Tags the `llm_logs` audit rows; null for a signed-out run. */
   userId: string | null;
   job: JobData;
   profile: CandidateProfile;

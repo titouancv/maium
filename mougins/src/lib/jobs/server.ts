@@ -8,12 +8,6 @@ import type {
   ResumeVersion,
 } from "@/types/job";
 
-/**
- * History of the current user's analyses, newest first (RLS-scoped).
- *
- * `limit` caps the rows fetched — the home dashboard only previews the latest
- * few, while the history page passes nothing and gets everything.
- */
 export async function getAnalysisHistory(
   limit?: number,
 ): Promise<AnalysisListItem[]> {
@@ -59,11 +53,6 @@ export async function getAnalysisHistory(
   });
 }
 
-/**
- * A single finished analysis with its job and active resume, scoped to its
- * owner. Same shape as a history row, so the signed-out result screen can
- * reuse the components the history list already feeds.
- */
 export async function getAnalysisById(
   id: string,
 ): Promise<AnalysisListItem | null> {
@@ -104,14 +93,6 @@ export async function getAnalysisById(
   };
 }
 
-/**
- * Current state of an analysis job, for status polling / Realtime fallback.
- *
- * Read with the service-role client and authorized explicitly via
- * {@link ownsRow}, because a signed-out run's rows carry a NULL `user_id` and
- * no RLS policy can match them. Returns `null` for a row the caller doesn't
- * own, so the route answers 404 either way and never confirms it exists.
- */
 export async function getAnalysisJobById(
   id: string,
 ): Promise<AnalysisJob | null> {
@@ -130,7 +111,6 @@ export async function getAnalysisJobById(
   return data as unknown as AnalysisJob;
 }
 
-/** An optimized resume plus its version history, scoped to its owner. */
 export async function getResumeById(id: string): Promise<{
   resume: OptimizedResume;
   versions: ResumeVersion[];

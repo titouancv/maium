@@ -4,30 +4,19 @@ import type { UserSummary } from "@/types/user";
 
 export type NotificationKind = "follow" | "message" | "profile_view";
 
-/** A persisted home notification, with the acting user's public summary. */
 export interface HomeNotification {
   id: number;
   kind: NotificationKind;
-  /** The user that triggered the notification. */
   actor: UserSummary;
-  /** Set only for `message` notifications (the source conversation). */
   conversationId: string | null;
   createdAt: string;
-  /** `null` while unread. */
   readAt: string | null;
 }
 
-/** Max notifications surfaced in the overlay. */
 const NOTIFICATIONS_LIMIT = 30;
 
-/**
- * Notification kinds currently hidden from the user. The feature (DB trigger,
- * type, rendering) is kept intact — these are only filtered out at read time,
- * so re-enabling a kind is a one-line change. `profile_view` is disabled for now.
- */
 const HIDDEN_KINDS: NotificationKind[] = ["profile_view"];
 
-/** Actor as embedded by the query — the public summary plus the internal id. */
 type ActorRow = UserSummary & { id: string };
 
 interface NotificationRow {
@@ -39,7 +28,6 @@ interface NotificationRow {
   actor: ActorRow | null;
 }
 
-/** Strip the internal id and (optionally) annotate the follow state. */
 function toSummary(actor: ActorRow, isFollowing?: boolean): UserSummary {
   return {
     pseudo: actor.pseudo,
@@ -52,11 +40,6 @@ function toSummary(actor: ActorRow, isFollowing?: boolean): UserSummary {
   };
 }
 
-/**
- * The current user's most recent notifications (newest first). Read with the
- * service-role client because `public.notifications` is RLS deny-all (written
- * only by triggers). Returns `[]` when signed out.
- */
 export async function getNotifications(
   limit = NOTIFICATIONS_LIMIT,
 ): Promise<HomeNotification[]> {
@@ -78,8 +61,6 @@ export async function getNotifications(
 
   const rows = (data ?? []) as unknown as NotificationRow[];
 
-  // `follow` rows show a follow/unfollow button, so resolve which of those
-  // actors the viewer already follows (one query for the whole batch).
   const followActorIds = rows
     .filter((row) => row.kind === "follow" && row.actor)
     .map((row) => row.actor!.id);
@@ -95,8 +76,6 @@ export async function getNotifications(
     );
   }
 
-  // Rows arrive newest-first and map one-to-one to a notification. Only
-  // `follow` rows carry follow state; the others stay unannotated.
   return rows.flatMap((row) =>
     row.actor
       ? [
@@ -118,7 +97,6 @@ export async function getNotifications(
   );
 }
 
-/** Number of unread notifications for the current user (0 when signed out). */
 export async function getUnreadNotificationsCount(): Promise<number> {
   const authUser = await getAuthUser();
   if (!authUser) return 0;
@@ -135,7 +113,6 @@ export async function getUnreadNotificationsCount(): Promise<number> {
   return count ?? 0;
 }
 
-/** Mark every unread notification of the current user as read. No-op signed out. */
 export async function markNotificationsRead(): Promise<void> {
   const authUser = await getAuthUser();
   if (!authUser) return;

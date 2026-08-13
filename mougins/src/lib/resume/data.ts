@@ -13,7 +13,6 @@ import type { ResumeJson } from "@/types/job";
 
 type SocialLink = { name: string; handle: string; url: string };
 
-/** Resolves a list of profile social URLs into named, ordered links. */
 function resolveSocialNetworks(urls: string[]): SocialLink[] {
   return urls
     .map((url) => {
@@ -23,14 +22,6 @@ function resolveSocialNetworks(urls: string[]): SocialLink[] {
     .filter((s): s is SocialLink => s !== null);
 }
 
-/**
- * Header fields for a resume produced by a signed-out run, taken from the CV
- * the visitor uploaded — there is no `public.users` row to read.
- *
- * The extraction lives on the driving `analysis_jobs` row, reached through the
- * resume's `analysis_id`. Ownership was already settled by `getResumeById`, so
- * this only assembles data.
- */
 async function buildAnonResumeHeader(
   analysisId: string | null,
 ): Promise<Pick<
@@ -54,33 +45,17 @@ async function buildAnonResumeHeader(
   return {
     fullName,
     contact: {
-      // A signed-out visitor never gave us an email — only what the CV held.
       email: null,
       phone: cv.phone ?? null,
       location: cv.location ?? null,
     },
     socialNetworks: resolveSocialNetworks(cv.socialNetworks ?? []),
-    // Both point at a maium profile, which doesn't exist yet. The QR would
-    // otherwise encode a 404, so it is left off.
     pseudo: "",
     profileUrl: "",
     profileQrCode: "",
   };
 }
 
-/**
- * Assembles the data a resume template needs: the optimized `resume_json`
- * (ownership-scoped via `getResumeById`, including the AI-optimized experiences
- * and education) plus the owner's header fields.
- *
- * The header comes from the signed-in user's `public.users` row, or — for a
- * resume produced by a signed-out run — from the CV that drove it.
- * Returns `null` when the resume does not exist or isn't visible to the caller.
- *
- * When `overrideJson` is provided (user-edited content from the resume editor),
- * it replaces the stored `resume_json` for rendering only — nothing is
- * persisted. `getResumeById` is still called to enforce ownership / existence.
- */
 export async function buildResumePdfData(
   resumeId: string,
   origin: string,
@@ -131,7 +106,6 @@ export async function buildResumePdfData(
     ? `${origin}${ROUTES.PROFILE(profile.pseudo)}`
     : "";
 
-  // Pre-render the QR as a PNG data-URL so the template stays a pure renderer.
   const profileQrCode = profileUrl
     ? await QRCode.toDataURL(profileUrl, { margin: 0, width: 160 })
     : "";
@@ -154,17 +128,6 @@ export async function buildResumePdfData(
   };
 }
 
-/**
- * Assembles resume PDF data from the authenticated user's profile alone — no job
- * analysis involved. Unlike {@link buildResumePdfData}, the experiences,
- * education, skills and summary are sourced straight from the profile
- * (`public.users` + child tables) via `getCurrentUserProfile`.
- * Returns `null` when there is no authenticated user.
- *
- * When `overrideJson` is provided (edits from the resume editor), it replaces
- * the profile-derived body for rendering only — nothing is persisted. The
- * header (name, contact, social links, QR) is always taken from the profile.
- */
 export async function buildProfileResumePdfData(
   origin: string,
   overrideJson?: ResumeJson,

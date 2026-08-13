@@ -42,8 +42,6 @@ export async function GET(request: NextRequest) {
 
   const rows = data ?? [];
 
-  // Annotate each result with whether the viewer already follows them, so the
-  // search rows can render an accurate follow/unfollow button.
   let followedSet = new Set<string>();
   if (currentUser && rows.length > 0) {
     const { data: follows } = await supabase

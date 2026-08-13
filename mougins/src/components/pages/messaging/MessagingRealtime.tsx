@@ -10,20 +10,10 @@ import { useMessagingStore } from "@/stores/useMessagingStore";
 import { activeConversationIdFrom } from "@/lib/messaging/conversationPath";
 import type { Conversation, Message } from "@/types";
 
-/**
- * A single Realtime subscription for the whole messaging area, mounted in the
- * messaging layout so it survives navigation between the list and a
- * conversation (a per-route subscription would tear down and miss messages).
- *
- * Every new message updates [useMessagingStore]: known conversations get their
- * preview/order/read state bumped in place; a message in an unknown
- * conversation means we were just added to a new one, so we refetch the list.
- */
 export function MessagingRealtime() {
   const userId = useCurrentUserStore((s) => s.user?.id);
   const pathname = usePathname();
 
-  // Read inside the Realtime callback without re-subscribing on every change.
   const activeIdRef = useRef<string | undefined>(undefined);
   const userIdRef = useRef<string | undefined>(undefined);
   useEffect(() => {
@@ -46,7 +36,6 @@ export function MessagingRealtime() {
           };
           useMessagingStore.getState().hydrate(conversations);
         } catch {
-          // Best-effort; the next message or a navigation will reconcile.
         }
       }, CONVERSATIONS_REFETCH_DEBOUNCE_MS);
     };

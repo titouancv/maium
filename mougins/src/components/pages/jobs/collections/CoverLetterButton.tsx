@@ -2,10 +2,8 @@
 
 import { useState } from "react";
 import { useTranslations } from "next-intl";
-// Import UI primitives from their files, not the `@/components/ui` barrel:
-// pulling this client tree through the barrel trips a Turbopack
-// `export *` namespace-seal bug at build time (see AnalyzeJob).
 import { Button } from "@/components/ui/Button";
+import { Overlay } from "@/components/ui/Overlay";
 import { Form } from "@/components/form";
 import { useNotificationStore } from "@/stores/useNotificationStore";
 
@@ -13,11 +11,6 @@ interface Props {
   coverLetter: string;
 }
 
-/**
- * Opens a form overlay showing the AI-generated cover letter in an editable
- * textarea, with a primary action that copies the current text to the
- * clipboard. Edits stay local — they are never persisted.
- */
 export function CoverLetterButton({ coverLetter }: Props) {
   const t = useTranslations("jobs");
   const notify = useNotificationStore((s) => s.notify);
@@ -28,10 +21,7 @@ export function CoverLetterButton({ coverLetter }: Props) {
     try {
       await navigator.clipboard.writeText(text);
       notify(t("detail.coverLetterCopied"), undefined, "surface");
-    } catch {
-      // Clipboard can be unavailable (insecure context / denied permission);
-      // nothing actionable to do beyond leaving the text on screen to copy.
-    }
+    } catch {}
   };
 
   return (
@@ -44,7 +34,7 @@ export function CoverLetterButton({ coverLetter }: Props) {
         {t("detail.coverLetter")}
       </Button>
       {open && (
-        <div className="bg-surface-50 fixed inset-0 z-50">
+        <Overlay onClose={() => setOpen(false)}>
           <Form
             type="longText"
             title={t("detail.coverLetter")}
@@ -60,7 +50,7 @@ export function CoverLetterButton({ coverLetter }: Props) {
             primaryLabel={t("detail.copyCoverLetter")}
             onPrimary={copy}
           />
-        </div>
+        </Overlay>
       )}
     </>
   );

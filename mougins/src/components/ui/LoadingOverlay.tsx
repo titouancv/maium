@@ -5,9 +5,6 @@ import { useLoadingStore } from "@/stores/useLoadingStore";
 import { Title } from "../ui";
 import { cn } from "@/lib/utils";
 
-// visible       → monté, opacity-100
-// transitioning → monté, opacity-0  (sortie uniquement)
-// hidden        → non monté
 type Phase = "hidden" | "transitioning" | "visible";
 
 export function LoadingOverlay() {
