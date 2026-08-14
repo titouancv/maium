@@ -48,7 +48,6 @@
         "contacts": "Contacts",
         "tracking": "Suivi"
       },
-      "documents": "Documents",
       "lowConfidenceWarning": "⚠️ Le score de confiance est de {score}, les résultats peuvent être moins précis.",
       "viewJobPosting": "Voir l'offre d'emploi",
       "aiDisclaimer": "Cette analyse a été générée par IA et peut contenir des erreurs.",
@@ -147,7 +146,8 @@
       "rejected": "Refusé"
     },
     "historyFilterAll": "Toutes",
-    "historyFilterEmpty": "Aucune analyse avec ce statut."
+    "historyFilterEmpty": "Aucune analyse avec ce statut.",
+    "pendingJobRestored": "On a repris l'offre que vous aviez collée avant de créer votre compte."
   },
   "search": {
     "placeholder": "Rechercher des utilisateurs...",
@@ -568,10 +568,38 @@
     },
     "gate": {
       "title": "Créez votre compte pour continuer",
-      "description": "Vous avez utilisé votre analyse gratuite. Votre CV est déjà importé et votre analyse vous attend — créer un compte tient en trois questions.",
-      "benefitProfile": "Votre profil est déjà rempli à partir de votre CV",
-      "benefitHistory": "Votre analyse, votre CV optimisé et votre lettre sont conservés",
-      "benefitUnlimited": "Analysez autant d'offres que vous voulez"
+      "description": "Vous avez utilisé votre analyse gratuite. Tout ce qui suit vient avec un compte — et votre CV est déjà importé."
+    },
+    "account": {
+      "title": "Créez votre compte pour garder tout ça",
+      "description": "Un clic avec Google. Votre CV est déjà importé, donc votre profil se remplit tout seul.",
+      "expiresOn": "Sans compte, cette analyse et ses documents seront supprimés le {date}.",
+      "cta": {
+        "keep": "Garder cette analyse",
+        "contacts": "Voir ces personnes",
+        "tracking": "Suivre cette candidature"
+      },
+      "benefits": {
+        "unlimited": "Analysez autant d'offres que vous voulez",
+        "history": "Chaque analyse conservée, avec son CV optimisé et sa lettre de motivation",
+        "tracking": "Suivez chaque candidature : statut, dates et notes",
+        "reminders": "Recevez une relance quand une candidature ne bouge plus",
+        "contacts": "Voyez qui, sur maium, travaille dans l'entreprise — et écrivez-leur",
+        "frenchResume": "Obtenez votre CV optimisé aussi en français, pas seulement en anglais",
+        "profile": "Votre profil déjà rempli à partir du CV que vous venez d'envoyer",
+        "network": "Soyez visible des recruteurs et suivez les gens avec qui vous voulez travailler"
+      },
+      "lockedContacts": {
+        "description": "Avec un compte, on cherche parmi les membres de maium les personnes qui ont travaillé dans cette entreprise, et vous pouvez leur écrire directement.",
+        "count": "{count, plural, one {# personne sur maium a travaillé chez {company}} other {# personnes sur maium ont travaillé chez {company}}}"
+      },
+      "lockedTracking": {
+        "description": "Avec un compte, cette analyse devient une candidature que vous suivez : où elle en est, depuis quand, vos notes sur chaque échange, et une relance quand plus rien ne bouge."
+      },
+      "gate": {
+        "offerKept": "On a gardé l'offre que vous venez de coller — elle part dès que votre compte est créé.",
+        "seeAnalysis": "Revoir mon analyse"
+      }
     }
   }
 }

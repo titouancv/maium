@@ -3,11 +3,13 @@
 import { useRef, useState } from "react";
 import { useTranslations } from "next-intl";
 import {
+  ANALYTICS_EVENTS,
   API,
   CV_ACCEPT_ATTRIBUTE,
   CV_ACCEPTED_MIME_TYPES,
   CV_MAX_BYTES,
 } from "@/constants";
+import { trackEvent } from "@/lib/analytics";
 import { Button } from "@/components/ui/Button";
 import { Title } from "@/components/ui/Title";
 import { Text } from "@/components/ui/Text";
@@ -49,6 +51,7 @@ export function AnalyzeCvStep({ onParsed }: AnalyzeCvStepProps) {
         return;
       }
       const { profile } = (await res.json()) as { profile: CvExtraction };
+      trackEvent(ANALYTICS_EVENTS.ANON_CV_PARSED);
       onParsed(profile);
     } catch {
       setError(t("errorParse"));

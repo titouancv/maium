@@ -1,35 +1,43 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import { GoogleSignInButton } from "@/components/ui/GoogleSignInButton";
-import { Title } from "@/components/ui/Title";
+import { Button } from "@/components/ui/Button";
 import { Text } from "@/components/ui/Text";
+import { AnonAccountBenefits } from "./AnonAccountBenefits";
 
-export function AnonQuotaGate() {
-  const t = useTranslations("analyze.gate");
+interface AnonQuotaGateProps {
+  analysisId: string | null;
+  hasPendingJob: boolean;
+  onSeeAnalysis: () => void;
+}
+
+export function AnonQuotaGate({
+  analysisId,
+  hasPendingJob,
+  onSeeAnalysis,
+}: AnonQuotaGateProps) {
+  const t = useTranslations("analyze");
 
   return (
     <div className="flex flex-col gap-6">
-      <div className="flex flex-col gap-2">
-        <Title label={t("title")} size="h2" />
-        <Text tone="muted" size="sm">
-          {t("description")}
-        </Text>
-      </div>
+      {hasPendingJob && (
+        <Text tone="primary">{t("account.gate.offerKept")}</Text>
+      )}
 
-      <ul className="flex flex-col gap-1">
-        <Text as="li" tone="muted" size="sm">
-          {t("benefitProfile")}
-        </Text>
-        <Text as="li" tone="muted" size="sm">
-          {t("benefitHistory")}
-        </Text>
-        <Text as="li" tone="muted" size="sm">
-          {t("benefitUnlimited")}
-        </Text>
-      </ul>
+      <AnonAccountBenefits
+        title={t("gate.title")}
+        description={t("gate.description")}
+        source="gate"
+        analysisId={analysisId ?? undefined}
+      />
 
-      <GoogleSignInButton />
+      {analysisId && (
+        <div className="flex">
+          <Button variant="outline" onClick={onSeeAnalysis}>
+            {t("account.gate.seeAnalysis")}
+          </Button>
+        </div>
+      )}
     </div>
   );
 }

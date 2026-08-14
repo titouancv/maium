@@ -6,16 +6,18 @@ import {
 } from "@/constants";
 
 export async function isAnonUnderQuota(params: {
-  anonId: string;
+  anonId: string | null;
   clientIp: string;
 }): Promise<boolean> {
   const admin = createAdminClient();
 
-  const { count: ownCount } = await admin
-    .from("analysis_jobs")
-    .select("id", { count: "exact", head: true })
-    .eq("anon_id", params.anonId);
-  if ((ownCount ?? 0) >= 1) return false;
+  if (params.anonId) {
+    const { count: ownCount } = await admin
+      .from("analysis_jobs")
+      .select("id", { count: "exact", head: true })
+      .eq("anon_id", params.anonId);
+    if ((ownCount ?? 0) >= 1) return false;
+  }
 
   const since = new Date(Date.now() - DAY_MS).toISOString();
   const { count: ipCount } = await admin

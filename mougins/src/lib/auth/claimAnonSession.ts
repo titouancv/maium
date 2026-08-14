@@ -85,10 +85,10 @@ async function importCvIntoProfile(
   }
 }
 
-export async function claimAnonSession(userId: string): Promise<void> {
+export async function claimAnonSession(userId: string): Promise<boolean> {
   try {
     const anonId = await getAnonId();
-    if (!anonId) return;
+    if (!anonId) return false;
 
     const admin = createAdminClient();
 
@@ -102,7 +102,9 @@ export async function claimAnonSession(userId: string): Promise<void> {
     }
 
     await clearAnonSession();
+    return true;
   } catch (error) {
     console.error("[claimAnonSession]", error);
+    return false;
   }
 }

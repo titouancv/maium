@@ -1,12 +1,15 @@
 import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
-import { ROUTES } from "@/constants";
+import { ANALYTICS_EVENTS, ROUTES } from "@/constants";
 import { claimAnonSession } from "@/lib/auth/claimAnonSession";
+import { trackServerEvent } from "@/lib/analytics.server";
+import { safeInternalPath } from "@/lib/auth/safeInternalPath";
 
 export async function GET(request: Request) {
   const { searchParams, origin } = new URL(request.url);
   const code = searchParams.get("code");
+  const next = safeInternalPath(searchParams.get("next"), origin);
 
   if (code) {
     const cookieStore = await cookies();
@@ -33,7 +36,11 @@ export async function GET(request: Request) {
         data: { user },
       } = await supabase.auth.getUser();
       if (user) {
-        await claimAnonSession(user.id);
+        const claimed = await claimAnonSession(user.id);
+        if (claimed) {
+          await trackServerEvent(ANALYTICS_EVENTS.ANON_CLAIM_SUCCEEDED);
+          if (next) return NextResponse.redirect(`${origin}${next}`);
+        }
 
         const { data: profile } = await supabase
           .from("users")

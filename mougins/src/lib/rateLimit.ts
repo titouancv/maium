@@ -1,11 +1,10 @@
-import type { NextRequest } from "next/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 
-export function getClientIp(request: NextRequest): string | null {
-  const forwarded = request.headers.get("x-forwarded-for");
+export function getClientIp(requestHeaders: Headers): string | null {
+  const forwarded = requestHeaders.get("x-forwarded-for");
   const first = forwarded?.split(",")[0]?.trim();
   if (first) return first;
-  return request.headers.get("x-real-ip")?.trim() || null;
+  return requestHeaders.get("x-real-ip")?.trim() || null;
 }
 
 export async function checkAnonRateLimit(params: {

@@ -60,7 +60,28 @@ export const API = {
   RESUME_PDF: (id: string) => `/api/resume/${id}/pdf`,
   RESUME_PROFILE_PDF: "/api/resume/profile/pdf",
   RESUME_TRANSLATE: "/api/resume/translate",
+  ANALYSIS_CONTACTS_COUNT: (id: string) => `/api/analysis/${id}/contacts-count`,
 } as const;
+
+export const ANALYTICS_EVENTS = {
+  ANON_CV_PARSED: "anon_cv_parsed",
+  ANON_ANALYSIS_SUBMITTED: "anon_analysis_submitted",
+  ANON_QUOTA_BLOCKED: "anon_quota_blocked",
+  ANON_RESULT_VIEWED: "anon_result_viewed",
+  ANON_RESULT_RESTORED: "anon_result_restored",
+  ANON_GATE_VIEWED: "anon_gate_viewed",
+  ANON_SIGNIN_CLICKED: "anon_signin_clicked",
+  ANON_CLAIM_SUCCEEDED: "anon_claim_succeeded",
+} as const;
+
+export const SIGNIN_SOURCES = [
+  "result_cta",
+  "locked_contacts",
+  "locked_tracking",
+  "gate",
+] as const;
+
+export type SigninSource = (typeof SIGNIN_SOURCES)[number];
 
 export const EXTERNAL_API = {
   PHOTON_GEOCODE: "https://photon.komoot.io/api/",
@@ -107,7 +128,14 @@ export const ANON_USED_COOKIE = "maium_anon_used";
 
 export const ANON_USED_STORAGE_KEY = "maium.anonAnalysisUsed";
 
-export const ANON_SESSION_MAX_AGE_S = 7 * 24 * 60 * 60;
+export const ANON_ANALYSIS_STORAGE_KEY = "maium.anonAnalysisId";
+
+export const ANON_PENDING_JOB_STORAGE_KEY = "maium.anonPendingJob";
+
+export const ANON_ANALYSIS_RETENTION_DAYS = 7;
+
+export const ANON_SESSION_MAX_AGE_S =
+  ANON_ANALYSIS_RETENTION_DAYS * 24 * 60 * 60;
 
 export const ANON_USED_MAX_AGE_S = 365 * 24 * 60 * 60;
 
