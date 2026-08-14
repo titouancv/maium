@@ -94,7 +94,7 @@ async function resolveAnonOwner(
     return NextResponse.json({ error: "Missing cvExtraction" }, { status: 400 });
   }
 
-  const clientIp = getClientIp(req);
+  const clientIp = getClientIp(req.headers);
   if (!clientIp) {
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }

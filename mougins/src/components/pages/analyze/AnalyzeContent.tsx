@@ -61,14 +61,18 @@ async function fetchAnalysis(
   }
 }
 
-export function AnalyzeContent() {
+interface AnalyzeContentProps {
+  initialFreeRunSpent: boolean;
+}
+
+export function AnalyzeContent({ initialFreeRunSpent }: AnalyzeContentProps) {
   const t = useTranslations("analyze");
   const tJobs = useTranslations("jobs");
   const tCommon = useTranslations("common");
 
   const [stage, setStage] = useState<Stage | null>(null);
 
-  const freeRunSpent = useFreeRunSpent();
+  const freeRunSpent = useFreeRunSpent() || initialFreeRunSpent;
   const storedAnalysisId = useStoredAnalysisId();
   const pendingJob = usePendingJob();
 
@@ -94,13 +98,17 @@ export function AnalyzeContent() {
         return;
       }
       clearStoredAnalysisId();
-      setStage(isFreeRunSpent() ? { name: "gate" } : { name: "cv" });
+      setStage(
+        isFreeRunSpent() || initialFreeRunSpent
+          ? { name: "gate" }
+          : { name: "cv" },
+      );
     });
 
     return () => {
       active = false;
     };
-  }, [restoringId]);
+  }, [restoringId, initialFreeRunSpent]);
 
   useEffect(() => {
     if (current.name === "gate") trackEvent(ANALYTICS_EVENTS.ANON_GATE_VIEWED);

@@ -24,7 +24,7 @@ export async function POST(request: NextRequest) {
       data: { user },
     } = await supabase.auth.getUser();
 
-    const clientIp = user ? null : getClientIp(request);
+    const clientIp = user ? null : getClientIp(request.headers);
     if (!user && !clientIp) {
       return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     }
