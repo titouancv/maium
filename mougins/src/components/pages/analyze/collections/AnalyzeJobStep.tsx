@@ -3,8 +3,8 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useTranslations } from "next-intl";
-import { API } from "@/constants";
+import { useLocale, useTranslations } from "next-intl";
+import { API, type Locale } from "@/constants";
 import {
   AnalyzeJobUrlSchema,
   AnalyzeJobTextSchema,
@@ -34,6 +34,7 @@ export function AnalyzeJobStep({
 }: AnalyzeJobStepProps) {
   const t = useTranslations("analyze.job");
   const tJobs = useTranslations("jobs");
+  const locale = useLocale() as Locale;
   const [mode, setMode] = useState<Mode>("url");
   const [activeId, setActiveId] = useState<string | null>(null);
   const [submitError, setSubmitError] = useState<string | null>(null);
@@ -56,7 +57,7 @@ export function AnalyzeJobStep({
     const res = await fetch(API.ANALYZE_JOB, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ ...values, cvExtraction: extraction }),
+      body: JSON.stringify({ ...values, cvExtraction: extraction, locale }),
     });
 
     if (res.status === 402) {

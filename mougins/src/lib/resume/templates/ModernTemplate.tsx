@@ -8,7 +8,7 @@ import {
   StyleSheet,
 } from "@react-pdf/renderer";
 import type { ResumePdfData } from "../types";
-import { formatDuration, formatPeriod } from "../experiencePeriod";
+import type { ResumeLabels } from "../labels";
 import { RESUME_FONT_FAMILY } from "../fonts";
 
 const PRIMARY = "#ff4500"; // --primary-600
@@ -43,7 +43,7 @@ const styles = StyleSheet.create({
     height: 3,
     width: 42,
     borderRadius: 2,
-    marginTop: 8,
+    marginTop: 12,
     backgroundColor: ON_PRIMARY,
   },
   headerSubtitle: { fontSize: 9, color: ON_PRIMARY, marginTop: 8 },
@@ -112,7 +112,7 @@ function SectionTitle({ label }: { label: string }) {
   );
 }
 
-export function ModernTemplate(data: ResumePdfData) {
+export function ModernTemplate(data: ResumePdfData, labels: ResumeLabels) {
   const contactItems = [
     data.contact.location,
     data.contact.email,
@@ -128,7 +128,7 @@ export function ModernTemplate(data: ResumePdfData) {
             <View style={styles.nameBar} />
             {data.profileUrl ? (
               <Text style={styles.headerSubtitle}>
-                {"Find this profile on maium  •  "}
+                {labels.findProfileShort + "  •  "}
                 <Link src={data.profileUrl} style={styles.headerPseudo}>
                   @{data.pseudo}
                 </Link>
@@ -147,7 +147,7 @@ export function ModernTemplate(data: ResumePdfData) {
           <View style={styles.sidebar}>
             {contactItems.length > 0 ? (
               <>
-                <SectionTitle label="Contact" />
+                <SectionTitle label={labels.contact} />
                 {contactItems.map((c, i) => (
                   <Text key={i} style={styles.contactItem}>
                     {c}
@@ -158,7 +158,7 @@ export function ModernTemplate(data: ResumePdfData) {
 
             {data.skills.length > 0 ? (
               <>
-                <SectionTitle label="Skills" />
+                <SectionTitle label={labels.skills} />
                 <Text style={styles.skillItem}>
                   {data.skills.join("  •  ")}
                 </Text>
@@ -167,7 +167,7 @@ export function ModernTemplate(data: ResumePdfData) {
 
             {data.socialNetworks.length > 0 ? (
               <>
-                <SectionTitle label="Social" />
+                <SectionTitle label={labels.social} />
                 {data.socialNetworks.map((s, i) => (
                   <Text key={i} style={styles.socialItem}>
                     <Text style={styles.socialName}>{s.name + ": "}</Text>
@@ -181,7 +181,7 @@ export function ModernTemplate(data: ResumePdfData) {
 
             {data.hobbies.length > 0 ? (
               <>
-                <SectionTitle label="Hobbies" />
+                <SectionTitle label={labels.hobbies} />
                 {data.hobbies.map((h, i) => (
                   <View key={i} style={styles.hobbyItem} wrap={false}>
                     <Text style={styles.hobbyTitle}>{h.title}</Text>
@@ -199,7 +199,7 @@ export function ModernTemplate(data: ResumePdfData) {
           <View style={styles.main}>
             {data.summary ? (
               <>
-                <SectionTitle label="Profile" />
+                <SectionTitle label={labels.profile} />
                 <Text style={{ fontSize: 9, marginBottom: 12 }}>
                   {data.summary}
                 </Text>
@@ -208,7 +208,7 @@ export function ModernTemplate(data: ResumePdfData) {
 
             {data.experiences.length > 0 ? (
               <>
-                <SectionTitle label="Experience" />
+                <SectionTitle label={labels.experience} />
                 {data.experiences.map((exp, i) => (
                   <View key={i} style={styles.expBlock} wrap={false}>
                     <View style={styles.expHeader}>
@@ -221,7 +221,10 @@ export function ModernTemplate(data: ResumePdfData) {
                         <Text style={styles.expMeta}>
                           <>
                             {exp.location ? exp.location + "  •  " : ""}
-                            {formatDuration(exp.startPeriod, exp.endPeriod)}
+                            {labels.formatDuration(
+                              exp.startPeriod,
+                              exp.endPeriod,
+                            )}
                             {"  •  "}
                             <Text
                               style={
@@ -230,7 +233,10 @@ export function ModernTemplate(data: ResumePdfData) {
                                   : styles.expPeriodOngoing
                               }
                             >
-                              {formatPeriod(exp.startPeriod, exp.endPeriod)}
+                              {labels.formatPeriod(
+                                exp.startPeriod,
+                                exp.endPeriod,
+                              )}
                             </Text>
                           </>
                         </Text>
@@ -248,7 +254,7 @@ export function ModernTemplate(data: ResumePdfData) {
 
             {data.education.length > 0 ? (
               <>
-                <SectionTitle label="Education" />
+                <SectionTitle label={labels.education} />
                 {data.education.map((edu, i) => (
                   <View key={i} style={styles.expBlock} wrap={false}>
                     <View style={styles.expHeader}>
@@ -261,7 +267,10 @@ export function ModernTemplate(data: ResumePdfData) {
                         <Text style={styles.expMeta}>
                           <>
                             {edu.location ? edu.location + "  •  " : ""}
-                            {formatDuration(edu.startPeriod, edu.endPeriod)}
+                            {labels.formatDuration(
+                              edu.startPeriod,
+                              edu.endPeriod,
+                            )}
                             {"  •  "}
                             <Text
                               style={
@@ -270,7 +279,10 @@ export function ModernTemplate(data: ResumePdfData) {
                                   : styles.expPeriodOngoing
                               }
                             >
-                              {formatPeriod(edu.startPeriod, edu.endPeriod)}
+                              {labels.formatPeriod(
+                                edu.startPeriod,
+                                edu.endPeriod,
+                              )}
                             </Text>
                           </>
                         </Text>

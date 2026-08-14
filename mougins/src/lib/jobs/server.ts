@@ -158,8 +158,8 @@ export async function getResumeById(id: string): Promise<{
   const { data: resume } = await admin
     .from("optimized_resumes")
     .select(
-      `id, user_id, anon_id, job_id, analysis_id, version, resume_json, ats_score,
-       is_active, created_at`,
+      `id, user_id, anon_id, job_id, analysis_id, version, resume_json, language,
+       ats_score, is_active, created_at`,
     )
     .eq("id", id)
     .is("deleted_at", null)

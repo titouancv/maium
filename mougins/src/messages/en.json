@@ -73,6 +73,10 @@
       "editHobbies": "Hobbies",
       "chooseTemplateTitle": "Choose a layout",
       "chooseTemplateDescription": "Pick the layout that best fits the role, then generate your PDF.",
+      "chooseLanguageTitle": "Choose a language",
+      "chooseLanguageDescription": "Pick the language your resume should be written in. Everything you edit next will be in that language.",
+      "translating": "Translating your resume…",
+      "translateError": "Could not translate the resume. Try again.",
       "generateButton": "Generate my resume",
       "coverLetter": "Cover letter",
       "coverLetterPlaceholder": "Your cover letter…",
@@ -176,6 +180,21 @@
     "skipButton": "Skip",
     "previousOption": "Previous",
     "nextOption": "Next"
+  },
+  "languages": {
+    "en": "English",
+    "fr": "French"
+  },
+  "resume": {
+    "profile": "Profile",
+    "experience": "Experience",
+    "education": "Education",
+    "skills": "Skills",
+    "contact": "Contact",
+    "social": "Social",
+    "hobbies": "Hobbies",
+    "findProfile": "Find the full profile on {app}:",
+    "findProfileShort": "Find this profile on {app}"
   },
   "home": {
     "name": "Full name",

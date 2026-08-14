@@ -3,13 +3,15 @@ import { RESUME_TEMPLATES, type ResumeTemplate } from "@/types/job";
 import { getTemplate } from "../templates";
 import { registerResumeFonts } from "../fonts";
 import type { ResumePdfData } from "../types";
+import type { ResumeLabels } from "../labels";
 
 export async function renderResumePdf(
   data: ResumePdfData,
   template: ResumeTemplate,
+  labels: ResumeLabels,
 ): Promise<Buffer> {
   registerResumeFonts();
-  return renderToBuffer(getTemplate(template)(data));
+  return renderToBuffer(getTemplate(template)(data, labels));
 }
 
 export function resolveTemplate(value: string | null): ResumeTemplate {

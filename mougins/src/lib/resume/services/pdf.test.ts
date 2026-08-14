@@ -2,6 +2,22 @@ import { describe, it, expect } from "vitest";
 import { RESUME_TEMPLATES } from "@/types/job";
 import { renderResumePdf } from "./pdf";
 import type { ResumePdfData } from "../types";
+import type { ResumeLabels } from "../labels";
+
+const LABELS: ResumeLabels = {
+  profile: "Profile",
+  experience: "Experience",
+  education: "Education",
+  skills: "Skills",
+  contact: "Contact",
+  social: "Social",
+  hobbies: "Hobbies",
+  network: "maium",
+  findProfile: "Find the full profile on maium:",
+  findProfileShort: "Find this profile on maium",
+  formatDuration: () => "3 years",
+  formatPeriod: () => "2019/2022",
+};
 
 const SAMPLE: ResumePdfData = {
   fullName: "Jane Doe",
@@ -44,7 +60,7 @@ const SAMPLE: ResumePdfData = {
 
 describe("renderResumePdf", () => {
   it.each(RESUME_TEMPLATES)("renders a non-empty PDF for the %s template", async (template) => {
-    const buffer = await renderResumePdf(SAMPLE, template);
+    const buffer = await renderResumePdf(SAMPLE, template, LABELS);
     expect(buffer.length).toBeGreaterThan(0);
     expect(buffer.subarray(0, 4).toString("latin1")).toBe("%PDF");
   });

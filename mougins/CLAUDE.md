@@ -154,6 +154,58 @@ an overlay over the history. Four seams are worth knowing.
   must branch on `kind` before reading it (see
   [NotificationRow](src/components/pages/home/items/NotificationRow.tsx)).
 
+### Language of generated content
+
+Two different things are generated, and they follow **two different language
+rules** — never collapse them into one setting.
+
+- **The analysis is written in the reader's locale.** The locale is captured at
+  submit time (both analyze forms send `useLocale()`), stored on
+  `analysis_jobs.locale`, and passed down to
+  [getMatchingExplanation](src/lib/jobs/matching.ts), which instructs the model
+  in `LANGUAGE_NAMES[locale]`. It is copied onto `analyses.locale` so the row
+  records the language its text is in. There is no English twin and no language
+  switch on the page: the analysis is something the user *reads*, so it is
+  written once, in their language. The one exception is `prep_points.resource_query`,
+  which stays English because it is fed to a YouTube/Google search.
+- **The cover letter follows the job posting**, not the user — it is sent to the
+  recruiter. That rule lives in the prompt in
+  [coverLetter.ts](src/lib/jobs/coverLetter.ts) and is deliberate.
+- **The resume is stored in English and translated on export.**
+  `optimizeResume` always writes English (`optimized_resumes.language`), because
+  that is the ATS-safe baseline. The language the user actually wants is asked
+  in the **first step** of [ResumeEditorOverlay](src/components/pages/jobs/collections/ResumeEditorOverlay.tsx),
+  before the edit steps, so the text they proofread is the text they download.
+  Choosing a language other than the draft's runs `POST /api/resume/translate`
+  ([translate.ts](src/lib/resume/translate.ts)) once, and the editor then holds
+  the translated draft. The translation is **transient** — it is never written
+  back to `optimized_resumes`, so the stored English base is never lost.
+  The editor pre-selects the UI locale, so a French user gets a French CV by
+  default and pays one translation call for it.
+- **Translation is signed-in only.** `/api/resume/translate` goes through
+  `requireApiUser()`, unlike the other resume endpoints an anonymous run can
+  reach — a free run gets its English CV, not a second LLM call. The editor
+  reflects that rather than letting the call 401: `canTranslate` (the current
+  user in the store) drops the language step entirely, so the wizard is 6 steps
+  for a visitor and 7 for an account. The step index is therefore **clamped at
+  render** (`Math.max(step, firstStep)`), never seeded into `useState` —
+  `UserHydration` streams inside a `Suspense`, so the store can still be empty
+  on the first paint and the step must correct itself when it fills.
+- The PDF is rendered in `draftLanguage` — the language the draft is *actually*
+  in — never in the language merely selected. A visitor who never saw the step
+  gets English chrome on English content instead of French headings over
+  English prose.
+- The translation merges **by echoed index**, never by array position, and falls
+  back to the source string for any entry or skill the model drops — the same
+  defence `mergeOptimizedEntries` uses. Periods, locations and organizations are
+  never sent to the model, so they cannot be altered.
+- **PDF chrome is localized separately from PDF content.** Section titles and
+  period wording come from [getResumeLabels](src/lib/resume/labels.ts) (namespace
+  `resume` + `common`), built with `getTranslations({ locale })` in the route
+  handler and passed into the template as a `ResumeLabels` object — react-pdf
+  templates are pure sync functions and cannot call a hook. `formatPeriod` /
+  `formatDuration` live on that object for the same reason.
+
 ### Signup Flows
 
 There is a single signup path: **Google OAuth**. (Email/password was removed —
@@ -208,6 +260,7 @@ OAuth flow: Google → Supabase → `/auth/callback` → `exchangeCodeForSession
 | `GET` | `/api/analysis/:id/result` | Get a finished analysis (owner-scoped) |
 | `GET` | `/api/history` | List the user's past job analyses |
 | `GET/DELETE` | `/api/resume/:id` | Get / delete an optimized resume |
+| `POST` | `/api/resume/translate` | Translate a resume draft into a locale (auth required) |
 | `GET/POST` | `/api/resume/:id/pdf` | Render / generate the resume PDF |
 | `GET/POST` | `/api/resume/profile/pdf` | Render the CV PDF from the user's profile |
 | `POST` | `/api/auth/logout` | Sign out |

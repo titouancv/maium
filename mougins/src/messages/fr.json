@@ -73,6 +73,10 @@
       "editHobbies": "Loisirs",
       "chooseTemplateTitle": "Choisis un format",
       "chooseTemplateDescription": "Choisis le format le plus adapté au poste, puis génère ton PDF.",
+      "chooseLanguageTitle": "Choisis une langue",
+      "chooseLanguageDescription": "Choisis la langue dans laquelle ton CV doit être rédigé. Tout ce que tu modifieras ensuite sera dans cette langue.",
+      "translating": "Traduction de ton CV en cours…",
+      "translateError": "Impossible de traduire le CV. Réessaie.",
       "generateButton": "Générer mon CV",
       "coverLetter": "Lettre de motivation",
       "coverLetterPlaceholder": "Ta lettre de motivation…",
@@ -176,6 +180,21 @@
     "skipButton": "Passer",
     "previousOption": "Précédent",
     "nextOption": "Suivant"
+  },
+  "languages": {
+    "en": "Anglais",
+    "fr": "Français"
+  },
+  "resume": {
+    "profile": "Profil",
+    "experience": "Expériences",
+    "education": "Formation",
+    "skills": "Compétences",
+    "contact": "Contact",
+    "social": "Réseaux",
+    "hobbies": "Centres d'intérêt",
+    "findProfile": "Retrouve le profil complet sur {app} :",
+    "findProfileShort": "Retrouve ce profil sur {app}"
   },
   "home": {
     "name": "Nom complet",
