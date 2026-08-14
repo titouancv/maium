@@ -26,7 +26,13 @@ async function buildAnonResumeHeader(
   analysisId: string | null,
 ): Promise<Pick<
   ResumePdfData,
-  "fullName" | "contact" | "socialNetworks" | "pseudo" | "profileUrl" | "profileQrCode"
+  | "fullName"
+  | "contact"
+  | "socialNetworks"
+  | "hobbies"
+  | "pseudo"
+  | "profileUrl"
+  | "profileQrCode"
 > | null> {
   if (!analysisId) return null;
 
@@ -50,6 +56,7 @@ async function buildAnonResumeHeader(
       location: cv.location ?? null,
     },
     socialNetworks: resolveSocialNetworks(cv.socialNetworks ?? []),
+    hobbies: cv.hobbies ?? [],
     pseudo: "",
     profileUrl: "",
     profileQrCode: "",
@@ -80,13 +87,14 @@ export async function buildResumePdfData(
       experiences: sortExperiences(resume_json.experiences ?? []),
       skills: resume_json.skills ?? [],
       education: sortExperiences(resume_json.education ?? []),
+      hobbies: resume_json.hobbies ?? header.hobbies,
     };
   }
 
   const { data: profile } = await supabase
     .from("users")
     .select(
-      `first_name, last_name, email, phone, location, pseudo, user_social_networks(url, position)`,
+      `first_name, last_name, email, phone, location, pseudo, user_social_networks(url, position), user_hobbies(title, description, position)`,
     )
     .eq("id", user.id)
     .single();
@@ -96,6 +104,10 @@ export async function buildResumePdfData(
       .sort((a, b) => a.position - b.position)
       .map(({ url }) => url),
   );
+
+  const profileHobbies = [...(profile?.user_hobbies ?? [])]
+    .sort((a, b) => a.position - b.position)
+    .map(({ title, description }) => ({ title, description }));
 
   const fullName = [profile?.first_name, profile?.last_name]
     .filter(Boolean)
@@ -119,6 +131,7 @@ export async function buildResumePdfData(
     },
     summary: resume_json.summary ?? "",
     socialNetworks,
+    hobbies: resume_json.hobbies ?? profileHobbies,
     pseudo: profile?.pseudo ?? "",
     profileUrl,
     profileQrCode,
@@ -158,6 +171,7 @@ export async function buildProfileResumePdfData(
     },
     summary: resume_json.summary ?? "",
     socialNetworks: resolveSocialNetworks(profile.social_networks ?? []),
+    hobbies: resume_json.hobbies ?? profile.hobbies ?? [],
     pseudo: profile.pseudo,
     profileUrl,
     profileQrCode,

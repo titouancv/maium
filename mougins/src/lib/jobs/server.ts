@@ -105,6 +105,32 @@ export async function updateAnalysisTracking(
   return Boolean(data);
 }
 
+export async function deleteAnalysis(analysisId: string): Promise<boolean> {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return false;
+
+  const { error: resumeError } = await supabase
+    .from("optimized_resumes")
+    .update({ deleted_at: new Date().toISOString(), is_active: false })
+    .eq("analysis_id", analysisId)
+    .eq("user_id", user.id);
+  if (resumeError) throw resumeError;
+
+  const { data, error } = await supabase
+    .from("analyses")
+    .delete()
+    .eq("id", analysisId)
+    .eq("user_id", user.id)
+    .select("id")
+    .maybeSingle();
+  if (error) throw error;
+
+  return Boolean(data);
+}
+
 export async function getAnalysisJobById(
   id: string,
 ): Promise<AnalysisJob | null> {
@@ -132,8 +158,8 @@ export async function getResumeById(id: string): Promise<{
   const { data: resume } = await admin
     .from("optimized_resumes")
     .select(
-      `id, user_id, anon_id, job_id, analysis_id, version, resume_json, ats_score,
-       is_active, created_at`,
+      `id, user_id, anon_id, job_id, analysis_id, version, resume_json, language,
+       ats_score, is_active, created_at`,
     )
     .eq("id", id)
     .is("deleted_at", null)

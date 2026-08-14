@@ -6,6 +6,7 @@ export * from "./AnalysisView";
 export * from "./ApplicationStatusSelector";
 export * from "./ApplicationTracker";
 export * from "./CompanyContactList";
+export * from "./DeleteAnalysisButton";
 export * from "./CompanyContactsLoader";
 export * from "./DownloadResumeButton";
 export * from "./CoverLetterButton";

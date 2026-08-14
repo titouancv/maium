@@ -1,8 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useTranslations } from "next-intl";
-import { API, EXPERIENCE_NAMESPACE } from "@/constants";
+import { useLocale, useTranslations } from "next-intl";
+import { API, EXPERIENCE_NAMESPACE, LOCALES, type Locale } from "@/constants";
 import { Form } from "@/components/form";
 import type { FormProps } from "@/components/form";
 import { FormLayout } from "@/components/layout/FormLayout";
@@ -17,6 +17,7 @@ import {
 } from "@/types/job";
 import type { Experience } from "@/types/experience";
 import { TabsVertical } from "@/components/ui/TabsVertical";
+import { useCurrentUserStore } from "@/stores/useCurrentUserStore";
 
 interface Props {
   resumeId?: string;
@@ -25,10 +26,15 @@ interface Props {
   onClose: () => void;
 }
 
-const TOTAL_STEPS = 5;
-const TEMPLATE_STEP = 4;
+const LANGUAGE_STEP = 0;
+const TEMPLATE_STEP = 6;
 
-type Phase = "idle" | "generating" | "error";
+type Phase =
+  | "idle"
+  | "translating"
+  | "generating"
+  | "translateError"
+  | "downloadError";
 
 function toResumeEntries(items: Experience[]): ResumeJson["experiences"] {
   return items.map((e) => ({
@@ -49,9 +55,14 @@ export function ResumeEditorOverlay({
 }: Props) {
   const t = useTranslations("jobs");
   const tCommon = useTranslations("common");
+  const tLanguages = useTranslations("languages");
+  const uiLocale = useLocale() as Locale;
+  const canTranslate = useCurrentUserStore((s) => Boolean(s.user));
 
   const [draft, setDraft] = useState<ResumeJson | null>(initialDraft ?? null);
   const [step, setStep] = useState(0);
+  const [language, setLanguage] = useState<Locale>(uiLocale);
+  const [draftLanguage, setDraftLanguage] = useState<Locale>(uiLocale);
   const [templateIndex, setTemplateIndex] = useState(0);
   const [phase, setPhase] = useState<Phase>("idle");
   const [progress, setProgress] = useState(0);
@@ -63,9 +74,11 @@ export function ResumeEditorOverlay({
       const res = await fetch(API.RESUME(resumeId));
       if (!res.ok) return;
       const json = (await res.json()) as {
-        resume: { resume_json: ResumeJson };
+        resume: { resume_json: ResumeJson; language: Locale };
       };
-      if (active) setDraft(json.resume.resume_json);
+      if (!active) return;
+      setDraft(json.resume.resume_json);
+      setDraftLanguage(json.resume.language);
     })();
     return () => {
       active = false;
@@ -80,6 +93,30 @@ export function ResumeEditorOverlay({
     return () => clearInterval(interval);
   }, [phase]);
 
+  async function confirmLanguage() {
+    if (!draft || language === draftLanguage) {
+      setStep(LANGUAGE_STEP + 1);
+      return;
+    }
+    setPhase("translating");
+    try {
+      const res = await fetch(API.RESUME_TRANSLATE, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ resume_json: draft, language }),
+      });
+      if (!res.ok) throw new Error("Translation failed");
+
+      const json = (await res.json()) as { resume_json: ResumeJson };
+      setDraft(json.resume_json);
+      setDraftLanguage(language);
+      setPhase("idle");
+      setStep(LANGUAGE_STEP + 1);
+    } catch {
+      setPhase("translateError");
+    }
+  }
+
   async function generate() {
     if (!draft) return;
     const endpoint = pdfEndpoint ?? (resumeId ? API.RESUME_PDF(resumeId) : null);
@@ -91,7 +128,11 @@ export function ResumeEditorOverlay({
       const res = await fetch(endpoint, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ resume_json: draft, template }),
+        body: JSON.stringify({
+          resume_json: draft,
+          template,
+          language: draftLanguage,
+        }),
       });
       if (!res.ok) throw new Error("PDF generation failed");
 
@@ -111,7 +152,7 @@ export function ResumeEditorOverlay({
 
       setTimeout(onClose, 800);
     } catch {
-      setPhase("error");
+      setPhase("downloadError");
     }
   }
 
@@ -125,19 +166,27 @@ export function ResumeEditorOverlay({
     );
   }
 
+  const firstStep = canTranslate ? LANGUAGE_STEP : LANGUAGE_STEP + 1;
+  const currentStep = Math.max(step, firstStep);
+  const totalSteps = TEMPLATE_STEP + 1 - firstStep;
+  const displayStep = currentStep + 1 - firstStep;
+
   const base = {
-    step: step + 1,
-    totalSteps: TOTAL_STEPS,
+    step: displayStep,
+    totalSteps,
     primaryLabel: tCommon("nextButton"),
     secondaryLabel:
-      step === 0 ? tCommon("cancelButton") : tCommon("backButton"),
-    onSecondary: step === 0 ? onClose : () => setStep((s) => s - 1),
-    onPrimary: () => setStep((s) => s + 1),
+      currentStep === firstStep
+        ? tCommon("cancelButton")
+        : tCommon("backButton"),
+    onSecondary:
+      currentStep === firstStep ? onClose : () => setStep(currentStep - 1),
+    onPrimary: () => setStep(currentStep + 1),
   };
 
   const getFormProps = (): FormProps => {
-    switch (step) {
-      case 0:
+    switch (currentStep) {
+      case 1:
         return {
           ...base,
           type: "longText",
@@ -148,7 +197,7 @@ export function ResumeEditorOverlay({
           onChange: (v) =>
             setDraft((d) => (d ? { ...d, summary: v ?? "" } : d)),
         };
-      case 1:
+      case 2:
         return {
           ...base,
           type: "experiences",
@@ -161,7 +210,7 @@ export function ResumeEditorOverlay({
               d ? { ...d, experiences: toResumeEntries(exps) } : d,
             ),
         };
-      case 2:
+      case 3:
         return {
           ...base,
           type: "experiences",
@@ -174,7 +223,7 @@ export function ResumeEditorOverlay({
               d ? { ...d, education: toResumeEntries(exps) } : d,
             ),
         };
-      case 3:
+      case 4:
         return {
           ...base,
           type: "keys",
@@ -184,12 +233,60 @@ export function ResumeEditorOverlay({
           onChange: (items) =>
             setDraft((d) => (d ? { ...d, skills: items } : d)),
         };
+      case 5:
+        return {
+          ...base,
+          type: "hobbies",
+          title: t("detail.editHobbies"),
+          defaultValue: draft.hobbies ?? [],
+          onChange: (items) =>
+            setDraft((d) => (d ? { ...d, hobbies: items } : d)),
+        };
       default:
         return base as FormProps;
     }
   };
 
-  if (step !== TEMPLATE_STEP) {
+  if (currentStep === LANGUAGE_STEP) {
+    return (
+      <Overlay onClose={onClose}>
+        <FormLayout
+          title={t("detail.chooseLanguageTitle")}
+          step={displayStep}
+          totalSteps={totalSteps}
+          secondaryLabel={tCommon("cancelButton")}
+          onSecondary={onClose}
+          primaryLabel={tCommon("nextButton")}
+          primaryLoading={phase === "translating"}
+          onPrimary={confirmLanguage}
+        >
+          <div className="flex flex-col gap-6">
+            {phase === "translating" ? (
+              <Text tone="muted" size="sm">
+                {t("detail.translating")}
+              </Text>
+            ) : (
+              <>
+                <p>{t("detail.chooseLanguageDescription")}</p>
+                <TabsVertical
+                  tabs={LOCALES.map((locale) => tLanguages(locale))}
+                  activeTab={LOCALES.indexOf(language)}
+                  onChange={(index) => setLanguage(LOCALES[index])}
+                />
+              </>
+            )}
+            <InfoMessage
+              message={
+                phase === "translateError" ? t("detail.translateError") : null
+              }
+            />
+          </div>
+        </FormLayout>
+      </Overlay>
+    );
+  }
+
+  if (currentStep !== TEMPLATE_STEP) {
     return (
       <Overlay onClose={onClose}>
         <Form {...getFormProps()} />
@@ -201,10 +298,10 @@ export function ResumeEditorOverlay({
     <Overlay onClose={onClose}>
       <FormLayout
         title={t("detail.chooseTemplateTitle")}
-        step={TOTAL_STEPS}
-        totalSteps={TOTAL_STEPS}
+        step={displayStep}
+        totalSteps={totalSteps}
         secondaryLabel={tCommon("backButton")}
-        onSecondary={() => setStep(3)}
+        onSecondary={() => setStep(TEMPLATE_STEP - 1)}
         primaryLabel={t("detail.generateButton")}
         primaryLoading={phase === "generating"}
         onPrimary={generate}
@@ -230,7 +327,7 @@ export function ResumeEditorOverlay({
             </>
           )}
           <InfoMessage
-            message={phase === "error" ? t("detail.downloadError") : null}
+            message={phase === "downloadError" ? t("detail.downloadError") : null}
           />
         </div>
       </FormLayout>

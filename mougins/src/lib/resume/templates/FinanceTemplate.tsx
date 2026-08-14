@@ -8,7 +8,7 @@ import {
   StyleSheet,
 } from "@react-pdf/renderer";
 import type { ResumePdfData } from "../types";
-import { formatDuration, formatPeriod } from "../experiencePeriod";
+import type { ResumeLabels } from "../labels";
 
 const FONT_FAMILY = "Times-Roman";
 const BLACK = "#000000";
@@ -90,7 +90,7 @@ function SectionTitle({ label }: { label: string }) {
   );
 }
 
-export function FinanceTemplate(data: ResumePdfData) {
+export function FinanceTemplate(data: ResumePdfData, labels: ResumeLabels) {
   const contactLine = [
     data.contact.location,
     data.contact.email,
@@ -111,14 +111,14 @@ export function FinanceTemplate(data: ResumePdfData) {
 
         {data.summary ? (
           <>
-            <SectionTitle label="Profile" />
+            <SectionTitle label={labels.profile} />
             <Text>{data.summary}</Text>
           </>
         ) : null}
 
         {data.experiences.length > 0 ? (
           <>
-            <SectionTitle label="Experience" />
+            <SectionTitle label={labels.experience} />
             {data.experiences.map((exp, i) => (
               <View key={i} style={styles.expBlock} wrap={false}>
                 <View style={styles.expHeaderRow}>
@@ -129,9 +129,9 @@ export function FinanceTemplate(data: ResumePdfData) {
                   <Text style={styles.expMeta}>
                     <>
                       {exp.location ? exp.location + "  •  " : ""}
-                      {formatDuration(exp.startPeriod, exp.endPeriod)}
+                      {labels.formatDuration(exp.startPeriod, exp.endPeriod)}
                       {"  •  "}
-                      {formatPeriod(exp.startPeriod, exp.endPeriod)}
+                      {labels.formatPeriod(exp.startPeriod, exp.endPeriod)}
                     </>
                   </Text>
                 </View>
@@ -145,7 +145,7 @@ export function FinanceTemplate(data: ResumePdfData) {
 
         {data.education.length > 0 ? (
           <>
-            <SectionTitle label="Education" />
+            <SectionTitle label={labels.education} />
             {data.education.map((edu, i) => (
               <View key={i} style={styles.expBlock} wrap={false}>
                 <View style={styles.expHeaderRow}>
@@ -156,9 +156,9 @@ export function FinanceTemplate(data: ResumePdfData) {
                   <Text style={styles.expMeta}>
                     <>
                       {edu.location ? edu.location + "  •  " : ""}
-                      {formatDuration(edu.startPeriod, edu.endPeriod)}
+                      {labels.formatDuration(edu.startPeriod, edu.endPeriod)}
                       {"  •  "}
-                      {formatPeriod(edu.startPeriod, edu.endPeriod)}
+                      {labels.formatPeriod(edu.startPeriod, edu.endPeriod)}
                     </>
                   </Text>
                 </View>
@@ -172,17 +172,17 @@ export function FinanceTemplate(data: ResumePdfData) {
 
         {data.skills.length > 0 ? (
           <>
-            <SectionTitle label="Skills" />
+            <SectionTitle label={labels.skills} />
             <Text>{data.skills.join("  •  ")}</Text>
           </>
         ) : null}
 
         {data.profileUrl ? (
           <>
-            <SectionTitle label="maium" />
+            <SectionTitle label={labels.network} />
             <View style={styles.maiumRow}>
               <Text>
-                Find the full profile on maium:{" "}
+                {labels.findProfile}{" "}
                 <Link src={data.profileUrl} style={styles.maiumLink}>
                   {data.profileUrl}
                 </Link>

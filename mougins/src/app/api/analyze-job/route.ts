@@ -39,6 +39,7 @@ export async function POST(req: NextRequest) {
       ...owner.columns,
       source_url: parsed.data.mode === "url" ? parsed.data.jobUrl : null,
       job_text: parsed.data.mode === "text" ? parsed.data.jobText : null,
+      locale: parsed.data.locale,
       status: "queued",
       progress: 0,
     })

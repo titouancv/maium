@@ -9,7 +9,7 @@ import {
 } from "framer-motion";
 import { useTranslations } from "next-intl";
 import { cn } from "@/lib/utils";
-import { SELECTOR_PEEK_PX, scaleColor } from "@/constants/ui";
+import { SELECTOR_DEFAULT_COLOR, SELECTOR_PEEK_PX } from "@/constants/ui";
 import { Icon } from "./icons";
 
 export interface SelectorValue {
@@ -113,8 +113,7 @@ export function Selector({ values, activeIndex, onChange }: SelectorProps) {
             const isString = typeof value === "string";
             const label = isString ? value : value.label;
             const color =
-              (isString ? undefined : value.color) ??
-              scaleColor(index, values.length);
+              (isString ? undefined : value.color) ?? SELECTOR_DEFAULT_COLOR;
             const isActive = index === activeIndex;
 
             return (

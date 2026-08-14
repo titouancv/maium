@@ -1,4 +1,4 @@
-import { APPLICATION_STATUSES, type ApplicationStatus } from "@/types/job";
+import type { ApplicationStatus } from "@/types/job";
 
 export const PRIMARY_COLORS =
   "bg-radial from-secondary-400 from-10% to-primary to-90% text-on-primary hover:from-primary hover:to-secondary-400 shadow-md inset-shadow-sm transition-colors duration-300 ease-in-out inset-shadow-light-100/60";
@@ -46,19 +46,14 @@ export const INFO_COLORS: Record<InfoType, string> = {
   info: "text-txt",
 };
 
-const SCALE_START = "var(--color-secondary-400)";
-const SCALE_END = "var(--color-primary)";
-
-export const scaleColor = (index: number, total: number) => {
-  const ratio = total > 1 ? index / (total - 1) : 0;
-  return `color-mix(in oklab, ${SCALE_END} ${Math.round(ratio * 100)}%, ${SCALE_START})`;
+export const APPLICATION_STATUS_COLORS: Record<ApplicationStatus, string> = {
+  not_started: "var(--color-light-600)",
+  applied: "var(--color-secondary)",
+  interview: "var(--color-primary)",
+  accepted: "var(--color-success)",
+  rejected: "var(--color-error)",
 };
 
-export const APPLICATION_STATUS_COLORS = Object.fromEntries(
-  APPLICATION_STATUSES.map((status, index) => [
-    status,
-    scaleColor(index, APPLICATION_STATUSES.length),
-  ]),
-) as Record<ApplicationStatus, string>;
-
 export const SELECTOR_PEEK_PX = 40;
+
+export const SELECTOR_DEFAULT_COLOR = "var(--color-primary)";

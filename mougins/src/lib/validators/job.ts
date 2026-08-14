@@ -1,5 +1,9 @@
 import { z } from "zod";
-import { ANALYSIS_NOTES_CHAR_LIMIT, ANALYSIS_SNOOZE_DAYS } from "@/constants";
+import {
+  ANALYSIS_NOTES_CHAR_LIMIT,
+  ANALYSIS_SNOOZE_DAYS,
+  LOCALES,
+} from "@/constants";
 import {
   APPLICATION_STATUSES,
   PREP_POINT_KINDS,
@@ -23,9 +27,19 @@ export const AnalyzeJobSchema = z.discriminatedUnion("mode", [
 ]);
 export type AnalyzeJobInput = z.infer<typeof AnalyzeJobSchema>;
 
+export const LocaleSchema = z.enum(LOCALES);
+
+const FallbackLocaleSchema = LocaleSchema.catch("en").default("en");
+
 export const AnalyzeJobRequestSchema = z.discriminatedUnion("mode", [
-  AnalyzeJobUrlSchema.extend({ cvExtraction: CvExtractionSchema.optional() }),
-  AnalyzeJobTextSchema.extend({ cvExtraction: CvExtractionSchema.optional() }),
+  AnalyzeJobUrlSchema.extend({
+    cvExtraction: CvExtractionSchema.optional(),
+    locale: FallbackLocaleSchema,
+  }),
+  AnalyzeJobTextSchema.extend({
+    cvExtraction: CvExtractionSchema.optional(),
+    locale: FallbackLocaleSchema,
+  }),
 ]);
 
 export const JobExtractionSchema = z.object({
@@ -49,11 +63,17 @@ const ResumeEntrySchema = z.object({
   description: z.string().default(""),
 });
 
+const ResumeHobbySchema = z.object({
+  title: z.string().default(""),
+  description: z.string().default(""),
+});
+
 export const ResumeJsonInputSchema = z.object({
   summary: z.string().default(""),
   experiences: z.array(ResumeEntrySchema).default([]),
   education: z.array(ResumeEntrySchema).default([]),
   skills: z.array(z.string()).default([]),
+  hobbies: z.array(ResumeHobbySchema).default([]),
 });
 
 function toPlainString(value: unknown): string {
@@ -145,4 +165,30 @@ export const OptimizedResumeSchema = z.object({
 
 export const CoverLetterSchema = z.object({
   cover_letter: z.string().default(""),
+});
+
+const TranslatedEntrySchema = z.object({
+  index: z.number().int().min(0).default(0),
+  role: LlmString.catch(""),
+  description: LlmString.catch(""),
+});
+
+const TranslatedHobbySchema = z.object({
+  index: z.number().int().min(0).default(0),
+  title: LlmString.catch(""),
+  description: LlmString.catch(""),
+});
+
+export const ResumeTranslationSchema = z.object({
+  summary: LlmString.catch(""),
+  experiences: z.array(TranslatedEntrySchema).catch([]),
+  education: z.array(TranslatedEntrySchema).catch([]),
+  skills: z.array(LlmString).catch([]),
+  hobbies: z.array(TranslatedHobbySchema).catch([]),
+});
+export type ResumeTranslation = z.infer<typeof ResumeTranslationSchema>;
+
+export const TranslateResumeRequestSchema = z.object({
+  resume_json: ResumeJsonInputSchema,
+  language: LocaleSchema,
 });

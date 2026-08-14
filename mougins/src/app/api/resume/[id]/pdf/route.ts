@@ -1,7 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import {
   buildResumePdfData,
+  getResumeLabels,
   renderResumePdf,
+  resolveResumeLanguage,
   resolveTemplate,
   pdfResponse,
 } from "@/lib/resume";
@@ -15,13 +17,19 @@ export async function GET(
 ) {
   const { id } = await params;
   const template = resolveTemplate(req.nextUrl.searchParams.get("template"));
+  const language = resolveResumeLanguage(
+    req.nextUrl.searchParams.get("language"),
+  );
 
-  const data = await buildResumePdfData(id, req.nextUrl.origin);
+  const [data, labels] = await Promise.all([
+    buildResumePdfData(id, req.nextUrl.origin),
+    getResumeLabels(language),
+  ]);
   if (!data) {
     return NextResponse.json({ error: "Not found" }, { status: 404 });
   }
 
-  const pdf = await renderResumePdf(data, template);
+  const pdf = await renderResumePdf(data, template, labels);
   return pdfResponse(pdf, data.fullName);
 }
 
@@ -32,19 +40,24 @@ export async function POST(
   const body = (await req.json().catch(() => null)) as {
     resume_json?: unknown;
     template?: string;
+    language?: string;
   } | null;
   const parsed = ResumeJsonInputSchema.safeParse(body?.resume_json);
   if (!parsed.success) {
     return NextResponse.json({ error: "Invalid body" }, { status: 400 });
   }
   const template = resolveTemplate(body?.template ?? null);
+  const language = resolveResumeLanguage(body?.language);
 
   const { id } = await params;
-  const data = await buildResumePdfData(id, req.nextUrl.origin, parsed.data);
+  const [data, labels] = await Promise.all([
+    buildResumePdfData(id, req.nextUrl.origin, parsed.data),
+    getResumeLabels(language),
+  ]);
   if (!data) {
     return NextResponse.json({ error: "Not found" }, { status: 404 });
   }
 
-  const pdf = await renderResumePdf(data, template);
+  const pdf = await renderResumePdf(data, template, labels);
   return pdfResponse(pdf, data.fullName);
 }

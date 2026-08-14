@@ -1,6 +1,6 @@
 import { createAdminClient } from "@/lib/supabase/admin";
 import { DEFAULT_CHAT_MODEL, embed } from "@/lib/mistral";
-import { PROMPT_VERSION } from "@/constants";
+import { PROMPT_VERSION, type Locale } from "@/constants";
 import type { AnalysisStep } from "@/types/job";
 import type { CvExtraction } from "@/lib/validators/cv";
 import { extractJob, extractJobFromText } from "./extract";
@@ -38,7 +38,9 @@ export async function runAnalysisPipeline(analysisJobId: string): Promise<void> 
 
   const { data: jobRow } = await admin
     .from("analysis_jobs")
-    .select("id, user_id, anon_id, source_url, job_text, cv_extraction, expires_at")
+    .select(
+      "id, user_id, anon_id, source_url, job_text, cv_extraction, expires_at, locale",
+    )
     .eq("id", analysisJobId)
     .single();
 
@@ -48,6 +50,7 @@ export async function runAnalysisPipeline(analysisJobId: string): Promise<void> 
   const anonId = jobRow.anon_id as string | null;
   const expiresAt = jobRow.expires_at as string | null;
   const cvExtraction = jobRow.cv_extraction as CvExtraction | null;
+  const locale = jobRow.locale as Locale;
 
   const owner = { user_id: userId, anon_id: anonId, expires_at: expiresAt };
 
@@ -97,6 +100,7 @@ export async function runAnalysisPipeline(analysisJobId: string): Promise<void> 
       job,
       profile,
       semanticSimilarity,
+      locale,
     });
 
     let coverLetter: string | null = null;
@@ -117,6 +121,7 @@ export async function runAnalysisPipeline(analysisJobId: string): Promise<void> 
         recruiter_questions: explanation.recruiter_questions,
         summary: explanation.summary,
         cover_letter: coverLetter || null,
+        locale,
         model: CHAT_MODEL,
         prompt_version: PROMPT_VERSION,
       })

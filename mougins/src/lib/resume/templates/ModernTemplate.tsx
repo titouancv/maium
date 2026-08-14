@@ -8,7 +8,7 @@ import {
   StyleSheet,
 } from "@react-pdf/renderer";
 import type { ResumePdfData } from "../types";
-import { formatDuration, formatPeriod } from "../experiencePeriod";
+import type { ResumeLabels } from "../labels";
 import { RESUME_FONT_FAMILY } from "../fonts";
 
 const PRIMARY = "#ff4500"; // --primary-600
@@ -27,11 +27,17 @@ const styles = StyleSheet.create({
     backgroundColor: SURFACE_50,
   },
   header: {
-    backgroundColor: PRIMARY,
+    backgroundColor: INK,
     color: ON_PRIMARY,
     paddingVertical: 12,
     paddingHorizontal: 12,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    borderBottomWidth: 4,
+    borderBottomColor: PRIMARY,
   },
+  headerText: { flex: 1, paddingRight: 12 },
   name: { fontSize: 22, fontWeight: 800 },
   nameBar: {
     height: 3,
@@ -40,6 +46,14 @@ const styles = StyleSheet.create({
     marginTop: 12,
     backgroundColor: ON_PRIMARY,
   },
+  headerSubtitle: { fontSize: 9, color: ON_PRIMARY, marginTop: 8 },
+  headerPseudo: { fontWeight: 800, color: ON_PRIMARY, textDecoration: "none" },
+  headerQrCard: {
+    backgroundColor: "#ffffff",
+    borderRadius: 3,
+    padding: 4,
+  },
+  headerQr: { width: 56, height: 56 },
   body: {
     flexDirection: "row",
     flex: 1,
@@ -63,20 +77,20 @@ const styles = StyleSheet.create({
     marginTop: 3,
     backgroundColor: INK,
   },
-  contactItem: { fontSize: 9, marginBottom: 3, color: MUTED },
+  contactItem: { fontSize: 9, marginBottom: 3, color: INK },
   socialItem: { fontSize: 9, marginBottom: 3 },
   socialName: { color: INK },
   socialLink: { color: PRIMARY, textDecoration: "none" },
   skillItem: { marginBottom: 3, fontSize: 8, color: INK },
-  maiumText: { fontSize: 9, color: INK, marginBottom: 1 },
-  maiumLink: { fontSize: 9, color: PRIMARY, textDecoration: "none" },
-  maiumQr: { width: 64, height: 64, marginTop: 6 },
+  hobbyItem: { marginBottom: 5 },
+  hobbyTitle: { fontSize: 9, color: INK },
+  hobbyDescription: { fontSize: 8, color: MUTED, lineHeight: 1.3 },
   expBlock: { marginBottom: 12 },
   expHeader: { flexDirection: "row" },
   expBar: {
     width: 3,
     borderRadius: 2,
-    backgroundColor: INK,
+    backgroundColor: MUTED,
     marginVertical: 2,
     marginRight: 10,
   },
@@ -98,7 +112,7 @@ function SectionTitle({ label }: { label: string }) {
   );
 }
 
-export function ModernTemplate(data: ResumePdfData) {
+export function ModernTemplate(data: ResumePdfData, labels: ResumeLabels) {
   const contactItems = [
     data.contact.location,
     data.contact.email,
@@ -109,17 +123,31 @@ export function ModernTemplate(data: ResumePdfData) {
     <Document title={`CV ${data.fullName}`}>
       <Page size="A4" style={styles.page}>
         <View style={styles.header}>
-          <View style={styles.sectionTitleWrap}>
+          <View style={styles.headerText}>
             <Text style={styles.name}>{data.fullName}</Text>
             <View style={styles.nameBar} />
+            {data.profileUrl ? (
+              <Text style={styles.headerSubtitle}>
+                {labels.findProfileShort + "  •  "}
+                <Link src={data.profileUrl} style={styles.headerPseudo}>
+                  @{data.pseudo}
+                </Link>
+              </Text>
+            ) : null}
           </View>
+          {data.profileUrl && data.profileQrCode ? (
+            <View style={styles.headerQrCard}>
+              {/* eslint-disable-next-line jsx-a11y/alt-text -- react-pdf Image has no alt prop */}
+              <Image src={data.profileQrCode} style={styles.headerQr} />
+            </View>
+          ) : null}
         </View>
 
         <View style={styles.body}>
           <View style={styles.sidebar}>
             {contactItems.length > 0 ? (
               <>
-                <SectionTitle label="Contact" />
+                <SectionTitle label={labels.contact} />
                 {contactItems.map((c, i) => (
                   <Text key={i} style={styles.contactItem}>
                     {c}
@@ -130,7 +158,7 @@ export function ModernTemplate(data: ResumePdfData) {
 
             {data.skills.length > 0 ? (
               <>
-                <SectionTitle label="Skills" />
+                <SectionTitle label={labels.skills} />
                 <Text style={styles.skillItem}>
                   {data.skills.join("  •  ")}
                 </Text>
@@ -139,7 +167,7 @@ export function ModernTemplate(data: ResumePdfData) {
 
             {data.socialNetworks.length > 0 ? (
               <>
-                <SectionTitle label="Social" />
+                <SectionTitle label={labels.social} />
                 {data.socialNetworks.map((s, i) => (
                   <Text key={i} style={styles.socialItem}>
                     <Text style={styles.socialName}>{s.name + ": "}</Text>
@@ -151,19 +179,19 @@ export function ModernTemplate(data: ResumePdfData) {
               </>
             ) : null}
 
-            {data.profileUrl ? (
+            {data.hobbies.length > 0 ? (
               <>
-                <SectionTitle label="maium" />
-                <Text style={styles.maiumText}>
-                  Find the full profile on maium
-                </Text>
-                <Link src={data.profileUrl} style={styles.maiumLink}>
-                  @{data.pseudo}
-                </Link>
-                {data.profileQrCode ? (
-                  // eslint-disable-next-line jsx-a11y/alt-text -- react-pdf Image has no alt prop
-                  <Image src={data.profileQrCode} style={styles.maiumQr} />
-                ) : null}
+                <SectionTitle label={labels.hobbies} />
+                {data.hobbies.map((h, i) => (
+                  <View key={i} style={styles.hobbyItem} wrap={false}>
+                    <Text style={styles.hobbyTitle}>{h.title}</Text>
+                    {h.description ? (
+                      <Text style={styles.hobbyDescription}>
+                        {h.description}
+                      </Text>
+                    ) : null}
+                  </View>
+                ))}
               </>
             ) : null}
           </View>
@@ -171,7 +199,7 @@ export function ModernTemplate(data: ResumePdfData) {
           <View style={styles.main}>
             {data.summary ? (
               <>
-                <SectionTitle label="Profile" />
+                <SectionTitle label={labels.profile} />
                 <Text style={{ fontSize: 9, marginBottom: 12 }}>
                   {data.summary}
                 </Text>
@@ -180,7 +208,7 @@ export function ModernTemplate(data: ResumePdfData) {
 
             {data.experiences.length > 0 ? (
               <>
-                <SectionTitle label="Experience" />
+                <SectionTitle label={labels.experience} />
                 {data.experiences.map((exp, i) => (
                   <View key={i} style={styles.expBlock} wrap={false}>
                     <View style={styles.expHeader}>
@@ -193,7 +221,10 @@ export function ModernTemplate(data: ResumePdfData) {
                         <Text style={styles.expMeta}>
                           <>
                             {exp.location ? exp.location + "  •  " : ""}
-                            {formatDuration(exp.startPeriod, exp.endPeriod)}
+                            {labels.formatDuration(
+                              exp.startPeriod,
+                              exp.endPeriod,
+                            )}
                             {"  •  "}
                             <Text
                               style={
@@ -202,7 +233,10 @@ export function ModernTemplate(data: ResumePdfData) {
                                   : styles.expPeriodOngoing
                               }
                             >
-                              {formatPeriod(exp.startPeriod, exp.endPeriod)}
+                              {labels.formatPeriod(
+                                exp.startPeriod,
+                                exp.endPeriod,
+                              )}
                             </Text>
                           </>
                         </Text>
@@ -220,7 +254,7 @@ export function ModernTemplate(data: ResumePdfData) {
 
             {data.education.length > 0 ? (
               <>
-                <SectionTitle label="Education" />
+                <SectionTitle label={labels.education} />
                 {data.education.map((edu, i) => (
                   <View key={i} style={styles.expBlock} wrap={false}>
                     <View style={styles.expHeader}>
@@ -233,7 +267,10 @@ export function ModernTemplate(data: ResumePdfData) {
                         <Text style={styles.expMeta}>
                           <>
                             {edu.location ? edu.location + "  •  " : ""}
-                            {formatDuration(edu.startPeriod, edu.endPeriod)}
+                            {labels.formatDuration(
+                              edu.startPeriod,
+                              edu.endPeriod,
+                            )}
                             {"  •  "}
                             <Text
                               style={
@@ -242,7 +279,10 @@ export function ModernTemplate(data: ResumePdfData) {
                                   : styles.expPeriodOngoing
                               }
                             >
-                              {formatPeriod(edu.startPeriod, edu.endPeriod)}
+                              {labels.formatPeriod(
+                                edu.startPeriod,
+                                edu.endPeriod,
+                              )}
                             </Text>
                           </>
                         </Text>

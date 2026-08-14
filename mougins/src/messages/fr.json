@@ -70,8 +70,13 @@
       "editEducation": "Formation",
       "editSkills": "Compétences",
       "skillPlaceholder": "Ajouter une compétence",
+      "editHobbies": "Loisirs",
       "chooseTemplateTitle": "Choisis un format",
       "chooseTemplateDescription": "Choisis le format le plus adapté au poste, puis génère ton PDF.",
+      "chooseLanguageTitle": "Choisis une langue",
+      "chooseLanguageDescription": "Choisis la langue dans laquelle ton CV doit être rédigé. Tout ce que tu modifieras ensuite sera dans cette langue.",
+      "translating": "Traduction de ton CV en cours…",
+      "translateError": "Impossible de traduire le CV. Réessaie.",
       "generateButton": "Générer mon CV",
       "coverLetter": "Lettre de motivation",
       "coverLetterPlaceholder": "Ta lettre de motivation…",
@@ -124,6 +129,14 @@
         "snoozeHint": "On vous prévient le {date} si cette candidature est toujours à son statut actuel.",
         "snoozeOverdueHint": "Cette candidature a déjà dépassé ce délai — la relance vous attend dans vos notifications.",
         "snoozeSettled": "Cette candidature est close — pas besoin de relance."
+      },
+      "delete": {
+        "title": "Supprimer cette analyse",
+        "hint": "La supprimer efface aussi le suivi, les notes et le CV optimisé qui lui sont rattachés.",
+        "button": "Supprimer l'analyse",
+        "confirmHint": "Cette action est irréversible.",
+        "confirmButton": "Supprimer définitivement",
+        "error": "Impossible de supprimer cette analyse. Réessayez."
       }
     },
     "status": {
@@ -167,6 +180,21 @@
     "skipButton": "Passer",
     "previousOption": "Précédent",
     "nextOption": "Suivant"
+  },
+  "languages": {
+    "en": "Anglais",
+    "fr": "Français"
+  },
+  "resume": {
+    "profile": "Profil",
+    "experience": "Expériences",
+    "education": "Formation",
+    "skills": "Compétences",
+    "contact": "Contact",
+    "social": "Réseaux",
+    "hobbies": "Centres d'intérêt",
+    "findProfile": "Retrouve le profil complet sur {app} :",
+    "findProfileShort": "Retrouve ce profil sur {app}"
   },
   "home": {
     "name": "Nom complet",

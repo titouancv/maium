@@ -3,8 +3,8 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useTranslations } from "next-intl";
-import { API, ROUTES } from "@/constants";
+import { useLocale, useTranslations } from "next-intl";
+import { API, ROUTES, type Locale } from "@/constants";
 import {
   AnalyzeJobUrlSchema,
   AnalyzeJobTextSchema,
@@ -24,6 +24,7 @@ type Mode = "url" | "text";
 
 export function AnalyzeJob() {
   const t = useTranslations("jobs");
+  const locale = useLocale() as Locale;
   const user = useCurrentUserStore((s) => s.user);
   const [mode, setMode] = useState<Mode>("url");
   const [activeId, setActiveId] = useState<string | null>(null);
@@ -47,7 +48,7 @@ export function AnalyzeJob() {
     const res = await fetch(API.ANALYZE_JOB, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(values),
+      body: JSON.stringify({ ...values, locale }),
     });
     if (!res.ok) {
       setSubmitError(res.status === 429 ? t("rateLimited") : t("submitError"));

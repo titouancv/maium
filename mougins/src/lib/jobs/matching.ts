@@ -3,7 +3,9 @@ import {
   MatchingExplanationSchema,
   type MatchingExplanation,
 } from "@/lib/validators/job";
+import { LANGUAGE_NAMES, type Locale } from "@/constants";
 import type { CandidateProfile, JobData } from "@/types/job";
+import { candidateWithoutHobbies } from "./profile";
 
 const WEIGHTS = {
   hardSkills: 0.4,
@@ -39,9 +41,12 @@ export async function getMatchingExplanation(params: {
   job: JobData;
   profile: CandidateProfile;
   semanticSimilarity: number;
+  locale: Locale;
 }): Promise<
   { breakdown: ScoreBreakdown } & Omit<MatchingExplanation, "scores">
 > {
+  const language = LANGUAGE_NAMES[params.locale];
+
   const system = [
     "You are an expert recruitment and career-fit analyst specialized in evaluating real-world fit between a candidate and a company/job offer (not ATS scoring).",
 
@@ -100,6 +105,12 @@ export async function getMatchingExplanation(params: {
     "- Do not refer to 'the candidate'.",
     "- Be factual, specific, and grounded in job reality.",
 
+    "Language:",
+    `- Write every text you output in ${language}: each prep_point title and detail, every recruiter question, and the summary.`,
+    `- Write in ${language} even when the job posting and the candidate profile are in another language.`,
+    "- The ONLY exception is resource_query, which always stays in English.",
+    "- Never translate proper nouns: company, product, tool and technology names stay as they are.",
+
     "### prep_points",
     "First reason internally about the gaps between the profile and the job, then emit ONLY the actions. Never emit a bare observation.",
     "Return 4 to 7 prep_points, each an item the candidate should work on before the interview.",
@@ -137,7 +148,7 @@ export async function getMatchingExplanation(params: {
       skills: params.job.skills,
       description: params.job.description?.slice(0, 4000),
     },
-    candidate: params.profile,
+    candidate: candidateWithoutHobbies(params.profile),
   });
 
   const result = await chatJSON({

@@ -1,4 +1,5 @@
-import type { ANALYSIS_SNOOZE_DAYS, Gender } from "@/constants";
+import type { ANALYSIS_SNOOZE_DAYS, Gender, Locale } from "@/constants";
+import type { Hobby } from "./user";
 
 export const ANALYSIS_STATUSES = [
   "queued",
@@ -115,6 +116,7 @@ export interface OptimizedResume {
   analysis_id: string | null;
   version: number;
   resume_json: ResumeJson;
+  language: Locale;
   ats_score: number | null;
   is_active: boolean;
   created_at: string;
@@ -147,6 +149,7 @@ export interface ResumeJson {
     description: string;
   }>;
   skills: string[];
+  hobbies: Hobby[];
 }
 
 export interface CandidateProfile {
@@ -169,4 +172,5 @@ export interface CandidateProfile {
   }>;
   skills: string[];
   projects: string[];
+  hobbies: Hobby[];
 }

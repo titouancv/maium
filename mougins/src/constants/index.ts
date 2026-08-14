@@ -1,6 +1,17 @@
+import { routing } from "@/i18n/routing";
+
 export * from "./ui";
 
 export const APP_NAME = "maium";
+
+export const LOCALES = routing.locales;
+
+export type Locale = (typeof LOCALES)[number];
+
+export const LANGUAGE_NAMES: Record<Locale, string> = {
+  en: "English",
+  fr: "French",
+};
 
 export const ROUTES = {
   HOME: "/",
@@ -48,6 +59,7 @@ export const API = {
   RESUME: (id: string) => `/api/resume/${id}`,
   RESUME_PDF: (id: string) => `/api/resume/${id}/pdf`,
   RESUME_PROFILE_PDF: "/api/resume/profile/pdf",
+  RESUME_TRANSLATE: "/api/resume/translate",
 } as const;
 
 export const EXTERNAL_API = {

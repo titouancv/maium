@@ -1,6 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import { requireApiUser } from "@/lib/auth";
-import { getAnalysisJobById, updateAnalysisTracking } from "@/lib/jobs/server";
+import {
+  deleteAnalysis,
+  getAnalysisJobById,
+  updateAnalysisTracking,
+} from "@/lib/jobs/server";
 import { UpdateAnalysisTrackingSchema } from "@/lib/validators/job";
 
 export async function GET(
@@ -39,11 +43,6 @@ export async function PATCH(
   })();
   const parsed = UpdateAnalysisTrackingSchema.safeParse(body);
   if (!parsed.success) {
-    const { appendFile } = await import("node:fs/promises");
-    await appendFile(
-      "/private/tmp/claude-501/-Users-titouan-Documents-Projects-maium/c39514cb-1f3a-46af-b26c-e07433f8372e/scratchpad/patch-400.log",
-      `raw=${raw}\nissues=${JSON.stringify(parsed.error.issues)}\n\n`,
-    ).catch(() => {});
     console.error(
       "[PATCH /api/analysis/:id] rejected body",
       raw,
@@ -60,6 +59,30 @@ export async function PATCH(
     }
   } catch (error) {
     console.error("[PATCH /api/analysis/:id]", error);
+    return NextResponse.json(
+      { error: "Internal server error" },
+      { status: 500 },
+    );
+  }
+
+  return NextResponse.json({ ok: true });
+}
+
+export async function DELETE(
+  _req: NextRequest,
+  { params }: { params: Promise<{ id: string }> },
+) {
+  const auth = await requireApiUser();
+  if (auth instanceof NextResponse) return auth;
+
+  const { id } = await params;
+  try {
+    const deleted = await deleteAnalysis(id);
+    if (!deleted) {
+      return NextResponse.json({ error: "Not found" }, { status: 404 });
+    }
+  } catch (error) {
+    console.error("[DELETE /api/analysis/:id]", error);
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500 },

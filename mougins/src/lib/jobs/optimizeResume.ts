@@ -1,7 +1,11 @@
 import { createAdminClient } from "@/lib/supabase/admin";
 import { chatJSON } from "@/lib/mistral";
 import { OptimizedResumeSchema } from "@/lib/validators/job";
+import { LANGUAGE_NAMES, type Locale } from "@/constants";
 import type { CandidateProfile, JobData, ResumeJson } from "@/types/job";
+import { candidateWithoutHobbies } from "./profile";
+
+const STORED_RESUME_LANGUAGE: Locale = "en";
 
 type OptimizedEntry = {
   source_index: number;
@@ -60,7 +64,7 @@ export async function optimizeResume(params: {
   const system = [
     "You are an ATS resume optimizer.",
     "Rewrite the candidate's resume to target the given job.",
-    "Always write the entire output in English, even if the candidate data is in another language: translate every field (summary, experiences, education, skills) into English.",
+    `Always write the entire output in ${LANGUAGE_NAMES[STORED_RESUME_LANGUAGE]}, even if the candidate data is in another language: translate every field (summary, experiences, education, skills) into ${LANGUAGE_NAMES[STORED_RESUME_LANGUAGE]}.`,
     "ABSOLUTE RULES: never invent, never add, never modify facts.",
     "You may ONLY rephrase, reorganize, optimize for ATS keywords, and highlight existing skills/experience.",
     "Every skill, experience and education entry in your output MUST come from the candidate data.",
@@ -79,7 +83,7 @@ export async function optimizeResume(params: {
       seniority: params.job.seniority,
     },
     candidate: {
-      ...params.profile,
+      ...candidateWithoutHobbies(params.profile),
       experiences: params.profile.experiences.map((e, index) => ({
         index,
         organization: e.organization,
@@ -119,6 +123,7 @@ export async function optimizeResume(params: {
     experiences,
     education,
     skills: output.skills,
+    hobbies: params.profile.hobbies,
   };
 
   const { data: resume, error } = await admin
@@ -129,6 +134,7 @@ export async function optimizeResume(params: {
       analysis_id: params.analysisId,
       version: 1,
       resume_json: resumeJson,
+      language: STORED_RESUME_LANGUAGE,
       ats_score: output.ats_score,
       is_active: true,
     })
