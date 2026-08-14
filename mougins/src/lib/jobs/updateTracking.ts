@@ -16,3 +16,14 @@ export async function updateAnalysisTrackingRequest(
     return false;
   }
 }
+
+export async function deleteAnalysisRequest(
+  analysisId: string,
+): Promise<boolean> {
+  try {
+    const res = await fetch(API.ANALYSIS(analysisId), { method: "DELETE" });
+    return res.ok;
+  } catch {
+    return false;
+  }
+}

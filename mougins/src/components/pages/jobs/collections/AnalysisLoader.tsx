@@ -6,6 +6,7 @@ import type { AnalysisListItem } from "@/types/job";
 import { AnalysisView } from "./AnalysisView";
 import { ApplicationStatusSelector } from "./ApplicationStatusSelector";
 import { ApplicationTracker } from "./ApplicationTracker";
+import { DeleteAnalysisButton } from "./DeleteAnalysisButton";
 
 interface AnalysisLoaderProps {
   analysisPromise: Promise<AnalysisListItem | null>;
@@ -26,7 +27,12 @@ export function AnalysisLoader({
         analysis={analysis}
         contacts={contacts}
         statusBar={<ApplicationStatusSelector analysis={analysis} />}
-        tracking={<ApplicationTracker analysis={analysis} />}
+        tracking={
+          <>
+            <ApplicationTracker analysis={analysis} />
+            <DeleteAnalysisButton analysisId={analysis.id} />
+          </>
+        }
       />
     </div>
   );

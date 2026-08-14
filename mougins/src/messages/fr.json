@@ -124,6 +124,14 @@
         "snoozeHint": "On vous prévient le {date} si cette candidature est toujours à son statut actuel.",
         "snoozeOverdueHint": "Cette candidature a déjà dépassé ce délai — la relance vous attend dans vos notifications.",
         "snoozeSettled": "Cette candidature est close — pas besoin de relance."
+      },
+      "delete": {
+        "title": "Supprimer cette analyse",
+        "hint": "La supprimer efface aussi le suivi, les notes et le CV optimisé qui lui sont rattachés.",
+        "button": "Supprimer l'analyse",
+        "confirmHint": "Cette action est irréversible.",
+        "confirmButton": "Supprimer définitivement",
+        "error": "Impossible de supprimer cette analyse. Réessayez."
       }
     },
     "status": {

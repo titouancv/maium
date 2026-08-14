@@ -124,6 +124,14 @@
         "snoozeHint": "We'll notify you on {date} if this application is still at its current status.",
         "snoozeOverdueHint": "This application has already passed that delay — the reminder is waiting in your notifications.",
         "snoozeSettled": "This application is closed — no reminder needed."
+      },
+      "delete": {
+        "title": "Delete this analysis",
+        "hint": "Removing it also removes the tracking, the notes and the optimized resume attached to it.",
+        "button": "Delete the analysis",
+        "confirmHint": "This cannot be undone.",
+        "confirmButton": "Delete permanently",
+        "error": "Could not delete this analysis. Try again."
       }
     },
     "status": {
