@@ -634,7 +634,7 @@ never invented twice. Import from `@/components/ui`.
 | `ExpandableText` | Long copy clamped to N lines with a see more / see less toggle. |
 | `Title` · `Section` · `Markdown` | Headings and long-form content. |
 | `Button` · `Chip` · `ChipList` · `Tabs` · `TabsVertical` · `MenuList` · `SlideToEnter` | Actions and choices. |
-| `Selector` | One value at a time out of an **ordered** list: chevrons step through it, the neighbours peek in at the edges under a fade. Each value carries its own colour along the secondary → primary scale (`scaleColor` in [constants/ui.ts](src/constants/ui.ts)); pass an explicit `color` per value to reuse a canonical scale such as `APPLICATION_STATUS_COLORS`. Use `Tabs` instead when every option must be visible at once. |
+| `Selector` | One value at a time out of an **ordered** list: chevrons step through it, the neighbours peek in at the edges under a fade. Values are `primary` by default; per-value colour is opt-in through an explicit `color` and is reserved for application status (`APPLICATION_STATUS_COLORS` in [constants/ui.ts](src/constants/ui.ts), one semantic token per status). Use `Tabs` instead when every option must be visible at once. |
 | `TextInput` · `TextArea` · `DateInput` · `PhoneInput` · `SearchInput` · `LocationInput` | Fields (see `form/` for whole steps). |
 | `Skeleton` · `ProgressBar` · `NumberRoller` | Loading and numbers. |
 | `UserCard` · `ProfilePhoto` · `ProfilePhotoPicker` | People. |

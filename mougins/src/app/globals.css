@@ -44,6 +44,14 @@
   --error-600: #b02030;
   --error-800: #7d1220;
   --error-900: #470810;
+
+  --success-50: #ecf7f0;
+  --success-100: #b3e0c6;
+  --success-200: #6fc494;
+  --success-400: #1f8a52;
+  --success-600: #166b3f;
+  --success-800: #0d4728;
+  --success-900: #062916;
 }
 
 :root {
@@ -260,6 +268,17 @@
   --color-error-600: var(--error-600);
   --color-error-800: var(--error-800);
   --color-error-900: var(--error-900);
+
+  --color-success: var(--success-400);
+  --color-on-success: var(--success-50);
+
+  --color-success-50: var(--success-50);
+  --color-success-100: var(--success-100);
+  --color-success-200: var(--success-200);
+  --color-success-400: var(--success-400);
+  --color-success-600: var(--success-600);
+  --color-success-800: var(--success-800);
+  --color-success-900: var(--success-900);
 }
 
 @utility bg-main-gradient {
