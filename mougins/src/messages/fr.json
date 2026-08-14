@@ -574,6 +574,11 @@
       "title": "Créez votre compte pour garder tout ça",
       "description": "Un clic avec Google. Votre CV est déjà importé, donc votre profil se remplit tout seul.",
       "expiresOn": "Sans compte, cette analyse et ses documents seront supprimés le {date}.",
+      "cta": {
+        "keep": "Garder cette analyse",
+        "contacts": "Voir ces personnes",
+        "tracking": "Suivre cette candidature"
+      },
       "benefits": {
         "unlimited": "Analysez autant d'offres que vous voulez",
         "history": "Chaque analyse conservée, avec son CV optimisé et sa lettre de motivation",

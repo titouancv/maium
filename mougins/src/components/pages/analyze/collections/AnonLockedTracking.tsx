@@ -2,7 +2,7 @@
 
 import { useTranslations } from "next-intl";
 import { Section, Text } from "@/components/ui";
-import { AnonAccountBenefits } from "./AnonAccountBenefits";
+import { AnonAccountCta } from "./AnonAccountCta";
 
 interface AnonLockedTrackingProps {
   analysisId: string;
@@ -18,9 +18,8 @@ export function AnonLockedTracking({ analysisId }: AnonLockedTrackingProps) {
         {tAccount("lockedTracking.description")}
       </Text>
 
-      <AnonAccountBenefits
-        title={tAccount("title")}
-        description={tAccount("description")}
+      <AnonAccountCta
+        label={tAccount("cta.tracking")}
         source="locked_tracking"
         analysisId={analysisId}
       />

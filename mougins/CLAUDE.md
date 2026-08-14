@@ -103,6 +103,13 @@ best feature isn't hidden behind signup. The seams:
   a broken control, not a teaser. Every pitch on those screens routes through the
   single [AnonAccountBenefits](src/components/pages/analyze/collections/AnonAccountBenefits.tsx),
   so the benefit list exists in exactly one place.
+- **The pitch answers an intent; it is never on screen unprompted.** A locked
+  surface shows only its one-line teaser and a single action button
+  ([AnonAccountCta](src/components/pages/analyze/collections/AnonAccountCta.tsx)),
+  which opens the benefit list in an `Overlay` — otherwise the same eight-line
+  argument sat under the result, under Contacts and under Tracking at once (all
+  three render together on mobile). The quota gate is the one place it stays
+  inline: reaching it *is* the blocked action.
 - The Contacts teaser shows a **real** count, never a fabricated one:
   `count_company_contacts` mirrors `get_company_contacts` but returns only an
   integer, so nothing personal reaches a signed-out visitor. It is reached

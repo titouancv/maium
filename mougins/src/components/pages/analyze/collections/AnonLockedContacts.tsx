@@ -5,7 +5,7 @@ import { useTranslations } from "next-intl";
 import { API } from "@/constants";
 import { Section, Text } from "@/components/ui";
 import type { AnalysisListItem } from "@/types/job";
-import { AnonAccountBenefits } from "./AnonAccountBenefits";
+import { AnonAccountCta } from "./AnonAccountCta";
 
 interface AnonLockedContactsProps {
   analysis: AnalysisListItem;
@@ -51,9 +51,8 @@ export function AnonLockedContacts({ analysis }: AnonLockedContactsProps) {
         <Text tone="primary">{tAccount("lockedContacts.count", peers)}</Text>
       )}
 
-      <AnonAccountBenefits
-        title={tAccount("title")}
-        description={tAccount("description")}
+      <AnonAccountCta
+        label={tAccount("cta.contacts")}
         source="locked_contacts"
         analysisId={analysis.id}
       />

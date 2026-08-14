@@ -21,7 +21,6 @@ import { AnalyzeJobStep } from "./collections/AnalyzeJobStep";
 import { AnonQuotaGate } from "./collections/AnonQuotaGate";
 import { AnonLockedContacts } from "./collections/AnonLockedContacts";
 import { AnonLockedTracking } from "./collections/AnonLockedTracking";
-import { AnonResultCta } from "./collections/AnonResultCta";
 import {
   AnalysisHeading,
   analysisHeadingLabel,
@@ -151,7 +150,6 @@ export function AnalyzeContent({ initialFreeRunSpent }: AnalyzeContentProps) {
             contacts={<AnonLockedContacts analysis={analysis} />}
             tracking={<AnonLockedTracking analysisId={analysis.id} />}
           />
-          <AnonResultCta analysis={analysis} />
         </div>
       </PageLayout>
     );

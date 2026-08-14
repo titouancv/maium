@@ -19,7 +19,7 @@ const BENEFIT_KEYS = [
 ] as const;
 
 interface AnonAccountBenefitsProps {
-  title: string;
+  title?: string;
   description: string;
   source: SigninSource;
   analysisId?: string;
@@ -36,7 +36,7 @@ export function AnonAccountBenefits({
   return (
     <div className="flex w-full flex-col gap-6">
       <div className="flex flex-col gap-2">
-        <Title label={title} size="h3" />
+        {title && <Title label={title} size="h3" />}
         <Text tone="muted" size="sm">
           {description}
         </Text>
