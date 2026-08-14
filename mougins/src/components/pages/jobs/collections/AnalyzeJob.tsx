@@ -1,10 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useLocale, useTranslations } from "next-intl";
 import { API, ROUTES, type Locale } from "@/constants";
+import { clearPendingJob, readPendingJob } from "@/lib/analyze/anonStorage";
 import {
   AnalyzeJobUrlSchema,
   AnalyzeJobTextSchema,
@@ -18,7 +19,7 @@ import { AnalysisProgress } from "./AnalysisProgress";
 import { Link } from "@/i18n/navigation";
 import { useCurrentUserStore } from "@/stores/useCurrentUserStore";
 import { hasEnoughProfileForAnalysis } from "@/lib/home";
-import { Section } from "@/components/ui";
+import { Section, Text } from "@/components/ui";
 
 type Mode = "url" | "text";
 
@@ -43,22 +44,53 @@ export function AnalyzeJob() {
   const isSubmitting =
     urlForm.formState.isSubmitting || textForm.formState.isSubmitting;
 
-  async function submit(values: AnalyzeJobInput) {
-    setSubmitError(null);
-    const res = await fetch(API.ANALYZE_JOB, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ ...values, locale }),
-    });
-    if (!res.ok) {
-      setSubmitError(res.status === 429 ? t("rateLimited") : t("submitError"));
-      return;
+  const prefilledRef = useRef(false);
+  const autoSubmittedRef = useRef(false);
+  const [restoredPendingJob, setRestoredPendingJob] = useState(false);
+
+  const submit = useCallback(
+    async (values: AnalyzeJobInput) => {
+      setSubmitError(null);
+      const res = await fetch(API.ANALYZE_JOB, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ...values, locale }),
+      });
+      if (!res.ok) {
+        setSubmitError(res.status === 429 ? t("rateLimited") : t("submitError"));
+        return;
+      }
+      clearPendingJob();
+      const data = (await res.json()) as { analysisId: string };
+      setActiveId(data.analysisId);
+      urlForm.reset();
+      textForm.reset();
+    },
+    [locale, t, urlForm, textForm],
+  );
+
+  useEffect(() => {
+    const pending = readPendingJob();
+    if (!pending) return;
+
+    if (!prefilledRef.current) {
+      prefilledRef.current = true;
+      setMode(pending.mode);
+      if (pending.mode === "url") {
+        urlForm.reset(pending);
+      } else {
+        textForm.reset(pending);
+      }
+      setRestoredPendingJob(true);
     }
-    const data = (await res.json()) as { analysisId: string };
-    setActiveId(data.analysisId);
-    urlForm.reset();
-    textForm.reset();
-  }
+
+    if (autoSubmittedRef.current) return;
+    if (!user || !hasEnoughProfileForAnalysis(user)) return;
+
+    autoSubmittedRef.current = true;
+    clearPendingJob();
+    queueMicrotask(() => submit(pending));
+  }, [user, urlForm, textForm, submit]);
 
   const urlErrors = urlForm.formState.errors;
   const textErrors = textForm.formState.errors;
@@ -105,6 +137,11 @@ export function AnalyzeJob() {
         className="flex flex-1 flex-col justify-between gap-4"
       >
         <div className="flex flex-col justify-between gap-4">
+          {restoredPendingJob && (
+            <Text tone="primary" size="sm">
+              {t("pendingJobRestored")}
+            </Text>
+          )}
           {mode === "url" ? (
             <TextInput
               placeholder={t("urlPlaceholder")}

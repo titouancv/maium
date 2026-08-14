@@ -224,6 +224,16 @@ describe("claimAnonSession", () => {
     mockAdmin.mockImplementation(() => {
       throw new Error("database is down");
     });
-    await expect(claimAnonSession(USER_ID)).resolves.toBeUndefined();
+    await expect(claimAnonSession(USER_ID)).resolves.toBe(false);
+  });
+
+  it("reports the claim so the caller can redirect to the analysis", async () => {
+    mockDb(CV_EXTRACTION);
+    await expect(claimAnonSession(USER_ID)).resolves.toBe(true);
+  });
+
+  it("reports no claim when the visitor has no anon session", async () => {
+    cookieJar.delete(ANON_SESSION_COOKIE);
+    await expect(claimAnonSession(USER_ID)).resolves.toBe(false);
   });
 });

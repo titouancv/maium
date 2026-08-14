@@ -4,7 +4,9 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useLocale, useTranslations } from "next-intl";
-import { API, type Locale } from "@/constants";
+import { ANALYTICS_EVENTS, API, type Locale } from "@/constants";
+import { trackEvent } from "@/lib/analytics";
+import { writePendingJob } from "@/lib/analyze/anonStorage";
 import {
   AnalyzeJobUrlSchema,
   AnalyzeJobTextSchema,
@@ -61,6 +63,8 @@ export function AnalyzeJobStep({
     });
 
     if (res.status === 402) {
+      writePendingJob(values);
+      trackEvent(ANALYTICS_EVENTS.ANON_QUOTA_BLOCKED, { mode: values.mode });
       onQuotaExhausted();
       return;
     }
@@ -72,6 +76,7 @@ export function AnalyzeJobStep({
     }
 
     const data = (await res.json()) as { analysisId: string };
+    trackEvent(ANALYTICS_EVENTS.ANON_ANALYSIS_SUBMITTED, { mode: values.mode });
     setActiveId(data.analysisId);
   }
 

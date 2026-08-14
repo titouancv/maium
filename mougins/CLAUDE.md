@@ -95,13 +95,48 @@ best feature isn't hidden behind signup. The seams:
   [lib/jobs/usage.ts](src/lib/jobs/usage.ts). Refusals are **402**, distinct
   from the signed-in **429**, so the UI says "create an account" rather than
   "try again later".
+- **The result screen is the conversion surface, so it shows the whole product.**
+  `AnalyzeContent` passes locked stand-ins into `AnalysisView`'s existing
+  `contacts` / `tracking` slots, so a visitor sees all four tabs and learns what
+  an account adds — `AnalysisView` itself knows nothing about anonymity. The
+  `statusBar` slot stays empty on purpose: a status selector that cannot write is
+  a broken control, not a teaser. Every pitch on those screens routes through the
+  single [AnonAccountBenefits](src/components/pages/analyze/collections/AnonAccountBenefits.tsx),
+  so the benefit list exists in exactly one place.
+- The Contacts teaser shows a **real** count, never a fabricated one:
+  `count_company_contacts` mirrors `get_company_contacts` but returns only an
+  integer, so nothing personal reaches a signed-out visitor. It is reached
+  through `/api/analysis/:id/contacts-count`, which runs `getAnalysisById` first
+  — owning the analysis is what licenses the probe, otherwise the route would let
+  anyone count members at an arbitrary company.
+- **The result must outlive a refresh**, or the visitor loses their work and hits
+  the quota gate instead. `AnalyzeContent` stores the analysis id in
+  `localStorage` and re-fetches it on mount (stage `restoring`); a 404 — expired,
+  purged, cookie lost — clears the key and falls through to the gate. Those keys
+  are read and validated in one place,
+  [lib/analyze/anonStorage.ts](src/lib/analyze/anonStorage.ts), which swallows a
+  corrupt or unavailable `localStorage` rather than breaking the page. They are a
+  **render-fast cache only**: the cookie + DB checks remain the authority, so
+  clearing them grants nothing.
+- The offer typed into a **second** analysis is kept too (`maium.anonPendingJob`)
+  and replayed by the signed-in `AnalyzeJob` form after signup — auto-submitted
+  when the profile-completion gate passes, merely pre-filled when it doesn't. The
+  key is cleared *before* submitting so a refresh can never re-run the pipeline.
 - On sign-in, [claimAnonSession](src/lib/auth/claimAnonSession.ts) reassigns the
   visitor's rows to the account and copies their CV into the profile's **gaps**.
   The same OAuth callback serves a returning user, so the import is skipped
   entirely once `onboarding_completed` is true and otherwise only fills empty
   fields — `writeProfile` replaces collections wholesale, so an unguarded claim
   would wipe an existing profile. Best-effort — it must never cost the user
-  their sign-in.
+  their sign-in — but it **returns whether it claimed**, because the callback
+  redirects to the reclaimed analysis and a silent failure would send the user to
+  a page they no longer own.
+- `/auth/callback` honours `?next=` only when the claim succeeded **and**
+  [safeInternalPath](src/lib/auth/safeInternalPath.ts) accepts it; anything that
+  could leave the origin (`//host`, an absolute URL, a backslash) falls back to
+  the onboarding redirect. `GoogleSignInButton` sends `next` only where it means
+  something — the anonymous conversion CTAs — so the home and signup buttons keep
+  the plain onboarding flow.
 
 ### The analysis page
 
@@ -258,6 +293,7 @@ OAuth flow: Google → Supabase → `/auth/callback` → `exchangeCodeForSession
 | `GET` | `/api/analysis/:id` | Analysis job status (owner-scoped) |
 | `PATCH` | `/api/analysis/:id` | Update application tracking (status, dates, notes) |
 | `GET` | `/api/analysis/:id/result` | Get a finished analysis (owner-scoped) |
+| `GET` | `/api/analysis/:id/contacts-count` | How many members worked at the job's company (owner-scoped, count only) |
 | `GET` | `/api/history` | List the user's past job analyses |
 | `GET/DELETE` | `/api/resume/:id` | Get / delete an optimized resume |
 | `POST` | `/api/resume/translate` | Translate a resume draft into a locale (auth required) |

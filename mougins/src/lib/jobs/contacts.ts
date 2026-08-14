@@ -1,4 +1,5 @@
 import { createClient } from "@/lib/supabase/server";
+import { createAdminClient } from "@/lib/supabase/admin";
 import { COMPANY_CONTACTS_LIMIT } from "@/constants";
 import type { CompanyContact } from "@/types/job";
 
@@ -14,4 +15,17 @@ export async function getCompanyContacts(
   });
 
   return (data as CompanyContact[]) ?? [];
+}
+
+export async function getCompanyContactsCount(
+  company: string | null | undefined,
+): Promise<number> {
+  if (!company?.trim()) return 0;
+
+  const admin = createAdminClient();
+  const { data } = await admin.rpc("count_company_contacts", {
+    p_company: company,
+  });
+
+  return typeof data === "number" ? data : 0;
 }
