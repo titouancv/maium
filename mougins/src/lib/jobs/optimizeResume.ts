@@ -2,6 +2,7 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import { chatJSON } from "@/lib/mistral";
 import { OptimizedResumeSchema } from "@/lib/validators/job";
 import type { CandidateProfile, JobData, ResumeJson } from "@/types/job";
+import { candidateWithoutHobbies } from "./profile";
 
 type OptimizedEntry = {
   source_index: number;
@@ -79,7 +80,7 @@ export async function optimizeResume(params: {
       seniority: params.job.seniority,
     },
     candidate: {
-      ...params.profile,
+      ...candidateWithoutHobbies(params.profile),
       experiences: params.profile.experiences.map((e, index) => ({
         index,
         organization: e.organization,
@@ -119,6 +120,7 @@ export async function optimizeResume(params: {
     experiences,
     education,
     skills: output.skills,
+    hobbies: params.profile.hobbies,
   };
 
   const { data: resume, error } = await admin

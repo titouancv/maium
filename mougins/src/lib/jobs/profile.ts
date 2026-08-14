@@ -39,6 +39,7 @@ export async function getCandidateProfile(
     })),
     skills: user.skills ?? [],
     projects: user.projects ?? [],
+    hobbies: user.hobbies ?? [],
   };
 }
 
@@ -60,6 +61,19 @@ export function cvExtractionToCandidateProfile(
     education: (extraction.educationalExperiences ?? []).map(toEntry),
     skills: extraction.skills ?? [],
     projects: extraction.projects ?? [],
+    hobbies: extraction.hobbies ?? [],
+  };
+}
+
+export function candidateWithoutHobbies(
+  profile: CandidateProfile,
+): Omit<CandidateProfile, "hobbies"> {
+  return {
+    bio: profile.bio,
+    experiences: profile.experiences,
+    education: profile.education,
+    skills: profile.skills,
+    projects: profile.projects,
   };
 }
 

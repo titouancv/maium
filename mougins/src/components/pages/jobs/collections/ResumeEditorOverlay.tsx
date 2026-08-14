@@ -25,8 +25,8 @@ interface Props {
   onClose: () => void;
 }
 
-const TOTAL_STEPS = 5;
-const TEMPLATE_STEP = 4;
+const TOTAL_STEPS = 6;
+const TEMPLATE_STEP = 5;
 
 type Phase = "idle" | "generating" | "error";
 
@@ -184,6 +184,15 @@ export function ResumeEditorOverlay({
           onChange: (items) =>
             setDraft((d) => (d ? { ...d, skills: items } : d)),
         };
+      case 4:
+        return {
+          ...base,
+          type: "hobbies",
+          title: t("detail.editHobbies"),
+          defaultValue: draft.hobbies ?? [],
+          onChange: (items) =>
+            setDraft((d) => (d ? { ...d, hobbies: items } : d)),
+        };
       default:
         return base as FormProps;
     }
@@ -204,7 +213,7 @@ export function ResumeEditorOverlay({
         step={TOTAL_STEPS}
         totalSteps={TOTAL_STEPS}
         secondaryLabel={tCommon("backButton")}
-        onSecondary={() => setStep(3)}
+        onSecondary={() => setStep(TEMPLATE_STEP - 1)}
         primaryLabel={t("detail.generateButton")}
         primaryLoading={phase === "generating"}
         onPrimary={generate}

@@ -11,6 +11,10 @@ const SAMPLE: ResumePdfData = {
     { name: "LinkedIn", handle: "jane-doe", url: "https://linkedin.com/in/jane-doe" },
     { name: "GitHub", handle: "janedoe", url: "https://github.com/janedoe" },
   ],
+  hobbies: [
+    { title: "Trail running", description: "Semi-marathon en 1h32." },
+    { title: "Piano", description: "" },
+  ],
   pseudo: "jane",
   profileUrl: "https://maium.app/profile/jane",
   profileQrCode:

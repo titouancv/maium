@@ -49,11 +49,17 @@ const ResumeEntrySchema = z.object({
   description: z.string().default(""),
 });
 
+const ResumeHobbySchema = z.object({
+  title: z.string().default(""),
+  description: z.string().default(""),
+});
+
 export const ResumeJsonInputSchema = z.object({
   summary: z.string().default(""),
   experiences: z.array(ResumeEntrySchema).default([]),
   education: z.array(ResumeEntrySchema).default([]),
   skills: z.array(z.string()).default([]),
+  hobbies: z.array(ResumeHobbySchema).default([]),
 });
 
 function toPlainString(value: unknown): string {

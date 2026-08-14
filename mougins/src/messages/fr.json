@@ -70,6 +70,7 @@
       "editEducation": "Formation",
       "editSkills": "Compétences",
       "skillPlaceholder": "Ajouter une compétence",
+      "editHobbies": "Loisirs",
       "chooseTemplateTitle": "Choisis un format",
       "chooseTemplateDescription": "Choisis le format le plus adapté au poste, puis génère ton PDF.",
       "generateButton": "Générer mon CV",

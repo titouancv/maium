@@ -27,19 +27,33 @@ const styles = StyleSheet.create({
     backgroundColor: SURFACE_50,
   },
   header: {
-    backgroundColor: PRIMARY,
+    backgroundColor: INK,
     color: ON_PRIMARY,
     paddingVertical: 12,
     paddingHorizontal: 12,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    borderBottomWidth: 4,
+    borderBottomColor: PRIMARY,
   },
+  headerText: { flex: 1, paddingRight: 12 },
   name: { fontSize: 22, fontWeight: 800 },
   nameBar: {
     height: 3,
     width: 42,
     borderRadius: 2,
-    marginTop: 12,
+    marginTop: 8,
     backgroundColor: ON_PRIMARY,
   },
+  headerSubtitle: { fontSize: 9, color: ON_PRIMARY, marginTop: 8 },
+  headerPseudo: { fontWeight: 800, color: ON_PRIMARY, textDecoration: "none" },
+  headerQrCard: {
+    backgroundColor: "#ffffff",
+    borderRadius: 3,
+    padding: 4,
+  },
+  headerQr: { width: 56, height: 56 },
   body: {
     flexDirection: "row",
     flex: 1,
@@ -63,20 +77,20 @@ const styles = StyleSheet.create({
     marginTop: 3,
     backgroundColor: INK,
   },
-  contactItem: { fontSize: 9, marginBottom: 3, color: MUTED },
+  contactItem: { fontSize: 9, marginBottom: 3, color: INK },
   socialItem: { fontSize: 9, marginBottom: 3 },
   socialName: { color: INK },
   socialLink: { color: PRIMARY, textDecoration: "none" },
   skillItem: { marginBottom: 3, fontSize: 8, color: INK },
-  maiumText: { fontSize: 9, color: INK, marginBottom: 1 },
-  maiumLink: { fontSize: 9, color: PRIMARY, textDecoration: "none" },
-  maiumQr: { width: 64, height: 64, marginTop: 6 },
+  hobbyItem: { marginBottom: 5 },
+  hobbyTitle: { fontSize: 9, color: INK },
+  hobbyDescription: { fontSize: 8, color: MUTED, lineHeight: 1.3 },
   expBlock: { marginBottom: 12 },
   expHeader: { flexDirection: "row" },
   expBar: {
     width: 3,
     borderRadius: 2,
-    backgroundColor: INK,
+    backgroundColor: MUTED,
     marginVertical: 2,
     marginRight: 10,
   },
@@ -109,10 +123,24 @@ export function ModernTemplate(data: ResumePdfData) {
     <Document title={`CV ${data.fullName}`}>
       <Page size="A4" style={styles.page}>
         <View style={styles.header}>
-          <View style={styles.sectionTitleWrap}>
+          <View style={styles.headerText}>
             <Text style={styles.name}>{data.fullName}</Text>
             <View style={styles.nameBar} />
+            {data.profileUrl ? (
+              <Text style={styles.headerSubtitle}>
+                {"Find this profile on maium  •  "}
+                <Link src={data.profileUrl} style={styles.headerPseudo}>
+                  @{data.pseudo}
+                </Link>
+              </Text>
+            ) : null}
           </View>
+          {data.profileUrl && data.profileQrCode ? (
+            <View style={styles.headerQrCard}>
+              {/* eslint-disable-next-line jsx-a11y/alt-text -- react-pdf Image has no alt prop */}
+              <Image src={data.profileQrCode} style={styles.headerQr} />
+            </View>
+          ) : null}
         </View>
 
         <View style={styles.body}>
@@ -151,19 +179,19 @@ export function ModernTemplate(data: ResumePdfData) {
               </>
             ) : null}
 
-            {data.profileUrl ? (
+            {data.hobbies.length > 0 ? (
               <>
-                <SectionTitle label="maium" />
-                <Text style={styles.maiumText}>
-                  Find the full profile on maium
-                </Text>
-                <Link src={data.profileUrl} style={styles.maiumLink}>
-                  @{data.pseudo}
-                </Link>
-                {data.profileQrCode ? (
-                  // eslint-disable-next-line jsx-a11y/alt-text -- react-pdf Image has no alt prop
-                  <Image src={data.profileQrCode} style={styles.maiumQr} />
-                ) : null}
+                <SectionTitle label="Hobbies" />
+                {data.hobbies.map((h, i) => (
+                  <View key={i} style={styles.hobbyItem} wrap={false}>
+                    <Text style={styles.hobbyTitle}>{h.title}</Text>
+                    {h.description ? (
+                      <Text style={styles.hobbyDescription}>
+                        {h.description}
+                      </Text>
+                    ) : null}
+                  </View>
+                ))}
               </>
             ) : null}
           </View>

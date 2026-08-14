@@ -4,6 +4,7 @@ import {
   type MatchingExplanation,
 } from "@/lib/validators/job";
 import type { CandidateProfile, JobData } from "@/types/job";
+import { candidateWithoutHobbies } from "./profile";
 
 const WEIGHTS = {
   hardSkills: 0.4,
@@ -137,7 +138,7 @@ export async function getMatchingExplanation(params: {
       skills: params.job.skills,
       description: params.job.description?.slice(0, 4000),
     },
-    candidate: params.profile,
+    candidate: candidateWithoutHobbies(params.profile),
   });
 
   const result = await chatJSON({
