@@ -47,7 +47,16 @@ describe("email template", () => {
     expect(html).toContain("#f4f3ee");
     expect(html).toContain("radial-gradient(circle,#e04490 10%,#ff4500 90%)");
     expect(html).toContain("CabinetGrotesk-Extrabold.woff2");
-    expect(html).toContain("prefers-color-scheme:dark");
+  });
+
+  it("always renders in light mode, since Gmail ignores prefers-color-scheme", () => {
+    const html = renderEmailHtml(content);
+
+    expect(html).not.toContain("prefers-color-scheme");
+    expect(html).toContain('<meta name="color-scheme" content="light" />');
+    expect(html).toContain(
+      '<meta name="supported-color-schemes" content="light" />',
+    );
   });
 
   it("renders a plain-text alternative with both urls", () => {

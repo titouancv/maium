@@ -25,9 +25,7 @@ export function escapeHtml(value: string): string {
 }
 
 const SURFACE = "#f4f3ee";
-const SURFACE_DARK = "#020617";
 const TEXT = "#201e1a";
-const TEXT_DARK = "#f4f3ee";
 const TEXT_MUTED = "#818cf8";
 const PRIMARY = "#ff4500";
 const SECONDARY = "#e04490";
@@ -56,11 +54,6 @@ function fontFaces(): string {
 function styleBlock(): string {
   return `${fontFaces()}
 body{margin:0;padding:0;width:100%;}
-@media (prefers-color-scheme:dark){
-.ground{background-color:${SURFACE_DARK}!important;}
-.txt{color:${TEXT_DARK}!important;}
-.accent{background-color:${TEXT_DARK}!important;}
-}
 @media (max-width:600px){
 .shell{padding:40px 20px!important;}
 .heading{font-size:24px!important;}
@@ -68,7 +61,7 @@ body{margin:0;padding:0;width:100%;}
 }
 
 function accentBar(width: number): string {
-  return `<div class="accent" style="height:4px;line-height:4px;font-size:0;width:${width}px;border-radius:9999px;background-color:${TEXT};">&#160;</div>`;
+  return `<div style="height:4px;line-height:4px;font-size:0;width:${width}px;border-radius:9999px;background-color:${TEXT};">&#160;</div>`;
 }
 
 export function renderEmailHtml(content: EmailContent): string {
@@ -88,19 +81,19 @@ export function renderEmailHtml(content: EmailContent): string {
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<meta name="color-scheme" content="light dark" />
-<meta name="supported-color-schemes" content="light dark" />
+<meta name="color-scheme" content="light" />
+<meta name="supported-color-schemes" content="light" />
 <style>${styleBlock()}</style>
 </head>
-<body class="ground" style="margin:0;padding:0;background-color:${SURFACE};">
+<body style="margin:0;padding:0;background-color:${SURFACE};">
 <div style="display:none;max-height:0;overflow:hidden;opacity:0;">${escapeHtml(preview)}</div>
-<div class="ground shell" style="background-color:${SURFACE};padding:56px 24px;font-family:${FONT_STACK};">
+<div class="shell" style="background-color:${SURFACE};padding:56px 24px;font-family:${FONT_STACK};">
   <div style="max-width:520px;margin:0 auto;">
-    <p class="txt" style="margin:0 0 8px;font-size:22px;line-height:1;font-weight:800;letter-spacing:-0.01em;color:${TEXT};">${escapeHtml(APP_NAME)}</p>
+    <p style="margin:0 0 8px;font-size:22px;line-height:1;font-weight:800;letter-spacing:-0.01em;color:${TEXT};">${escapeHtml(APP_NAME)}</p>
     ${accentBar(64)}
-    <h1 class="txt heading" style="margin:56px 0 12px;font-size:28px;line-height:1.2;font-weight:800;letter-spacing:-0.02em;color:${TEXT};">${escapeHtml(heading)}</h1>
+    <h1 class="heading" style="margin:56px 0 12px;font-size:28px;line-height:1.2;font-weight:800;letter-spacing:-0.02em;color:${TEXT};">${escapeHtml(heading)}</h1>
     ${accentBar(88)}
-    <p class="txt" style="margin:24px 0 0;font-size:16px;line-height:1.65;color:${TEXT};">${escapeHtml(body)}</p>
+    <p style="margin:24px 0 0;font-size:16px;line-height:1.65;color:${TEXT};">${escapeHtml(body)}</p>
     <div style="margin:40px 0 0;">
       <a href="${escapeHtml(actionUrl)}" style="display:inline-block;padding:14px 28px;border-radius:16px;background-color:${PRIMARY};background-image:radial-gradient(circle,${SECONDARY} 10%,${PRIMARY} 90%);color:${ON_PRIMARY};font-size:16px;font-weight:500;line-height:1.2;text-decoration:none;box-shadow:0 4px 6px -1px rgba(32,30,26,0.15);">${escapeHtml(actionLabel)}</a>
     </div>
