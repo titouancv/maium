@@ -1,6 +1,7 @@
 import { z } from "zod";
 import {
   GENDERS,
+  LOCALES,
   MIN_SIGNUP_AGE,
   PSEUDO_MAX_LENGTH,
   PSEUDO_MIN_LENGTH,
@@ -60,13 +61,18 @@ export const UpdateUserSchema = z
       .optional(),
     gender: z.enum(GENDERS).optional(),
     onboardingCompleted: z.boolean().optional(),
+    emailNotifications: z.boolean().optional(),
+    locale: z.enum(LOCALES).optional(),
     professionalExperiences: z.array(ExperienceSchema).optional(),
     educationalExperiences: z.array(ExperienceSchema).optional(),
     phone: z.string().nullable().optional(),
     nationality: z.string().nullable().optional(),
     location: z.string().nullable().optional(),
     bio: z.string().nullable().optional(),
-    profilePhoto: z.union([z.url(), z.literal("")]).nullable().optional(),
+    profilePhoto: z
+      .union([z.url(), z.literal("")])
+      .nullable()
+      .optional(),
     socialNetworks: z.array(z.string().url()).optional(),
     hobbies: z.array(HobbySchema).optional(),
     personalExperiences: z.array(ExperienceSchema).optional(),

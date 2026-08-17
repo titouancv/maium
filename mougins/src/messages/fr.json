@@ -48,7 +48,7 @@
         "contacts": "Contacts",
         "tracking": "Suivi"
       },
-      "lowConfidenceWarning": "⚠️ Le score de confiance est de {score}, les résultats peuvent être moins précis.",
+      "lowConfidenceWarning": "Le score de confiance est bas, les résultats peuvent être moins précis.",
       "viewJobPosting": "Voir l'offre d'emploi",
       "aiDisclaimer": "Cette analyse a été générée par IA et peut contenir des erreurs.",
       "template": {
@@ -300,7 +300,16 @@
     "themeLightDescription": "Toujours clair",
     "themeDarkDescription": "Toujours sombre",
     "themeSystemDescription": "Suit votre appareil",
-    "themeDayCycleDescription": "Clair le jour, sombre la nuit"
+    "themeDayCycleDescription": "Clair le jour, sombre la nuit",
+    "notificationsMenuLabel": "Notifications",
+    "emailNotificationsTitle": "Notifications par email",
+    "emailsEnabled": "Activées",
+    "emailsDisabled": "Désactivées",
+    "emailNotificationsEnabledDescription": "Vous recevez un email quand quelqu'un vous suit et quand une candidature attend une relance.",
+    "emailNotificationsDisabledDescription": "Vous ne recevez aucun email de notification. Vos notifications restent visibles dans l'application.",
+    "emailLanguageTitle": "Langue des emails",
+    "emailLanguageDescription": "La langue dans laquelle vos emails de notification sont écrits.",
+    "notificationsSaveError": "Nous n'avons pas pu enregistrer votre préférence. Veuillez réessayer."
   },
   "welcome": {
     "greeting": "Bienvenue, {name} !",
@@ -600,6 +609,34 @@
         "offerKept": "On a gardé l'offre que vous venez de coller — elle part dès que votre compte est créé.",
         "seeAnalysis": "Revoir mon analyse"
       }
+    }
+  },
+  "emails": {
+    "footer": "Vous recevez cet email parce que vous avez un compte {appName}.",
+    "unsubscribe": "Se désabonner des emails de notification",
+    "follow": {
+      "subject": "{name} vous suit sur {appName}",
+      "heading": "{name} vous suit",
+      "body": "{name} vient de s'abonner à votre profil {appName}. Découvrez son parcours et abonnez-vous en retour.",
+      "action": "Voir le profil"
+    },
+    "message": {
+      "subject": "{name} vous a envoyé un message sur {appName}",
+      "heading": "{name} vous a envoyé un message",
+      "body": "Vous avez un nouveau message de {name} sur {appName}.",
+      "action": "Ouvrir la conversation"
+    },
+    "snooze": {
+      "subject": "Relancer votre candidature : {title}",
+      "heading": "Votre candidature attend une relance",
+      "body": "Votre candidature pour {title} n'a pas bougé depuis un moment. C'est le bon moment pour relancer.",
+      "bodyWithCompany": "Votre candidature pour {title} chez {company} n'a pas bougé depuis un moment. C'est le bon moment pour relancer.",
+      "action": "Ouvrir l'analyse"
+    },
+    "unsubscribed": {
+      "title": "Désabonnement confirmé",
+      "description": "Vous ne recevrez plus d'emails de notification. Vos notifications restent visibles dans l'application.",
+      "manageLink": "Gérer mes notifications"
     }
   }
 }

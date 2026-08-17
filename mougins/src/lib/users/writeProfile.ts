@@ -43,11 +43,14 @@ export async function writeProfile(
   set("pseudo", patch.pseudo);
   set("gender", patch.gender);
   set("onboarding_completed", patch.onboardingCompleted);
+  set("email_notifications", patch.emailNotifications);
+  set("locale", patch.locale);
   if (patch.dob !== undefined) {
     core.dob = new Date(patch.dob).toISOString().slice(0, 10);
   }
   if (patch.phone !== undefined) core.phone = patch.phone ?? null;
-  if (patch.nationality !== undefined) core.nationality = patch.nationality ?? null;
+  if (patch.nationality !== undefined)
+    core.nationality = patch.nationality ?? null;
   if (patch.location !== undefined) core.location = patch.location ?? null;
   if (patch.bio !== undefined) core.bio = patch.bio ?? null;
   if (patch.profilePhoto !== undefined) {
@@ -55,7 +58,10 @@ export async function writeProfile(
   }
 
   if (Object.keys(core).length > 0) {
-    const { error } = await supabase.from("users").update(core).eq("id", userId);
+    const { error } = await supabase
+      .from("users")
+      .update(core)
+      .eq("id", userId);
     if (error) throw error;
   }
 
@@ -71,20 +77,22 @@ export async function writeProfile(
     if (error) throw error;
     if (entries.length === 0) continue;
 
-    const { error: insertError } = await supabase.from("user_experiences").insert(
-      entries.map((exp, i) => ({
-        user_id: userId,
-        type,
-        organization: exp.organization,
-        role: exp.role,
-        start_period: exp.startPeriod,
-        end_period: exp.endPeriod ?? null,
-        description: exp.description ?? null,
-        website: exp.website ?? null,
-        location: exp.location ?? null,
-        position: i,
-      })),
-    );
+    const { error: insertError } = await supabase
+      .from("user_experiences")
+      .insert(
+        entries.map((exp, i) => ({
+          user_id: userId,
+          type,
+          organization: exp.organization,
+          role: exp.role,
+          start_period: exp.startPeriod,
+          end_period: exp.endPeriod ?? null,
+          description: exp.description ?? null,
+          website: exp.website ?? null,
+          location: exp.location ?? null,
+          position: i,
+        })),
+      );
     if (insertError) throw insertError;
   }
 
@@ -99,7 +107,13 @@ export async function writeProfile(
     if (values.length === 0) return;
     const { error: insertError } = await supabase
       .from(table)
-      .insert(values.map((value, i) => ({ user_id: userId, [column]: value, position: i })));
+      .insert(
+        values.map((value, i) => ({
+          user_id: userId,
+          [column]: value,
+          position: i,
+        })),
+      );
     if (insertError) throw insertError;
   };
 

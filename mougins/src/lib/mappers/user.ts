@@ -1,4 +1,4 @@
-import type { Gender } from "@/constants";
+import { LOCALES, type Gender, type Locale } from "@/constants";
 import type { Experience } from "@/types/experience";
 import type { UserData, Hobby, UserSummary } from "@/types/user";
 
@@ -49,6 +49,8 @@ export type DbUserRaw = {
   dob?: string | null;
   gender?: string | null;
   onboarding_completed?: boolean;
+  email_notifications?: boolean;
+  locale?: string | null;
   phone?: string | null;
   nationality?: string | null;
   location?: string | null;
@@ -63,6 +65,10 @@ export type DbUserRaw = {
 
 function byPosition<T extends { position: number }>(a: T, b: T) {
   return a.position - b.position;
+}
+
+function toLocale(value: string | null | undefined): Locale {
+  return LOCALES.includes(value as Locale) ? (value as Locale) : "en";
 }
 
 function mapExperience(e: DbExperience): Experience {
@@ -89,20 +95,30 @@ export function mapUserFromDb(raw: DbUserRaw): UserData {
     dob: raw.dob ? new Date(raw.dob + "T00:00:00Z").getTime() : null,
     gender: (raw.gender as Gender | null) ?? null,
     onboarding_completed: raw.onboarding_completed,
+    email_notifications: raw.email_notifications ?? true,
+    locale: toLocale(raw.locale),
     phone: raw.phone,
     nationality: raw.nationality,
     location: raw.location,
     bio: raw.bio,
     profile_photo: raw.profile_photo ?? null,
-    professional_experiences: exps.filter((e) => e.type === "professional").map(mapExperience),
-    educational_experiences: exps.filter((e) => e.type === "educational").map(mapExperience),
-    personal_experiences: exps.filter((e) => e.type === "personal").map(mapExperience),
+    professional_experiences: exps
+      .filter((e) => e.type === "professional")
+      .map(mapExperience),
+    educational_experiences: exps
+      .filter((e) => e.type === "educational")
+      .map(mapExperience),
+    personal_experiences: exps
+      .filter((e) => e.type === "personal")
+      .map(mapExperience),
     skills: [...(raw.user_skills ?? [])].sort(byPosition).map((s) => s.name),
     projects: [...(raw.user_projects ?? [])].sort(byPosition).map((p) => p.url),
-    social_networks: [...(raw.user_social_networks ?? [])].sort(byPosition).map((s) => s.url),
-    hobbies: [...(raw.user_hobbies ?? [])].sort(byPosition).map(
-      (h): Hobby => ({ title: h.title, description: h.description }),
-    ),
+    social_networks: [...(raw.user_social_networks ?? [])]
+      .sort(byPosition)
+      .map((s) => s.url),
+    hobbies: [...(raw.user_hobbies ?? [])]
+      .sort(byPosition)
+      .map((h): Hobby => ({ title: h.title, description: h.description })),
   };
 }
 

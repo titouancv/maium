@@ -24,7 +24,7 @@ export function AnalysisOverview({ analysis }: AnalysisOverviewProps) {
   return (
     <div className="flex w-full min-w-0 flex-col gap-10">
       <div className="flex w-full min-w-0 flex-col gap-6 md:items-start md:gap-8">
-        <div className="flex shrink-0 flex-col items-start gap-4">
+        <div className="flex shrink-0 flex-col items-start gap-2">
           <div className="flex shrink-0 flex-col items-start gap-1">
             <span className="text-primary text-5xl leading-none font-extrabold">
               {analysis.matching_score}
@@ -35,9 +35,7 @@ export function AnalysisOverview({ analysis }: AnalysisOverviewProps) {
           </div>
           {analysis.confidence_score < ANALYSIS_LOW_CONFIDENCE_SCORE && (
             <Text tone="primary" size="sm">
-              {t("detail.lowConfidenceWarning", {
-                score: analysis.confidence_score,
-              })}
+              {t("detail.lowConfidenceWarning")}
             </Text>
           )}
         </div>
