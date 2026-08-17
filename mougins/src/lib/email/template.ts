@@ -24,8 +24,7 @@ export function escapeHtml(value: string): string {
   return value.replace(/[&<>"']/g, (char) => HTML_ESCAPES[char] ?? char);
 }
 
-const SURFACE = "#f4f3ee";
-const TEXT = "#201e1a";
+const TEXT = "#0f172a";
 const TEXT_MUTED = "#818cf8";
 const PRIMARY = "#ff4500";
 const SECONDARY = "#e04490";
@@ -85,9 +84,9 @@ export function renderEmailHtml(content: EmailContent): string {
 <meta name="supported-color-schemes" content="light" />
 <style>${styleBlock()}</style>
 </head>
-<body style="margin:0;padding:0;background-color:${SURFACE};">
+<body style="margin:0;padding:0;">
 <div style="display:none;max-height:0;overflow:hidden;opacity:0;">${escapeHtml(preview)}</div>
-<div class="shell" style="background-color:${SURFACE};padding:56px 24px;font-family:${FONT_STACK};">
+<div class="shell" style="padding:56px 24px;font-family:${FONT_STACK};">
   <div style="max-width:520px;margin:0 auto;">
     <p style="margin:0 0 8px;font-size:22px;line-height:1;font-weight:800;letter-spacing:-0.01em;color:${TEXT};">${escapeHtml(APP_NAME)}</p>
     ${accentBar(64)}

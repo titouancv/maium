@@ -44,7 +44,6 @@ describe("email template", () => {
   it("dresses the email in the site palette and type", () => {
     const html = renderEmailHtml(content);
 
-    expect(html).toContain("#f4f3ee");
     expect(html).toContain("radial-gradient(circle,#e04490 10%,#ff4500 90%)");
     expect(html).toContain("CabinetGrotesk-Extrabold.woff2");
   });
