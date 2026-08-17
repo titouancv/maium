@@ -14,7 +14,6 @@ import {
 import { Button } from "@/components/ui/Button";
 import { TextInput } from "@/components/ui/TextInput";
 import { TextArea } from "@/components/ui/TextArea";
-import { Tabs } from "@/components/ui/Tabs";
 import { AnalysisProgress } from "./AnalysisProgress";
 import { Link } from "@/i18n/navigation";
 import { useCurrentUserStore } from "@/stores/useCurrentUserStore";
@@ -47,17 +46,25 @@ export function AnalyzeJob() {
   const prefilledRef = useRef(false);
   const autoSubmittedRef = useRef(false);
   const [restoredPendingJob, setRestoredPendingJob] = useState(false);
+  const [lastSubmittedUrl, setLastSubmittedUrl] = useState<string | null>(
+    null,
+  );
 
   const submit = useCallback(
     async (values: AnalyzeJobInput) => {
       setSubmitError(null);
+      if (values.mode === "url") {
+        setLastSubmittedUrl(values.jobUrl);
+      }
       const res = await fetch(API.ANALYZE_JOB, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ ...values, locale }),
       });
       if (!res.ok) {
-        setSubmitError(res.status === 429 ? t("rateLimited") : t("submitError"));
+        setSubmitError(
+          res.status === 429 ? t("rateLimited") : t("submitError"),
+        );
         return;
       }
       clearPendingJob();
@@ -112,22 +119,6 @@ export function AnalyzeJob() {
 
   return (
     <div className="flex h-full flex-col gap-4">
-      <div className="flex w-full justify-between">
-        <Link href={ROUTES.JOBS_HISTORY}>
-          <Button variant="outline" size="none" className="px-4 py-2">
-            {t("viewHistory")}
-          </Button>
-        </Link>
-        <Tabs
-          tabs={[t("modeUrl"), t("modeText")]}
-          activeTab={mode === "url" ? 0 : 1}
-          onChange={(idx) => {
-            setMode(idx === 0 ? "url" : "text");
-            setSubmitError(null);
-          }}
-          layoutId="analyzeJobMode"
-        />
-      </div>
       <form
         onSubmit={
           mode === "url"
@@ -142,36 +133,55 @@ export function AnalyzeJob() {
               {t("pendingJobRestored")}
             </Text>
           )}
-          {mode === "url" ? (
-            <TextInput
-              placeholder={t("urlPlaceholder")}
-              infoType={urlErrors.jobUrl || submitError ? "error" : undefined}
-              infoLabel={
-                urlErrors.jobUrl ? t("invalidUrl") : (submitError ?? "")
-              }
-              {...urlForm.register("jobUrl")}
-            />
-          ) : (
-            <TextArea
-              placeholder={t("textPlaceholder")}
-              row={6}
-              infoType={textErrors.jobText || submitError ? "error" : undefined}
-              infoLabel={
-                textErrors.jobText ? t("invalidText") : (submitError ?? "")
-              }
-              {...textForm.register("jobText")}
-            />
-          )}
+          {!activeId &&
+            (mode === "url" ? (
+              <TextInput
+                placeholder={t("urlPlaceholder")}
+                infoType={
+                  urlErrors.jobUrl || submitError ? "error" : undefined
+                }
+                infoLabel={
+                  urlErrors.jobUrl ? t("invalidUrl") : (submitError ?? "")
+                }
+                {...urlForm.register("jobUrl")}
+              />
+            ) : (
+              <TextArea
+                placeholder={t("textPlaceholder")}
+                row={6}
+                infoType={
+                  textErrors.jobText || submitError ? "error" : undefined
+                }
+                infoLabel={
+                  textErrors.jobText ? t("invalidText") : (submitError ?? "")
+                }
+                {...textForm.register("jobText")}
+              />
+            ))}
           {activeId && (
             <AnalysisProgress
               analysisJobId={activeId}
               onDone={() => setActiveId(null)}
+              onRetryAsText={
+                mode === "url"
+                  ? () => {
+                      if (lastSubmittedUrl) {
+                        textForm.setValue("sourceUrl", lastSubmittedUrl);
+                      }
+                      setActiveId(null);
+                      setMode("text");
+                      setSubmitError(null);
+                    }
+                  : undefined
+              }
             />
           )}
         </div>
-        <Button type="submit" isLoading={isSubmitting}>
-          {t("analyze")}
-        </Button>
+        {!activeId && (
+          <Button type="submit" isLoading={isSubmitting}>
+            {t("analyze")}
+          </Button>
+        )}
       </form>
     </div>
   );

@@ -37,7 +37,10 @@ export async function POST(req: NextRequest) {
     .from("analysis_jobs")
     .insert({
       ...owner.columns,
-      source_url: parsed.data.mode === "url" ? parsed.data.jobUrl : null,
+      source_url:
+        parsed.data.mode === "url"
+          ? parsed.data.jobUrl
+          : (parsed.data.sourceUrl ?? null),
       job_text: parsed.data.mode === "text" ? parsed.data.jobText : null,
       locale: parsed.data.locale,
       status: "queued",

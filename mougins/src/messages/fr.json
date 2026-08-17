@@ -11,8 +11,6 @@
   "jobs": {
     "title": "Analyse d'offre",
     "analyze": "Analyser",
-    "modeUrl": "URL",
-    "modeText": "Coller le texte",
     "urlPlaceholder": "Collez l'URL d'une offre d'emploi",
     "textPlaceholder": "Collez ici le contenu de l'offre d'emploi…",
     "invalidUrl": "Entrez une URL valide",
@@ -27,7 +25,8 @@
     "queued": "En file d'attente…",
     "error": {
       "insufficientData": "Impossible d'extraire suffisamment d'informations. Vérifiez que le contenu décrit une vraie offre d'emploi.",
-      "unknown": "L'analyse a échoué. Veuillez réessayer."
+      "unknown": "L'analyse a échoué. Veuillez réessayer.",
+      "pasteInstead": "Coller le texte à la place"
     },
     "matchScore": "Score de correspondance",
     "untitledJob": "Offre sans titre",
@@ -573,7 +572,7 @@
     },
     "job": {
       "title": "Maintenant l'offre",
-      "description": "Collez le lien de l'offre, ou son texte. Nous évaluons la correspondance, réécrivons votre CV pour elle et rédigeons une lettre de motivation."
+      "description": "Collez le lien de l'offre. Nous évaluons la correspondance, réécrivons votre CV pour elle et rédigeons une lettre de motivation."
     },
     "gate": {
       "title": "Créez votre compte pour continuer",

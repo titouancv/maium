@@ -68,7 +68,7 @@ export async function runAnalysisPipeline(analysisJobId: string): Promise<void> 
     const rawText = jobRow.job_text as string | null;
     const sourceUrl = jobRow.source_url as string | null;
     const job = rawText
-      ? await extractJobFromText(rawText, userId)
+      ? await extractJobFromText(rawText, userId, sourceUrl)
       : await extractJob(sourceUrl!, userId);
     await admin
       .from("analysis_jobs")

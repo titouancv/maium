@@ -15,7 +15,6 @@ import {
 import { Button } from "@/components/ui/Button";
 import { TextInput } from "@/components/ui/TextInput";
 import { TextArea } from "@/components/ui/TextArea";
-import { Tabs } from "@/components/ui/Tabs";
 import { Title } from "@/components/ui/Title";
 import { Text } from "@/components/ui/Text";
 import { AnalysisProgress } from "@/components/pages/jobs/collections/AnalysisProgress";
@@ -40,6 +39,9 @@ export function AnalyzeJobStep({
   const [mode, setMode] = useState<Mode>("url");
   const [activeId, setActiveId] = useState<string | null>(null);
   const [submitError, setSubmitError] = useState<string | null>(null);
+  const [lastSubmittedUrl, setLastSubmittedUrl] = useState<string | null>(
+    null,
+  );
 
   const urlForm = useForm<Extract<AnalyzeJobInput, { mode: "url" }>>({
     resolver: zodResolver(AnalyzeJobUrlSchema),
@@ -56,6 +58,9 @@ export function AnalyzeJobStep({
 
   async function submit(values: AnalyzeJobInput) {
     setSubmitError(null);
+    if (values.mode === "url") {
+      setLastSubmittedUrl(values.jobUrl);
+    }
     const res = await fetch(API.ANALYZE_JOB, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -92,18 +97,6 @@ export function AnalyzeJobStep({
         </Text>
       </div>
 
-      <div className="flex w-full justify-end">
-        <Tabs
-          tabs={[tJobs("modeUrl"), tJobs("modeText")]}
-          activeTab={mode === "url" ? 0 : 1}
-          onChange={(idx) => {
-            setMode(idx === 0 ? "url" : "text");
-            setSubmitError(null);
-          }}
-          layoutId="analyzeAnonMode"
-        />
-      </div>
-
       <form
         onSubmit={
           mode === "url"
@@ -112,22 +105,29 @@ export function AnalyzeJobStep({
         }
         className="flex flex-col gap-4"
       >
-        {mode === "url" ? (
-          <TextInput
-            placeholder={tJobs("urlPlaceholder")}
-            infoType={urlErrors.jobUrl || submitError ? "error" : undefined}
-            infoLabel={urlErrors.jobUrl ? tJobs("invalidUrl") : (submitError ?? "")}
-            {...urlForm.register("jobUrl")}
-          />
-        ) : (
-          <TextArea
-            placeholder={tJobs("textPlaceholder")}
-            row={6}
-            infoType={textErrors.jobText || submitError ? "error" : undefined}
-            infoLabel={textErrors.jobText ? tJobs("invalidText") : (submitError ?? "")}
-            {...textForm.register("jobText")}
-          />
-        )}
+        {!activeId &&
+          (mode === "url" ? (
+            <TextInput
+              placeholder={tJobs("urlPlaceholder")}
+              infoType={urlErrors.jobUrl || submitError ? "error" : undefined}
+              infoLabel={
+                urlErrors.jobUrl ? tJobs("invalidUrl") : (submitError ?? "")
+              }
+              {...urlForm.register("jobUrl")}
+            />
+          ) : (
+            <TextArea
+              placeholder={tJobs("textPlaceholder")}
+              row={6}
+              infoType={
+                textErrors.jobText || submitError ? "error" : undefined
+              }
+              infoLabel={
+                textErrors.jobText ? tJobs("invalidText") : (submitError ?? "")
+              }
+              {...textForm.register("jobText")}
+            />
+          ))}
 
         {activeId && (
           <AnalysisProgress
@@ -135,6 +135,18 @@ export function AnalyzeJobStep({
             anonymous
             onDone={() => setActiveId(null)}
             onCompleted={onCompleted}
+            onRetryAsText={
+              mode === "url"
+                ? () => {
+                    if (lastSubmittedUrl) {
+                      textForm.setValue("sourceUrl", lastSubmittedUrl);
+                    }
+                    setActiveId(null);
+                    setMode("text");
+                    setSubmitError(null);
+                  }
+                : undefined
+            }
           />
         )}
 

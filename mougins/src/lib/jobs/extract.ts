@@ -35,10 +35,12 @@ const JOB_EXTRACTION_SYSTEM = [
 export async function extractJobFromText(
   rawText: string,
   userId: string | null,
+  sourceUrl?: string | null,
 ): Promise<JobData> {
   const admin = createAdminClient();
   const hash = createHash("sha256").update(rawText).digest("hex");
   const syntheticUrl = `text:${hash}`;
+  const displayUrl = sourceUrl ? normalizeUrl(sourceUrl) : syntheticUrl;
 
   const { data: existing } = await admin
     .from("jobs")
@@ -76,7 +78,7 @@ export async function extractJobFromText(
     .from("jobs")
     .upsert(
       {
-        source_url: syntheticUrl,
+        source_url: displayUrl,
         normalized_url_hash: syntheticUrl,
         title: extraction.title,
         company: extraction.company,

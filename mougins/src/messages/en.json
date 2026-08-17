@@ -11,8 +11,6 @@
   "jobs": {
     "title": "Job Analysis",
     "analyze": "Analyze",
-    "modeUrl": "URL",
-    "modeText": "Paste text",
     "urlPlaceholder": "Paste a job posting URL",
     "textPlaceholder": "Paste the job posting content here…",
     "invalidUrl": "Enter a valid URL",
@@ -27,7 +25,8 @@
     "queued": "Queued…",
     "error": {
       "insufficientData": "Not enough information could be extracted. Make sure the content describes a real job posting.",
-      "unknown": "Analysis failed. Please try again."
+      "unknown": "Analysis failed. Please try again.",
+      "pasteInstead": "Paste the text instead"
     },
     "matchScore": "Match score",
     "untitledJob": "Untitled job",
@@ -573,7 +572,7 @@
     },
     "job": {
       "title": "Now the job offer",
-      "description": "Paste the offer's link, or the text itself. We'll score the match, rewrite your CV for it and draft a cover letter."
+      "description": "Paste the offer's link. We'll score the match, rewrite your CV for it and draft a cover letter."
     },
     "gate": {
       "title": "Create your account to keep going",
