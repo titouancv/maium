@@ -620,6 +620,12 @@
       "body": "{name} just followed your {appName} profile. Take a look at their background and follow them back.",
       "action": "View profile"
     },
+    "message": {
+      "subject": "{name} sent you a message on {appName}",
+      "heading": "{name} sent you a message",
+      "body": "You have a new message from {name} on {appName}.",
+      "action": "Open conversation"
+    },
     "snooze": {
       "subject": "Time to follow up: {title}",
       "heading": "Your application is waiting for a follow-up",

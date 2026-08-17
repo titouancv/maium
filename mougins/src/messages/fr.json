@@ -620,6 +620,12 @@
       "body": "{name} vient de s'abonner à votre profil {appName}. Découvrez son parcours et abonnez-vous en retour.",
       "action": "Voir le profil"
     },
+    "message": {
+      "subject": "{name} vous a envoyé un message sur {appName}",
+      "heading": "{name} vous a envoyé un message",
+      "body": "Vous avez un nouveau message de {name} sur {appName}.",
+      "action": "Ouvrir la conversation"
+    },
     "snooze": {
       "subject": "Relancer votre candidature : {title}",
       "heading": "Votre candidature attend une relance",

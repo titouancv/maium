@@ -1,7 +1,7 @@
 import { getTranslations } from "next-intl/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { routing } from "@/i18n/routing";
-import { APP_NAME, LOCALES, ROUTES, type Locale } from "@/constants";
+import { APP_NAME, DAY_MS, LOCALES, ROUTES, type Locale } from "@/constants";
 import { getAppUrl } from "./client";
 import { sendEmail } from "./send";
 import { createUnsubscribeUrl } from "./unsubscribeToken";
@@ -81,6 +81,32 @@ async function releaseNotification(
     .eq("id", notificationId);
 }
 
+async function claimMessageEmailSlot(
+  admin: AdminClient,
+  userId: string,
+): Promise<boolean> {
+  const cutoff = new Date(Date.now() - DAY_MS).toISOString();
+  const { data } = await admin
+    .from("users")
+    .update({ last_message_email_at: new Date().toISOString() })
+    .eq("id", userId)
+    .or(`last_message_email_at.is.null,last_message_email_at.lt.${cutoff}`)
+    .select("id")
+    .maybeSingle();
+
+  return data !== null;
+}
+
+async function releaseMessageEmailSlot(
+  admin: AdminClient,
+  userId: string,
+): Promise<void> {
+  await admin
+    .from("users")
+    .update({ last_message_email_at: null })
+    .eq("id", userId);
+}
+
 function localizedUrl(locale: Locale, path: string): string {
   const prefix = locale === routing.defaultLocale ? "" : `/${locale}`;
   return `${getAppUrl()}${prefix}${path}`;
@@ -122,28 +148,31 @@ async function buildContent({
 }
 
 interface DispatchInput extends BuildContentInput {
-  admin: AdminClient;
-  notificationId: number;
   subject: string;
+  claim: () => Promise<boolean>;
+  release: () => Promise<void>;
 }
 
 async function dispatch({
-  admin,
-  notificationId,
   subject,
+  claim,
+  release,
   ...contentInput
 }: DispatchInput): Promise<boolean> {
-  const content = await buildContent(contentInput);
-  if (!content) return false;
+  if (!(await claim())) return false;
 
-  if (!(await claimNotification(admin, notificationId))) return false;
+  const content = await buildContent(contentInput);
+  if (!content) {
+    await release();
+    return false;
+  }
 
   const sent = await sendEmail({
     to: contentInput.recipient.email,
     subject,
     content,
   });
-  if (!sent) await releaseNotification(admin, notificationId);
+  if (!sent) await release();
 
   return sent;
 }
@@ -175,15 +204,46 @@ export async function sendFollowNotificationEmail(input: {
   });
   const actorName = input.actorName || input.actorPseudo;
 
+  const notificationId = notification.id as number;
+
   await dispatch({
-    admin,
-    notificationId: notification.id as number,
     recipient,
     subject: t("follow.subject", { name: actorName, appName: APP_NAME }),
     heading: t("follow.heading", { name: actorName }),
     body: t("follow.body", { name: actorName, appName: APP_NAME }),
     actionLabel: t("follow.action"),
     actionPath: ROUTES.PROFILE(input.actorPseudo),
+    claim: () => claimNotification(admin, notificationId),
+    release: () => releaseNotification(admin, notificationId),
+  });
+}
+
+export async function sendMessageNotificationEmail(input: {
+  recipientId: string;
+  senderName: string;
+  senderPseudo: string;
+  conversationId: string;
+}): Promise<void> {
+  const admin = createAdminClient();
+
+  const recipient = await getRecipient(admin, input.recipientId);
+  if (!recipient) return;
+
+  const t = await getTranslations({
+    locale: recipient.locale,
+    namespace: "emails",
+  });
+  const senderName = input.senderName || input.senderPseudo;
+
+  await dispatch({
+    recipient,
+    subject: t("message.subject", { name: senderName, appName: APP_NAME }),
+    heading: t("message.heading", { name: senderName }),
+    body: t("message.body", { name: senderName, appName: APP_NAME }),
+    actionLabel: t("message.action"),
+    actionPath: ROUTES.CONVERSATION(input.conversationId),
+    claim: () => claimMessageEmailSlot(admin, input.recipientId),
+    release: () => releaseMessageEmailSlot(admin, input.recipientId),
   });
 }
 
@@ -238,8 +298,6 @@ export async function sendPendingSnoozeEmails(limit: number): Promise<number> {
     const company = row.analysis.job?.company;
 
     const delivered = await dispatch({
-      admin,
-      notificationId: row.id,
       recipient,
       subject: t("snooze.subject", { title }),
       heading: t("snooze.heading", { title }),
@@ -248,6 +306,8 @@ export async function sendPendingSnoozeEmails(limit: number): Promise<number> {
         : t("snooze.body", { title }),
       actionLabel: t("snooze.action"),
       actionPath: ROUTES.JOB_ANALYSIS(row.analysis.id),
+      claim: () => claimNotification(admin, row.id),
+      release: () => releaseNotification(admin, row.id),
     });
 
     if (delivered) sent += 1;

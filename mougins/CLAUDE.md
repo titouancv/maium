@@ -198,11 +198,11 @@ an overlay over the history. Four seams are worth knowing.
 
 ### Notification emails (Resend)
 
-Two of the four notification kinds also leave the app as an email: **`follow`**
-and **`analysis_snooze`**. `message` and `profile_view` deliberately do not — a
-conversation is already live in the app, and a profile view is hidden even
-in-app. Everything lives in [lib/email/](src/lib/email/); nothing else in the
-codebase talks to Resend.
+Three of the four notification kinds also leave the app as an email:
+**`follow`**, **`message`** (capped at once per day per recipient) and
+**`analysis_snooze`**. `profile_view` deliberately does not — it is hidden
+even in-app. Everything lives in [lib/email/](src/lib/email/); nothing else in
+the codebase talks to Resend.
 
 - **The `notifications` row is the ledger, not a queue.** `notifications.emailed_at`
   is claimed with a conditional `UPDATE … WHERE emailed_at IS NULL` before the
@@ -211,14 +211,32 @@ codebase talks to Resend.
   send first and stamp after. The claim also survives the trigger's upsert
   (a repeat event bumps `created_at` / `read_at`, not `emailed_at`), so a burst
   cannot turn into a burst of email. A re-follow *is* a new email: the unfollow
-  trigger deletes the row, and with it the claim.
+  trigger deletes the row, and with it the claim. `dispatch()` in
+  [notifications.ts](src/lib/email/notifications.ts) takes the claim/release pair
+  as arguments precisely because the message email (below) needs a different one.
+- **The message email is capped globally, not per-notification.** The `message`
+  notification row is collapsed per (recipient, conversation) and never resets
+  `emailed_at` on the trigger's upsert, so it can only ever express "emailed
+  once, for this conversation, ever" — not a rolling daily cap across every
+  conversation and sender. Instead the message email claims
+  `users.last_message_email_at` with a conditional
+  `UPDATE … WHERE last_message_email_at IS NULL OR last_message_email_at < now() - interval '1 day'`,
+  the same claim-before-send / release-on-failure shape as `notifications.emailed_at`,
+  just scoped to the user row instead of a notification row. It is queued the
+  same way as the follow email — `after()` in
+  [the messages POST route](<src/app/api/messages/conversations/[conversationId]/messages/route.ts>)
+  — once per other conversation member, so a group conversation emails every
+  other member subject to their own daily cap.
 - **Missing configuration is a no-op, never an error.** No `RESEND_API_KEY` /
   `RESEND_FROM` / `EMAIL_UNSUBSCRIBE_SECRET` means `sendEmail` returns `false`
   and the notification stays unclaimed. The in-app notification is the product;
   the email is an extra.
-- **The follow email never delays the follow.** It is queued with `after()` from
-  `next/server` in [/api/users/follow](src/app/api/users/follow/route.ts), so it
-  runs past the response — a fire-and-forget promise would be killed instead.
+- **The follow and message emails never delay the request.** They are queued
+  with `after()` from `next/server` in
+  [/api/users/follow](src/app/api/users/follow/route.ts) and
+  [the messages POST route](<src/app/api/messages/conversations/[conversationId]/messages/route.ts>)
+  respectively, so they run past the response — a fire-and-forget promise would
+  be killed instead.
 - **The snooze email needs a cron, because the read-time sweep cannot reach the
   people it is for.** `sweep_stale_analysis_notifications(p_user_id)` only runs
   when the user opens the app; someone who has stopped opening it never
