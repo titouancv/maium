@@ -20,6 +20,8 @@ export const ROUTES = {
   SETTINGS_ACCOUNT: "/settings/account",
   SETTINGS_MY_INFORMATION: "/settings/my-information",
   SETTINGS_PERSONALIZATION: "/settings/personalization",
+  SETTINGS_NOTIFICATIONS: "/settings/notifications",
+  UNSUBSCRIBED: "/unsubscribed",
   AUTH_CALLBACK: "/auth/callback",
   PROFILE: (pseudo: string) => `/profile/${pseudo}`,
   PROFILE_FOLLOWERS: (pseudo: string) => `/profile/${pseudo}/followers`,
@@ -61,7 +63,11 @@ export const API = {
   RESUME_PROFILE_PDF: "/api/resume/profile/pdf",
   RESUME_TRANSLATE: "/api/resume/translate",
   ANALYSIS_CONTACTS_COUNT: (id: string) => `/api/analysis/${id}/contacts-count`,
+  EMAIL_UNSUBSCRIBE: "/api/email/unsubscribe",
+  CRON_NOTIFICATION_EMAILS: "/api/cron/notification-emails",
 } as const;
+
+export const SNOOZE_EMAIL_BATCH_LIMIT = 200;
 
 export const ANALYTICS_EVENTS = {
   ANON_CV_PARSED: "anon_cv_parsed",

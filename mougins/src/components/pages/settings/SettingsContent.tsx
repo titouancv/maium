@@ -18,6 +18,10 @@ export const SettingsContent = () => {
       label: t("personalizationMenuLabel"),
       href: ROUTES.SETTINGS_PERSONALIZATION,
     },
+    {
+      label: t("notificationsMenuLabel"),
+      href: ROUTES.SETTINGS_NOTIFICATIONS,
+    },
     { label: t("privacyPolicyMenuLabel"), href: ROUTES.PRIVACY_POLICY },
   ];
 

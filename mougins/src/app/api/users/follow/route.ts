@@ -1,11 +1,49 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest, NextResponse, after } from "next/server";
 import { requireApiUser } from "@/lib/auth";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { sendFollowNotificationEmail } from "@/lib/email";
 
 async function getFollowedId(pseudo: string): Promise<string | null> {
   const admin = createAdminClient();
-  const { data } = await admin.from("users").select("id").eq("pseudo", pseudo).single();
+  const { data } = await admin
+    .from("users")
+    .select("id")
+    .eq("pseudo", pseudo)
+    .single();
   return data?.id ?? null;
+}
+
+async function getActorIdentity(actorId: string) {
+  const admin = createAdminClient();
+  const { data } = await admin
+    .from("users")
+    .select("pseudo, first_name, last_name")
+    .eq("id", actorId)
+    .maybeSingle();
+  if (!data) return null;
+
+  return {
+    pseudo: data.pseudo as string,
+    name: [data.first_name, data.last_name].filter(Boolean).join(" ").trim(),
+  };
+}
+
+function queueFollowEmail(recipientId: string, actorId: string) {
+  after(async () => {
+    try {
+      const actor = await getActorIdentity(actorId);
+      if (!actor) return;
+
+      await sendFollowNotificationEmail({
+        recipientId,
+        actorId,
+        actorName: actor.name,
+        actorPseudo: actor.pseudo,
+      });
+    } catch (error) {
+      console.error("[follow email]", error);
+    }
+  });
 }
 
 export async function POST(request: NextRequest) {
@@ -25,7 +63,10 @@ export async function POST(request: NextRequest) {
     }
 
     if (followedId === user.id) {
-      return NextResponse.json({ error: "Cannot follow yourself" }, { status: 400 });
+      return NextResponse.json(
+        { error: "Cannot follow yourself" },
+        { status: 400 },
+      );
     }
 
     const { error } = await supabase
@@ -34,15 +75,23 @@ export async function POST(request: NextRequest) {
 
     if (error) {
       if (error.code === "23505") {
-        return NextResponse.json({ error: "Already following" }, { status: 409 });
+        return NextResponse.json(
+          { error: "Already following" },
+          { status: 409 },
+        );
       }
       throw error;
     }
 
+    queueFollowEmail(followedId, user.id);
+
     return NextResponse.json({ success: true }, { status: 201 });
   } catch (error) {
     console.error("[POST /api/users/follow]", error);
-    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
+    return NextResponse.json(
+      { error: "Internal server error" },
+      { status: 500 },
+    );
   }
 }
 
@@ -73,6 +122,9 @@ export async function DELETE(request: NextRequest) {
     return NextResponse.json({ success: true }, { status: 200 });
   } catch (error) {
     console.error("[DELETE /api/users/follow]", error);
-    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
+    return NextResponse.json(
+      { error: "Internal server error" },
+      { status: 500 },
+    );
   }
 }

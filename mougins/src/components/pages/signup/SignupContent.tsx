@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useSearchParams } from "next/navigation";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { useRouter } from "@/i18n/navigation";
 import { ROUTES, SIGNUP_FORM_ID, GENDERS, type Gender } from "@/constants";
 import { updateProfile } from "@/lib/users/updateProfile";
@@ -33,6 +33,7 @@ export const SignupContent = ({
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
+  const locale = useLocale();
   const tCommon = useTranslations("common");
   const tNav = useTranslations("nav");
   const tSignup = useTranslations("auth.signup");
@@ -42,7 +43,7 @@ export const SignupContent = ({
   const patchProfile = async (body: Record<string, unknown>) => {
     setIsLoading(true);
     setError(null);
-    const ok = await updateProfile(body);
+    const ok = await updateProfile({ ...body, locale });
     if (!ok) setError(tSignup("saveError"));
     setIsLoading(false);
     return ok;

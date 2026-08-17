@@ -1,4 +1,4 @@
-import type { Gender } from "@/constants";
+import type { Gender, Locale } from "@/constants";
 import { Experience } from "./experience";
 
 export interface Hobby {
@@ -31,6 +31,8 @@ export interface UserData {
   dob: number | null;
   gender?: Gender | null;
   onboarding_completed?: boolean;
+  email_notifications?: boolean;
+  locale?: Locale;
   phone?: string | null;
   nationality?: string | null;
   location?: string | null;

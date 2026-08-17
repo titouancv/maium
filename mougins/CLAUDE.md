@@ -176,9 +176,9 @@ an overlay over the history. Four seams are worth knowing.
   [AnalysisView](src/components/pages/jobs/collections/AnalysisView.tsx) inline
   with no `tracking` / `contacts` slot — `/jobs` is a protected prefix, so a
   signed-out visitor can never reach the real page.
-- **The snooze reminder is swept at read time, not scheduled.** `analyses.snooze_days`
-  (NULL = off) asks for a nudge when an application sits at the same status too
-  long. There is no cron: `sweep_stale_analysis_notifications(p_user_id)` runs at
+- **The snooze reminder is swept at read time**, and again by the email cron.
+  `analyses.snooze_days` (NULL = off) asks for a nudge when an application sits
+  at the same status too long. `sweep_stale_analysis_notifications(p_user_id)` runs at
   the top of `getNotifications()` / `getUnreadNotificationsCount()`
   ([lib/users/notifications.ts](src/lib/users/notifications.ts)) and materialises
   the due rows. It fires **once per staleness episode** — the DELETE drops any
@@ -195,6 +195,58 @@ an overlay over the history. Four seams are worth knowing.
   `analysis_snooze`). `HomeNotification.actor` is therefore nullable — a consumer
   must branch on `kind` before reading it (see
   [NotificationRow](src/components/pages/home/items/NotificationRow.tsx)).
+
+### Notification emails (Resend)
+
+Two of the four notification kinds also leave the app as an email: **`follow`**
+and **`analysis_snooze`**. `message` and `profile_view` deliberately do not — a
+conversation is already live in the app, and a profile view is hidden even
+in-app. Everything lives in [lib/email/](src/lib/email/); nothing else in the
+codebase talks to Resend.
+
+- **The `notifications` row is the ledger, not a queue.** `notifications.emailed_at`
+  is claimed with a conditional `UPDATE … WHERE emailed_at IS NULL` before the
+  send, and reset to NULL if Resend refuses. That single statement is what makes
+  the send **at most once** under concurrent follows and cron retries — never
+  send first and stamp after. The claim also survives the trigger's upsert
+  (a repeat event bumps `created_at` / `read_at`, not `emailed_at`), so a burst
+  cannot turn into a burst of email. A re-follow *is* a new email: the unfollow
+  trigger deletes the row, and with it the claim.
+- **Missing configuration is a no-op, never an error.** No `RESEND_API_KEY` /
+  `RESEND_FROM` / `EMAIL_UNSUBSCRIBE_SECRET` means `sendEmail` returns `false`
+  and the notification stays unclaimed. The in-app notification is the product;
+  the email is an extra.
+- **The follow email never delays the follow.** It is queued with `after()` from
+  `next/server` in [/api/users/follow](src/app/api/users/follow/route.ts), so it
+  runs past the response — a fire-and-forget promise would be killed instead.
+- **The snooze email needs a cron, because the read-time sweep cannot reach the
+  people it is for.** `sweep_stale_analysis_notifications(p_user_id)` only runs
+  when the user opens the app; someone who has stopped opening it never
+  materialises a row. `sweep_stale_analysis_notifications_all()` (same body,
+  no user filter, plus a `user_id IS NOT NULL` guard so anonymous analyses can
+  never be inserted into the NOT NULL column) runs from
+  [/api/cron/notification-emails](src/app/api/cron/notification-emails/route.ts),
+  scheduled daily in [vercel.json](vercel.json) and gated on `CRON_SECRET`.
+- **Opt-out is checked at send time, on `users.email_notifications`** — there is
+  no suppression list to keep in sync. The unsubscribe link carries an
+  HMAC-SHA256 token over the user id ([unsubscribeToken.ts](src/lib/email/unsubscribeToken.ts)),
+  so it needs no session: a user who unsubscribes from their phone's mail app is
+  not asked to log in. The token has no expiry on purpose — an old email must
+  still unsubscribe. `/api/email/unsubscribe` answers both `GET` (redirect to
+  `/unsubscribed`) and `POST`, because Gmail's one-click header (`List-Unsubscribe-Post`)
+  POSTs. Mail clients do prefetch `GET` links; the worst case is an unwanted
+  opt-out the user reverses in Settings, which is why the route flips a
+  preference and never deletes anything.
+- **Email copy is HTML built by hand, and every interpolation is escaped**
+  ([template.ts](src/lib/email/template.ts)). Names and job titles are user
+  input. There is no React Email dependency and no `dangerouslySetInnerHTML`
+  equivalent — `renderEmailHtml` is the only place that emits markup, and
+  `renderEmailText` always ships a plain-text twin.
+- **An email is written in `users.locale`, not in the sender's locale** — it
+  arrives long after the request that caused it, so there is no request locale to
+  read. The column is captured on every signup-wizard PATCH (`SignupContent`
+  merges `useLocale()`) and editable in Settings › Notifications. Accounts
+  created before this column default to `en`.
 
 ### Language of generated content
 
@@ -307,6 +359,8 @@ OAuth flow: Google → Supabase → `/auth/callback` → `exchangeCodeForSession
 | `GET/POST` | `/api/resume/:id/pdf` | Render / generate the resume PDF |
 | `GET/POST` | `/api/resume/profile/pdf` | Render the CV PDF from the user's profile |
 | `POST` | `/api/auth/logout` | Sign out |
+| `GET/POST` | `/api/email/unsubscribe` | Turn notification emails off from a signed token (no session; `POST` serves Gmail one-click) |
+| `GET` | `/api/cron/notification-emails` | Sweep due snooze reminders and send them (Vercel Cron, `CRON_SECRET`) |
 | `GET` | `/api/health` | Health check |
 
 ### Database Schema (`public.users`)
@@ -319,6 +373,8 @@ last_name                text
 pseudo                   text     unique
 dob                      date
 onboarding_completed     boolean  not null default false
+email_notifications      boolean  not null default true
+locale                   text     not null default 'en'  (en | fr — language of the user's emails)
 phone · nationality · location · bio   text  (nullable profile fields)
 created_at               timestamptz
 ```
@@ -546,6 +602,7 @@ frontend/src/
 │   ├── mistral/                   # Mistral AI client
 │   ├── mappers/                   # DB row → domain type mappers
 │   ├── home/                      # Home dashboard stats + profile completion
+│   ├── email/                     # Resend client, templates, unsubscribe token, dispatch
 │   ├── users/ · messaging/        # Server-side data access per domain
 │   └── validators/                # Zod schemas (user.ts, job.ts, cv.ts)
 ├── messages/
@@ -578,6 +635,8 @@ export const ROUTES = {
   SETTINGS_ACCOUNT: "/settings/account",
   SETTINGS_MY_INFORMATION: "/settings/my-information",
   SETTINGS_PERSONALIZATION: "/settings/personalization",
+  SETTINGS_NOTIFICATIONS: "/settings/notifications",
+  UNSUBSCRIBED: "/unsubscribed",
   AUTH_CALLBACK: "/auth/callback",
   PROFILE: (pseudo: string) => `/profile/${pseudo}`,
   PROFILE_FOLLOWERS: (pseudo: string) => `/profile/${pseudo}/followers`,
@@ -600,6 +659,8 @@ export const API = {
   MESSAGES_CONVERSATIONS: "/api/messages/conversations",
   MESSAGES_CONVERSATION_MESSAGES: (id: string) =>
     `/api/messages/conversations/${id}/messages`,
+  EMAIL_UNSUBSCRIBE: "/api/email/unsubscribe",
+  CRON_NOTIFICATION_EMAILS: "/api/cron/notification-emails",
 } as const;
 
 export const EXTERNAL_API = {
