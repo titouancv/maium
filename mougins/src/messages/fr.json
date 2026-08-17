@@ -48,7 +48,7 @@
         "contacts": "Contacts",
         "tracking": "Suivi"
       },
-      "lowConfidenceWarning": "⚠️ Le score de confiance est de {score}, les résultats peuvent être moins précis.",
+      "lowConfidenceWarning": "Le score de confiance est bas, les résultats peuvent être moins précis.",
       "viewJobPosting": "Voir l'offre d'emploi",
       "aiDisclaimer": "Cette analyse a été générée par IA et peut contenir des erreurs.",
       "template": {
