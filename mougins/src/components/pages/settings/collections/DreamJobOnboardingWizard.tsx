@@ -39,7 +39,7 @@ export const DreamJobOnboardingWizard = ({ user, setUser }: Props) => {
     user.dream_company_types ?? [],
   );
   const [workMode, setWorkMode] = useState<DreamWorkMode | null>(
-    user.dream_work_mode ?? null,
+    user.dream_work_mode ?? "flexible",
   );
   const [location, setLocation] = useState(user.dream_location ?? "");
   const [salary, setSalary] = useState(
@@ -161,7 +161,7 @@ export const DreamJobOnboardingWizard = ({ user, setUser }: Props) => {
       default:
         return {
           ...base,
-          type: "text",
+          type: "longText",
           title: tDreamJob("companyValuesLabel"),
           placeholder: tDreamJob("companyValuesPlaceholder"),
           defaultValue: companyValues,

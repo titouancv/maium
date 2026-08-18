@@ -440,7 +440,7 @@
     "salaryPlaceholder": "45000",
     "salarySuffix": "€ brut / an",
     "industriesLabel": "Secteurs d'activité préférés",
-    "industriesPlaceholder": "Ajouter un secteur",
+    "industriesPlaceholder": "Tech, Finance, Santé...",
     "companyValuesLabel": "Ce qui compte le plus pour vous dans une entreprise",
     "companyValuesPlaceholder": "Autonomie, impact social, ambiance d'équipe..."
   },

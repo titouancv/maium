@@ -220,10 +220,10 @@ export const DREAM_COMPANY_TYPES = [
 export type DreamCompanyType = (typeof DREAM_COMPANY_TYPES)[number];
 
 export const DREAM_WORK_MODES = [
+  "flexible",
   "remote",
   "hybrid",
   "onsite",
-  "flexible",
 ] as const;
 
 export type DreamWorkMode = (typeof DREAM_WORK_MODES)[number];

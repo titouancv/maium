@@ -38,7 +38,7 @@ export const DreamJobEditOverlay = ({ field, user, onClose, onSaved }: Props) =>
     user.dream_company_types ?? [],
   );
   const [workMode, setWorkMode] = useState<DreamWorkMode | null>(
-    user.dream_work_mode ?? null,
+    user.dream_work_mode ?? "flexible",
   );
   const [salary, setSalary] = useState(
     user.dream_salary ? String(user.dream_salary) : "",
@@ -149,7 +149,7 @@ export const DreamJobEditOverlay = ({ field, user, onClose, onSaved }: Props) =>
       default:
         return {
           ...base,
-          type: "text",
+          type: "longText",
           title: tDreamJob("companyValuesLabel"),
           placeholder: tDreamJob("companyValuesPlaceholder"),
           defaultValue: user.dream_company_values ?? "",

@@ -1,7 +1,6 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import { Tabs } from "@/components/ui";
 import { TabsVertical } from "@/components/ui/TabsVertical";
 import { DREAM_WORK_MODES, type DreamWorkMode } from "@/constants";
 
@@ -17,13 +16,8 @@ export const DreamJobWorkModeField = ({ value, onChange }: Props) => {
   const handleChange = (index: number) => onChange(DREAM_WORK_MODES[index]);
 
   return (
-    <div className="flex w-full items-center justify-start">
-      <div className="hidden md:block">
-        <Tabs tabs={tabs} activeTab={activeTab} onChange={handleChange} />
-      </div>
-      <div className="w-full md:hidden">
-        <TabsVertical tabs={tabs} activeTab={activeTab} onChange={handleChange} />
-      </div>
+    <div className="w-full">
+      <TabsVertical tabs={tabs} activeTab={activeTab} onChange={handleChange} />
     </div>
   );
 };

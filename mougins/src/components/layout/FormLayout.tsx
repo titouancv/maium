@@ -39,20 +39,22 @@ export const FormLayout = ({
   return (
     <div className="flex h-dvh flex-col md:h-screen md:items-center md:justify-center">
       <div className="flex h-full w-full flex-col md:h-screen md:max-w-xl">
-        <div className="flex shrink-0 items-center justify-between px-4 pt-6 md:pt-12">
-          <Title label={title} size="h1" />
-          {isCancelable ? (
-            <Button
-              variant="ghost"
-              type="button"
-              size="none"
-              onClick={onCancel}
-            >
-              {cancelLabel}
-            </Button>
-          ) : (
-            <StepCounter step={step} totalSteps={totalSteps} />
-          )}
+        <div className="flex shrink-0 items-center justify-between gap-3 px-4 pt-6 md:pt-12">
+          <Title label={title} size="h1" className="min-w-0" />
+          <div className="shrink-0">
+            {isCancelable ? (
+              <Button
+                variant="ghost"
+                type="button"
+                size="none"
+                onClick={onCancel}
+              >
+                {cancelLabel}
+              </Button>
+            ) : (
+              <StepCounter step={step} totalSteps={totalSteps} />
+            )}
+          </div>
         </div>
 
         <div className="flex min-h-0 flex-1 flex-col overflow-y-auto px-4 pt-10 pb-4">

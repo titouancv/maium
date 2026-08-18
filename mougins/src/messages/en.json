@@ -440,7 +440,7 @@
     "salaryPlaceholder": "45000",
     "salarySuffix": "€ gross / year",
     "industriesLabel": "Preferred industries",
-    "industriesPlaceholder": "Add an industry",
+    "industriesPlaceholder": "Tech, Finance, Healthcare...",
     "companyValuesLabel": "What matters most to you in a company",
     "companyValuesPlaceholder": "Autonomy, social impact, team spirit..."
   },
