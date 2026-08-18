@@ -11,7 +11,7 @@ import { PageLayout } from "../../layout";
 import { HeroSection } from "../../ui/collections/HeroSection";
 import { CurrentUserSync } from "./CurrentUserSync";
 import { GreetingSection } from "./items/GreetingSection";
-import { AnalyzeCard, DreamJobCard } from "./items";
+import { AnalyzeCard, DreamJobBanner } from "./items";
 import {
   NotificationsCenter,
   RecentAnalysesList,
@@ -76,12 +76,11 @@ export const HomeContent = ({
 
       {user && (
         <>
-          <div className="flex w-full max-w-7xl flex-col gap-24 pt-24">
+          <div className="flex w-full max-w-7xl flex-col gap-14 pt-8 md:gap-20 md:pt-16">
+            {!isDreamJobFilled(user) && <DreamJobBanner />}
+
             <Section title={t("sections.analyze")} titleSize="h2">
-              <div className="flex flex-col gap-8 md:items-start">
-                <AnalyzeCard />
-                {!isDreamJobFilled(user) && <DreamJobCard />}
-              </div>
+              <AnalyzeCard />
             </Section>
 
             {analysesPromise && (
