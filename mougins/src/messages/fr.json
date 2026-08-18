@@ -11,8 +11,6 @@
   "jobs": {
     "title": "Analyse d'offre",
     "analyze": "Analyser",
-    "modeUrl": "URL",
-    "modeText": "Coller le texte",
     "urlPlaceholder": "Collez l'URL d'une offre d'emploi",
     "textPlaceholder": "Collez ici le contenu de l'offre d'emploi…",
     "invalidUrl": "Entrez une URL valide",
@@ -27,7 +25,8 @@
     "queued": "En file d'attente…",
     "error": {
       "insufficientData": "Impossible d'extraire suffisamment d'informations. Vérifiez que le contenu décrit une vraie offre d'emploi.",
-      "unknown": "L'analyse a échoué. Veuillez réessayer."
+      "unknown": "L'analyse a échoué. Veuillez réessayer.",
+      "pasteInstead": "Coller le texte à la place"
     },
     "matchScore": "Score de correspondance",
     "untitledJob": "Offre sans titre",
@@ -225,8 +224,10 @@
     },
     "actions": {
       "analyzeTitle": "Lancer une analyse",
-      "analyzeDescription": "Collez une offre : l'IA la confronte à votre profil, réécrit votre CV pour cette offre et rédige la lettre de motivation.",
-      "analyzeHistory": "Voir toutes mes analyses"
+      "analyzeDescription": "Collez une offre et obtenez aussitôt votre taux de compatibilité, un CV sur mesure et une lettre de motivation prête à envoyer, le tout généré par l'IA en quelques secondes.",
+      "analyzeHistory": "Voir toutes mes analyses",
+      "dreamJobTitle": "Décrire mon job de rêve",
+      "dreamJobDescription": "Indiquez le poste, le salaire et l'entreprise dont vous rêvez : l'IA orientera chaque analyse pour vous aider à décrocher ce job."
     },
     "sections": {
       "analyze": "Optimisez votre CV avec l'IA",
@@ -309,7 +310,10 @@
     "emailNotificationsDisabledDescription": "Vous ne recevez aucun email de notification. Vos notifications restent visibles dans l'application.",
     "emailLanguageTitle": "Langue des emails",
     "emailLanguageDescription": "La langue dans laquelle vos emails de notification sont écrits.",
-    "notificationsSaveError": "Nous n'avons pas pu enregistrer votre préférence. Veuillez réessayer."
+    "notificationsSaveError": "Nous n'avons pas pu enregistrer votre préférence. Veuillez réessayer.",
+    "dreamJobMenuLabel": "Mon job de rêve",
+    "dreamJobTitle": "Mon job de rêve",
+    "dreamJobSaveError": "Nous n'avons pas pu enregistrer vos préférences. Veuillez réessayer."
   },
   "welcome": {
     "greeting": "Bienvenue, {name} !",
@@ -425,6 +429,34 @@
     "male": "Homme",
     "female": "Femme",
     "other": "Autre"
+  },
+  "dreamJob": {
+    "intro": "Ces informations sont facultatives et restent privées : elles ne sont jamais visibles par les autres utilisateurs, elles servent uniquement à affiner l'analyse de vos candidatures.",
+    "companyTypesLabel": "Type(s) d'entreprise",
+    "workModeLabel": "Mode de travail préféré",
+    "locationLabel": "Localisation souhaitée",
+    "locationPlaceholder": "Paris, France ou Remote",
+    "salaryLabel": "Salaire annuel de rêve, brut",
+    "salaryPlaceholder": "45000",
+    "salarySuffix": "€ brut / an",
+    "industriesLabel": "Secteurs d'activité préférés",
+    "industriesPlaceholder": "Tech, Finance, Santé...",
+    "companyValuesLabel": "Ce qui compte le plus pour vous dans une entreprise",
+    "companyValuesPlaceholder": "Autonomie, impact social, ambiance d'équipe..."
+  },
+  "dreamCompanyType": {
+    "startup": "Startup",
+    "scaleup": "Scale-up",
+    "sme": "PME",
+    "corporate": "Grand groupe / ETI",
+    "nonprofit": "Association / ONG",
+    "freelance": "Indépendant / Freelance"
+  },
+  "dreamWorkMode": {
+    "remote": "Remote",
+    "hybrid": "Hybride",
+    "onsite": "Présentiel",
+    "flexible": "Peu importe"
   },
   "experience": {
     "professional": {
@@ -573,7 +605,7 @@
     },
     "job": {
       "title": "Maintenant l'offre",
-      "description": "Collez le lien de l'offre, ou son texte. Nous évaluons la correspondance, réécrivons votre CV pour elle et rédigeons une lettre de motivation."
+      "description": "Collez le lien de l'offre. Nous évaluons la correspondance, réécrivons votre CV pour elle et rédigeons une lettre de motivation."
     },
     "gate": {
       "title": "Créez votre compte pour continuer",

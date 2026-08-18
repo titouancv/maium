@@ -11,8 +11,6 @@
   "jobs": {
     "title": "Job Analysis",
     "analyze": "Analyze",
-    "modeUrl": "URL",
-    "modeText": "Paste text",
     "urlPlaceholder": "Paste a job posting URL",
     "textPlaceholder": "Paste the job posting content here…",
     "invalidUrl": "Enter a valid URL",
@@ -27,7 +25,8 @@
     "queued": "Queued…",
     "error": {
       "insufficientData": "Not enough information could be extracted. Make sure the content describes a real job posting.",
-      "unknown": "Analysis failed. Please try again."
+      "unknown": "Analysis failed. Please try again.",
+      "pasteInstead": "Paste the text instead"
     },
     "matchScore": "Match score",
     "untitledJob": "Untitled job",
@@ -225,8 +224,10 @@
     },
     "actions": {
       "analyzeTitle": "Start an analysis",
-      "analyzeDescription": "Paste a job offer: the AI matches it against your profile, rewrites your resume for that offer and drafts the cover letter.",
-      "analyzeHistory": "See all my analyses"
+      "analyzeDescription": "Paste a job offer and get an instant match score, a resume tailored to it, and a ready-to-send cover letter, all written by AI in seconds.",
+      "analyzeHistory": "See all my analyses",
+      "dreamJobTitle": "Describe my dream job",
+      "dreamJobDescription": "Tell us the role, salary and company you're dreaming of, the AI will tailor every analysis to help you land it."
     },
     "sections": {
       "analyze": "Tailor your resume with AI",
@@ -309,7 +310,10 @@
     "emailNotificationsDisabledDescription": "You get no notification emails. Your notifications stay visible in the app.",
     "emailLanguageTitle": "Email language",
     "emailLanguageDescription": "The language your notification emails are written in.",
-    "notificationsSaveError": "We could not save your preference. Please try again."
+    "notificationsSaveError": "We could not save your preference. Please try again.",
+    "dreamJobMenuLabel": "My dream job",
+    "dreamJobTitle": "My dream job",
+    "dreamJobSaveError": "We could not save your preferences. Please try again."
   },
   "welcome": {
     "greeting": "Welcome, {name}!",
@@ -425,6 +429,34 @@
     "male": "Male",
     "female": "Female",
     "other": "Other"
+  },
+  "dreamJob": {
+    "intro": "This information is optional and stays private: it is never visible to other users, and is only used to sharpen the analysis of your applications.",
+    "companyTypesLabel": "Company type(s)",
+    "workModeLabel": "Preferred work mode",
+    "locationLabel": "Desired location",
+    "locationPlaceholder": "Paris, France or Remote",
+    "salaryLabel": "Dream annual gross salary",
+    "salaryPlaceholder": "45000",
+    "salarySuffix": "€ gross / year",
+    "industriesLabel": "Preferred industries",
+    "industriesPlaceholder": "Tech, Finance, Healthcare...",
+    "companyValuesLabel": "What matters most to you in a company",
+    "companyValuesPlaceholder": "Autonomy, social impact, team spirit..."
+  },
+  "dreamCompanyType": {
+    "startup": "Startup",
+    "scaleup": "Scale-up",
+    "sme": "SME",
+    "corporate": "Large company / mid-market",
+    "nonprofit": "Nonprofit / NGO",
+    "freelance": "Freelance / Independent"
+  },
+  "dreamWorkMode": {
+    "remote": "Remote",
+    "hybrid": "Hybrid",
+    "onsite": "On-site",
+    "flexible": "No preference"
   },
   "experience": {
     "professional": {
@@ -573,7 +605,7 @@
     },
     "job": {
       "title": "Now the job offer",
-      "description": "Paste the offer's link, or the text itself. We'll score the match, rewrite your CV for it and draft a cover letter."
+      "description": "Paste the offer's link. We'll score the match, rewrite your CV for it and draft a cover letter."
     },
     "gate": {
       "title": "Create your account to keep going",

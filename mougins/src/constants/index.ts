@@ -21,6 +21,7 @@ export const ROUTES = {
   SETTINGS_MY_INFORMATION: "/settings/my-information",
   SETTINGS_PERSONALIZATION: "/settings/personalization",
   SETTINGS_NOTIFICATIONS: "/settings/notifications",
+  SETTINGS_DREAM_JOB: "/settings/dream-job",
   UNSUBSCRIBED: "/unsubscribed",
   AUTH_CALLBACK: "/auth/callback",
   PROFILE: (pseudo: string) => `/profile/${pseudo}`,
@@ -157,7 +158,7 @@ export const ANALYSIS_SNOOZE_DAYS = [7, 14, 30] as const;
 
 export const COMPANY_CONTACTS_LIMIT = 8;
 
-export const PROMPT_VERSION = "v1";
+export const PROMPT_VERSION = "v2";
 
 export const MESSAGES_PAGE_SIZE = 30;
 
@@ -206,3 +207,23 @@ export type ExperienceNamespace =
 export const GENDERS = ["male", "female", "other"] as const;
 
 export type Gender = (typeof GENDERS)[number];
+
+export const DREAM_COMPANY_TYPES = [
+  "startup",
+  "scaleup",
+  "sme",
+  "corporate",
+  "nonprofit",
+  "freelance",
+] as const;
+
+export type DreamCompanyType = (typeof DREAM_COMPANY_TYPES)[number];
+
+export const DREAM_WORK_MODES = [
+  "flexible",
+  "remote",
+  "hybrid",
+  "onsite",
+] as const;
+
+export type DreamWorkMode = (typeof DREAM_WORK_MODES)[number];

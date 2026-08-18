@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { getProfileCompletion } from "./completion";
+import { getProfileCompletion, isDreamJobFilled } from "./completion";
 import type { UserData } from "@/types";
 
 const baseUser: UserData = {
@@ -76,5 +76,33 @@ describe("getProfileCompletion", () => {
     });
     expect(result.percent).toBe(71);
     expect(result.isComplete).toBe(false);
+  });
+});
+
+describe("isDreamJobFilled", () => {
+  it("is false for a bare profile", () => {
+    expect(isDreamJobFilled(baseUser)).toBe(false);
+  });
+
+  it("is true when only company types are set", () => {
+    expect(
+      isDreamJobFilled({ ...baseUser, dream_company_types: ["startup"] }),
+    ).toBe(true);
+  });
+
+  it("is true when only the salary is set", () => {
+    expect(isDreamJobFilled({ ...baseUser, dream_salary: 45000 })).toBe(true);
+  });
+
+  it("ignores empty arrays and whitespace-only text", () => {
+    expect(
+      isDreamJobFilled({
+        ...baseUser,
+        dream_company_types: [],
+        dream_industries: [],
+        dream_location: "   ",
+        dream_company_values: "",
+      }),
+    ).toBe(false);
   });
 });

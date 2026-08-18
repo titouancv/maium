@@ -22,6 +22,7 @@ export const SettingsContent = () => {
       label: t("notificationsMenuLabel"),
       href: ROUTES.SETTINGS_NOTIFICATIONS,
     },
+    { label: t("dreamJobMenuLabel"), href: ROUTES.SETTINGS_DREAM_JOB },
     { label: t("privacyPolicyMenuLabel"), href: ROUTES.PRIVACY_POLICY },
   ];
 

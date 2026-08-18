@@ -1,5 +1,7 @@
 import { z } from "zod";
 import {
+  DREAM_COMPANY_TYPES,
+  DREAM_WORK_MODES,
   GENDERS,
   LOCALES,
   MIN_SIGNUP_AGE,
@@ -78,6 +80,12 @@ export const UpdateUserSchema = z
     personalExperiences: z.array(ExperienceSchema).optional(),
     skills: z.array(z.string().min(1).max(50)).optional(),
     projects: z.array(z.string().url()).optional(),
+    dreamCompanyTypes: z.array(z.enum(DREAM_COMPANY_TYPES)).optional(),
+    dreamWorkMode: z.enum(DREAM_WORK_MODES).nullable().optional(),
+    dreamLocation: z.string().max(150).nullable().optional(),
+    dreamSalary: z.number().int().positive().nullable().optional(),
+    dreamIndustries: z.array(z.string().min(1).max(50)).optional(),
+    dreamCompanyValues: z.string().max(300).nullable().optional(),
   })
   .refine((data) => Object.values(data).some((v) => v !== undefined), {
     message: "At least one field must be provided",

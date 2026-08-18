@@ -1,4 +1,4 @@
-import type { Gender, Locale } from "@/constants";
+import type { DreamWorkMode, Gender, Locale } from "@/constants";
 import { Experience } from "./experience";
 
 export interface Hobby {
@@ -45,4 +45,10 @@ export interface UserData {
   personal_experiences?: Experience[];
   skills?: string[];
   projects?: string[];
+  dream_company_types?: string[];
+  dream_work_mode?: DreamWorkMode | null;
+  dream_location?: string | null;
+  dream_salary?: number | null;
+  dream_industries?: string[];
+  dream_company_values?: string | null;
 }

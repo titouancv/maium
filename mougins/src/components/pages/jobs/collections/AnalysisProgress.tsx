@@ -5,7 +5,7 @@ import { useTranslations } from "next-intl";
 import { useRouter } from "@/i18n/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { ANALYSIS_POLL_INTERVAL_MS, API, ROUTES } from "@/constants";
-import { InfoMessage, ProgressBar } from "@/components/ui";
+import { Button, InfoMessage, ProgressBar } from "@/components/ui";
 import type { AnalysisStatus, AnalysisStep } from "@/types/job";
 
 interface AnalysisProgressProps {
@@ -13,6 +13,7 @@ interface AnalysisProgressProps {
   onDone: () => void;
   anonymous?: boolean;
   onCompleted?: (analysisId: string) => void;
+  onRetryAsText?: () => void;
 }
 
 interface ProgressState {
@@ -28,6 +29,7 @@ export function AnalysisProgress({
   onDone,
   anonymous,
   onCompleted,
+  onRetryAsText,
 }: AnalysisProgressProps) {
   const t = useTranslations("jobs");
   const router = useRouter();
@@ -85,12 +87,20 @@ export function AnalysisProgress({
   useEffect(() => {
     let cancelled = false;
 
+    const applyStatus = (next: ProgressState) => {
+      setState((prev) =>
+        prev.status === "completed" || prev.status === "failed"
+          ? prev
+          : next,
+      );
+    };
+
     const readStatus = () =>
       fetch(API.ANALYSIS(analysisJobId))
         .then((r) => (r.ok ? r.json() : null))
         .then((data) => {
           if (cancelled || !data) return null;
-          setState({
+          applyStatus({
             status: data.status,
             currentStep: data.currentStep,
             progress: data.progress,
@@ -135,7 +145,7 @@ export function AnalysisProgress({
             error_message: string | null;
             analysis_id: string | null;
           };
-          setState({
+          applyStatus({
             status: row.status,
             currentStep: row.current_step,
             progress: row.progress,
@@ -180,7 +190,16 @@ export function AnalysisProgress({
       state.error === "INSUFFICIENT_JOB_DATA"
         ? t("error.insufficientData")
         : t("error.unknown");
-    return <InfoMessage message={errorMessage} />;
+    return (
+      <div className="flex flex-col items-start gap-3">
+        <InfoMessage message={errorMessage} />
+        {onRetryAsText && (
+          <Button variant="outline" size="sm" onClick={onRetryAsText}>
+            {t("error.pasteInstead")}
+          </Button>
+        )}
+      </div>
+    );
   }
 
   return (

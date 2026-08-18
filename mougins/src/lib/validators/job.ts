@@ -19,6 +19,7 @@ export const AnalyzeJobUrlSchema = z.object({
 export const AnalyzeJobTextSchema = z.object({
   mode: z.literal("text"),
   jobText: z.string().min(50),
+  sourceUrl: z.url().optional(),
 });
 
 export const AnalyzeJobSchema = z.discriminatedUnion("mode", [
