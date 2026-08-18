@@ -21,6 +21,17 @@ export function hasEnoughProfileForAnalysis(user: UserData): boolean {
   return getProfileCompletion(user).percent >= ANALYSIS_MIN_PROFILE_PERCENT;
 }
 
+export function isDreamJobFilled(user: UserData): boolean {
+  return (
+    hasItems(user.dream_company_types) ||
+    hasText(user.dream_work_mode) ||
+    hasText(user.dream_location) ||
+    typeof user.dream_salary === "number" ||
+    hasItems(user.dream_industries) ||
+    hasText(user.dream_company_values)
+  );
+}
+
 export function getProfileCompletion(user: UserData): ProfileCompletion {
   const checks: boolean[] = [
     hasText(user.bio),

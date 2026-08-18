@@ -152,6 +152,15 @@ export interface ResumeJson {
   hobbies: Hobby[];
 }
 
+export interface CandidateDreamJob {
+  companyTypes?: string[];
+  workMode?: string;
+  location?: string;
+  salary?: number;
+  industries?: string[];
+  companyValues?: string;
+}
+
 export interface CandidateProfile {
   bio: string;
   experiences: Array<{
@@ -173,4 +182,5 @@ export interface CandidateProfile {
   skills: string[];
   projects: string[];
   hobbies: Hobby[];
+  dreamJob?: CandidateDreamJob;
 }

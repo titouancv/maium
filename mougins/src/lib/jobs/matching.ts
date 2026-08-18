@@ -87,6 +87,12 @@ export async function getMatchingExplanation(params: {
     "Include: portfolio relevance, concrete achievements, impactful projects, leadership signals, or strong domain expertise.",
     "Cap at 1.0.",
 
+    "## candidate_preferences (optional)",
+    "The candidate data may include a candidate_preferences object: the kind of company, work mode, location, salary, industries and company values the candidate says they are looking for.",
+    "If candidate_preferences is absent, ignore this section entirely — do not penalize the candidate for missing preferences.",
+    "When present, treat it as a mild, optional signal folded into the bonus score only: increase bonus modestly (never more than +0.1 on the [0,1] scale) when the job's company type, work mode, location, or industry clearly aligns with the stated preferences.",
+    "Never lower any score because of a mismatch with candidate_preferences — these are wishes, not requirements, and the candidate chose to analyze this job regardless.",
+
     "## Key evaluation focus (very important)",
     "Assess fit between:",
     "- What the company is actually asking someone to DO (mission, responsibilities)",
@@ -130,6 +136,7 @@ export async function getMatchingExplanation(params: {
 
     "### summary",
     "Explain the overall fit in terms of job readiness and success probability, not ATS score. Also state briefly how confident you are and why (how complete the job description is, how detailed the profile is, how much uncertainty remains).",
+    "When candidate_preferences is present and there is something concrete to say, add one short sentence noting whether the job's context (company type, work mode, location) matches what the candidate said they're looking for. Say nothing about it when candidate_preferences is absent.",
 
     "Output requirements:",
     "- Return valid JSON only:",

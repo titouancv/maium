@@ -56,6 +56,14 @@ export async function writeProfile(
   if (patch.profilePhoto !== undefined) {
     core.profile_photo = patch.profilePhoto || null;
   }
+  set("dream_company_types", patch.dreamCompanyTypes);
+  set("dream_work_mode", patch.dreamWorkMode);
+  if (patch.dreamLocation !== undefined)
+    core.dream_location = patch.dreamLocation || null;
+  if (patch.dreamSalary !== undefined) core.dream_salary = patch.dreamSalary ?? null;
+  set("dream_industries", patch.dreamIndustries);
+  if (patch.dreamCompanyValues !== undefined)
+    core.dream_company_values = patch.dreamCompanyValues || null;
 
   if (Object.keys(core).length > 0) {
     const { error } = await supabase

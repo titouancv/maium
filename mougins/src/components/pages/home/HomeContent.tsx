@@ -11,7 +11,7 @@ import { PageLayout } from "../../layout";
 import { HeroSection } from "../../ui/collections/HeroSection";
 import { CurrentUserSync } from "./CurrentUserSync";
 import { GreetingSection } from "./items/GreetingSection";
-import { AnalyzeCard } from "./items";
+import { AnalyzeCard, DreamJobCard } from "./items";
 import {
   NotificationsCenter,
   RecentAnalysesList,
@@ -21,6 +21,7 @@ import {
   WelcomeCelebration,
 } from "./collections";
 import { Button, Section, DataUsageNotice } from "@/components/ui";
+import { isDreamJobFilled } from "@/lib/home";
 
 interface HomeContentProps {
   user: UserData | null;
@@ -77,7 +78,10 @@ export const HomeContent = ({
         <>
           <div className="flex w-full max-w-7xl flex-col gap-24 pt-24">
             <Section title={t("sections.analyze")} titleSize="h2">
-              <AnalyzeCard />
+              <div className="flex flex-col gap-8 md:flex-row md:items-start">
+                <AnalyzeCard />
+                {!isDreamJobFilled(user) && <DreamJobCard />}
+              </div>
             </Section>
 
             {analysesPromise && (

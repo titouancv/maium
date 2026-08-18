@@ -225,7 +225,9 @@
     "actions": {
       "analyzeTitle": "Lancer une analyse",
       "analyzeDescription": "Collez une offre : l'IA la confronte à votre profil, réécrit votre CV pour cette offre et rédige la lettre de motivation.",
-      "analyzeHistory": "Voir toutes mes analyses"
+      "analyzeHistory": "Voir toutes mes analyses",
+      "dreamJobTitle": "Mon job de rêve",
+      "dreamJobDescription": "Décrivez le poste, le salaire et l'entreprise que vous visez : l'IA en tiendra compte dans ses analyses."
     },
     "sections": {
       "analyze": "Optimisez votre CV avec l'IA",
@@ -308,7 +310,10 @@
     "emailNotificationsDisabledDescription": "Vous ne recevez aucun email de notification. Vos notifications restent visibles dans l'application.",
     "emailLanguageTitle": "Langue des emails",
     "emailLanguageDescription": "La langue dans laquelle vos emails de notification sont écrits.",
-    "notificationsSaveError": "Nous n'avons pas pu enregistrer votre préférence. Veuillez réessayer."
+    "notificationsSaveError": "Nous n'avons pas pu enregistrer votre préférence. Veuillez réessayer.",
+    "dreamJobMenuLabel": "Mon job de rêve",
+    "dreamJobTitle": "Mon job de rêve",
+    "dreamJobSaveError": "Nous n'avons pas pu enregistrer vos préférences. Veuillez réessayer."
   },
   "welcome": {
     "greeting": "Bienvenue, {name} !",
@@ -424,6 +429,34 @@
     "male": "Homme",
     "female": "Femme",
     "other": "Autre"
+  },
+  "dreamJob": {
+    "intro": "Ces informations sont facultatives et restent privées : elles ne sont jamais visibles par les autres utilisateurs, elles servent uniquement à affiner l'analyse de vos candidatures.",
+    "companyTypesLabel": "Type(s) d'entreprise",
+    "workModeLabel": "Mode de travail préféré",
+    "locationLabel": "Localisation souhaitée",
+    "locationPlaceholder": "Paris, France ou Remote",
+    "salaryLabel": "Salaire annuel de rêve, brut",
+    "salaryPlaceholder": "45000",
+    "salarySuffix": "€ brut / an",
+    "industriesLabel": "Secteurs d'activité préférés",
+    "industriesPlaceholder": "Ajouter un secteur",
+    "companyValuesLabel": "Ce qui compte le plus pour vous dans une entreprise",
+    "companyValuesPlaceholder": "Autonomie, impact social, ambiance d'équipe..."
+  },
+  "dreamCompanyType": {
+    "startup": "Startup",
+    "scaleup": "Scale-up",
+    "sme": "PME",
+    "corporate": "Grand groupe / ETI",
+    "nonprofit": "Association / ONG",
+    "freelance": "Indépendant / Freelance"
+  },
+  "dreamWorkMode": {
+    "remote": "Remote",
+    "hybrid": "Hybride",
+    "onsite": "Présentiel",
+    "flexible": "Peu importe"
   },
   "experience": {
     "professional": {

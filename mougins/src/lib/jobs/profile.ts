@@ -5,7 +5,27 @@ import {
   type DbUserRaw,
 } from "@/lib/mappers/user";
 import type { CvExtraction } from "@/lib/validators/cv";
-import type { CandidateProfile } from "@/types/job";
+import type { CandidateDreamJob, CandidateProfile } from "@/types/job";
+import type { UserData } from "@/types/user";
+
+function buildDreamJob(user: UserData): CandidateDreamJob | undefined {
+  const dreamJob: CandidateDreamJob = {
+    companyTypes: user.dream_company_types?.length
+      ? user.dream_company_types
+      : undefined,
+    workMode: user.dream_work_mode ?? undefined,
+    location: user.dream_location || undefined,
+    salary: user.dream_salary ?? undefined,
+    industries: user.dream_industries?.length
+      ? user.dream_industries
+      : undefined,
+    companyValues: user.dream_company_values || undefined,
+  };
+
+  return Object.values(dreamJob).some((v) => v !== undefined)
+    ? dreamJob
+    : undefined;
+}
 
 export async function getCandidateProfile(
   userId: string,
@@ -13,7 +33,9 @@ export async function getCandidateProfile(
   const admin = createAdminClient();
   const { data } = await admin
     .from("users")
-    .select(`id, bio, ${USER_PROFILE_SELECT}`)
+    .select(
+      `id, bio, dream_company_types, dream_work_mode, dream_location, dream_salary, dream_industries, dream_company_values, ${USER_PROFILE_SELECT}`,
+    )
     .eq("id", userId)
     .single();
 
@@ -40,6 +62,7 @@ export async function getCandidateProfile(
     skills: user.skills ?? [],
     projects: user.projects ?? [],
     hobbies: user.hobbies ?? [],
+    dreamJob: buildDreamJob(user),
   };
 }
 
@@ -74,6 +97,7 @@ export function candidateWithoutHobbies(
     education: profile.education,
     skills: profile.skills,
     projects: profile.projects,
+    dreamJob: profile.dreamJob,
   };
 }
 

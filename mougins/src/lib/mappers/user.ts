@@ -1,4 +1,4 @@
-import { LOCALES, type Gender, type Locale } from "@/constants";
+import { LOCALES, type DreamWorkMode, type Gender, type Locale } from "@/constants";
 import type { Experience } from "@/types/experience";
 import type { UserData, Hobby, UserSummary } from "@/types/user";
 
@@ -56,6 +56,12 @@ export type DbUserRaw = {
   location?: string | null;
   bio?: string | null;
   profile_photo?: string | null;
+  dream_company_types?: string[] | null;
+  dream_work_mode?: string | null;
+  dream_location?: string | null;
+  dream_salary?: number | null;
+  dream_industries?: string[] | null;
+  dream_company_values?: string | null;
   user_experiences?: DbExperience[];
   user_skills?: DbSkill[];
   user_projects?: DbProject[];
@@ -102,6 +108,12 @@ export function mapUserFromDb(raw: DbUserRaw): UserData {
     location: raw.location,
     bio: raw.bio,
     profile_photo: raw.profile_photo ?? null,
+    dream_company_types: raw.dream_company_types ?? [],
+    dream_work_mode: (raw.dream_work_mode as DreamWorkMode | null) ?? null,
+    dream_location: raw.dream_location ?? null,
+    dream_salary: raw.dream_salary ?? null,
+    dream_industries: raw.dream_industries ?? [],
+    dream_company_values: raw.dream_company_values ?? null,
     professional_experiences: exps
       .filter((e) => e.type === "professional")
       .map(mapExperience),
