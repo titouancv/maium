@@ -41,7 +41,7 @@ export const ActionCard = ({
   );
 
   return (
-    <div className="flex h-full gap-4 md:gap-8">
+    <div className="flex h-full flex-col gap-4 md:flex-row md:gap-8">
       {illustration && (
         <Image
           src={illustration}

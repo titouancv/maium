@@ -78,7 +78,7 @@ export const HomeContent = ({
         <>
           <div className="flex w-full max-w-7xl flex-col gap-24 pt-24">
             <Section title={t("sections.analyze")} titleSize="h2">
-              <div className="flex flex-col gap-8 md:flex-row md:items-start">
+              <div className="flex flex-col gap-8 md:items-start">
                 <AnalyzeCard />
                 {!isDreamJobFilled(user) && <DreamJobCard />}
               </div>

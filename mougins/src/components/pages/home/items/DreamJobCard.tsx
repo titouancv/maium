@@ -12,7 +12,8 @@ export const DreamJobCard = () => {
       actionLabel={t("actions.dreamJobTitle")}
       description={t("actions.dreamJobDescription")}
       href={`${ROUTES.SETTINGS_DREAM_JOB}?onboarding=1`}
-      emphasis="compact"
+      emphasis="hero"
+      primary
     />
   );
 };
