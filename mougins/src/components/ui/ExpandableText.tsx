@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
 import { cn } from "@/lib/utils";
 import { Button } from "./Button";
+import { Text } from "./Text";
 
 const CLAMPS = {
   3: "line-clamp-3",
@@ -34,16 +35,17 @@ export function ExpandableText({
 
   return (
     <div>
-      <p
+      <Text
         ref={ref}
+        size="sm"
         className={cn(
-          "text-txt text-sm whitespace-pre-line",
+          "whitespace-pre-line",
           !expanded && CLAMPS[lines],
           className,
         )}
       >
         {children}
-      </p>
+      </Text>
       {(isClamped || expanded) && (
         <Button
           type="button"

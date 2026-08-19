@@ -77,23 +77,28 @@ export const ProfileContent = ({
       </aside>
 
       <main className="flex flex-1 flex-col gap-6 md:min-h-0 md:overflow-y-auto">
-        <Tabs
-          tabs={[
-            t("tabOverview"),
-            t("tabExperience"),
-            t("tabProjects"),
-            t("tabSkillsLinks"),
-          ]}
-          activeTab={activeTab}
-          onChange={setActiveTab}
-        />
+        <div className="flex">
+          <Tabs
+            tabs={[
+              t("tabOverview"),
+              t("tabExperience"),
+              t("tabProjects"),
+              t("tabSkillsLinks"),
+            ]}
+            activeTab={activeTab}
+            onChange={setActiveTab}
+            layoutId="activeProfileTab"
+          />
+        </div>
 
         <div className="flex flex-col gap-8">
           {activeTab === OVERVIEW_TAB &&
             (hasOverview ? (
               <>
                 {hasPhotos && <ProfilePhotoGallery photos={user.photos!} />}
-                {user.bio && <p className="whitespace-pre-line">{user.bio}</p>}
+                {user.bio && (
+                  <Text className="whitespace-pre-line">{user.bio}</Text>
+                )}
                 {hasHobbies && (
                   <Section title={t("hobbies")}>
                     <HobbyList hobbies={user.hobbies!} />
@@ -116,7 +121,9 @@ export const ProfileContent = ({
                 )}
                 {hasEducational && (
                   <Section title={t("educationalExperiences")}>
-                    <ExperienceList experiences={user.educational_experiences!} />
+                    <ExperienceList
+                      experiences={user.educational_experiences!}
+                    />
                   </Section>
                 )}
                 {hasPersonal && (
