@@ -176,10 +176,7 @@ export const HOME_STATS_REFETCH_DEBOUNCE_MS = 800;
 
 export const HOME_RECENT_ANALYSES_LIMIT = 4;
 
-export const DEFAULT_PROFILE_PHOTO_COUNT = 10;
-
-export const DEFAULT_PROFILE_PHOTO = (index: number) =>
-  `/assets/defaultProfilePhoto${index}.png`;
+export const DEFAULT_PROFILE_PHOTO = "/assets/avatarMaium.png";
 
 export const DEFAULT_FRAME = "/assets/defaultFrame.png";
 

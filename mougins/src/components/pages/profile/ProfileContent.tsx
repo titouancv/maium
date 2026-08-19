@@ -40,7 +40,6 @@ export const ProfileContent = ({
               pseudo={user.pseudo}
               src={user.profile_photo}
               displayName={displayName}
-              gender={user.gender ?? null}
               hideNameOnDesktop
             />
           </div>

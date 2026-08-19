@@ -73,7 +73,6 @@ export const NotificationRow = ({ notification }: NotificationRowProps) => {
         first_name={actor.first_name}
         last_name={actor.last_name}
         profilePhoto={actor.profile_photo}
-        gender={actor.gender}
         href={href}
         subtitle={subtitle}
         subtitleClassName={subtitleClassName}
