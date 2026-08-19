@@ -418,6 +418,7 @@
     "projects": "Projects",
     "hobbies": "Hobbies",
     "skills": "Skills",
+    "skillPrompt": "What is the skill \"{skill}\"?",
     "socialNetworks": "Links",
     "notFound": "Profile not found",
     "followersTitle": "Followers",

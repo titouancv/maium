@@ -1,10 +1,5 @@
 import Image from "next/image";
-import {
-  DEFAULT_FRAME,
-  DEFAULT_PROFILE_PHOTO,
-  DEFAULT_PROFILE_PHOTO_COUNT,
-  type Gender,
-} from "@/constants";
+import { DEFAULT_FRAME, DEFAULT_PROFILE_PHOTO } from "@/constants";
 import { cn } from "@/lib/utils";
 
 interface ProfilePhotoProps {
@@ -13,21 +8,11 @@ interface ProfilePhotoProps {
   src?: string | null;
   sizes?: string;
   className?: string;
-  gender: Gender | null;
   hideNameOnDesktop?: boolean;
 
   isFramed?: boolean;
   isFrameMuted?: boolean;
 }
-
-const defaultPhotoIndex = (pseudo: string, gender: Gender | null) => {
-  if (gender === "male" || gender === "female") {
-    const half = DEFAULT_PROFILE_PHOTO_COUNT / 2;
-    const offset = gender === "male" ? 2 : 1; // even vs. odd 1-based index
-    return (pseudo.length % half) * 2 + offset;
-  }
-  return (pseudo.length % DEFAULT_PROFILE_PHOTO_COUNT) + 1;
-};
 
 export const ProfilePhoto = ({
   pseudo,
@@ -35,12 +20,11 @@ export const ProfilePhoto = ({
   src,
   sizes = "(max-width: 768px) 96px, 20vw",
   className,
-  gender,
   hideNameOnDesktop = false,
   isFramed = false,
   isFrameMuted = false,
 }: ProfilePhotoProps) => {
-  const photo = src ?? DEFAULT_PROFILE_PHOTO(defaultPhotoIndex(pseudo, gender));
+  const photo = src ?? DEFAULT_PROFILE_PHOTO;
 
   return (
     <div

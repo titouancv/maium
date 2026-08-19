@@ -95,6 +95,7 @@ export const EXTERNAL_API = {
   FAVICON: "https://www.google.com/s2/favicons",
   YOUTUBE_SEARCH: "https://www.youtube.com/results",
   GOOGLE_SEARCH: "https://www.google.com/search",
+  MISTRAL_CHAT: "https://chat.mistral.ai/chat",
 } as const;
 
 export const DAY_MS = 24 * 60 * 60 * 1000;
@@ -176,10 +177,7 @@ export const HOME_STATS_REFETCH_DEBOUNCE_MS = 800;
 
 export const HOME_RECENT_ANALYSES_LIMIT = 4;
 
-export const DEFAULT_PROFILE_PHOTO_COUNT = 10;
-
-export const DEFAULT_PROFILE_PHOTO = (index: number) =>
-  `/assets/defaultProfilePhoto${index}.png`;
+export const DEFAULT_PROFILE_PHOTO = "/assets/avatarMaium.png";
 
 export const DEFAULT_FRAME = "/assets/defaultFrame.png";
 

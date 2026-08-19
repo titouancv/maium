@@ -29,7 +29,6 @@ export function CompanyContactItem({ contact }: CompanyContactItemProps) {
         first_name={contact.first_name}
         last_name={contact.last_name}
         profilePhoto={contact.profile_photo}
-        gender={contact.gender}
         subtitle={period}
       />
       <Button
