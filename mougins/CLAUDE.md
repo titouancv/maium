@@ -358,6 +358,9 @@ OAuth flow: Google → Supabase → `/auth/callback` → `exchangeCodeForSession
 | `GET` | `/api/users/following` | List who a user follows |
 | `POST/DELETE` | `/api/users/follow` | Follow / unfollow a user |
 | `POST` | `/api/users/view` | Record a (deduped) profile view |
+| `POST/PATCH` | `/api/users/me/photos` | Add a profile gallery photo (max 9) / reorder them |
+| `DELETE` | `/api/users/me/photos/:id` | Remove a profile gallery photo |
+| `GET` | `/api/hobbies/personality-search` | Search Wikipedia for a "personality" hobby's photo (auth not required) |
 | `GET/POST` | `/api/messages/conversations` | List / create conversations |
 | `GET/POST` | `/api/messages/conversations/:id/messages` | Get / send messages in a conversation |
 | `PATCH` | `/api/messages/conversations/:id/read` | Mark a conversation as read |
@@ -810,6 +813,7 @@ never invented twice. Import from `@/components/ui`.
 | `Title` · `Section` · `Markdown` | Headings and long-form content. |
 | `Button` · `Chip` · `ChipList` · `Tabs` · `TabsVertical` · `MenuList` · `SlideToEnter` | Actions and choices. |
 | `Selector` | One value at a time out of an **ordered** list: chevrons step through it, the neighbours peek in at the edges under a fade. Values are `primary` by default; per-value colour is opt-in through an explicit `color` and is reserved for application status (`APPLICATION_STATUS_COLORS` in [constants/ui.ts](src/constants/ui.ts), one semantic token per status). Use `Tabs` instead when every option must be visible at once. |
+| `CoverFlow` | Generic 3D carousel (drag or chevrons, off-center items tilt via `rotateY`) — used for the profile photo gallery, but not photo-specific. |
 | `TextInput` · `TextArea` · `DateInput` · `PhoneInput` · `SearchInput` · `LocationInput` | Fields (see `form/` for whole steps). |
 | `Skeleton` · `ProgressBar` · `NumberRoller` | Loading and numbers. |
 | `UserCard` · `ProfilePhoto` · `ProfilePhotoPicker` | People. |

@@ -26,7 +26,7 @@ describe("getProfileCompletion", () => {
       professional_experiences: [{} as never],
       educational_experiences: [{} as never],
       skills: ["math"],
-      hobbies: [{ title: "h", description: "d" }],
+      hobbies: [{ title: "h", description: "d", category: "text" }],
       social_networks: ["https://example.com"],
     };
     expect(getProfileCompletion(full)).toEqual({
@@ -58,7 +58,7 @@ describe("getProfileCompletion", () => {
       professional_experiences: [{} as never],
       educational_experiences: [{} as never],
       skills: ["math"],
-      hobbies: [{ title: "h", description: "d" }],
+      hobbies: [{ title: "h", description: "d", category: "text" }],
     };
     const result = getProfileCompletion(almostFull);
     expect(result.percent).toBe(86);

@@ -60,7 +60,9 @@ export async function getCandidateProfile(
       description: e.description ?? "",
     })),
     skills: user.skills ?? [],
-    projects: user.projects ?? [],
+    projects: (user.projects ?? []).map((p) =>
+      p.bio ? `${p.title}: ${p.bio}` : p.title,
+    ),
     hobbies: user.hobbies ?? [],
     dreamJob: buildDreamJob(user),
   };

@@ -7,7 +7,15 @@ import { clearAnonSession, getAnonId } from "./anonSession";
 const OWNED_TABLES = ["analysis_jobs", "analyses", "optimized_resumes"] as const;
 
 const EXISTING_PROFILE_SELECT =
-  "onboarding_completed, phone, nationality, location, bio, user_experiences(type), user_skills(name), user_projects(url), user_social_networks(url), user_hobbies(title)";
+  "onboarding_completed, phone, nationality, location, bio, user_experiences(type), user_skills(name), user_projects(title), user_social_networks(url), user_hobbies(title)";
+
+function hostnameOf(url: string): string | null {
+  try {
+    return new URL(url).hostname;
+  } catch {
+    return null;
+  }
+}
 
 interface ExistingProfile {
   onboarding_completed: boolean | null;
@@ -44,11 +52,25 @@ function fillableFromCv(cv: CvExtraction, existing: ExistingProfile): ProfilePat
   }
 
   if (cv.skills?.length && !existing.user_skills?.length) patch.skills = cv.skills;
-  if (cv.projects?.length && !existing.user_projects?.length) patch.projects = cv.projects;
+  if (cv.projects?.length && !existing.user_projects?.length) {
+    patch.projects = cv.projects.map((url) => ({
+      title: hostnameOf(url) ?? url,
+      websiteUrl: url,
+      githubUrl: undefined,
+      imageUrl: undefined,
+    }));
+  }
   if (cv.socialNetworks?.length && !existing.user_social_networks?.length) {
     patch.socialNetworks = cv.socialNetworks;
   }
-  if (cv.hobbies?.length && !existing.user_hobbies?.length) patch.hobbies = cv.hobbies;
+  if (cv.hobbies?.length && !existing.user_hobbies?.length) {
+    patch.hobbies = cv.hobbies.map((h) => ({
+      ...h,
+      category: "text" as const,
+      imageUrl: undefined,
+      sourceUrl: undefined,
+    }));
+  }
 
   return patch;
 }

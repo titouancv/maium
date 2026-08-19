@@ -6,6 +6,7 @@ import { useRouter } from "@/i18n/navigation";
 import { MenuList } from "@/components/ui";
 import { EditInfoOverlay, type EditableField } from "./EditInfoOverlay";
 import { EditProfilePhotoOverlay } from "./EditProfilePhotoOverlay";
+import { EditPhotoGalleryOverlay } from "./EditPhotoGalleryOverlay";
 import type { UserData } from "@/types";
 import { formatTimestampToDate } from "@/lib/date";
 
@@ -21,6 +22,7 @@ export const MyInformationMenu = ({ userPromise }: MyInformationMenuProps) => {
   const router = useRouter();
   const [editingField, setEditingField] = useState<EditableField | null>(null);
   const [editingPhoto, setEditingPhoto] = useState(false);
+  const [editingGallery, setEditingGallery] = useState(false);
 
   const handleSaved = () => router.refresh();
 
@@ -40,6 +42,13 @@ export const MyInformationMenu = ({ userPromise }: MyInformationMenuProps) => {
               label: t("profilePhoto"),
               value: user.profile_photo ? t("profilePhotoSet") : undefined,
               onClick: () => setEditingPhoto(true),
+            },
+            {
+              label: t("photos"),
+              value: user.photos?.length
+                ? String(user.photos.length)
+                : undefined,
+              onClick: () => setEditingGallery(true),
             },
             {
               label: tHome("pseudo"),
@@ -155,6 +164,14 @@ export const MyInformationMenu = ({ userPromise }: MyInformationMenuProps) => {
         <EditProfilePhotoOverlay
           user={user}
           onClose={() => setEditingPhoto(false)}
+          onSaved={handleSaved}
+        />
+      )}
+
+      {editingGallery && (
+        <EditPhotoGalleryOverlay
+          photos={user.photos ?? []}
+          onClose={() => setEditingGallery(false)}
           onSaved={handleSaved}
         />
       )}

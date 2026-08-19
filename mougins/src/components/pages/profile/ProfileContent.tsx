@@ -1,10 +1,19 @@
 "use client";
 
+import { useState } from "react";
 import { useTranslations } from "next-intl";
-import { ChipList, ProfilePhoto, Section, Text } from "@/components/ui";
+import {
+  ChipList,
+  EmptyState,
+  ProfilePhoto,
+  Section,
+  Tabs,
+  Text,
+} from "@/components/ui";
 import { ExperienceList } from "@/components/ui";
 import type { UserData } from "@/types";
-import { HobbyList, SocialNetworkItem, UrlItem } from "@/components/ui";
+import { HobbyList, ProjectList, SocialNetworkItem } from "@/components/ui";
+import { ProfilePhotoGallery } from "./collections";
 import { skillChatUrl } from "@/lib/skills";
 
 interface ProfileContentProps {
@@ -13,12 +22,18 @@ interface ProfileContentProps {
   rankSlot: React.ReactNode;
 }
 
+const OVERVIEW_TAB = 0;
+const EXPERIENCE_TAB = 1;
+const PROJECTS_TAB = 2;
+const SKILLS_LINKS_TAB = 3;
+
 export const ProfileContent = ({
   user,
   followSlot,
   rankSlot,
 }: ProfileContentProps) => {
   const t = useTranslations("profile");
+  const [activeTab, setActiveTab] = useState(OVERVIEW_TAB);
 
   const displayName = {
     firstName: user.first_name,
@@ -31,6 +46,10 @@ export const ProfileContent = ({
   const hasHobbies = (user.hobbies?.length ?? 0) > 0;
   const hasSkills = (user.skills?.length ?? 0) > 0;
   const hasSocialNetworks = (user.social_networks?.length ?? 0) > 0;
+  const hasPhotos = (user.photos?.length ?? 0) > 0;
+  const hasOverview = Boolean(user.bio) || hasHobbies || hasPhotos;
+  const hasExperience = hasProfessional || hasEducational || hasPersonal;
+  const hasSkillsOrLinks = hasSkills || hasSocialNetworks;
 
   return (
     <div className="flex h-full w-full max-w-7xl flex-col gap-8 pt-0 md:flex-row">
@@ -57,60 +76,97 @@ export const ProfileContent = ({
         </div>
       </aside>
 
-      <main className="flex flex-1 flex-col gap-8 md:min-h-0 md:w-3/5 md:overflow-y-auto">
-        {user.bio && <p className="whitespace-pre-line">{user.bio}</p>}
-        {hasProfessional && (
-          <Section title={t("professionalExperiences")}>
-            <ExperienceList experiences={user.professional_experiences!} />
-          </Section>
-        )}
-        {hasEducational && (
-          <Section title={t("educationalExperiences")}>
-            <ExperienceList experiences={user.educational_experiences!} />
-          </Section>
-        )}
-        {hasPersonal && (
-          <Section title={t("personalExperiences")}>
-            <ExperienceList experiences={user.personal_experiences!} />
-          </Section>
-        )}
-        {hasHobbies && (
-          <Section title={t("hobbies")}>
-            <HobbyList hobbies={user.hobbies!} />
-          </Section>
-        )}
+      <main className="flex flex-1 flex-col gap-6 md:min-h-0 md:overflow-y-auto">
+        <Tabs
+          tabs={[
+            t("tabOverview"),
+            t("tabExperience"),
+            t("tabProjects"),
+            t("tabSkillsLinks"),
+          ]}
+          activeTab={activeTab}
+          onChange={setActiveTab}
+        />
+
+        <div className="flex flex-col gap-8">
+          {activeTab === OVERVIEW_TAB &&
+            (hasOverview ? (
+              <>
+                {hasPhotos && <ProfilePhotoGallery photos={user.photos!} />}
+                {user.bio && <p className="whitespace-pre-line">{user.bio}</p>}
+                {hasHobbies && (
+                  <Section title={t("hobbies")}>
+                    <HobbyList hobbies={user.hobbies!} />
+                  </Section>
+                )}
+              </>
+            ) : (
+              <EmptyState label={t("emptySection")} align="center" />
+            ))}
+
+          {activeTab === EXPERIENCE_TAB &&
+            (hasExperience ? (
+              <>
+                {hasProfessional && (
+                  <Section title={t("professionalExperiences")}>
+                    <ExperienceList
+                      experiences={user.professional_experiences!}
+                    />
+                  </Section>
+                )}
+                {hasEducational && (
+                  <Section title={t("educationalExperiences")}>
+                    <ExperienceList experiences={user.educational_experiences!} />
+                  </Section>
+                )}
+                {hasPersonal && (
+                  <Section title={t("personalExperiences")}>
+                    <ExperienceList experiences={user.personal_experiences!} />
+                  </Section>
+                )}
+              </>
+            ) : (
+              <EmptyState label={t("emptySection")} align="center" />
+            ))}
+
+          {activeTab === PROJECTS_TAB &&
+            (hasProjects ? (
+              <ProjectList projects={user.projects!} />
+            ) : (
+              <EmptyState label={t("emptySection")} align="center" />
+            ))}
+
+          {activeTab === SKILLS_LINKS_TAB &&
+            (hasSkillsOrLinks ? (
+              <>
+                {hasSkills && (
+                  <Section title={t("skills")}>
+                    <ChipList
+                      items={user.skills!}
+                      variant="outlineMuted"
+                      getHref={(skill) =>
+                        skillChatUrl(t("skillPrompt", { skill }))
+                      }
+                    />
+                  </Section>
+                )}
+                {hasSocialNetworks && (
+                  <Section title={t("socialNetworks")}>
+                    <div className="flex flex-col gap-2">
+                      {user.social_networks!.map((url, i) => (
+                        <SocialNetworkItem url={url} key={i} />
+                      ))}
+                    </div>
+                  </Section>
+                )}
+              </>
+            ) : (
+              <EmptyState label={t("emptySection")} align="center" />
+            ))}
+        </div>
+
         <div className="h-0 shrink-0 md:h-32" />
       </main>
-
-      <aside className="flex flex-col gap-8 md:w-1/5">
-        {hasSkills && (
-          <Section title={t("skills")}>
-            <ChipList
-              items={user.skills!}
-              variant="outlineMuted"
-              getHref={(skill) => skillChatUrl(t("skillPrompt", { skill }))}
-            />
-          </Section>
-        )}
-        {hasSocialNetworks && (
-          <Section title={t("socialNetworks")}>
-            <div className="flex flex-col gap-2">
-              {user.social_networks!.map((url, i) => (
-                <SocialNetworkItem url={url} key={i} />
-              ))}
-            </div>
-          </Section>
-        )}
-        {hasProjects && (
-          <Section title={t("projects")}>
-            <div className="flex flex-col gap-2">
-              {user.projects!.map((url, i) => (
-                <UrlItem url={url} key={i} />
-              ))}
-            </div>
-          </Section>
-        )}
-      </aside>
       <div className="h-24 shrink-0 md:h-0" />
     </div>
   );

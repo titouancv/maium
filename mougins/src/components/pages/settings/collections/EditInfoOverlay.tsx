@@ -14,7 +14,7 @@ import { Form } from "@/components/form";
 import type { FormProps } from "@/components/form";
 import type { UserData } from "@/types/user";
 import type { Experience } from "@/types/experience";
-import { HobbyData } from "@/types/user";
+import { HobbyData, type Project } from "@/types/user";
 
 export type EditableField =
   | "name"
@@ -64,11 +64,13 @@ export const EditInfoOverlay = ({ field, user, onClose, onSaved }: Props) => {
   const [currentStrItems, setCurrentStrItems] = useState<string[]>(() => {
     if (field === "skills") return user.skills ?? [];
     if (field === "socialNetworks") return user.social_networks ?? [];
-    if (field === "projects") return user.projects ?? [];
     return [];
   });
   const [currentHobbies, setCurrentHobbies] = useState<HobbyData[]>(
     user.hobbies ?? [],
+  );
+  const [currentProjects, setCurrentProjects] = useState<Project[]>(
+    user.projects ?? [],
   );
   const [currentBio, setCurrentBio] = useState<string>(user.bio ?? "");
 
@@ -235,10 +237,10 @@ export const EditInfoOverlay = ({ field, user, onClose, onSaved }: Props) => {
       case "projects":
         return {
           ...base,
-          type: "urls",
+          type: "projects",
           defaultValue: user.projects ?? [],
-          onChange: (items) => setCurrentStrItems(items),
-          onPrimary: () => save({ projects: currentStrItems }),
+          onChange: (projects) => setCurrentProjects(projects),
+          onPrimary: () => save({ projects: currentProjects }),
         };
       case "hobbies":
         return {

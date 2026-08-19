@@ -2,6 +2,7 @@ export * from "./BackButton";
 export * from "./Button";
 export * from "./Chip";
 export * from "./ChipList";
+export * from "./CoverFlow";
 export * from "./LocationInput";
 export * from "./SearchInput";
 export * from "./Selector";

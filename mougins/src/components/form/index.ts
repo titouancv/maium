@@ -6,7 +6,6 @@ export { DateForm } from "./DateForm";
 export { FullNameForm } from "./FullNameForm";
 export { PhoneNumberForm } from "./PhoneNumberForm";
 export { LocationForm } from "./LocationForm";
-export { UrlsForm } from "./UrlsForm";
 export { SocialNetworkForm } from "./SocialNetworkForm";
 export { KeysForm } from "./KeysForm";
 export { TextForm } from "./TextForm";

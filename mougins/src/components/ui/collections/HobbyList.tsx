@@ -1,10 +1,9 @@
 "use client";
 
-import type { HobbyData } from "@/types/user";
-import { HobbyItem } from "../items/HobbyItem";
+import { HobbyItem, type HobbyItemData } from "../items/HobbyItem";
 
 interface Props {
-  hobbies: HobbyData[];
+  hobbies: HobbyItemData[];
   onEdit?: (index: number) => void;
 }
 

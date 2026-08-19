@@ -8,20 +8,25 @@ import { KeysForm } from "./KeysForm";
 import { LocationForm } from "./LocationForm";
 import { PhoneNumberForm } from "./PhoneNumberForm";
 import { SocialNetworkForm } from "./SocialNetworkForm";
-import { UrlsForm } from "./UrlsForm";
 import { TextForm } from "./TextForm";
 import { LongTextForm } from "./LongTextForm";
 import { DateRangeForm } from "./DateRangeForm";
 import { ExperiencesForm } from "./ExperiencesForm";
 import { HobbiesForm } from "./HobbiesForm";
+import { ResumeHobbiesForm } from "./ResumeHobbiesForm";
 import { PseudoForm } from "./PseudoForm";
 import { SelectForm, type SelectOption } from "./SelectForm";
 import { CvImportForm } from "./CvImportForm";
 import { ProfilePhotoForm } from "./ProfilePhotoForm";
+import { HobbyPlaceForm } from "./HobbyPlaceForm";
+import { HobbyPersonalityForm } from "./HobbyPersonalityForm";
+import { ProjectImageForm, type ProjectImageValue } from "./ProjectImageForm";
+import { ProjectsForm } from "./ProjectsForm";
 import type { DateMode } from "@/components/ui/DateInput";
 import type { Experience } from "@/types/experience";
 import type { CvExtraction } from "@/lib/validators/cv";
-import { HobbyData } from "@/types/user";
+import { HobbyData, type Project } from "@/types/user";
+import type { ResumeHobby } from "@/types/job";
 import {
   EXPERIENCE_NAMESPACE,
   type ExperienceNamespace,
@@ -48,11 +53,11 @@ export type FormValueMap = {
   date: { dob: number };
   fullName: { firstName: string; lastName: string };
   hobbies: HobbyData[];
+  resumeHobbies: ResumeHobby[];
   keys: string[];
   location: { location: string };
   phoneNumber: { phone: string };
   socialNetwork: string[];
-  urls: string[];
   text: string;
   longText: string;
   dateRange: { startDate: number | null; endDate: number | null };
@@ -61,17 +66,21 @@ export type FormValueMap = {
   select: string;
   cvImport: CvExtraction;
   profilePhoto: string;
+  hobbyPlace: { countryName: string; countryCode: string };
+  hobbyPersonality: { title: string; imageUrl?: string; sourceUrl?: string };
+  projects: Project[];
+  projectImage: ProjectImageValue | null;
 };
 
 export type FormDefaultValueMap = {
   date: number | null;
   fullName: { firstName?: string; lastName?: string };
   hobbies: HobbyData[];
+  resumeHobbies: ResumeHobby[];
   keys: string[];
   location: string;
   phoneNumber: string;
   socialNetwork: string[];
-  urls: string[];
   text: string;
   longText: string;
   dateRange: {
@@ -83,17 +92,21 @@ export type FormDefaultValueMap = {
   select: string;
   cvImport: never;
   profilePhoto: string;
+  hobbyPlace: { countryName: string; countryCode: string };
+  hobbyPersonality: { title: string; imageUrl?: string; sourceUrl?: string };
+  projects: Project[];
+  projectImage: ProjectImageValue | null;
 };
 
 export type FormConfigMap = {
   date: never;
   fullName: never;
   hobbies: never;
+  resumeHobbies: never;
   keys: { placeholder: string };
   location: { format?: "city-country" | "country" };
   phoneNumber: never;
   socialNetwork: never;
-  urls: never;
   text: {
     placeholder: string;
     infoLabel?: string;
@@ -114,6 +127,10 @@ export type FormConfigMap = {
   select: { options: SelectOption<string>[]; footer?: React.ReactNode };
   cvImport: never;
   profilePhoto: never;
+  hobbyPlace: never;
+  hobbyPersonality: never;
+  projects: never;
+  projectImage: never;
 };
 
 export type FormType = keyof FormValueMap;
@@ -168,10 +185,6 @@ const renderContent = (props: FormProps) => {
           defaultValue={props.defaultValue}
           onChange={props.onChange}
         />
-      );
-    case "urls":
-      return (
-        <UrlsForm defaultValue={props.defaultValue} onChange={props.onChange} />
       );
     case "text":
       return (
@@ -239,6 +252,13 @@ const renderContent = (props: FormProps) => {
           onChange={props.onChange}
         />
       );
+    case "resumeHobbies":
+      return (
+        <ResumeHobbiesForm
+          defaultValue={props.defaultValue}
+          onChange={props.onChange}
+        />
+      );
     case "cvImport":
       return (
         <CvImportForm
@@ -249,6 +269,35 @@ const renderContent = (props: FormProps) => {
     case "profilePhoto":
       return (
         <ProfilePhotoForm
+          defaultValue={props.defaultValue}
+          onChange={props.onChange}
+          isSubmitting={props.primaryLoading}
+        />
+      );
+    case "hobbyPlace":
+      return (
+        <HobbyPlaceForm
+          defaultValue={props.defaultValue}
+          onChange={props.onChange}
+        />
+      );
+    case "hobbyPersonality":
+      return (
+        <HobbyPersonalityForm
+          defaultValue={props.defaultValue}
+          onChange={props.onChange}
+        />
+      );
+    case "projects":
+      return (
+        <ProjectsForm
+          defaultValue={props.defaultValue}
+          onChange={props.onChange}
+        />
+      );
+    case "projectImage":
+      return (
+        <ProjectImageForm
           defaultValue={props.defaultValue}
           onChange={props.onChange}
           isSubmitting={props.primaryLoading}
@@ -275,11 +324,12 @@ const getDefaultTitle = (
     case "socialNetwork":
       return t("socialNetworkTitle");
     case "hobbies":
+    case "resumeHobbies":
       return t("hobbiesTitle");
     case "keys":
       return t("keysTitle");
-    case "urls":
-      return t("urlsTitle");
+    case "projects":
+      return t("projectsTitle");
     case "experiences":
       if (props.namespace === EXPERIENCE_NAMESPACE.educational)
         return t("experiencesEducationalTitle");

@@ -236,7 +236,7 @@ export function ResumeEditorOverlay({
       case 5:
         return {
           ...base,
-          type: "hobbies",
+          type: "resumeHobbies",
           title: t("detail.editHobbies"),
           defaultValue: draft.hobbies ?? [],
           onChange: (items) =>

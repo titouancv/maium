@@ -47,6 +47,9 @@ export const API = {
   USERS_FOLLOWING: "/api/users/following",
   AUTH_LOGOUT: "/api/auth/logout",
   URL_TITLE: "/api/url-title",
+  HOBBIES_PERSONALITY_SEARCH: "/api/hobbies/personality-search",
+  USERS_ME_PHOTOS: "/api/users/me/photos",
+  USERS_ME_PHOTO: (id: string) => `/api/users/me/photos/${id}`,
   MESSAGES_CONVERSATIONS: "/api/messages/conversations",
   MESSAGES_CONVERSATION_MESSAGES: (id: string) =>
     `/api/messages/conversations/${id}/messages`,
@@ -96,6 +99,7 @@ export const EXTERNAL_API = {
   YOUTUBE_SEARCH: "https://www.youtube.com/results",
   GOOGLE_SEARCH: "https://www.google.com/search",
   MISTRAL_CHAT: "https://chat.mistral.ai/chat",
+  FLAG_CDN: "https://flagcdn.com",
 } as const;
 
 export const DAY_MS = 24 * 60 * 60 * 1000;
@@ -194,6 +198,24 @@ export const PROFILE_PHOTO_MAX_BYTES = 5 * 1024 * 1024;
 
 export const PROFILE_PHOTO_OUTPUT_WIDTH = 700;
 
+export const PROJECT_IMAGE_BUCKET = "profile-project-images";
+
+export const PROJECT_IMAGE_ASPECT = 16 / 9;
+
+export const PROJECT_IMAGE_MAX_BYTES = 5 * 1024 * 1024;
+
+export const PROJECT_IMAGE_OUTPUT_WIDTH = 1200;
+
+export const PROFILE_GALLERY_PHOTOS_BUCKET = "profile-gallery-photos";
+
+export const PROFILE_GALLERY_PHOTO_ASPECT = 4 / 5;
+
+export const PROFILE_GALLERY_PHOTO_MAX_BYTES = 5 * 1024 * 1024;
+
+export const PROFILE_GALLERY_PHOTO_OUTPUT_WIDTH = 900;
+
+export const PROFILE_GALLERY_MAX_PHOTOS = 9;
+
 export const EXPERIENCE_NAMESPACE = {
   professional: "experience.professional",
   educational: "experience.educational",
@@ -205,6 +227,15 @@ export type ExperienceNamespace =
 export const GENDERS = ["male", "female", "other"] as const;
 
 export type Gender = (typeof GENDERS)[number];
+
+export const HOBBY_CATEGORIES = [
+  "club",
+  "personality",
+  "place",
+  "text",
+] as const;
+
+export type HobbyCategory = (typeof HOBBY_CATEGORIES)[number];
 
 export const DREAM_COMPANY_TYPES = [
   "startup",

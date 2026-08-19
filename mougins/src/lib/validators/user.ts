@@ -3,6 +3,7 @@ import {
   DREAM_COMPANY_TYPES,
   DREAM_WORK_MODES,
   GENDERS,
+  HOBBY_CATEGORIES,
   LOCALES,
   MIN_SIGNUP_AGE,
   PSEUDO_MAX_LENGTH,
@@ -39,9 +40,21 @@ const ExperienceSchema = z
     path: ["endPeriod"],
   });
 
+const ProjectSchema = z.object({
+  title: z.string().min(1).max(120),
+  bio: z.string().optional(),
+  websiteUrl: optionalUrl,
+  githubUrl: optionalUrl,
+  imageUrl: optionalUrl,
+  imagePath: z.string().optional(),
+});
+
 const HobbySchema = z.object({
   title: z.string().min(1).max(100),
   description: z.string(),
+  category: z.enum(HOBBY_CATEGORIES),
+  imageUrl: optionalUrl,
+  sourceUrl: optionalUrl,
 });
 
 export const UpdateUserSchema = z
@@ -79,7 +92,7 @@ export const UpdateUserSchema = z
     hobbies: z.array(HobbySchema).optional(),
     personalExperiences: z.array(ExperienceSchema).optional(),
     skills: z.array(z.string().min(1).max(50)).optional(),
-    projects: z.array(z.string().url()).optional(),
+    projects: z.array(ProjectSchema).optional(),
     dreamCompanyTypes: z.array(z.enum(DREAM_COMPANY_TYPES)).optional(),
     dreamWorkMode: z.enum(DREAM_WORK_MODES).nullable().optional(),
     dreamLocation: z.string().max(150).nullable().optional(),
@@ -92,3 +105,16 @@ export const UpdateUserSchema = z
   });
 
 export type UpdateUserInput = z.infer<typeof UpdateUserSchema>;
+
+export const AddPhotoSchema = z.object({
+  url: z.url(),
+  path: z.string().min(1),
+});
+
+export type AddPhotoInput = z.infer<typeof AddPhotoSchema>;
+
+export const ReorderPhotosSchema = z.object({
+  order: z.array(z.string()).min(1),
+});
+
+export type ReorderPhotosInput = z.infer<typeof ReorderPhotosSchema>;

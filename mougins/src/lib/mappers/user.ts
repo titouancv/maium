@@ -1,6 +1,13 @@
-import { LOCALES, type DreamWorkMode, type Gender, type Locale } from "@/constants";
+import {
+  HOBBY_CATEGORIES,
+  LOCALES,
+  type DreamWorkMode,
+  type Gender,
+  type HobbyCategory,
+  type Locale,
+} from "@/constants";
 import type { Experience } from "@/types/experience";
-import type { UserData, Hobby, UserSummary } from "@/types/user";
+import type { UserData, Hobby, Project, UserPhoto, UserSummary } from "@/types/user";
 
 export function userToSummary(
   user: Pick<
@@ -36,9 +43,25 @@ type DbExperience = {
 };
 
 type DbSkill = { name: string; position: number };
-type DbProject = { url: string; position: number };
+type DbPhoto = { id: string; url: string; position: number };
+type DbProject = {
+  title: string;
+  bio: string | null;
+  website_url: string | null;
+  github_url: string | null;
+  image_url: string | null;
+  image_path: string | null;
+  position: number;
+};
 type DbSocialNetwork = { url: string; position: number };
-type DbHobby = { title: string; description: string; position: number };
+type DbHobby = {
+  title: string;
+  description: string;
+  category: string;
+  image_url: string | null;
+  source_url: string | null;
+  position: number;
+};
 
 export type DbUserRaw = {
   id?: string | null;
@@ -66,6 +89,7 @@ export type DbUserRaw = {
   user_skills?: DbSkill[];
   user_projects?: DbProject[];
   user_social_networks?: DbSocialNetwork[];
+  user_photos?: DbPhoto[];
   user_hobbies?: DbHobby[];
 };
 
@@ -75,6 +99,12 @@ function byPosition<T extends { position: number }>(a: T, b: T) {
 
 function toLocale(value: string | null | undefined): Locale {
   return LOCALES.includes(value as Locale) ? (value as Locale) : "en";
+}
+
+function toHobbyCategory(value: string): HobbyCategory {
+  return HOBBY_CATEGORIES.includes(value as HobbyCategory)
+    ? (value as HobbyCategory)
+    : "text";
 }
 
 function mapExperience(e: DbExperience): Experience {
@@ -124,20 +154,39 @@ export function mapUserFromDb(raw: DbUserRaw): UserData {
       .filter((e) => e.type === "personal")
       .map(mapExperience),
     skills: [...(raw.user_skills ?? [])].sort(byPosition).map((s) => s.name),
-    projects: [...(raw.user_projects ?? [])].sort(byPosition).map((p) => p.url),
+    projects: [...(raw.user_projects ?? [])].sort(byPosition).map(
+      (p): Project => ({
+        title: p.title,
+        bio: p.bio ?? undefined,
+        websiteUrl: p.website_url ?? undefined,
+        githubUrl: p.github_url ?? undefined,
+        imageUrl: p.image_url ?? undefined,
+        imagePath: p.image_path ?? undefined,
+      }),
+    ),
     social_networks: [...(raw.user_social_networks ?? [])]
       .sort(byPosition)
       .map((s) => s.url),
-    hobbies: [...(raw.user_hobbies ?? [])]
-      .sort(byPosition)
-      .map((h): Hobby => ({ title: h.title, description: h.description })),
+    hobbies: [...(raw.user_hobbies ?? [])].sort(byPosition).map(
+      (h): Hobby => ({
+        title: h.title,
+        description: h.description,
+        category: toHobbyCategory(h.category),
+        imageUrl: h.image_url ?? undefined,
+        sourceUrl: h.source_url ?? undefined,
+      }),
+    ),
+    photos: [...(raw.user_photos ?? [])].sort(byPosition).map(
+      (p): UserPhoto => ({ id: p.id, url: p.url, position: p.position }),
+    ),
   };
 }
 
 export const USER_PROFILE_SELECT = `
   user_experiences(type, organization, role, start_period, end_period, description, website, location, position),
   user_skills(name, position),
-  user_projects(url, position),
+  user_projects(title, bio, website_url, github_url, image_url, image_path, position),
   user_social_networks(url, position),
-  user_hobbies(title, description, position)
+  user_hobbies(title, description, category, image_url, source_url, position),
+  user_photos(id, url, position)
 `.trim();

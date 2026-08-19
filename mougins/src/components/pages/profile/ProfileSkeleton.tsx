@@ -36,7 +36,8 @@ export const ProfileBodySkeleton = () => (
       </div>
     </aside>
 
-    <main className="flex flex-1 flex-col gap-8 md:w-3/5">
+    <main className="flex flex-1 flex-col gap-6">
+      <Skeleton className="h-9 w-64 rounded-full" />
       <div className="flex flex-col gap-2">
         <Skeleton className="h-4 w-full" />
         <Skeleton className="h-4 w-3/4" />
@@ -44,9 +45,5 @@ export const ProfileBodySkeleton = () => (
       <SectionSkeleton rows={2} />
       <SectionSkeleton rows={1} />
     </main>
-
-    <aside className="flex flex-col gap-8 md:w-1/5">
-      <SectionSkeleton rows={2} />
-    </aside>
   </div>
 );
