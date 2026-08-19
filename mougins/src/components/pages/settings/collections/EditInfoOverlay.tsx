@@ -16,22 +16,25 @@ import type { UserData } from "@/types/user";
 import type { Experience } from "@/types/experience";
 import { HobbyData, type Project } from "@/types/user";
 
-export type EditableField =
-  | "name"
-  | "pseudo"
-  | "dob"
-  | "gender"
-  | "phone"
-  | "nationality"
-  | "location"
-  | "bio"
-  | "professionalExperiences"
-  | "educationalExperiences"
-  | "personalExperiences"
-  | "socialNetworks"
-  | "hobbies"
-  | "skills"
-  | "projects";
+export const EDITABLE_FIELDS = [
+  "name",
+  "pseudo",
+  "dob",
+  "gender",
+  "phone",
+  "nationality",
+  "location",
+  "bio",
+  "professionalExperiences",
+  "educationalExperiences",
+  "personalExperiences",
+  "socialNetworks",
+  "hobbies",
+  "skills",
+  "projects",
+] as const;
+
+export type EditableField = (typeof EDITABLE_FIELDS)[number];
 
 interface Props {
   field: EditableField;

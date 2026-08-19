@@ -18,6 +18,7 @@ export async function ProfileBody({ pseudo }: { pseudo: string }) {
       )}
       <ProfileContent
         user={bundle.user}
+        isOwner={bundle.isOwner}
         rankSlot={
           <Suspense fallback={null}>
             <ProfileRank pseudo={pseudo} />

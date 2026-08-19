@@ -2,9 +2,14 @@
 
 import { use, useState } from "react";
 import { useTranslations } from "next-intl";
+import { useSearchParams } from "next/navigation";
 import { useRouter } from "@/i18n/navigation";
 import { MenuList } from "@/components/ui";
-import { EditInfoOverlay, type EditableField } from "./EditInfoOverlay";
+import {
+  EDITABLE_FIELDS,
+  EditInfoOverlay,
+  type EditableField,
+} from "./EditInfoOverlay";
 import { EditProfilePhotoOverlay } from "./EditProfilePhotoOverlay";
 import { EditPhotoGalleryOverlay } from "./EditPhotoGalleryOverlay";
 import type { UserData } from "@/types";
@@ -14,15 +19,24 @@ interface MyInformationMenuProps {
   userPromise: Promise<UserData | null>;
 }
 
+const isEditableField = (value: string | null): value is EditableField =>
+  EDITABLE_FIELDS.includes(value as EditableField);
+
 export const MyInformationMenu = ({ userPromise }: MyInformationMenuProps) => {
   const user = use(userPromise);
   const t = useTranslations("settings");
   const tHome = useTranslations("home");
   const tGender = useTranslations("gender");
   const router = useRouter();
-  const [editingField, setEditingField] = useState<EditableField | null>(null);
+  const searchParams = useSearchParams();
+  const requestedField = searchParams.get("field");
+  const [editingField, setEditingField] = useState<EditableField | null>(() =>
+    isEditableField(requestedField) ? requestedField : null,
+  );
   const [editingPhoto, setEditingPhoto] = useState(false);
-  const [editingGallery, setEditingGallery] = useState(false);
+  const [editingGallery, setEditingGallery] = useState(
+    () => requestedField === "photos",
+  );
 
   const handleSaved = () => router.refresh();
 

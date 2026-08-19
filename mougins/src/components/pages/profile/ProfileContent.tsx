@@ -2,22 +2,20 @@
 
 import { useState } from "react";
 import { useTranslations } from "next-intl";
-import {
-  ChipList,
-  EmptyState,
-  ProfilePhoto,
-  Section,
-  Tabs,
-  Text,
-} from "@/components/ui";
+import { ChipList, ProfilePhoto, Section, Tabs, Text } from "@/components/ui";
 import { ExperienceList } from "@/components/ui";
 import type { UserData } from "@/types";
 import { HobbyList, ProjectList, SocialNetworkItem } from "@/components/ui";
 import { ProfilePhotoGallery } from "./collections";
+import {
+  ProfileEmptySection,
+  ProfileMissingSection,
+} from "./ProfileEmptySection";
 import { skillChatUrl } from "@/lib/skills";
 
 interface ProfileContentProps {
   user: UserData;
+  isOwner: boolean;
   followSlot: React.ReactNode;
   rankSlot: React.ReactNode;
 }
@@ -29,6 +27,7 @@ const SKILLS_LINKS_TAB = 3;
 
 export const ProfileContent = ({
   user,
+  isOwner,
   followSlot,
   rankSlot,
 }: ProfileContentProps) => {
@@ -93,60 +92,104 @@ export const ProfileContent = ({
 
         <div className="flex flex-col gap-8">
           {activeTab === OVERVIEW_TAB &&
-            (hasOverview ? (
+            (hasOverview || isOwner ? (
               <>
-                {hasPhotos && <ProfilePhotoGallery photos={user.photos!} />}
-                {user.bio && (
+                {user.bio ? (
                   <Text className="whitespace-pre-line">{user.bio}</Text>
+                ) : (
+                  <ProfileMissingSection
+                    isOwner={isOwner}
+                    title={t("bio")}
+                    descriptionKey="bio"
+                  />
                 )}
-                {hasHobbies && (
+                {hasPhotos ? (
+                  <ProfilePhotoGallery photos={user.photos!} />
+                ) : (
+                  <ProfileMissingSection
+                    isOwner={isOwner}
+                    title={t("photos")}
+                    descriptionKey="photos"
+                  />
+                )}
+                {hasHobbies ? (
                   <Section title={t("hobbies")}>
                     <HobbyList hobbies={user.hobbies!} />
                   </Section>
+                ) : (
+                  <ProfileMissingSection
+                    isOwner={isOwner}
+                    title={t("hobbies")}
+                    descriptionKey="hobbies"
+                  />
                 )}
               </>
             ) : (
-              <EmptyState label={t("emptySection")} align="center" />
+              <ProfileEmptySection />
             ))}
 
           {activeTab === EXPERIENCE_TAB &&
-            (hasExperience ? (
+            (hasExperience || isOwner ? (
               <>
-                {hasProfessional && (
+                {hasProfessional ? (
                   <Section title={t("professionalExperiences")}>
                     <ExperienceList
                       experiences={user.professional_experiences!}
                     />
                   </Section>
+                ) : (
+                  <ProfileMissingSection
+                    isOwner={isOwner}
+                    title={t("professionalExperiences")}
+                    descriptionKey="professionalExperiences"
+                  />
                 )}
-                {hasEducational && (
+                {hasEducational ? (
                   <Section title={t("educationalExperiences")}>
                     <ExperienceList
                       experiences={user.educational_experiences!}
                     />
                   </Section>
+                ) : (
+                  <ProfileMissingSection
+                    isOwner={isOwner}
+                    title={t("educationalExperiences")}
+                    descriptionKey="educationalExperiences"
+                  />
                 )}
-                {hasPersonal && (
+                {hasPersonal ? (
                   <Section title={t("personalExperiences")}>
                     <ExperienceList experiences={user.personal_experiences!} />
                   </Section>
+                ) : (
+                  <ProfileMissingSection
+                    isOwner={isOwner}
+                    title={t("personalExperiences")}
+                    descriptionKey="personalExperiences"
+                  />
                 )}
               </>
             ) : (
-              <EmptyState label={t("emptySection")} align="center" />
+              <ProfileEmptySection />
             ))}
 
           {activeTab === PROJECTS_TAB &&
             (hasProjects ? (
               <ProjectList projects={user.projects!} />
+            ) : isOwner ? (
+              <ProfileMissingSection
+                isOwner={isOwner}
+                title={t("projects")}
+                descriptionKey="projects"
+              />
             ) : (
-              <EmptyState label={t("emptySection")} align="center" />
+              <ProfileEmptySection />
             ))}
 
           {activeTab === SKILLS_LINKS_TAB &&
-            (hasSkillsOrLinks ? (
+            (hasSkillsOrLinks || isOwner ? (
               <>
-                {hasSkills && (
+                {hasSkills ? (
                   <Section title={t("skills")}>
                     <ChipList
                       items={user.skills!}
@@ -156,8 +199,14 @@ export const ProfileContent = ({
                       }
                     />
                   </Section>
+                ) : (
+                  <ProfileMissingSection
+                    isOwner={isOwner}
+                    title={t("skills")}
+                    descriptionKey="skills"
+                  />
                 )}
-                {hasSocialNetworks && (
+                {hasSocialNetworks ? (
                   <Section title={t("socialNetworks")}>
                     <div className="flex flex-col gap-2">
                       {user.social_networks!.map((url, i) => (
@@ -165,10 +214,16 @@ export const ProfileContent = ({
                       ))}
                     </div>
                   </Section>
+                ) : (
+                  <ProfileMissingSection
+                    isOwner={isOwner}
+                    title={t("socialNetworks")}
+                    descriptionKey="socialNetworks"
+                  />
                 )}
               </>
             ) : (
-              <EmptyState label={t("emptySection")} align="center" />
+              <ProfileEmptySection />
             ))}
         </div>
 
