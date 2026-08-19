@@ -418,6 +418,7 @@
     "projects": "Projets",
     "hobbies": "Loisirs",
     "skills": "Compétences",
+    "skillPrompt": "Qu'est-ce que la compétence « {skill} » ?",
     "socialNetworks": "Liens",
     "notFound": "Profil introuvable",
     "followersTitle": "Abonnés",

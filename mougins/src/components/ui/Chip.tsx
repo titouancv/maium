@@ -10,6 +10,7 @@ export interface ChipProps {
   variant?: UIVariant;
   onRemove?: () => void;
   onClick?: () => void;
+  href?: string;
   selected?: boolean;
   className?: string;
 }
@@ -19,6 +20,7 @@ export function Chip({
   variant = "outlineSecondary",
   onRemove,
   onClick,
+  href,
   selected,
   className,
 }: ChipProps) {
@@ -46,6 +48,19 @@ export function Chip({
     UI_VARIANTS[resolvedVariant],
     className,
   );
+
+  if (href) {
+    return (
+      <a
+        href={href}
+        target="_blank"
+        rel="noopener noreferrer"
+        className={classes}
+      >
+        {content}
+      </a>
+    );
+  }
 
   if (onClick) {
     return (

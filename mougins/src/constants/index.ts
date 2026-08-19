@@ -95,6 +95,7 @@ export const EXTERNAL_API = {
   FAVICON: "https://www.google.com/s2/favicons",
   YOUTUBE_SEARCH: "https://www.youtube.com/results",
   GOOGLE_SEARCH: "https://www.google.com/search",
+  MISTRAL_CHAT: "https://chat.mistral.ai/chat",
 } as const;
 
 export const DAY_MS = 24 * 60 * 60 * 1000;

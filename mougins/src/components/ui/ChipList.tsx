@@ -7,6 +7,7 @@ export interface ChipListProps {
   items: string[];
   variant?: UIVariant;
   onRemove?: (index: number) => void;
+  getHref?: (item: string, index: number) => string;
   className?: string;
 }
 
@@ -14,6 +15,7 @@ export function ChipList({
   items,
   variant = "outlineMuted",
   onRemove,
+  getHref,
   className,
 }: ChipListProps) {
   return (
@@ -24,6 +26,7 @@ export function ChipList({
           label={item}
           variant={variant}
           onRemove={onRemove ? () => onRemove(index) : undefined}
+          href={getHref ? getHref(item, index) : undefined}
         />
       ))}
     </div>

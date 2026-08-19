@@ -5,6 +5,7 @@ import { ChipList, ProfilePhoto, Section, Text } from "@/components/ui";
 import { ExperienceList } from "@/components/ui";
 import type { UserData } from "@/types";
 import { HobbyList, SocialNetworkItem, UrlItem } from "@/components/ui";
+import { skillChatUrl } from "@/lib/skills";
 
 interface ProfileContentProps {
   user: UserData;
@@ -84,7 +85,11 @@ export const ProfileContent = ({
       <aside className="flex flex-col gap-8 md:w-1/5">
         {hasSkills && (
           <Section title={t("skills")}>
-            <ChipList items={user.skills!} variant="outlineMuted" />
+            <ChipList
+              items={user.skills!}
+              variant="outlineMuted"
+              getHref={(skill) => skillChatUrl(t("skillPrompt", { skill }))}
+            />
           </Section>
         )}
         {hasSocialNetworks && (

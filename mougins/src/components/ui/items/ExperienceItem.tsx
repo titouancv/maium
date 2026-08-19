@@ -58,7 +58,7 @@ export const ExperienceItem = ({
   return (
     <div>
       <div className="flex items-center gap-4">
-        <Rail className="my-1" />
+        <Rail className="text-txt-muted my-1" />
         <div className="grid w-full grid-cols-[1fr_auto] items-center gap-3">
           <a
             className={`group flex min-w-0 flex-col ${website ? "cursor-pointer" : "cursor-default"}`}
