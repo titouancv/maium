@@ -161,6 +161,7 @@
     "backButton": "Back",
     "addButton": "Add",
     "editButton": "Edit",
+    "visitWebsiteButton": "Visit website",
     "sinceLabel": "since",
     "yearsCount": "{count, plural, one {# year} other {# years}}",
     "monthsCount": "{count, plural, one {# month} other {# months}}",
