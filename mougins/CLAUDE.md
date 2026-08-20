@@ -298,8 +298,8 @@ rules** — never collapse them into one setting.
   `requireApiUser()`, unlike the other resume endpoints an anonymous run can
   reach — a free run gets its English CV, not a second LLM call. The editor
   reflects that rather than letting the call 401: `canTranslate` (the current
-  user in the store) drops the language step entirely, so the wizard is 6 steps
-  for a visitor and 7 for an account. The step index is therefore **clamped at
+  user in the store) drops the language step entirely, so the wizard is 5 steps
+  for a visitor and 6 for an account. The step index is therefore **clamped at
   render** (`Math.max(step, firstStep)`), never seeded into `useState` —
   `UserHydration` streams inside a `Suspense`, so the store can still be empty
   on the first paint and the step must correct itself when it fills.
@@ -360,7 +360,7 @@ OAuth flow: Google → Supabase → `/auth/callback` → `exchangeCodeForSession
 | `POST` | `/api/users/view` | Record a (deduped) profile view |
 | `POST/PATCH` | `/api/users/me/photos` | Add a profile gallery photo (max 9) / reorder them |
 | `DELETE` | `/api/users/me/photos/:id` | Remove a profile gallery photo |
-| `GET` | `/api/hobbies/personality-search` | Search Wikipedia for a "personality" hobby's photo (auth not required) |
+| `GET` | `/api/hobbies/wikipedia-search` | Search Wikipedia for a hobby's visual — a personality's photo or a club/sport logo (auth not required) |
 | `GET/POST` | `/api/messages/conversations` | List / create conversations |
 | `GET/POST` | `/api/messages/conversations/:id/messages` | Get / send messages in a conversation |
 | `PATCH` | `/api/messages/conversations/:id/read` | Mark a conversation as read |

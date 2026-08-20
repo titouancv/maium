@@ -13,20 +13,17 @@ import { LongTextForm } from "./LongTextForm";
 import { DateRangeForm } from "./DateRangeForm";
 import { ExperiencesForm } from "./ExperiencesForm";
 import { HobbiesForm } from "./HobbiesForm";
-import { ResumeHobbiesForm } from "./ResumeHobbiesForm";
 import { PseudoForm } from "./PseudoForm";
 import { SelectForm, type SelectOption } from "./SelectForm";
 import { CvImportForm } from "./CvImportForm";
 import { ProfilePhotoForm } from "./ProfilePhotoForm";
-import { HobbyPlaceForm } from "./HobbyPlaceForm";
-import { HobbyPersonalityForm } from "./HobbyPersonalityForm";
+import { HobbyWikipediaForm } from "./HobbyWikipediaForm";
 import { ProjectImageForm, type ProjectImageValue } from "./ProjectImageForm";
 import { ProjectsForm } from "./ProjectsForm";
 import type { DateMode } from "@/components/ui/DateInput";
 import type { Experience } from "@/types/experience";
 import type { CvExtraction } from "@/lib/validators/cv";
 import { HobbyData, type Project } from "@/types/user";
-import type { ResumeHobby } from "@/types/job";
 import {
   EXPERIENCE_NAMESPACE,
   type ExperienceNamespace,
@@ -53,7 +50,6 @@ export type FormValueMap = {
   date: { dob: number };
   fullName: { firstName: string; lastName: string };
   hobbies: HobbyData[];
-  resumeHobbies: ResumeHobby[];
   keys: string[];
   location: { location: string };
   phoneNumber: { phone: string };
@@ -66,8 +62,7 @@ export type FormValueMap = {
   select: string;
   cvImport: CvExtraction;
   profilePhoto: string;
-  hobbyPlace: { countryName: string; countryCode: string };
-  hobbyPersonality: { title: string; imageUrl?: string; sourceUrl?: string };
+  hobbyWikipedia: { title: string; imageUrl?: string; sourceUrl?: string };
   projects: Project[];
   projectImage: ProjectImageValue | null;
 };
@@ -76,7 +71,6 @@ export type FormDefaultValueMap = {
   date: number | null;
   fullName: { firstName?: string; lastName?: string };
   hobbies: HobbyData[];
-  resumeHobbies: ResumeHobby[];
   keys: string[];
   location: string;
   phoneNumber: string;
@@ -92,8 +86,7 @@ export type FormDefaultValueMap = {
   select: string;
   cvImport: never;
   profilePhoto: string;
-  hobbyPlace: { countryName: string; countryCode: string };
-  hobbyPersonality: { title: string; imageUrl?: string; sourceUrl?: string };
+  hobbyWikipedia: { title: string; imageUrl?: string; sourceUrl?: string };
   projects: Project[];
   projectImage: ProjectImageValue | null;
 };
@@ -102,7 +95,6 @@ export type FormConfigMap = {
   date: never;
   fullName: never;
   hobbies: never;
-  resumeHobbies: never;
   keys: { placeholder: string };
   location: { format?: "city-country" | "country" };
   phoneNumber: never;
@@ -127,8 +119,10 @@ export type FormConfigMap = {
   select: { options: SelectOption<string>[]; footer?: React.ReactNode };
   cvImport: never;
   profilePhoto: never;
-  hobbyPlace: never;
-  hobbyPersonality: never;
+  hobbyWikipedia: {
+    infoLabel?: string;
+    infoType?: InfoType;
+  };
   projects: never;
   projectImage: never;
 };
@@ -252,13 +246,6 @@ const renderContent = (props: FormProps) => {
           onChange={props.onChange}
         />
       );
-    case "resumeHobbies":
-      return (
-        <ResumeHobbiesForm
-          defaultValue={props.defaultValue}
-          onChange={props.onChange}
-        />
-      );
     case "cvImport":
       return (
         <CvImportForm
@@ -274,18 +261,13 @@ const renderContent = (props: FormProps) => {
           isSubmitting={props.primaryLoading}
         />
       );
-    case "hobbyPlace":
+    case "hobbyWikipedia":
       return (
-        <HobbyPlaceForm
+        <HobbyWikipediaForm
           defaultValue={props.defaultValue}
           onChange={props.onChange}
-        />
-      );
-    case "hobbyPersonality":
-      return (
-        <HobbyPersonalityForm
-          defaultValue={props.defaultValue}
-          onChange={props.onChange}
+          infoLabel={props.infoLabel}
+          infoType={props.infoType}
         />
       );
     case "projects":
@@ -324,7 +306,6 @@ const getDefaultTitle = (
     case "socialNetwork":
       return t("socialNetworkTitle");
     case "hobbies":
-    case "resumeHobbies":
       return t("hobbiesTitle");
     case "keys":
       return t("keysTitle");

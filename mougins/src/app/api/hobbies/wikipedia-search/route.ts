@@ -14,7 +14,7 @@ interface WikipediaQueryResponse {
   query?: { pages?: Record<string, WikipediaPage> };
 }
 
-export interface PersonalitySearchResult {
+export interface WikipediaSearchResult {
   title: string;
   description: string | null;
   thumbnailUrl: string;
@@ -49,7 +49,7 @@ export async function GET(req: NextRequest) {
     const data: WikipediaQueryResponse = await response.json();
     const pages = Object.values(data.query?.pages ?? {});
 
-    const results: PersonalitySearchResult[] = pages
+    const results: WikipediaSearchResult[] = pages
       .filter((p) => p.thumbnail?.source)
       .sort((a, b) => (a.index ?? 0) - (b.index ?? 0))
       .map((p) => ({

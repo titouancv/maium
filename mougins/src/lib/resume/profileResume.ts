@@ -19,6 +19,5 @@ export function profileToResumeJson(profile: UserData): ResumeJson {
     experiences: (profile.professional_experiences ?? []).map(toResumeEntry),
     education: (profile.educational_experiences ?? []).map(toResumeEntry),
     skills: profile.skills ?? [],
-    hobbies: profile.hobbies ?? [],
   };
 }

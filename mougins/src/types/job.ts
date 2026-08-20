@@ -1,10 +1,5 @@
 import type { ANALYSIS_SNOOZE_DAYS, Gender, Locale } from "@/constants";
 
-export interface ResumeHobby {
-  title: string;
-  description: string;
-}
-
 export const ANALYSIS_STATUSES = [
   "queued",
   "processing",
@@ -153,7 +148,6 @@ export interface ResumeJson {
     description: string;
   }>;
   skills: string[];
-  hobbies: ResumeHobby[];
 }
 
 export interface CandidateDreamJob {
@@ -185,6 +179,5 @@ export interface CandidateProfile {
   }>;
   skills: string[];
   projects: string[];
-  hobbies: ResumeHobby[];
   dreamJob?: CandidateDreamJob;
 }

@@ -66,7 +66,6 @@ function fillableFromCv(cv: CvExtraction, existing: ExistingProfile): ProfilePat
   if (cv.hobbies?.length && !existing.user_hobbies?.length) {
     patch.hobbies = cv.hobbies.map((h) => ({
       ...h,
-      category: "text" as const,
       imageUrl: undefined,
       sourceUrl: undefined,
     }));

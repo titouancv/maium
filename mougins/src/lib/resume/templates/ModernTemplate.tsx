@@ -82,9 +82,6 @@ const styles = StyleSheet.create({
   socialName: { color: INK },
   socialLink: { color: PRIMARY, textDecoration: "none" },
   skillItem: { marginBottom: 3, fontSize: 8, color: INK },
-  hobbyItem: { marginBottom: 5 },
-  hobbyTitle: { fontSize: 9, color: INK },
-  hobbyDescription: { fontSize: 8, color: MUTED, lineHeight: 1.3 },
   expBlock: { marginBottom: 12 },
   expHeader: { flexDirection: "row" },
   expBar: {
@@ -175,22 +172,6 @@ export function ModernTemplate(data: ResumePdfData, labels: ResumeLabels) {
                       {s.handle}
                     </Link>
                   </Text>
-                ))}
-              </>
-            ) : null}
-
-            {data.hobbies.length > 0 ? (
-              <>
-                <SectionTitle label={labels.hobbies} />
-                {data.hobbies.map((h, i) => (
-                  <View key={i} style={styles.hobbyItem} wrap={false}>
-                    <Text style={styles.hobbyTitle}>{h.title}</Text>
-                    {h.description ? (
-                      <Text style={styles.hobbyDescription}>
-                        {h.description}
-                      </Text>
-                    ) : null}
-                  </View>
                 ))}
               </>
             ) : null}

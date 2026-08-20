@@ -1,10 +1,9 @@
-import type { DreamWorkMode, Gender, HobbyCategory, Locale } from "@/constants";
+import type { DreamWorkMode, Gender, Locale } from "@/constants";
 import { Experience } from "./experience";
 
 export interface Hobby {
   title: string;
   description: string;
-  category: HobbyCategory;
   imageUrl?: string;
   sourceUrl?: string;
 }

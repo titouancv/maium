@@ -41,7 +41,3 @@ export function faviconUrl(domainOrUrl: string, size = 32): string {
   } catch {}
   return `${EXTERNAL_API.FAVICON}?domain=${domain}&sz=${size}`;
 }
-
-export function flagUrl(countryCode: string, height = 60): string {
-  return `${EXTERNAL_API.FLAG_CDN}/h${height}/${countryCode.toLowerCase()}.png`;
-}

@@ -3,34 +3,54 @@
 import { useEffect, useRef, useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { TextInput } from "@/components/ui/TextInput";
-import { Button } from "@/components/ui/Button";
 import { Text } from "@/components/ui/Text";
-import { API } from "@/constants";
-import type { PersonalitySearchResult } from "@/app/api/hobbies/personality-search/route";
+import { API, type InfoType } from "@/constants";
+import { imageBackdropTheme, useImageTone } from "@/hooks";
+import { cn } from "@/lib/utils";
+import type { WikipediaSearchResult } from "@/app/api/hobbies/wikipedia-search/route";
 
-interface HobbyPersonalityValue {
+interface HobbyWikipediaValue {
   title: string;
   imageUrl?: string;
   sourceUrl?: string;
 }
 
-interface HobbyPersonalityFormProps {
-  defaultValue?: HobbyPersonalityValue;
-  onChange: (value: HobbyPersonalityValue) => void;
+interface HobbyWikipediaFormProps {
+  defaultValue?: HobbyWikipediaValue;
+  onChange: (value: HobbyWikipediaValue) => void;
+  infoLabel?: string;
+  infoType?: InfoType;
 }
 
-export const HobbyPersonalityForm = ({
+/** Wikipedia results are often transparent logos: put them on a contrasting plate. */
+const Thumbnail = ({ src, className }: { src: string; className: string }) => {
+  const tone = useImageTone(src);
+
+  return (
+    <div
+      data-theme={imageBackdropTheme(tone)}
+      className={cn("bg-surface-100 overflow-hidden rounded-sm p-1", className)}
+    >
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img src={src} alt="" className="h-full w-full object-contain" />
+    </div>
+  );
+};
+
+export const HobbyWikipediaForm = ({
   defaultValue,
   onChange,
-}: HobbyPersonalityFormProps) => {
+  infoLabel,
+  infoType = "info",
+}: HobbyWikipediaFormProps) => {
   const t = useTranslations("settings");
   const tCommon = useTranslations("common");
   const locale = useLocale();
   const [query, setQuery] = useState(defaultValue?.title ?? "");
-  const [selected, setSelected] = useState<HobbyPersonalityValue | undefined>(
-    defaultValue,
+  const [selected, setSelected] = useState<HobbyWikipediaValue | undefined>(
+    defaultValue?.imageUrl ? defaultValue : undefined,
   );
-  const [results, setResults] = useState<PersonalitySearchResult[]>([]);
+  const [results, setResults] = useState<WikipediaSearchResult[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -46,9 +66,9 @@ export const HobbyPersonalityForm = ({
       setIsLoading(true);
       try {
         const res = await fetch(
-          `${API.HOBBIES_PERSONALITY_SEARCH}?q=${encodeURIComponent(query)}&locale=${locale}`,
+          `${API.HOBBIES_WIKIPEDIA_SEARCH}?q=${encodeURIComponent(query)}&locale=${locale}`,
         );
-        const data: { results: PersonalitySearchResult[] } = await res.json();
+        const data: { results: WikipediaSearchResult[] } = await res.json();
         setResults(data.results);
       } catch {
         setResults([]);
@@ -61,7 +81,13 @@ export const HobbyPersonalityForm = ({
     };
   }, [query, locale]);
 
-  const select = (result: PersonalitySearchResult) => {
+  const type = (title: string) => {
+    setQuery(title);
+    setSelected(undefined);
+    onChange({ title });
+  };
+
+  const select = (result: WikipediaSearchResult) => {
     const value = {
       title: result.title,
       imageUrl: result.thumbnailUrl,
@@ -73,33 +99,20 @@ export const HobbyPersonalityForm = ({
     onChange(value);
   };
 
-  const skip = () => {
-    const value = { title: query.trim() };
-    setSelected(value);
-    setResults([]);
-    onChange(value);
-  };
-
   return (
     <div className="flex flex-col gap-4 md:flex-1 md:justify-center">
       <TextInput
-        placeholder={t("hobbyPersonalityPlaceholder")}
+        placeholder={t("hobbyTitlePlaceholder")}
         value={query}
         autoFocus
-        onChange={(e) => {
-          setQuery(e.target.value);
-          if (selected) setSelected(undefined);
-        }}
+        onChange={(e) => type(e.target.value)}
+        infoLabel={infoLabel}
+        infoType={infoType}
       />
 
       {selected?.imageUrl && (
         <div className="flex items-center gap-3">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src={selected.imageUrl}
-            alt=""
-            className="h-14 w-14 rounded-full object-cover"
-          />
+          <Thumbnail src={selected.imageUrl} className="h-14 w-14 shrink-0" />
           <Text tone="muted" size="sm">
             {selected.title}
           </Text>
@@ -121,11 +134,9 @@ export const HobbyPersonalityForm = ({
                 onClick={() => select(result)}
                 className="hover:bg-surface-100 flex w-full items-center gap-3 rounded-sm px-2 py-2 text-left"
               >
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
+                <Thumbnail
                   src={result.thumbnailUrl}
-                  alt=""
-                  className="h-10 w-10 shrink-0 rounded-full object-cover"
+                  className="h-10 w-10 shrink-0"
                 />
                 <div className="flex min-w-0 flex-col">
                   <Text truncate>{result.title}</Text>
@@ -143,20 +154,8 @@ export const HobbyPersonalityForm = ({
 
       {!selected && !isLoading && query.length >= 2 && results.length === 0 && (
         <Text tone="muted" size="sm">
-          {t("hobbyPersonalityNoResults")}
+          {t("hobbyWikipediaNoResults")}
         </Text>
-      )}
-
-      {!selected && query.trim().length > 0 && (
-        <Button
-          type="button"
-          variant="outline"
-          size="sm"
-          className="self-start"
-          onClick={skip}
-        >
-          {t("hobbyPersonalitySkip")}
-        </Button>
       )}
     </div>
   );

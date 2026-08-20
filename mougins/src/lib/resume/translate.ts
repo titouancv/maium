@@ -37,11 +37,6 @@ export function mergeResumeTranslation(
   source: ResumeJson,
   translation: ResumeTranslation,
 ): ResumeJson {
-  const hobbies = source.hobbies ?? [];
-  const translatedHobbies = new Map(
-    translation.hobbies.map((hobby) => [hobby.index, hobby]),
-  );
-
   return {
     summary: translation.summary || source.summary,
     experiences: mergeTranslatedEntries(
@@ -55,11 +50,6 @@ export function mergeResumeTranslation(
     skills: (source.skills ?? []).map(
       (skill, index) => translation.skills[index] || skill,
     ),
-    hobbies: hobbies.map((hobby, index) => ({
-      title: translatedHobbies.get(index)?.title || hobby.title,
-      description:
-        translatedHobbies.get(index)?.description || hobby.description,
-    })),
   };
 }
 
@@ -69,7 +59,6 @@ export async function translateResumeJson(params: {
   language: Locale;
 }): Promise<ResumeJson> {
   const languageName = LANGUAGE_NAMES[params.language];
-  const hobbies = params.resumeJson.hobbies ?? [];
 
   const system = [
     `You are a professional resume translator. Rewrite the resume in ${languageName}.`,
@@ -79,7 +68,7 @@ export async function translateResumeJson(params: {
     "Keep job titles idiomatic for the target language rather than literal.",
     "Echo back the index of every entry you receive so it can be matched with its source, and return every entry — never drop, merge or reorder one.",
     "Return the skills array with exactly the same number of items, in the same order.",
-    "Return a JSON object with keys: summary (string), experiences (array of {index, role, description}), education (array of {index, role, description}), skills (string array), hobbies (array of {index, title, description}).",
+    "Return a JSON object with keys: summary (string), experiences (array of {index, role, description}), education (array of {index, role, description}), skills (string array).",
     "No markdown, no commentary, no extra text.",
   ].join(" ");
 
@@ -90,11 +79,6 @@ export async function translateResumeJson(params: {
       experiences: toIndexedEntries(params.resumeJson.experiences ?? []),
       education: toIndexedEntries(params.resumeJson.education ?? []),
       skills: params.resumeJson.skills ?? [],
-      hobbies: hobbies.map((hobby, index) => ({
-        index,
-        title: hobby.title,
-        description: hobby.description,
-      })),
     },
   });
 

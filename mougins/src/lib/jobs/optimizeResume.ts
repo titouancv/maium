@@ -3,7 +3,6 @@ import { chatJSON } from "@/lib/mistral";
 import { OptimizedResumeSchema } from "@/lib/validators/job";
 import { LANGUAGE_NAMES, type Locale } from "@/constants";
 import type { CandidateProfile, JobData, ResumeJson } from "@/types/job";
-import { candidateWithoutHobbies } from "./profile";
 
 const STORED_RESUME_LANGUAGE: Locale = "en";
 
@@ -83,7 +82,7 @@ export async function optimizeResume(params: {
       seniority: params.job.seniority,
     },
     candidate: {
-      ...candidateWithoutHobbies(params.profile),
+      ...params.profile,
       experiences: params.profile.experiences.map((e, index) => ({
         index,
         organization: e.organization,
@@ -123,7 +122,6 @@ export async function optimizeResume(params: {
     experiences,
     education,
     skills: output.skills,
-    hobbies: params.profile.hobbies,
   };
 
   const { data: resume, error } = await admin

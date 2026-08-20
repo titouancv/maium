@@ -163,7 +163,6 @@ export async function writeProfile(
           user_id: userId,
           title: h.title,
           description: h.description,
-          category: h.category,
           image_url: h.imageUrl ?? null,
           source_url: h.sourceUrl ?? null,
           position: i,

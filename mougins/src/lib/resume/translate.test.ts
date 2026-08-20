@@ -32,7 +32,6 @@ const SOURCE: ResumeJson = {
     },
   ],
   skills: ["TypeScript", "Product design"],
-  hobbies: [{ title: "Trail running", description: "Half marathon." }],
 };
 
 const translation = (overrides: Record<string, unknown> = {}) =>
@@ -92,11 +91,5 @@ describe("mergeResumeTranslation", () => {
     expect(merged.experiences[1].description).toBe("Built internal tools.");
     expect(merged.summary).toBe("Product engineer.");
     expect(merged.skills).toEqual(["TypeScript", "Product design"]);
-  });
-
-  it("never drops a hobby the model forgot to return", () => {
-    const merged = mergeResumeTranslation(SOURCE, translation({}));
-
-    expect(merged.hobbies).toEqual(SOURCE.hobbies);
   });
 });

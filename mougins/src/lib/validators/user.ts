@@ -3,7 +3,6 @@ import {
   DREAM_COMPANY_TYPES,
   DREAM_WORK_MODES,
   GENDERS,
-  HOBBY_CATEGORIES,
   LOCALES,
   MIN_SIGNUP_AGE,
   PSEUDO_MAX_LENGTH,
@@ -52,7 +51,6 @@ const ProjectSchema = z.object({
 const HobbySchema = z.object({
   title: z.string().min(1).max(100),
   description: z.string(),
-  category: z.enum(HOBBY_CATEGORIES),
   imageUrl: optionalUrl,
   sourceUrl: optionalUrl,
 });

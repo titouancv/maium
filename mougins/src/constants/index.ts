@@ -47,7 +47,7 @@ export const API = {
   USERS_FOLLOWING: "/api/users/following",
   AUTH_LOGOUT: "/api/auth/logout",
   URL_TITLE: "/api/url-title",
-  HOBBIES_PERSONALITY_SEARCH: "/api/hobbies/personality-search",
+  HOBBIES_WIKIPEDIA_SEARCH: "/api/hobbies/wikipedia-search",
   USERS_ME_PHOTOS: "/api/users/me/photos",
   USERS_ME_PHOTO: (id: string) => `/api/users/me/photos/${id}`,
   MESSAGES_CONVERSATIONS: "/api/messages/conversations",
@@ -99,7 +99,6 @@ export const EXTERNAL_API = {
   YOUTUBE_SEARCH: "https://www.youtube.com/results",
   GOOGLE_SEARCH: "https://www.google.com/search",
   MISTRAL_CHAT: "https://chat.mistral.ai/chat",
-  FLAG_CDN: "https://flagcdn.com",
 } as const;
 
 export const DAY_MS = 24 * 60 * 60 * 1000;
@@ -227,15 +226,6 @@ export type ExperienceNamespace =
 export const GENDERS = ["male", "female", "other"] as const;
 
 export type Gender = (typeof GENDERS)[number];
-
-export const HOBBY_CATEGORIES = [
-  "club",
-  "personality",
-  "place",
-  "text",
-] as const;
-
-export type HobbyCategory = (typeof HOBBY_CATEGORIES)[number];
 
 export const DREAM_COMPANY_TYPES = [
   "startup",

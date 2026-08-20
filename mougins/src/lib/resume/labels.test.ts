@@ -10,7 +10,6 @@ const RESUME_KEYS = [
   "skills",
   "contact",
   "social",
-  "hobbies",
   "findProfile",
   "findProfileShort",
 ] as const;

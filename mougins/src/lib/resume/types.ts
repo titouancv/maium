@@ -1,4 +1,4 @@
-import type { ResumeHobby, ResumeJson } from "@/types/job";
+import type { ResumeJson } from "@/types/job";
 
 export interface ResumePdfData {
   fullName: string;
@@ -9,7 +9,6 @@ export interface ResumePdfData {
   };
   summary: string;
   socialNetworks: Array<{ name: string; handle: string; url: string }>;
-  hobbies: ResumeHobby[];
   pseudo: string;
   profileUrl: string;
   profileQrCode: string;

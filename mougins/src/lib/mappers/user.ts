@@ -1,9 +1,7 @@
 import {
-  HOBBY_CATEGORIES,
   LOCALES,
   type DreamWorkMode,
   type Gender,
-  type HobbyCategory,
   type Locale,
 } from "@/constants";
 import type { Experience } from "@/types/experience";
@@ -57,7 +55,6 @@ type DbSocialNetwork = { url: string; position: number };
 type DbHobby = {
   title: string;
   description: string;
-  category: string;
   image_url: string | null;
   source_url: string | null;
   position: number;
@@ -99,12 +96,6 @@ function byPosition<T extends { position: number }>(a: T, b: T) {
 
 function toLocale(value: string | null | undefined): Locale {
   return LOCALES.includes(value as Locale) ? (value as Locale) : "en";
-}
-
-function toHobbyCategory(value: string): HobbyCategory {
-  return HOBBY_CATEGORIES.includes(value as HobbyCategory)
-    ? (value as HobbyCategory)
-    : "text";
 }
 
 function mapExperience(e: DbExperience): Experience {
@@ -171,7 +162,6 @@ export function mapUserFromDb(raw: DbUserRaw): UserData {
       (h): Hobby => ({
         title: h.title,
         description: h.description,
-        category: toHobbyCategory(h.category),
         imageUrl: h.image_url ?? undefined,
         sourceUrl: h.source_url ?? undefined,
       }),
@@ -187,6 +177,6 @@ export const USER_PROFILE_SELECT = `
   user_skills(name, position),
   user_projects(title, bio, website_url, github_url, image_url, image_path, position),
   user_social_networks(url, position),
-  user_hobbies(title, description, category, image_url, source_url, position),
+  user_hobbies(title, description, image_url, source_url, position),
   user_photos(id, url, position)
 `.trim();
