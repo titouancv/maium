@@ -22,6 +22,9 @@ interface MyInformationMenuProps {
 const isEditableField = (value: string | null): value is EditableField =>
   EDITABLE_FIELDS.includes(value as EditableField);
 
+const countOf = (items?: unknown[] | null) =>
+  items?.length ? String(items.length) : undefined;
+
 export const MyInformationMenu = ({ userPromise }: MyInformationMenuProps) => {
   const user = use(userPromise);
   const t = useTranslations("settings");
@@ -53,22 +56,25 @@ export const MyInformationMenu = ({ userPromise }: MyInformationMenuProps) => {
               onClick: () => setEditingField("name"),
             },
             {
+              label: tHome("pseudo"),
+              value: user.pseudo ?? undefined,
+              onClick: () => setEditingField("pseudo"),
+            },
+            {
               label: t("profilePhoto"),
               value: user.profile_photo ? t("profilePhotoSet") : undefined,
               onClick: () => setEditingPhoto(true),
             },
             {
-              label: t("photos"),
-              value: user.photos?.length
-                ? String(user.photos.length)
-                : undefined,
-              onClick: () => setEditingGallery(true),
+              label: t("location"),
+              value: user.location ?? undefined,
+              onClick: () => setEditingField("location"),
             },
-            {
-              label: tHome("pseudo"),
-              value: user.pseudo ?? undefined,
-              onClick: () => setEditingField("pseudo"),
-            },
+          ]}
+        />
+
+        <MenuList
+          items={[
             {
               label: tHome("dob"),
               value:
@@ -80,15 +86,6 @@ export const MyInformationMenu = ({ userPromise }: MyInformationMenuProps) => {
               value: user.gender ? tGender(user.gender) : undefined,
               onClick: () => setEditingField("gender"),
             },
-          ]}
-        />
-        <MenuList
-          items={[
-            {
-              label: t("bio"),
-              value: user.bio ?? undefined,
-              onClick: () => setEditingField("bio"),
-            },
             {
               label: t("phone"),
               value: user.phone ?? undefined,
@@ -99,67 +96,70 @@ export const MyInformationMenu = ({ userPromise }: MyInformationMenuProps) => {
               value: user.nationality ?? undefined,
               onClick: () => setEditingField("nationality"),
             },
+          ]}
+        />
+
+        <MenuList
+          items={[
             {
-              label: t("location"),
-              value: user.location ?? undefined,
-              onClick: () => setEditingField("location"),
+              label: t("bio"),
+              value: user.bio ?? undefined,
+              onClick: () => setEditingField("bio"),
+            },
+            {
+              label: t("photos"),
+              value: countOf(user.photos),
+              onClick: () => setEditingGallery(true),
+            },
+            {
+              label: t("hobbies"),
+              value: countOf(user.hobbies),
+              onClick: () => setEditingField("hobbies"),
             },
           ]}
         />
+
         <MenuList
           items={[
             {
               label: t("professionalExperiencesLabel"),
-              value: user.professional_experiences?.length
-                ? String(user.professional_experiences.length)
-                : undefined,
+              value: countOf(user.professional_experiences),
               onClick: () => setEditingField("professionalExperiences"),
             },
             {
               label: t("educationalExperiencesLabel"),
-              value: user.educational_experiences?.length
-                ? String(user.educational_experiences.length)
-                : undefined,
+              value: countOf(user.educational_experiences),
               onClick: () => setEditingField("educationalExperiences"),
             },
             {
               label: t("personalExperiences"),
-              value: user.personal_experiences?.length
-                ? String(user.personal_experiences.length)
-                : undefined,
+              value: countOf(user.personal_experiences),
               onClick: () => setEditingField("personalExperiences"),
             },
           ]}
         />
+
+        <MenuList
+          items={[
+            {
+              label: t("projects"),
+              value: countOf(user.projects),
+              onClick: () => setEditingField("projects"),
+            },
+          ]}
+        />
+
         <MenuList
           items={[
             {
               label: t("skills"),
-              value: user.skills?.length
-                ? String(user.skills.length)
-                : undefined,
+              value: countOf(user.skills),
               onClick: () => setEditingField("skills"),
             },
             {
               label: t("socialNetworks"),
-              value: user.social_networks?.length
-                ? String(user.social_networks.length)
-                : undefined,
+              value: countOf(user.social_networks),
               onClick: () => setEditingField("socialNetworks"),
-            },
-            {
-              label: t("projects"),
-              value: user.projects?.length
-                ? String(user.projects.length)
-                : undefined,
-              onClick: () => setEditingField("projects"),
-            },
-            {
-              label: t("hobbies"),
-              value: user.hobbies?.length
-                ? String(user.hobbies.length)
-                : undefined,
-              onClick: () => setEditingField("hobbies"),
             },
           ]}
         />

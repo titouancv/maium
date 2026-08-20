@@ -13,8 +13,11 @@ const MenuListSkeleton = ({ rows }: { rows: number }) => (
 
 export const SettingsMyInformationSkeleton = () => (
   <div className="flex w-full max-w-2xl flex-col gap-12">
-    <MenuListSkeleton rows={7} />
-    <MenuListSkeleton rows={3} />
     <MenuListSkeleton rows={4} />
+    <MenuListSkeleton rows={4} />
+    <MenuListSkeleton rows={3} />
+    <MenuListSkeleton rows={3} />
+    <MenuListSkeleton rows={1} />
+    <MenuListSkeleton rows={2} />
   </div>
 );
