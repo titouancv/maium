@@ -9,7 +9,6 @@ export interface ResumeLabels {
   skills: string;
   contact: string;
   social: string;
-  hobbies: string;
   network: string;
   findProfile: string;
   findProfileShort: string;
@@ -36,7 +35,6 @@ export async function getResumeLabels(
     skills: t("skills"),
     contact: t("contact"),
     social: t("social"),
-    hobbies: t("hobbies"),
     network: APP_NAME,
     findProfile: t("findProfile", { app: APP_NAME }),
     findProfileShort: t("findProfileShort", { app: APP_NAME }),

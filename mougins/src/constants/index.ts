@@ -47,6 +47,9 @@ export const API = {
   USERS_FOLLOWING: "/api/users/following",
   AUTH_LOGOUT: "/api/auth/logout",
   URL_TITLE: "/api/url-title",
+  HOBBIES_WIKIPEDIA_SEARCH: "/api/hobbies/wikipedia-search",
+  USERS_ME_PHOTOS: "/api/users/me/photos",
+  USERS_ME_PHOTO: (id: string) => `/api/users/me/photos/${id}`,
   MESSAGES_CONVERSATIONS: "/api/messages/conversations",
   MESSAGES_CONVERSATION_MESSAGES: (id: string) =>
     `/api/messages/conversations/${id}/messages`,
@@ -193,6 +196,24 @@ export const PROFILE_PHOTO_ASPECT = 5 / 7;
 export const PROFILE_PHOTO_MAX_BYTES = 5 * 1024 * 1024;
 
 export const PROFILE_PHOTO_OUTPUT_WIDTH = 700;
+
+export const PROJECT_IMAGE_BUCKET = "profile-project-images";
+
+export const PROJECT_IMAGE_ASPECT = 16 / 9;
+
+export const PROJECT_IMAGE_MAX_BYTES = 5 * 1024 * 1024;
+
+export const PROJECT_IMAGE_OUTPUT_WIDTH = 1200;
+
+export const PROFILE_GALLERY_PHOTOS_BUCKET = "profile-gallery-photos";
+
+export const PROFILE_GALLERY_PHOTO_ASPECT = 4 / 5;
+
+export const PROFILE_GALLERY_PHOTO_MAX_BYTES = 5 * 1024 * 1024;
+
+export const PROFILE_GALLERY_PHOTO_OUTPUT_WIDTH = 900;
+
+export const PROFILE_GALLERY_MAX_PHOTOS = 9;
 
 export const EXPERIENCE_NAMESPACE = {
   professional: "experience.professional",

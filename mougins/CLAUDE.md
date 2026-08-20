@@ -298,8 +298,8 @@ rules** — never collapse them into one setting.
   `requireApiUser()`, unlike the other resume endpoints an anonymous run can
   reach — a free run gets its English CV, not a second LLM call. The editor
   reflects that rather than letting the call 401: `canTranslate` (the current
-  user in the store) drops the language step entirely, so the wizard is 6 steps
-  for a visitor and 7 for an account. The step index is therefore **clamped at
+  user in the store) drops the language step entirely, so the wizard is 5 steps
+  for a visitor and 6 for an account. The step index is therefore **clamped at
   render** (`Math.max(step, firstStep)`), never seeded into `useState` —
   `UserHydration` streams inside a `Suspense`, so the store can still be empty
   on the first paint and the step must correct itself when it fills.
@@ -358,6 +358,9 @@ OAuth flow: Google → Supabase → `/auth/callback` → `exchangeCodeForSession
 | `GET` | `/api/users/following` | List who a user follows |
 | `POST/DELETE` | `/api/users/follow` | Follow / unfollow a user |
 | `POST` | `/api/users/view` | Record a (deduped) profile view |
+| `POST/PATCH` | `/api/users/me/photos` | Add a profile gallery photo (max 9) / reorder them |
+| `DELETE` | `/api/users/me/photos/:id` | Remove a profile gallery photo |
+| `GET` | `/api/hobbies/wikipedia-search` | Search Wikipedia for a hobby's visual — a personality's photo or a club/sport logo (auth not required) |
 | `GET/POST` | `/api/messages/conversations` | List / create conversations |
 | `GET/POST` | `/api/messages/conversations/:id/messages` | Get / send messages in a conversation |
 | `PATCH` | `/api/messages/conversations/:id/read` | Mark a conversation as read |
@@ -810,6 +813,7 @@ never invented twice. Import from `@/components/ui`.
 | `Title` · `Section` · `Markdown` | Headings and long-form content. |
 | `Button` · `Chip` · `ChipList` · `Tabs` · `TabsVertical` · `MenuList` · `SlideToEnter` | Actions and choices. |
 | `Selector` | One value at a time out of an **ordered** list: chevrons step through it, the neighbours peek in at the edges under a fade. Values are `primary` by default; per-value colour is opt-in through an explicit `color` and is reserved for application status (`APPLICATION_STATUS_COLORS` in [constants/ui.ts](src/constants/ui.ts), one semantic token per status). Use `Tabs` instead when every option must be visible at once. |
+| `CoverFlow` | Generic 3D carousel (drag, wheel, click a side card, off-center items tilt via `rotateY`) — used for the profile photo gallery, but not photo-specific. `loop` makes it endless: the items are repeated until the visible window plus one hidden slot per side is filled, so a card only ever wraps from one end of the ribbon to the other while it is off-screen. The stage clips itself horizontally (`overflow-x-clip`): the side cards are absolutely positioned well past the container edges, so without it they widen the page's scroll container on narrow screens. The chevrons are **mobile-only** (`md:hidden`): on a pointer device the wheel and the side cards already step the ribbon. Wheel handling is a native non-passive listener, not `onWheel` — React attaches `wheel` passively at the root, so `preventDefault()` on the synthetic event is a no-op and the page would scroll away under the carousel. It stops calling `preventDefault()` at the ends of a non-looping list so the page scrolls normally once the ribbon cannot advance. |
 | `TextInput` · `TextArea` · `DateInput` · `PhoneInput` · `SearchInput` · `LocationInput` | Fields (see `form/` for whole steps). |
 | `Skeleton` · `ProgressBar` · `NumberRoller` | Loading and numbers. |
 | `UserCard` · `ProfilePhoto` · `ProfilePhotoPicker` | People. |

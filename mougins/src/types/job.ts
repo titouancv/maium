@@ -1,5 +1,4 @@
 import type { ANALYSIS_SNOOZE_DAYS, Gender, Locale } from "@/constants";
-import type { Hobby } from "./user";
 
 export const ANALYSIS_STATUSES = [
   "queued",
@@ -149,7 +148,6 @@ export interface ResumeJson {
     description: string;
   }>;
   skills: string[];
-  hobbies: Hobby[];
 }
 
 export interface CandidateDreamJob {
@@ -181,6 +179,5 @@ export interface CandidateProfile {
   }>;
   skills: string[];
   projects: string[];
-  hobbies: Hobby[];
   dreamJob?: CandidateDreamJob;
 }

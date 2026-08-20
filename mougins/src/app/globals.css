@@ -122,7 +122,7 @@
   }
 }
 
-:root[data-theme="dark"] {
+[data-theme="dark"] {
   --color-surface-50: var(--dark-900);
   --color-surface-100: var(--dark-800);
   --color-surface-200: var(--dark-600);
@@ -153,7 +153,7 @@
   --color-txt-inverse: var(--color-surface-50);
 }
 
-:root[data-theme="light"] {
+[data-theme="light"] {
   --color-surface-50: var(--light-50);
   --color-surface-100: var(--light-100);
   --color-surface-200: var(--light-200);

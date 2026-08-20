@@ -9,20 +9,20 @@ export const SettingsContent = () => {
   const t = useTranslations("settings");
 
   const menuItems = [
-    { label: t("accountMenuLabel"), href: ROUTES.SETTINGS_ACCOUNT },
-    {
-      label: t("myInformationMenuLabel"),
-      href: ROUTES.SETTINGS_MY_INFORMATION,
-    },
-    {
-      label: t("personalizationMenuLabel"),
-      href: ROUTES.SETTINGS_PERSONALIZATION,
-    },
     {
       label: t("notificationsMenuLabel"),
       href: ROUTES.SETTINGS_NOTIFICATIONS,
     },
+    {
+      label: t("myInformationMenuLabel"),
+      href: ROUTES.SETTINGS_MY_INFORMATION,
+    },
     { label: t("dreamJobMenuLabel"), href: ROUTES.SETTINGS_DREAM_JOB },
+    {
+      label: t("personalizationMenuLabel"),
+      href: ROUTES.SETTINGS_PERSONALIZATION,
+    },
+    { label: t("accountMenuLabel"), href: ROUTES.SETTINGS_ACCOUNT },
     { label: t("privacyPolicyMenuLabel"), href: ROUTES.PRIVACY_POLICY },
   ];
 

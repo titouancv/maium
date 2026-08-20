@@ -60,8 +60,9 @@ export async function getCandidateProfile(
       description: e.description ?? "",
     })),
     skills: user.skills ?? [],
-    projects: user.projects ?? [],
-    hobbies: user.hobbies ?? [],
+    projects: (user.projects ?? []).map((p) =>
+      p.bio ? `${p.title}: ${p.bio}` : p.title,
+    ),
     dreamJob: buildDreamJob(user),
   };
 }
@@ -84,20 +85,6 @@ export function cvExtractionToCandidateProfile(
     education: (extraction.educationalExperiences ?? []).map(toEntry),
     skills: extraction.skills ?? [],
     projects: extraction.projects ?? [],
-    hobbies: extraction.hobbies ?? [],
-  };
-}
-
-export function candidateWithoutHobbies(
-  profile: CandidateProfile,
-): Omit<CandidateProfile, "hobbies"> {
-  return {
-    bio: profile.bio,
-    experiences: profile.experiences,
-    education: profile.education,
-    skills: profile.skills,
-    projects: profile.projects,
-    dreamJob: profile.dreamJob,
   };
 }
 

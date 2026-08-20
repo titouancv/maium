@@ -4,9 +4,26 @@ import { Experience } from "./experience";
 export interface Hobby {
   title: string;
   description: string;
+  imageUrl?: string;
+  sourceUrl?: string;
 }
 
 export type HobbyData = Hobby;
+
+export interface UserPhoto {
+  id: string;
+  url: string;
+  position: number;
+}
+
+export interface Project {
+  title: string;
+  bio?: string;
+  websiteUrl?: string;
+  githubUrl?: string;
+  imageUrl?: string;
+  imagePath?: string;
+}
 
 export interface UserSummary {
   pseudo: string;
@@ -44,7 +61,8 @@ export interface UserData {
   hobbies?: Hobby[];
   personal_experiences?: Experience[];
   skills?: string[];
-  projects?: string[];
+  projects?: Project[];
+  photos?: UserPhoto[];
   dream_company_types?: string[];
   dream_work_mode?: DreamWorkMode | null;
   dream_location?: string | null;

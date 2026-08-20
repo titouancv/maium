@@ -24,17 +24,22 @@ export interface TextProps extends React.HTMLAttributes<HTMLElement> {
   truncate?: boolean;
 }
 
-export function Text({
-  as: Tag = "p",
-  tone = "default",
-  size = "base",
-  truncate = false,
-  className,
-  children,
-  ...props
-}: TextProps) {
+export const Text = React.forwardRef<HTMLElement, TextProps>(function Text(
+  {
+    as: Tag = "p",
+    tone = "default",
+    size = "base",
+    truncate = false,
+    className,
+    children,
+    ...props
+  },
+  ref,
+) {
+  const Component = Tag as React.ElementType;
   return (
-    <Tag
+    <Component
+      ref={ref}
       className={cn(
         TONES[tone],
         SIZES[size],
@@ -45,6 +50,6 @@ export function Text({
       {...props}
     >
       {children}
-    </Tag>
+    </Component>
   );
-}
+});

@@ -6,10 +6,6 @@ import { Form } from "../Form";
 import type { FormProps } from "../Form";
 import type { HobbyData } from "@/types/user";
 
-export type { HobbyData };
-
-const TOTAL_SUB_STEPS = 2;
-
 interface Props {
   initialData?: HobbyData;
   onSave: (data: HobbyData) => void;
@@ -17,7 +13,14 @@ interface Props {
   onDelete?: () => void;
 }
 
-export const HobbySubForm = ({ initialData, onSave, onCancel, onDelete }: Props) => {
+const TOTAL_SUB_STEPS = 2;
+
+export const HobbySubForm = ({
+  initialData,
+  onSave,
+  onCancel,
+  onDelete,
+}: Props) => {
   const t = useTranslations("settings");
   const tCommon = useTranslations("common");
   const [subStep, setSubStep] = useState(1);
@@ -39,39 +42,37 @@ export const HobbySubForm = ({ initialData, onSave, onCancel, onDelete }: Props)
   };
 
   const getFormProps = (): FormProps => {
-    switch (subStep) {
-      case 1:
-        return {
-          ...base,
-          type: "text",
-          title: t("hobbySubStep1Title"),
-          placeholder: t("hobbyTitlePlaceholder"),
-          defaultValue: values.title,
-          onChange: (v) => {
-            setValues((prev) => ({ ...prev, title: v }));
-            setTitleError(undefined);
-          },
-          infoLabel: titleError,
-          infoType: titleError ? "error" : "info",
-          onPrimary: () => {
-            if (!values.title.trim()) {
-              setTitleError(t("hobbyTitleRequired"));
-              return;
-            }
-            setSubStep(2);
-          },
-        };
-      default:
-        return {
-          ...base,
-          type: "longText",
-          title: t("hobbySubStep2Title"),
-          placeholder: t("hobbyDescriptionPlaceholder"),
-          defaultValue: values.description,
-          onChange: (v) => setValues((prev) => ({ ...prev, description: v })),
-          onPrimary: () => onSave(values),
-        };
+    if (subStep === 1) {
+      return {
+        ...base,
+        type: "hobbyWikipedia",
+        title: t("hobbySubStep1Title"),
+        defaultValue: values.title ? values : undefined,
+        onChange: ({ title, imageUrl, sourceUrl }) => {
+          setValues((prev) => ({ ...prev, title, imageUrl, sourceUrl }));
+          setTitleError(undefined);
+        },
+        infoLabel: titleError,
+        infoType: titleError ? "error" : "info",
+        onPrimary: () => {
+          if (!values.title.trim()) {
+            setTitleError(t("hobbyTitleRequired"));
+            return;
+          }
+          setSubStep(2);
+        },
+      };
     }
+
+    return {
+      ...base,
+      type: "longText",
+      title: t("hobbySubStep2Title"),
+      placeholder: t("hobbyDescriptionPlaceholder"),
+      defaultValue: values.description,
+      onChange: (v) => setValues((prev) => ({ ...prev, description: v })),
+      onPrimary: () => onSave(values),
+    };
   };
 
   return <Form key={subStep} {...getFormProps()} />;

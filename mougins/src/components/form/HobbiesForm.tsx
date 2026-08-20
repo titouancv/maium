@@ -31,6 +31,13 @@ export const HobbiesForm = ({ defaultValue, onChange }: HobbiesFormProps) => {
     editor.close();
   };
 
+  const handleMove = (from: number, to: number) => {
+    const next = [...items];
+    [next[from], next[to]] = [next[to], next[from]];
+    setItems(next);
+    onChange(next);
+  };
+
   const handleDelete = () => {
     if (typeof editor.editingIndex !== "number") return;
     const next = items.filter((_, i) => i !== editor.editingIndex);
@@ -56,7 +63,11 @@ export const HobbiesForm = ({ defaultValue, onChange }: HobbiesFormProps) => {
       ) : (
         <div className="flex h-full w-full flex-col justify-between gap-4">
           <div className="flex min-h-0 flex-1 flex-col overflow-y-auto">
-            <HobbyList hobbies={items} onEdit={editor.openExisting} />
+            <HobbyList
+              hobbies={items}
+              onEdit={editor.openExisting}
+              onMove={handleMove}
+            />
           </div>
           <Button
             type="button"

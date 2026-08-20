@@ -1,38 +1,131 @@
-import { Button, Rail, Text } from "@/components/ui";
-import type { HobbyData } from "@/types/user";
-import { useTranslations } from "next-intl";
+"use client";
 
-interface Props {
-  hobby: HobbyData;
-  onClick?: () => void;
+import { useState } from "react";
+import { useTranslations } from "next-intl";
+import { Button, Icon, Text, Title } from "@/components/ui";
+import { imageBackdropTheme, useImageTone } from "@/hooks";
+import { cn } from "@/lib/utils";
+
+export interface HobbyItemData {
+  title: string;
+  description: string;
+  imageUrl?: string;
 }
 
-export const HobbyItem = ({ hobby, onClick }: Props) => {
+interface Props {
+  hobby: HobbyItemData;
+  onClick?: () => void;
+  onMovePrevious?: () => void;
+  onMoveNext?: () => void;
+}
+
+export const HobbyItem = ({
+  hobby,
+  onClick,
+  onMovePrevious,
+  onMoveNext,
+}: Props) => {
   const t = useTranslations("common");
+  const [isPortrait, setIsPortrait] = useState(false);
+  const tone = useImageTone(hobby.imageUrl);
+  const isCutout = tone !== null;
+  const isReorderable = Boolean(onMovePrevious || onMoveNext);
+
+  const measureIfLoaded = (image: HTMLImageElement | null) => {
+    if (image?.complete && image.naturalWidth) {
+      setIsPortrait(image.naturalHeight > image.naturalWidth);
+    }
+  };
+
   return (
-    <div className="flex items-center gap-4">
-      <Rail className="text-txt-muted h-10" />
-      <div className="grid w-full grid-cols-[1fr_auto] items-center gap-3">
-        <div className="flex min-w-0 flex-col">
-          <Text>{hobby.title}</Text>
-          {hobby.description && (
-            <Text tone="muted" size="sm" truncate>
-              {hobby.description}
-            </Text>
+    <article className="flex flex-col gap-3">
+      {/* Cutout images (transparent logos) get the opposite theme behind them so
+          a dark logo never lands on a dark surface, and vice versa. */}
+      <div
+        data-theme={imageBackdropTheme(tone)}
+        className="bg-surface-50 text-txt @container relative aspect-[5/7] w-full overflow-hidden rounded-sm"
+      >
+        {hobby.imageUrl ? (
+          <>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={hobby.imageUrl}
+              alt=""
+              aria-hidden
+              className={cn(
+                "absolute inset-0 h-full w-full scale-125 object-cover blur-xl",
+                isCutout ? "opacity-25" : "opacity-40",
+              )}
+            />
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={hobby.imageUrl}
+              alt=""
+              ref={measureIfLoaded}
+              onLoad={(e) => measureIfLoaded(e.currentTarget)}
+              className={cn(
+                "absolute inset-0 z-1 h-full w-full",
+                isCutout
+                  ? "object-contain p-[12cqw] pb-[26cqw]"
+                  : isPortrait
+                    ? "object-cover"
+                    : "object-contain",
+              )}
+            />
+          </>
+        ) : (
+          <span
+            aria-hidden
+            className="text-txt-muted/25 absolute inset-0 flex items-center justify-center text-[45cqw] leading-none font-extrabold"
+          >
+            {hobby.title.charAt(0).toUpperCase()}
+          </span>
+        )}
+
+        <div className="from-surface-50 via-surface-50/60 absolute inset-x-0 bottom-0 z-2 h-[45%] bg-gradient-to-t from-10% via-60% to-transparent" />
+
+        <div className="absolute inset-x-[6cqw] bottom-[5cqw] z-3">
+          <Title label={hobby.title} size="h5" />
+        </div>
+      </div>
+
+      {hobby.description && (
+        <Text tone="muted" size="sm">
+          {hobby.description}
+        </Text>
+      )}
+
+      {(onClick || isReorderable) && (
+        <div className="flex items-center gap-1 self-start">
+          {onClick && (
+            <Button type="button" variant="outline" size="sm" onClick={onClick}>
+              {t("editButton")}
+            </Button>
+          )}
+          {isReorderable && (
+            <>
+              <button
+                type="button"
+                disabled={!onMovePrevious}
+                onClick={onMovePrevious}
+                aria-label={t("previousOption")}
+                className="enabled:hover:text-primary flex size-8 cursor-pointer items-center justify-center rounded-full disabled:cursor-default disabled:opacity-30"
+              >
+                <Icon name="chevronLeft" size={14} />
+              </button>
+              <button
+                type="button"
+                disabled={!onMoveNext}
+                onClick={onMoveNext}
+                aria-label={t("nextOption")}
+                className="enabled:hover:text-primary flex size-8 cursor-pointer items-center justify-center rounded-full disabled:cursor-default disabled:opacity-30"
+              >
+                <Icon name="chevronRight" size={14} />
+              </button>
+            </>
           )}
         </div>
-        {onClick && (
-          <Button
-            type="button"
-            variant="outline"
-            size="sm"
-            className="shrink-0"
-            onClick={onClick}
-          >
-            {t("editButton")}
-          </Button>
-        )}
-      </div>
-    </div>
+      )}
+    </article>
   );
 };

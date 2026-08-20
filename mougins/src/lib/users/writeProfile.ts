@@ -126,8 +126,30 @@ export async function writeProfile(
   };
 
   await replaceList("user_skills", "name", patch.skills);
-  await replaceList("user_projects", "url", patch.projects);
   await replaceList("user_social_networks", "url", patch.socialNetworks);
+
+  if (patch.projects !== undefined) {
+    const { error } = await supabase
+      .from("user_projects")
+      .delete()
+      .eq("user_id", userId);
+    if (error) throw error;
+    if (patch.projects.length > 0) {
+      const { error: insertError } = await supabase.from("user_projects").insert(
+        patch.projects.map((p, i) => ({
+          user_id: userId,
+          title: p.title,
+          bio: p.bio ?? null,
+          website_url: p.websiteUrl ?? null,
+          github_url: p.githubUrl ?? null,
+          image_url: p.imageUrl ?? null,
+          image_path: p.imagePath ?? null,
+          position: i,
+        })),
+      );
+      if (insertError) throw insertError;
+    }
+  }
 
   if (patch.hobbies !== undefined) {
     const { error } = await supabase
@@ -141,6 +163,8 @@ export async function writeProfile(
           user_id: userId,
           title: h.title,
           description: h.description,
+          image_url: h.imageUrl ?? null,
+          source_url: h.sourceUrl ?? null,
           position: i,
         })),
       );

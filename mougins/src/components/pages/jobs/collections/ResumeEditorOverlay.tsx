@@ -27,7 +27,7 @@ interface Props {
 }
 
 const LANGUAGE_STEP = 0;
-const TEMPLATE_STEP = 6;
+const TEMPLATE_STEP = 5;
 
 type Phase =
   | "idle"
@@ -232,15 +232,6 @@ export function ResumeEditorOverlay({
           defaultValue: draft.skills,
           onChange: (items) =>
             setDraft((d) => (d ? { ...d, skills: items } : d)),
-        };
-      case 5:
-        return {
-          ...base,
-          type: "hobbies",
-          title: t("detail.editHobbies"),
-          defaultValue: draft.hobbies ?? [],
-          onChange: (items) =>
-            setDraft((d) => (d ? { ...d, hobbies: items } : d)),
         };
       default:
         return base as FormProps;
