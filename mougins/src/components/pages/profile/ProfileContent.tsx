@@ -51,7 +51,7 @@ export const ProfileContent = ({
   const hasSkillsOrLinks = hasSkills || hasSocialNetworks;
 
   return (
-    <div className="flex h-full w-full max-w-7xl flex-col gap-8 pt-0 md:flex-row">
+    <div className="flex w-full max-w-7xl flex-col gap-8 pt-0 md:h-full md:flex-row">
       <aside className="flex flex-col gap-8 md:w-1/5">
         <div className="flex flex-col gap-4">
           <div className="px-4 md:px-0">
@@ -76,7 +76,7 @@ export const ProfileContent = ({
       </aside>
 
       <main className="flex flex-1 flex-col gap-6 md:min-h-0 md:overflow-y-auto">
-        <div className="flex">
+        <div className="bg-surface-50 sticky top-0 z-4 -mb-6 flex pb-4 md:pb-6">
           <Tabs
             tabs={[
               t("tabOverview"),
@@ -229,7 +229,7 @@ export const ProfileContent = ({
 
         <div className="h-0 shrink-0 md:h-32" />
       </main>
-      <div className="h-24 shrink-0 md:h-0" />
+      <div className="h-24 shrink-0 md:hidden" />
     </div>
   );
 };
