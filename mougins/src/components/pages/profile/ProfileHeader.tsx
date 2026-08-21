@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import { Title, BackButton } from "@/components/ui";
+import { ROUTES } from "@/constants";
 import { getProfileBundle } from "@/lib/users";
 
 export async function ProfileName({ pseudo }: { pseudo: string }) {
@@ -24,5 +25,10 @@ export async function ProfileBackButton({ pseudo }: { pseudo: string }) {
   ]);
   if (!bundle || bundle.isOwner) return null;
 
-  return <BackButton label={tCommon("backButton")} />;
+  return (
+    <BackButton
+      label={tCommon("backButton")}
+      href={bundle.isAuthenticated ? undefined : ROUTES.HOME}
+    />
+  );
 }

@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/Button";
 import { Overlay } from "@/components/ui/Overlay";
-import { ProjectList } from "@/components/ui";
+import { CompactItem, ReorderableList } from "@/components/ui";
 import { ProjectSubForm } from "./sub-form/ProjectSubForm";
 import type { Project } from "@/types/user";
 import { useListEditor } from "@/hooks";
@@ -29,6 +29,11 @@ export const ProjectsForm = ({ defaultValue, onChange }: ProjectsFormProps) => {
     setItems(next);
     onChange(next);
     editor.close();
+  };
+
+  const handleReorder = (next: Project[]) => {
+    setItems(next);
+    onChange(next);
   };
 
   const handleDelete = () => {
@@ -56,7 +61,17 @@ export const ProjectsForm = ({ defaultValue, onChange }: ProjectsFormProps) => {
       ) : (
         <div className="flex h-full w-full flex-col justify-between gap-4">
           <div className="flex min-h-0 flex-1 flex-col overflow-y-auto">
-            <ProjectList projects={items} onEdit={editor.openExisting} />
+            <ReorderableList items={items} onReorder={handleReorder}>
+              {(project, i, handleProps) => (
+                <CompactItem
+                  title={project.title}
+                  subtitle={project.bio}
+                  imageUrl={project.imageUrl}
+                  onEdit={() => editor.openExisting(i)}
+                  dragProps={handleProps}
+                />
+              )}
+            </ReorderableList>
           </div>
           <Button
             type="button"

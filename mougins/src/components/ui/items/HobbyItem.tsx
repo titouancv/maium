@@ -1,8 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useTranslations } from "next-intl";
-import { Button, Icon, Text, Title } from "@/components/ui";
+import { Text, Title } from "@/components/ui";
 import { imageBackdropTheme, useImageTone } from "@/hooks";
 import { cn } from "@/lib/utils";
 
@@ -14,22 +13,12 @@ export interface HobbyItemData {
 
 interface Props {
   hobby: HobbyItemData;
-  onClick?: () => void;
-  onMovePrevious?: () => void;
-  onMoveNext?: () => void;
 }
 
-export const HobbyItem = ({
-  hobby,
-  onClick,
-  onMovePrevious,
-  onMoveNext,
-}: Props) => {
-  const t = useTranslations("common");
+export const HobbyItem = ({ hobby }: Props) => {
   const [isPortrait, setIsPortrait] = useState(false);
   const tone = useImageTone(hobby.imageUrl);
   const isCutout = tone !== null;
-  const isReorderable = Boolean(onMovePrevious || onMoveNext);
 
   const measureIfLoaded = (image: HTMLImageElement | null) => {
     if (image?.complete && image.naturalWidth) {
@@ -93,38 +82,6 @@ export const HobbyItem = ({
         <Text tone="muted" size="sm">
           {hobby.description}
         </Text>
-      )}
-
-      {(onClick || isReorderable) && (
-        <div className="flex items-center gap-1 self-start">
-          {onClick && (
-            <Button type="button" variant="outline" size="sm" onClick={onClick}>
-              {t("editButton")}
-            </Button>
-          )}
-          {isReorderable && (
-            <>
-              <button
-                type="button"
-                disabled={!onMovePrevious}
-                onClick={onMovePrevious}
-                aria-label={t("previousOption")}
-                className="enabled:hover:text-primary flex size-8 cursor-pointer items-center justify-center rounded-full disabled:cursor-default disabled:opacity-30"
-              >
-                <Icon name="chevronLeft" size={14} />
-              </button>
-              <button
-                type="button"
-                disabled={!onMoveNext}
-                onClick={onMoveNext}
-                aria-label={t("nextOption")}
-                className="enabled:hover:text-primary flex size-8 cursor-pointer items-center justify-center rounded-full disabled:cursor-default disabled:opacity-30"
-              >
-                <Icon name="chevronRight" size={14} />
-              </button>
-            </>
-          )}
-        </div>
       )}
     </article>
   );

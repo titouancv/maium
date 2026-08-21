@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/Button";
 import { Overlay } from "@/components/ui/Overlay";
-import { HobbyList } from "@/components/ui";
+import { CompactItem, ReorderableList } from "@/components/ui";
 import { HobbySubForm } from "./sub-form/HobbySubForm";
 import type { HobbyData } from "@/types/user";
 import { useListEditor } from "@/hooks";
@@ -31,9 +31,7 @@ export const HobbiesForm = ({ defaultValue, onChange }: HobbiesFormProps) => {
     editor.close();
   };
 
-  const handleMove = (from: number, to: number) => {
-    const next = [...items];
-    [next[from], next[to]] = [next[to], next[from]];
+  const handleReorder = (next: HobbyData[]) => {
     setItems(next);
     onChange(next);
   };
@@ -63,11 +61,17 @@ export const HobbiesForm = ({ defaultValue, onChange }: HobbiesFormProps) => {
       ) : (
         <div className="flex h-full w-full flex-col justify-between gap-4">
           <div className="flex min-h-0 flex-1 flex-col overflow-y-auto">
-            <HobbyList
-              hobbies={items}
-              onEdit={editor.openExisting}
-              onMove={handleMove}
-            />
+            <ReorderableList items={items} onReorder={handleReorder}>
+              {(hobby, i, handleProps) => (
+                <CompactItem
+                  title={hobby.title}
+                  subtitle={hobby.description}
+                  imageUrl={hobby.imageUrl}
+                  onEdit={() => editor.openExisting(i)}
+                  dragProps={handleProps}
+                />
+              )}
+            </ReorderableList>
           </div>
           <Button
             type="button"

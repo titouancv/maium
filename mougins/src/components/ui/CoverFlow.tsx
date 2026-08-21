@@ -181,17 +181,8 @@ export function CoverFlow<T>({
     <div className="flex h-full flex-col items-center gap-3">
       <div
         ref={viewportRef}
-        className="relative flex min-h-0 w-full flex-1 items-center justify-center overflow-x-clip"
-        style={{ perspective: 1200 }}
+        className="relative isolate flex min-h-0 w-full flex-1 items-center justify-center overflow-x-clip"
       >
-        <motion.div
-          className="absolute inset-0 z-10 cursor-grab active:cursor-grabbing"
-          drag="x"
-          dragConstraints={{ left: 0, right: 0 }}
-          dragElastic={0.6}
-          onDragEnd={handleDragEnd}
-        />
-
         <button
           type="button"
           aria-label={t("previousOption")}
@@ -202,45 +193,54 @@ export function CoverFlow<T>({
           <Icon name="chevronLeft" />
         </button>
 
-        {Array.from({ length: slotCount }, (_, slotIndex) => {
-          const itemIndex = slotIndex % count;
-          const item = items[itemIndex];
-          const offset = getOffset(slotIndex);
-          const isActive = offset === 0;
-          const absOffset = Math.abs(offset);
-          const hidden = absOffset > maxVisibleOffset;
-          const itemKey = getKey(item, itemIndex);
-          const repeatIndex = Math.floor(slotIndex / count);
+        <motion.div
+          className="absolute inset-0 z-10 flex cursor-grab items-center justify-center active:cursor-grabbing"
+          style={{ perspective: 1200, touchAction: "pan-y" }}
+          drag="x"
+          dragConstraints={{ left: 0, right: 0 }}
+          dragElastic={0.6}
+          onDragEnd={handleDragEnd}
+        >
+          {Array.from({ length: slotCount }, (_, slotIndex) => {
+            const itemIndex = slotIndex % count;
+            const item = items[itemIndex];
+            const offset = getOffset(slotIndex);
+            const isActive = offset === 0;
+            const absOffset = Math.abs(offset);
+            const hidden = absOffset > maxVisibleOffset;
+            const itemKey = getKey(item, itemIndex);
+            const repeatIndex = Math.floor(slotIndex / count);
 
-          return (
-            <motion.div
-              key={repeatCount > 1 ? `${itemKey}-${repeatIndex}` : itemKey}
-              className="absolute"
-              style={{
-                zIndex: 100 - absOffset,
-                pointerEvents: hidden ? "none" : "auto",
-              }}
-              animate={{
-                x: offset * SIDE_OFFSET_PX,
-                rotateY: isActive
-                  ? 0
-                  : offset < 0
-                    ? SIDE_ROTATE_DEG
-                    : -SIDE_ROTATE_DEG,
-                scale: isActive ? 1 : SIDE_SCALE,
-                opacity: hidden ? 0 : 1,
-              }}
-              transition={{ type: "spring", stiffness: 300, damping: 32 }}
-              onClick={() => {
-                if (isActive) return;
-                if (isLooping) goToSlot(slotIndex);
-                else onChange(itemIndex);
-              }}
-            >
-              {renderItem(item, isActive)}
-            </motion.div>
-          );
-        })}
+            return (
+              <motion.div
+                key={repeatCount > 1 ? `${itemKey}-${repeatIndex}` : itemKey}
+                className="absolute"
+                style={{
+                  zIndex: 100 - absOffset,
+                  pointerEvents: hidden ? "none" : "auto",
+                }}
+                animate={{
+                  x: offset * SIDE_OFFSET_PX,
+                  rotateY: isActive
+                    ? 0
+                    : offset < 0
+                      ? SIDE_ROTATE_DEG
+                      : -SIDE_ROTATE_DEG,
+                  scale: isActive ? 1 : SIDE_SCALE,
+                  opacity: hidden ? 0 : 1,
+                }}
+                transition={{ type: "spring", stiffness: 300, damping: 32 }}
+                onClick={() => {
+                  if (isActive) return;
+                  if (isLooping) goToSlot(slotIndex);
+                  else onChange(itemIndex);
+                }}
+              >
+                {renderItem(item, isActive)}
+              </motion.div>
+            );
+          })}
+        </motion.div>
 
         <button
           type="button"

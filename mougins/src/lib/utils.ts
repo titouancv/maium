@@ -41,3 +41,27 @@ export function faviconUrl(domainOrUrl: string, size = 32): string {
   } catch {}
   return `${EXTERNAL_API.FAVICON}?domain=${domain}&sz=${size}`;
 }
+
+export function moveItem<T>(items: T[], from: number, to: number): T[] {
+  if (from === to) return items;
+  const next = [...items];
+  const [moved] = next.splice(from, 1);
+  next.splice(to, 0, moved);
+  return next;
+}
+
+const ITEM_KEYS = new WeakMap<object, string>();
+let itemKeyCount = 0;
+
+/**
+ * A React key tied to an object's identity, for lists that are reordered in
+ * place. Index keys would make React rewrite each card's content instead of
+ * moving its DOM node, which breaks a drag mid-gesture.
+ */
+export function itemKey(item: object): string {
+  const existing = ITEM_KEYS.get(item);
+  if (existing) return existing;
+  const key = `item-${++itemKeyCount}`;
+  ITEM_KEYS.set(item, key);
+  return key;
+}

@@ -804,7 +804,7 @@ never invented twice. Import from `@/components/ui`.
 | `Text` | Body copy. `tone` = default \| muted \| primary, `size` = xs \| sm \| base \| lg, `as` = p \| span \| div \| li, plus `truncate`. Replaces every `text-txt-muted text-sm` pair. |
 | `InfoMessage` | Any error, confirmation or hint. Renders nothing when `message` is empty, so pass a possibly-undefined error straight through — no `&&` guard. |
 | `EmptyState` | What a list renders instead of its rows. `align="center"` when it owns the region. |
-| `Icon` | Every icon, from a fixed set (`arrowRight`, `bell`, `check`, `chevronLeft`, `chevronRight`, `close`, `externalLink`, `search`). **Add a path to `ui/icons/Icon.tsx` rather than inlining an `<svg>`.** `GoogleMark` is the one brand-coloured exception. |
+| `Icon` | Every icon, from a fixed set (`arrowRight`, `bell`, `check`, `chevronLeft`, `chevronRight`, `close`, `externalLink`, `github`, `search`). **Add a path to `ui/icons/Icon.tsx` rather than inlining an `<svg>`.** `GoogleMark` is the one brand-coloured exception. |
 | `AccentBar` | The short bar under a heading. |
 | `Rail` | The vertical bar that marks a row (experience, hobby, message, quote). Pass `bg-primary` to mark it as the user's own. |
 | `ScrollRow` | A row that scrolls sideways with the scrollbar hidden. |
