@@ -178,6 +178,7 @@
     "dismissNotification": "Fermer la notification",
     "skipButton": "Passer",
     "previousOption": "Précédent",
+    "reorderAriaLabel": "Réorganiser",
     "nextOption": "Suivant"
   },
   "languages": {
@@ -270,7 +271,6 @@
     "photos": "Photos",
     "editPhotoGallery": "Photos",
     "photoGalleryMaxReached": "Tu as atteint le maximum de 9 photos.",
-    "removePhotoAriaLabel": "Supprimer la photo",
     "profilePhotoChoose": "Choisir une photo",
     "profilePhotoChooseAnother": "Choisir une autre photo",
     "profilePhotoZoom": "Zoom",

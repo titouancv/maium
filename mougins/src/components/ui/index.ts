@@ -22,6 +22,7 @@ export * from "./Section";
 export * from "./UserCard";
 export * from "./GoogleSignInButton";
 export * from "./DataUsageNotice";
+export * from "./DragHandle";
 export * from "./LoadingOverlay";
 export * from "./ProfilePhoto";
 export * from "./ProgressBar";

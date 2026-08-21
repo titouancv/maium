@@ -6,7 +6,8 @@ import { useTranslations } from "next-intl";
 import { FormLayout } from "@/components/layout";
 import { Overlay } from "@/components/ui/Overlay";
 import { Button } from "@/components/ui/Button";
-import { Icon } from "@/components/ui/icons";
+import { DragHandle } from "@/components/ui/DragHandle";
+import { ReorderableList } from "@/components/ui";
 import { Text } from "@/components/ui/Text";
 import { GalleryPhotoPicker } from "@/components/form/GalleryPhotoPicker";
 import { useGalleryPhotoPicker } from "@/hooks/useGalleryPhotoPicker";
@@ -79,20 +80,6 @@ export const EditPhotoGalleryOverlay = ({
     onSaved();
   };
 
-  const moveLeft = (index: number) => {
-    if (index === 0) return;
-    const next = [...photos];
-    [next[index - 1], next[index]] = [next[index], next[index - 1]];
-    void persistOrder(next);
-  };
-
-  const moveRight = (index: number) => {
-    if (index === photos.length - 1) return;
-    const next = [...photos];
-    [next[index], next[index + 1]] = [next[index + 1], next[index]];
-    void persistOrder(next);
-  };
-
   const canAdd = photos.length < PROFILE_GALLERY_MAX_PHOTOS;
 
   if (isAdding) {
@@ -137,9 +124,14 @@ export const EditPhotoGalleryOverlay = ({
       >
         <div className="flex flex-col gap-6">
           {photos.length > 0 && (
-            <div className="grid grid-cols-3 gap-3">
-              {photos.map((photo, index) => (
-                <div key={photo.id} className="flex flex-col gap-2">
+            <ReorderableList
+              items={photos}
+              onReorder={setPhotos}
+              onCommit={(next) => void persistOrder(next)}
+              className="grid grid-cols-3 gap-3"
+            >
+              {(photo, _index, handleProps) => (
+                <div className="flex flex-col gap-2">
                   <div className="bg-surface-100 relative aspect-square overflow-hidden rounded-sm">
                     <Image
                       src={photo.url}
@@ -148,39 +140,29 @@ export const EditPhotoGalleryOverlay = ({
                       sizes="200px"
                       className="object-cover"
                     />
-                    <div className="absolute inset-x-0 top-0 h-10 bg-gradient-to-b from-black/50 to-transparent" />
-                    <button
-                      type="button"
-                      onClick={() => handleRemove(photo.id)}
-                      aria-label={t("removePhotoAriaLabel")}
-                      className="text-on-primary absolute top-1 right-1 flex size-6 items-center justify-center"
-                    >
-                      <Icon name="close" size={14} />
-                    </button>
+                    {handleProps && (
+                      <>
+                        <div className="absolute inset-x-0 bottom-0 h-10 bg-gradient-to-t from-black/50 to-transparent" />
+                        <DragHandle
+                          {...handleProps}
+                          orientation="horizontal"
+                          className="text-on-primary absolute inset-0 h-full w-full items-end justify-center pb-2"
+                        />
+                      </>
+                    )}
                   </div>
-                  <div className="flex justify-center gap-1">
-                    <button
-                      type="button"
-                      disabled={index === 0}
-                      onClick={() => moveLeft(index)}
-                      aria-label={tCommon("previousOption")}
-                      className="enabled:hover:text-primary flex size-6 items-center justify-center rounded-full disabled:opacity-30"
-                    >
-                      <Icon name="chevronLeft" size={14} />
-                    </button>
-                    <button
-                      type="button"
-                      disabled={index === photos.length - 1}
-                      onClick={() => moveRight(index)}
-                      aria-label={tCommon("nextOption")}
-                      className="enabled:hover:text-primary flex size-6 items-center justify-center rounded-full disabled:opacity-30"
-                    >
-                      <Icon name="chevronRight" size={14} />
-                    </button>
-                  </div>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    className="w-full px-2"
+                    onClick={() => handleRemove(photo.id)}
+                  >
+                    {t("deleteButton")}
+                  </Button>
                 </div>
-              ))}
-            </div>
+              )}
+            </ReorderableList>
           )}
 
           {canAdd ? (

@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useTranslations } from "next-intl";
-import { Button, Icon, Text, Title, UrlItem } from "@/components/ui";
+import { Text, Title, UrlItem } from "@/components/ui";
 import { UI_VARIANTS } from "@/constants";
 import { imageBackdropTheme, useImageTone } from "@/hooks";
 import { cn } from "@/lib/utils";
@@ -10,10 +10,9 @@ import type { Project } from "@/types/user";
 
 interface Props {
   project: Project;
-  onClick?: () => void;
 }
 
-export const ProjectItem = ({ project, onClick }: Props) => {
+export const ProjectItem = ({ project }: Props) => {
   const t = useTranslations("common");
   const [isLandscape, setIsLandscape] = useState(false);
   const tone = useImageTone(project.imageUrl);
@@ -73,7 +72,7 @@ export const ProjectItem = ({ project, onClick }: Props) => {
         <div className="from-surface-50 via-surface-50/60 absolute inset-x-0 bottom-0 z-2 h-[55%] bg-gradient-to-t from-10% via-60% to-transparent" />
 
         <div className="absolute inset-x-[4cqw] bottom-[3cqw] z-3">
-          <Title label={project.title} size="h5" />
+          <Title label={project.title} size="h3" />
         </div>
       </div>
 
@@ -83,7 +82,7 @@ export const ProjectItem = ({ project, onClick }: Props) => {
         </Text>
       )}
 
-      {(project.websiteUrl || project.githubUrl || onClick) && (
+      {(project.websiteUrl || project.githubUrl) && (
         <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
           {project.websiteUrl && (
             <a
@@ -96,21 +95,9 @@ export const ProjectItem = ({ project, onClick }: Props) => {
               )}
             >
               {t("visitWebsiteButton")}
-              <Icon name="externalLink" size={12} />
             </a>
           )}
           {project.githubUrl && <UrlItem url={project.githubUrl} />}
-          {onClick && (
-            <Button
-              type="button"
-              variant="outline"
-              size="sm"
-              className="ml-auto shrink-0"
-              onClick={onClick}
-            >
-              {t("editButton")}
-            </Button>
-          )}
         </div>
       )}
     </article>
